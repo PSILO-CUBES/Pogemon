@@ -1,0 +1,247 @@
+#battleScene{
+    display: none;
+}
+
+/* player Healthbar Styles */
+#playerContainer{
+    background-color: white; 
+    width: 650px; 
+    position: absolute; 
+    top: 650px; 
+    left: 1225px; 
+    border: 4px black solid;
+}
+
+#playerInfo{
+    display: flex; 
+    justify-content: end; 
+    font-size: 22px; 
+    padding: 15px;
+}
+
+#playerHPDisplay{
+    position: absolute; 
+    top: 26px; 
+    display: inline-flex; 
+    align-items: center; 
+    z-index: 1; 
+    font-size: 22px; 
+    padding: 5px 5px 0 5px;
+    background-color: rgba(0,0,0,1);
+}
+
+#playerHealthbarContainer{
+    top: 18px;
+    position: relative
+}
+
+#playerGreybar{
+    background-color: lightgrey; 
+    height: 20px; 
+    position: relative; 
+    top: -17px; 
+    border-top: 2px solid black;
+}
+
+#playerHealthbar{
+    background-color: green; 
+    width: 100%;
+    height: 20px; 
+    position: absolute; 
+    top: -15px; 
+    left: 0; 
+    right: 0;
+    transition: 1.5s ease-out;
+}
+
+#playerExpbarContainer{
+    position: relative
+}
+
+#playerExpGreybar{
+    background-color: rgb(255, 200, 125); 
+    height: 10px;
+    position: relative; 
+    border-top: 2px solid black;
+}
+
+#playerExpbar{
+    background-color: rgb(255, 125, 0);
+    height: 10px; 
+    position: absolute;
+    top: 2px;
+    left: 0; 
+    right: 0;
+
+    transition: 1.5s ease-out;
+}
+
+/* level up display */
+
+#levelUpDisplayContainer{
+    display: none;
+    grid-template-rows: repeat(7, 14.285%);
+
+    position: absolute;
+    top: 37.5%;
+    left: 120%;
+
+    height: 250px;
+    width: 265px;
+
+    background-color: white;
+
+    border: 4px black solid;
+}
+
+.levelUpLabel {
+    padding: 10px 0 0 4px
+}
+
+.levelUpDisplayData{
+    position: relative;
+    top: -15px;
+
+    float: right;
+
+}
+
+/* enemy Healthbar Styles */
+#enemyContainer{
+    background-color: white; 
+    width: 650px; 
+    position: absolute; 
+    top: 25px; 
+    left: 250px; 
+    border: 4px black solid;
+}
+
+#enemyInfo{
+    display: flex; 
+    justify-content: end; 
+    font-size: 16px; 
+    padding: 15px;
+}
+
+#enemyHPDisplay{
+    position: absolute; 
+    top: 25px; 
+    display: inline-flex; 
+    align-items: center; 
+    z-index: 1; 
+    font-size: 16px; 
+    padding: 5px 5px 0 5px;
+    background-color: rgba(0,0,0,1);
+}
+
+#enemyHealthbarContainer{
+    position: relative;
+}
+
+#enemyGreybar{
+    background-color: lightgrey; 
+    height: 10px; 
+    border-top: 2px solid black;
+}
+
+#enemyHealthbar{
+    background-color: green; 
+    width: 100%;
+    height: 10px; 
+    position: absolute; 
+    top: 2px; 
+    left: 0; 
+    right: 0;
+    transition: 1.5s ease-out;
+}
+
+/* battle Menu */
+
+#battleMenuContainer{
+    background-color: transparent; 
+    position: absolute; 
+    height: 25%;
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    border-top: 4px black solid; 
+    display: inline-block;
+}
+
+#battleOptionsContainer{
+    display: grid;
+    grid-template-columns: 55% 45%;
+    background-color: white;
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    height: 100%;
+}
+
+#battleOptionsDialogueContainer{
+    background-color: transparent;
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    height: 100%;
+    border-right: 4px black solid;
+}
+
+#battleOptionsDialogue{
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    height: 100%;
+    font-size: 22px;
+}
+
+#battleOptionsButtonContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+    background-color: blue;
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    height: 100%;
+}
+
+#attackEventContainer{
+    background-color: white; 
+    height: 100%; 
+    position: absolute;
+    bottom: 0; 
+    left: 0; 
+    right: 0;
+    display: none;
+}
+
+#dialogueBox{
+    position: absolute; 
+    display: inline-block; 
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    background-color: white; 
+    padding: 24px; 
+    cursor: pointer;
+}
+
+#attacksBox{
+    display: grid; 
+    grid-template-columns: repeat(2,1fr); 
+    width: 66.66%;
+}
+
+#attackInfoContainer{
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 33.33%; 
+    border-left: black solid 4px;
+}
+
+#attackInfo{
+    font-size: 16px;
+}

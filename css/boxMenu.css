@@ -1,0 +1,218 @@
+#boxInterfaceContainer{
+    display: none;
+    grid-template-columns: 29% 52% 19%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#boxMenuContainer{
+    display: grid;
+    grid-template-rows: 25% 25% 25% 25%;
+    position: absolute;
+    top: 0;
+    left: 85%;
+    right: 0;
+    bottom: 20px;
+}
+
+.boxMenuButton{
+    background-color: #8F8FA7;
+}
+
+#pcTeamMenuContainer{
+    display: none;
+    grid-template-rows: 85% 15%;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#pcTargetMenuContainer{
+    display: grid;
+    grid-template-rows: 50% 50%;
+    
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#targetPogemonImageContainer{
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#leedPogemonPcTeam{
+    position: relative;
+    top: 347.5px;
+    left: 45px;
+    height: 130px;
+    width: 170px;
+    background-color: transparent;
+}
+
+#pcTeamMenuBackPogemonContainer{
+    grid-template-rows: repeat(5, 18%);
+    gap: 17.5px;
+
+    position: relative;
+    top: -802.5px;
+    left: 331px;
+
+    width: 167.5px;
+    height: 723px;
+}
+
+.pcTeamButton{
+    background-color: transparent;
+    width: 100%;
+    height: 17.5%;
+
+    margin-bottom: 21.5px;
+}.pcTeamButton:hover{
+    background-color: rgba(175, 100, 100, 0.5) !important;
+}
+
+#closeBoxTeamMenuButton{
+    position: relative;
+    top: -175px;
+    left: 49.9%;
+    transform: translateX(-50%);
+
+    height: 100px;
+    width: 87.75%;
+
+    background-color: transparent;
+}#closeBoxTeamMenuButton:hover{
+    background-color: rgba(150, 75, 75, 0.9);
+}
+
+#boxContainer{
+    display: grid;
+    grid-template-rows: 15% 85%;
+
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#boxIdDisplay{
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+
+    position: relative;
+    top: 22.5px;
+    left: 11.5px;
+}#boxIdDisplayLeftArrow{
+    background-color: transparent;
+    position: relative;
+    
+    width: 40%;
+    height: 42.5%;
+
+    left: 60%;
+    top: 52.5%;
+    transform: translate(-50%,-50%);
+}#boxIdDisplayRightArrow{
+    background-color: transparent;
+    position: relative;
+    
+    width: 40%;
+    height: 42.5%;
+
+    left: 40%;
+    top: 52.5%;
+    transform: translate(-50%,-50%);
+}
+
+#boxIdDisplayName{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    top: 50px;
+}
+
+#box{
+    position: relative;
+
+    height: 83%;
+    width: 93%;
+    
+    left: 51px;
+}
+
+.targetBoxes{
+    position: relative;
+
+    height: 138px;
+    width: 148px;
+
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    border-radius: 5px;
+
+    background-color: transparent
+}.targetBoxes:hover{
+    background-color: rgba(30, 30, 30, 0.1) !important;
+}
+
+#releaseConfirmationContainer{
+    display: none;
+    grid-template-rows: 75% 25%;
+
+    position: absolute;
+
+    height: 250px;
+    width: 500px;
+
+    left: 50%;
+    top: 25%;
+
+    transform: translate(-50%, -50%);
+
+    background-color: lightgrey;
+
+    border: 4px solid black;
+}
+
+#releaseButtonContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+#yesReleaseButton{
+    height: 100%;
+    width: 100%;
+    background-color: green;
+}#yesReleaseButton:hover{
+    background-color: darkgreen;
+}
+
+#noReleaseButton{
+    height: 100%;
+    width: 100%;
+    background-color: red;
+}#noReleaseButton:hover{
+    background-color: darkred;
+}
+
+#targetPogemonInfo{
+    position: relative;
+    left: 15px;
+    top: 50px;
+}

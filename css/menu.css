@@ -1,0 +1,124 @@
+#menuContainer{
+    display: none; position: absolute; top: 15px; right: 0; bottom: 0; left: 15px; background: transparent; margin: 30px;
+}
+
+#menu{
+    display: grid; grid-template-columns: repeat(8,12.5%); position: absolute; width: 100%; background: white; border: 4px black solid;
+}
+
+.menuButton{
+    font-size: 1.5rem; height: 50px; width: 100%;
+}
+
+#KOContainer{
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    z-index: 51;
+}#KOText{
+    color: white;
+    font-size: 72px;
+}#KOText:hover{
+    color: lightgrey;
+    
+    cursor: pointer;
+}
+
+#overworldContainer{
+    display: none;
+}
+
+#overworldDialogueBox{
+    display: grid;
+
+    position: absolute;
+
+    top: 60%;
+    left: 50px;
+    right: 50px;
+    bottom: 5%;
+
+    background-color: white;
+
+    border: 5px black solid;
+
+    padding: 4px;
+}
+
+#overworldDialogue{
+    display: inline;
+    font-size: 1.5rem;
+    padding: 1.5rem;
+}
+
+#overworldButtonContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    position: absolute;
+
+    top: 39%;
+    left: 0;
+    right: 0;
+    bottom: 0%;
+
+    height: 60%;
+    width: 100%;
+
+    border-top:5px black solid;
+}
+
+#yesButton{
+    position: relative;
+    display: flex;
+
+    width: 99.8%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: green;
+    border-right:2.5px black solid;
+
+    cursor: pointer;
+}#yesButton:hover{
+    background-color: darkgreen;
+}
+
+#noButton{
+    position: relative;
+    display: flex;
+
+    width: 99.8%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: red;
+    border-left:2.5px black solid;
+
+    cursor: pointer;
+}#noButton:hover{
+    background-color: darkred;
+}
+
+#pcMenuContainer{
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    background-color: white;
+    top: 150px;
+    right: 500px;
+    border: 4px black solid;
+    transition: 0.05s ease;
+}

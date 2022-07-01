@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pogemon</title>
+    <link rel="stylesheet" href="/css/menu.css">
+    <link rel="stylesheet" href="/css/teamMenu.css">
+    <link rel="stylesheet" href="/css/boxMenu.css">
+    <link rel="stylesheet" href="/css/battleScene.css">
+    <link rel="stylesheet" href="/css/summaryMenu.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:ital,wght@0,100;0,300;0,500;0,900;1,100;1,300;1,500;1,900&display=swap');
+    </style>
+    <style>
+        *, *::before, *::after{
+            padding: 0;
+            margin: 0;
+            user-select: none;
+            text-transform: uppercase !important;
+        }
+        body {
+            background-color: black;
+        }
+        button{
+            border: 0;
+            cursor: pointer;
+            font-family: 'Press Start 2p', roboto;
+            font-size: 16px;
+        } button:hover {
+            background-color: lightgrey;
+        }
+        div {
+            font-family: 'Press Start 2p', roboto;
+            transition: background-color 2s ease;
+        }
+        h1 {
+            font-family: 'Press Start 2p', roboto;
+            padding: 6px;
+        }
+        h2{
+            font-family: 'Press Start 2p', roboto;
+            transition: color 2s ease;
+        }
+    </style>
+</head>
+<body style="overflow: hidden;">
+
+    <div 
+        id="overlappingDiv" 
+        style="background: black; position: absolute; top: 0; left: 0; bottom: 0; right: 0; opacity: 0; pointer-events: none; z-index: 50;"
+    
+    ></div>
+
+    <div 
+        id="gameContainer"
+        style="display:inline-block; position: relative;"
+        >
+
+        <div
+            style="position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; right: 0;">
+
+        </div>
+        <canvas>
+        </canvas>
+
+        <div
+            id="userInterface">
+
+            <!-- KO screen -->
+
+            <div 
+                id="KOContainer">
+
+                <h1 
+                    id="KOText"
+                >You fainted...</h1>
+
+            </div>
+
+            <!-- overWorld Menus -->
+            <div
+                id="menuContainer">
+
+                <div
+                    id="menu">
+
+                    <button
+                        id="PogedecButtton"
+                        class="menuButton"
+                    >Pogedec</button>
+
+                    <button
+                        id="TeamButton"
+                        class="menuButton"
+                    >Team</button>
+
+                    <button
+                        id="ItemButton"
+                        class="menuButton"
+                    >Items</button>
+
+                    <button
+                        id="SaveButton"
+                        class="menuButton"
+                    >Save</button>
+
+                    <button
+                        id="ResetButton"
+                        class="menuButton"
+                    >Reset</button>
+
+                    <button
+                        id="OptionsButton"
+                        class="menuButton"
+                    >Options</button>
+
+                    <button
+                        id="ExitButton"
+                        class="menuButton"
+                    >Exit</button>
+
+                    <button
+                        id="ProuttButton"
+                        class="menuButton"
+                    >Proutt</button>
+                </div>
+            </div>
+
+            <div 
+                id="overworldContainer">
+
+                <img 
+                    id="exclamationNPC"
+                    src="img/chars/Exclamation.png" 
+                    alt=""
+                    style="display:none; position: absolute;"
+                >
+
+                <div 
+                id="overworldDialogueBox">
+
+                <h1 
+                    id="overworldDialogue">
+
+                </h1>
+
+                <div 
+                    id="overworldButtonContainer">
+
+                    <div 
+                        id="yesButton">
+
+                    </div>
+
+                    <div 
+                        id="noButton">
+
+                    </div>
+                    
+                </div>
+
+            </div>
+                
+            </div>
+
+            <!-- PC MENU CONTAINER HERE -->
+
+            <div 
+                id="pcMenuContainer">
+                <button 
+                    id="pcHealButton" 
+                    class="pcMenuButton"
+                >Heal</button>
+
+                <button 
+                    id="pcStorageButton" 
+                    class="pcMenuButton"
+                >Storage</button>
+
+                <button 
+                    id="pcCancelButton" 
+                    class="pcMenuButton"
+                >Cancel</button>
+            </div>
+
+            <!-- pc Interface Here -->
+            
+            <div 
+                id="boxInterfaceContainer">
+
+                <div 
+                    id="pcTeamMenuContainer">
+
+                    <button 
+                        id="leedPogemonPcTeam" 
+                        class="pcTeamButton"
+                    ></button>
+
+                    <div 
+                        id="pcTeamMenuBackPogemonContainer">
+                    
+                        <button 
+                            id="backPogemon1PcTeam" 
+                            class="pcTeamButton"
+                        ></button>
+
+                        <button 
+                            id="backPogemon2PcTeam" 
+                            class="pcTeamButton"
+                        ></button>
+
+                        <button 
+                            id="backPogemon3PcTeam" 
+                            class="pcTeamButton"
+                        ></button>
+
+                        <button 
+                            id="backPogemon4PcTeam" 
+                            class="pcTeamButton"
+                        ></button>
+                        
+                        <button 
+                            id="backPogemon5PcTeam" 
+                            class="pcTeamButton"
+                        ></button>
+
+                    </div>
+
+                    <button 
+                        id="closeBoxTeamMenuButton" 
+                    >CLOSE</button>
+
+                </div>
+
+                <div 
+                    id="pcTargetMenuContainer">
+
+                    <div 
+                        id="targetPogemonImageContainer">
+                    
+                    
+                    </div>
+
+                    <div 
+                        id="targetPogemonInfoContainer">
+                    
+                        <h1 
+                            id="targetPogemonInfo"
+                        ></h1>
+                    
+                    </div>
+                </div>
+
+                <div 
+                    id="boxContainer">
+                
+                    <div 
+                        id="boxIdDisplay">
+                    
+                        <button 
+                            id="boxIdDisplayLeftArrow"
+                        ></button>
+
+                        <div 
+                            id="boxIdDisplayNameContainer">
+
+                            <h1 
+                                id="boxIdDisplayName"
+                            ></h1>
+                    
+                        </div>
+
+
+                        <button 
+                            id="boxIdDisplayRightArrow"
+                        ></button>
+
+                    </div>
+
+                    <div 
+                        id="targetBoxesContainer">
+                    
+                        <div 
+                            id="box">
+                        
+                        
+                        </div>
+                    
+                    </div>
+                
+                </div>
+
+                <div 
+                    id="releaseConfirmationContainer">
+
+                    <div 
+                        id="releaseTextContainer">
+                    
+                    </div>
+                    
+                    <div 
+                        id="releaseButtonContainer">
+                    
+                        <button 
+                        id="yesReleaseButton"
+                        >yes</button>
+
+                        <button 
+                            id="noReleaseButton"
+                        >no</button>
+                    
+                    </div>
+
+
+
+                </div>
+
+                <div 
+                    id="boxMenuContainer">
+
+                    <button 
+                        id="boxMenuTeamButton" 
+                        class="boxMenuButton"
+                    >TEAM</button>
+
+                    <button 
+                    id="boxMenuSummaryButton" 
+                    class="boxMenuButton"
+                    >SUMMARY</button>
+
+                    <button 
+                    id="boxMenuReleaseButton" 
+                    class="boxMenuButton"
+                    >RELEASE</button>
+
+                    <button 
+                    id="boxMenuCancelButton" 
+                    class="boxMenuButton"
+                    >CANCEL</button>
+
+                </div>
+            
+            </div>
+
+            <!-- team Container -->
+
+            <div
+                id="teamContainer">
+
+                <div
+                    id="flexContainer">
+
+                    <div
+                        id="pogemonContainers">
+
+                        <div
+                            id="leedPogemonContainer">
+
+                            <button
+                                id="leedPogemon">
+
+                                <h1 
+                                    id="leedPogemonName"
+                                    class="backPogemonName"
+
+                                ></h1>
+                            </button>
+
+                            <div 
+                                id="leedPogemonHealthbarContainer">
+
+                                <div 
+                                    id="leedPogemonGreybar">
+
+                                </div>
+
+                                <div 
+                                     id="leedPogemonHealthbar">
+
+                                </div>
+                            </div>
+                                
+                            <div 
+                                id="leedPogemonExpbarContainer">
+
+                                <div 
+                                    id="leedPogemonExpGreybar">
+
+                                </div>
+
+                                <div 
+                                    id="leedPogemonExpbar">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            id="backPogemonContainer">
+
+                            <div
+                                id="backPogemon1Container">
+                                <button
+                                    id="backPogemon1"
+                                    class="backPogemon">
+
+                                    <h1 
+                                        id="backPogemon1Name"
+                                        class="backPogemonName"
+
+                                    ></h1>
+
+                                </button>
+                                <div 
+                                    id="backPogemon1HealthbarContainer"
+                                    class="backPogemonHealthbarContainer">
+
+                                    <div 
+                                        id="backPogemon1Greybar"
+                                        class="backPogemonGreybar">
+                                
+                                    </div>
+                                
+                                    <div 
+                                        id="backPogemon1Healthbar"
+                                        class="backPogemonHealthbar">
+                                
+                                    </div>
+
+                                </div>
+                                <div 
+                                    id="backPogemon1ExpbarContainer"
+                                    class="backPogemonExpbarContainer">
+
+                                    <div 
+                                        id="backPogemon1ExpGreybar"
+                                        class="backPogemonExpGreybar">
+
+                                    </div>
+
+                                    <div 
+                                        id="backPogemon1Expbar"
+                                        class="backPogemonExpbar">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                id="backPogemon2Container">
+                                <button
+                                    id="backPogemon2"
+                                    class="backPogemon">
+
+                                    <h1 
+                                        id="backPogemon2Name"
+                                        class="backPogemonName"
+
+                                    ></h1>
+
+                                </button>
+                                <div 
+                                    id="backPogemon2HealthbarContainer"
+                                    class="backPogemonHealthbarContainer">
+
+                                    <div 
+                                        id="backPogemon2Greybar"
+                                        class="backPogemonGreybar">
+                                
+                                    </div>
+                                
+                                    <div 
+                                        id="backPogemon2Healthbar"
+                                        class="backPogemonHealthbar">
+                                
+                                    </div>
+                                </div>
+                                <div 
+                                    id="backPogemon2ExpbarContainer"
+                                    class="backPogemonExpbarContainer">
+
+                                    <div 
+                                        id="backPogemon2ExpGreybar"
+                                        class="backPogemonExpGreybar">
+
+                                    </div>
+
+                                    <div 
+                                        id="backPogemon2Expbar"
+                                        class="backPogemonExpbar">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                id="backPogemon3Container">
+                                <button
+                                    id="backPogemon3"
+                                    class="backPogemon">
+
+                                    <h1 
+                                        id="backPogemon3Name"
+                                        class="backPogemonName"
+
+                                    ></h1>
+
+                                </button>
+                                <div 
+                                    id="backPogemon3HealthbarContainer"
+                                    class="backPogemonHealthbarContainer">
+
+                                    <div 
+                                        id="backPogemon3Greybar"
+                                        class="backPogemonGreybar">
+                                
+                                    </div>
+                                
+                                    <div 
+                                        id="backPogemon3Healthbar"
+                                        class="backPogemonHealthbar">
+                                
+                                    </div>
+                                </div>
+                                <div 
+                                    id="backPogemon3ExpbarContainer"
+                                    class="backPogemonExpbarContainer">
+
+                                    <div 
+                                        id="backPogemon3ExpGreybar"
+                                        class="backPogemonExpGreybar">
+
+                                    </div>
+
+                                    <div 
+                                        id="backPogemon3Expbar"
+                                        class="backPogemonExpbar">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                id="backPogemon4Container">
+                                <button
+                                    id="backPogemon4"
+                                    class="backPogemon">
+                            
+                                    <h1 
+                                        id="backPogemon4Name"
+                                        class="backPogemonName"
+                                    
+                                    ></h1>
+                            
+                                </button>
+                                <div 
+                                    id="backPogemon4HealthbarContainer"
+                                    class="backPogemonHealthbarContainer">
+
+                                    <div 
+                                        id="backPogemon4Greybar"
+                                        class="backPogemonGreybar">
+                                
+                                    </div>
+                                
+                                    <div 
+                                        id="backPogemon4Healthbar"
+                                        class="backPogemonHealthbar">
+                                
+                                    </div>
+                                </div>
+                                <div 
+                                    id="backPogemon4ExpbarContainer"
+                                    class="backPogemonExpbarContainer">
+
+                                    <div 
+                                        id="backPogemon4ExpGreybar"
+                                        class="backPogemonExpGreybar">
+
+                                    </div>
+
+                                    <div 
+                                        id="backPogemon4Expbar"
+                                        class="backPogemonExpbar">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                id="backPogemon5Container">
+                                <button
+                                    id="backPogemon5"
+                                    class="backPogemon">
+
+                                    <h1 
+                                        id="backPogemon5Name"
+                                        class="backPogemonName"
+
+                                    ></h1>
+
+                                </button>
+                                <div 
+                                    id="backPogemon5HealthbarContainer"
+                                    class="backPogemonHealthbarContainer">
+
+                                    <div 
+                                        id="backPogemon5Greybar"
+                                        class="backPogemonGreybar">
+                                
+                                    </div>
+                                
+                                    <div 
+                                        id="backPogemon5Healthbar"
+                                        class="backPogemonHealthbar">
+                                
+                                    </div>
+                                </div>
+                                <div 
+                                    id="backPogemon5ExpbarContainer"
+                                    class="backPogemonExpbarContainer">
+
+                                    <div 
+                                        id="backPogemon5ExpGreybar"
+                                        class="backPogemonExpGreybar">
+
+                                    </div>
+
+                                    <div 
+                                        id="backPogemon5Expbar"
+                                        class="backPogemonExpbar">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        id="teamContainerTextBox">
+
+                        <h1
+                            id="teamContainerText">
+                        
+                        </h1>
+
+                        <div
+                            id="teamContainerButton">
+                        
+                            <button
+                                id="summaryTeamButton"
+                                class="teamButton">
+                                SUMMARY
+                            </button>
+
+                            <button
+                                id="switchTeamButton"
+                                class="teamButton">
+                                SWITCH
+                            </button>
+
+                            <button
+                                id="itemTeamButton"
+                                class="teamButton">
+                                ITEM
+                            </button>
+
+                            <button
+                                id="cancelButton"
+                                class="teamButton">
+                                CANCEL
+                            </button>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- summary Stuff -->
+
+            <div 
+                id="summaryMenuContainer">
+            
+                <div 
+                    id="upperDisplayContainer">
+                
+                    <div 
+                        id="generalDataContainer">
+
+                        <h1 
+                            id="targetLevelData"
+                        ></h1>
+
+                        <h1 
+                            id="targetNameData"
+                        ></h1>
+
+                        <h1 
+                            id="targetTypeData"
+                        ></h1>
+
+                        <h1 
+                            id="targetItemData"
+                        ></h1>
+                    
+                    </div>
+
+                    <div 
+                        id="targetSpriteContainer">
+                    
+                    
+                    
+                    </div>
+
+                    <div 
+                        id="statsDataContainer">
+                    
+                        <h1 
+                            id="targetHPData"
+                        ></h1>
+
+                        <h1 
+                            id="targetAtkData"
+                        ></h1>
+
+                        <h1 
+                            id="targetDefData"
+                        ></h1>
+
+                        <h1 
+                            id="targetSpAtkData"
+                        ></h1>
+
+                        <h1 
+                            id="targetSpDefData"
+                        ></h1>
+
+                        <h1 
+                            id="targetSpdData"
+                        ></h1>
+                    
+                    </div>
+                
+                </div>
+
+                <div 
+                    id="lowerDisplayContainer">
+                
+                    <div 
+                        id="expAbilityDataContainer">
+                    
+                        <div 
+                            id="expDataContainer">
+                        
+                            <h1 
+                                id="targetTotalExp"
+                            ></h1>
+                        
+                            <h1 
+                                id="targetExpToNextLvl"
+                            ></h1>
+                        
+                        </div>
+
+                        <div 
+                            id="abilityDataContainer">
+                        
+                            <h1 
+                                id="targetAbilityData"
+                            ></h1>
+                        
+                        </div>
+                    
+                    </div>
+
+                    <div 
+                        id="attacksDataContainer">
+
+                        <div 
+                            id="summaryAttackDescriptionContainer">
+
+                            <h1 
+                                id="attackPower"
+                            ></h1>
+
+                            <h1 
+                                id="attackAccuracy"
+                            ></h1>
+
+                            <h1 
+                                id="attackDescription"
+                            ></h1>
+                        
+                        </div>
+                    
+                        <button 
+                            id="summaryAttack1"
+                            class="summaryAttackButton">                       
+                        </button>
+
+                        <button 
+                            id="summaryAttack2"
+                            class="summaryAttackButton">
+                        </button>
+
+                        <button 
+                            id="summaryAttack3"
+                            class="summaryAttackButton">
+                        </button>
+
+                        <button 
+                            id="summaryAttack4"
+                            class="summaryAttackButton">
+                        </button>
+
+                    </div>
+                
+                </div>
+            
+            </div>
+
+            <!-- battle Scene -->
+            <div
+                id="battleScene">
+            
+                <div 
+                    id="playerContainer">
+
+                    <h1 
+                        id="playerInfo">
+                    
+                    </h1>
+
+                    <h2 
+                        id="playerHPDisplay">
+
+                    </h2>
+
+                    <div 
+                        id="playerHealthbarContainer">
+                    
+                        <div 
+                            id="playerGreybar">
+                        
+                        </div>
+
+                        <div 
+                            id="playerHealthbar">
+                        
+                        </div>
+                    </div>
+
+                    <div 
+                        id="playerExpbarContainer">
+                
+                        <div 
+                            id="playerExpGreybar">
+                        
+                        </div>
+                     
+                        <div 
+                            id="playerExpbar">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div 
+                    id="levelUpDisplayContainer">
+
+                    <div id="levelContainer">
+                        <h4 
+                            id="levelUpLabel"
+                            class="levelUpLabel"
+                        >Level :</h4>
+                        <h4 
+                            id="levelUpLvlDisplay"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+
+                    <div id="hpContainer">
+                        <h4 
+                            id="levelUpHpLabel"
+                            class="levelUpLabel"
+                        >HP :</h4>
+                        <h4 
+                            id="levelUpHp"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+
+                    <div id="atkContainer">
+                        <h4 
+                            id="levelUpAtkLabel"
+                            class="levelUpLabel"
+                        >Atk :</h4>
+                        <h4 
+                            id="levelUpAtk"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+
+                    <div id="defContainer">
+                        <h4 
+                            id="levelUpDefLabel"
+                            class="levelUpLabel"
+                        >Def :</h4>
+                        <h4 
+                            id="levelUpDef"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+
+                    <div id="spatkContainer">
+                        <h4 
+                            id="levelUpSpAtkLabel"
+                            class="levelUpLabel"
+                        >Sp.Atk :</h4>
+                        <h4 
+                            id="levelUpSpAtk"
+                            class="levelUpDisplayData"
+                        ></v>
+                    </div>
+
+                    <div id="spdefContainer">
+                        <h4 
+                            id="levelUpSpDefLabel"
+                            class="levelUpLabel"
+                        >Sp.Def :</h4>
+                        <h4 
+                            id="levelUpSpDef"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+
+                    <div id="spdContainer">
+                        <h4 
+                            id="levelUpSpdLabel"
+                            class="levelUpLabel"
+                        >Spd :</h4>
+                        <h4 
+                            id="levelUpSpd"
+                            class="levelUpDisplayData"
+                        ></h4>
+                    </div>
+                </div>
+
+                <div 
+                    id="enemyContainer">
+
+                    <h1 
+                        id="enemyInfo">
+                    
+                    </h1>
+
+                    <h2 
+                        id="enemyHPDisplay">
+
+                    </h2>
+
+                    <div 
+                        id="enemyHealthbarContainer">
+                    
+                        <div 
+                            id="enemyGreybar">
+                        
+                        </div>
+
+                        <div 
+                            id="enemyHealthbar">
+                        
+                        </div>
+                    </div>
+                </div>
+
+                <div 
+                    id="battleMenuContainer">
+
+                    <div 
+                        id="battleOptionsContainer">
+                    
+                        <div 
+                            id="battleOptionsDialogueContainer">
+
+                            <h1 
+                                id="battleOptionsDialogue"
+                            ></h1>
+                        
+                        </div>
+
+                        <div 
+                            id="battleOptionsButtonContainer">
+
+                            <button 
+                                id="fightButton" 
+                                class="battleOptionsButton"
+                            >Fight</button>
+
+                            <button 
+                                id="catchButton" 
+                                class="battleOptionsButton"
+                            >Catch</button>
+
+                            <button 
+                                id="pogemonButton" 
+                                class="battleOptionsButton"
+                            >Pogemon</button>
+
+                            <button 
+                                id="runButton" 
+                                class="battleOptionsButton"
+                            >Run</button>
+
+                        </div>
+                    </div>
+
+                    <div 
+                        id="attackEventContainer">
+
+                        <div 
+                            id="dialogueBox">
+                    
+                        </div>
+
+                        <div 
+                            id="attacksBox">
+                        
+                        </div>
+
+                        <div 
+                            id="attackInfoContainer">
+
+                            <div 
+                                id="attackInfo">
+                                Attack Info
+                            </div>
+
+                        </div>
+                    </div>
+                </div>           
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js" integrity="sha512-VEBjfxWUOyzl0bAwh4gdLEaQyDYPvLrZql3pw1ifgb6fhEvZl9iDDehwHZ+dsMzA0Jfww8Xt7COSZuJ/slxc4Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="data/audio.js"></script>
+    <script src="data/tile_data/changeMapZones.js"></script>
+    <script src="data/tile_data/eventZones.js"></script>
+    <script src="data/tile_data/battleZones.js"></script>
+    <script src="data/tile_data/collisions.js"></script>
+    <script src="classes.js"></script>
+    <script src="data/imgs.js"></script>
+    <script src="data/types.js"></script>
+    <script src="data/attacks.js"></script>
+    <script src="data/pogemons.js"></script>
+    <script src="data/trainers.js"></script>
+    <script src="data/maps.js"></script>
+    <script src="pogemonStorage.js"></script>
+    <script src="index.js"></script>
+    <script src="teamMenuScene.js"></script>
+    <script src="pcMenuScene.js"></script>
+    <script src="summaryMenuScene.js"></script>
+    <script src="battleScene.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+#summaryMenuContainer{
+    display: none;
+    grid-template-rows: 64% 36%;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#upperDisplayContainer{
+    display: grid;
+    grid-template-columns: 31.25% 28.75% 40%;
+
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#lowerDisplayContainer{
+    display: grid;
+    grid-template-columns: 60.25% 39.75%;
+
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0; 
+    left: 0;
+}
+
+#generalDataContainer{
+    display: grid;
+    grid-template-rows: 20% 20% 15% 45%;
+}
+
+#targetGlobalIdData{
+    position: relative;
+
+    top: 69%;
+    left: 225px;
+}
+
+#targetLevelData{
+    position: relative;
+
+    top: 67.5%;
+    left: 455px;
+}
+
+#targetNameData{
+    position: relative;
+
+    top: 52.5%;
+    left: 235px;
+}
+
+#targetTypeData{
+    position: relative;
+
+    top: 27.5px;
+    left: 235px;
+
+    font-size: x-large;
+}
+
+#statsDataContainer{
+    display: grid;
+    grid-template-rows: 28% 12.5% 12.5% 12.5% 12.5% 22%;
+}#statsDataContainer > h1{
+    position: relative;
+
+    top: 20px;
+}
+
+#targetHPData{
+    position: inherit;
+
+    top: 87.5px !important;
+}
+
+#expAbilityDataContainer{
+    display: grid;
+    grid-template-rows: 50% 50%;
+
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#targetTotalExp{
+    position: relative;
+    top: 65px;
+    left: 67.5%;
+}
+
+#targetExpToNextLvl{
+    position: relative;
+    top: 80px;
+    left: 67.5%;
+}
+
+#attacksDataContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+
+    position: relative;
+    top: -2.5px;
+    right: 0;
+    bottom: 0;
+    left: 5px;
+
+    background-color: transparent;
+}
+
+.summaryAttackButton{
+    height: 90%;
+    width: 97.5%;
+}.summaryAttackButton:hover{
+    background: radial-gradient( #FF39390F 85%, #FAE5EA);
+}
+
+#summaryAttackDescriptionContainer{
+    display: grid;
+    grid-template-rows: 19% 13% 67%;
+    
+    position: absolute;
+    top: -506px;
+    left: -12.5px;
+
+    height: 500px;
+    width: 500px;
+}
+
+#attackPower{
+    position: relative;
+
+    left: 42.5%;
+    top: 50%;
+}
+
+#attackAccuracy{
+    position: relative;
+    
+    left: 42.5%;
+    top: 25%;
+}
+
+#attackDescription{
+    position: relative;
+    
+    left: 7.5%;
+    top: 19%;
+
+    width: 80%;
+
+    font-size: x-large;
+    line-height: 62.5px;
+}
