@@ -60,7 +60,7 @@
 #targetTypeData{
     position: relative;
 
-    top: 27.5px;
+    top: 32.5px;
     left: 235px;
 
     font-size: x-large;
@@ -100,8 +100,8 @@
 
 #targetExpToNextLvl{
     position: relative;
-    top: 80px;
-    left: 67.5%;
+    top: 90px;
+    left: 67.75%;
 }
 
 #attacksDataContainer{
@@ -131,31 +131,62 @@
     
     position: absolute;
     top: -506px;
-    left: -12.5px;
+    left: 37.5px;
 
     height: 500px;
     width: 500px;
 }
 
-#attackPower{
+#summaryAttackName{
     position: relative;
 
-    left: 42.5%;
-    top: 50%;
+    left: 150px;
+    top: 37.5px;
+
+    font-size: 24px;
 }
 
-#attackAccuracy{
+#summaryAttackPower{
     position: relative;
-    
-    left: 42.5%;
-    top: 25%;
+
+    left: 18.5%;
+    top: 5px;
+
+    font-size: 24px;
 }
 
-#attackDescription{
+#summaryAttackAccuracy{
     position: relative;
     
-    left: 7.5%;
-    top: 19%;
+    left: 51.5%;
+    top: -60px;
+
+    font-size: 24px;
+}
+
+#summaryAttackPP{
+    position: relative;
+    
+    left: 422px;
+    top: -395px;
+
+    font-size: 24px;
+}
+
+#summaryAttackType{
+    position: relative;
+
+    left: 314.5px;
+    top: -341.5px;
+
+    font-size: 20px;
+}
+
+#summaryAttackDescription{
+    position: relative;
+    
+    left: 45px;
+    top: -300px;
 
     width: 80%;
 

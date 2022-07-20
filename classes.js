@@ -88,6 +88,7 @@ class Pogemon extends Sprite {
     currLevel,
     expYield,
     expCurve,
+    catchRate,
     globalId,
     }) {
     super({
@@ -115,31 +116,61 @@ class Pogemon extends Sprite {
     this.attackPool = attackPool
     this.attacks = attacks
     this.evolution = evolution
+    this.catchRate = catchRate
     this.globalId = globalId
     }
 
     attack({attack, recipient, renderedSprites}) {
-        let superEffective = false
-        let notEffective = false
-        let immuned = false
-        let STAB = false
+        let superEffective
+        let veryEffective
+        let notEffective
+        let resisted
+        let immuned
+        let STAB
 
         if(this.type.type1 === attack.element || this.type.type2 === attack.element){
             STAB = true
         }
 
-        if(types[recipient.type.type1].superEffective.includes(attack.element) || types[recipient.type.type2].superEffective.includes(attack.element)){
-            superEffective = true
-            document.querySelector('#dialogueBox').innerHTML = `${this.name} used  ${attack.name} on ${recipient.name} <br><br> it's super effective!!!` 
-        } else if(types[recipient.type.type1].notEffective.includes(attack.element) || types[recipient.type.type2].notEffective.includes(attack.element)){
-            notEffective = true
-            document.querySelector('#dialogueBox').innerHTML = `${this.name} used ${attack.name} on ${recipient.name} <br><br> but it's not very effective on ${recipient.name}..` 
-        } else if(types[recipient.type.type1].immuned.includes(attack.element) || types[recipient.type.type2].immuned.includes(attack.element)){
-            immuned = true
-            document.querySelector('#dialogueBox').innerHTML = `${this.name} used attack.name on ${recipient.name} <br><br> but ${recipient.name} is immuned...`
+        // check for move effectiveness
+
+        //type 1 or type 2 is immuned, result is immued
+        if(attack.type === 'Special' || attack.type === 'Physical'){
+            if(types[recipient.type.type1].immuned.includes(attack.element) || types[recipient.type.type2].immuned.includes(attack.element)){
+                immuned = true
+                document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n but ${recipient.name} is immuned...`
+            //type 1 and type 2 are not immuned, proceed
+            } else if(!types[recipient.type.type1].immuned.includes(attack.element) && !types[recipient.type.type2].immuned.includes(attack.element)){
+                // type 1 and type 2 are very effective, result is super effective
+                if(types[recipient.type.type1].veryEffective.includes(attack.element) && types[recipient.type.type2].veryEffective.includes(attack.element)){
+                    superEffective = true
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's super effective!` 
+                // type 1 or type 2 are very effective, result is very effective
+                } else if(types[recipient.type.type1].veryEffective.includes(attack.element) && types[recipient.type.type2].notEffective.includes(attack.element)){
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}` 
+                // type 1 is very effective and type 2 is not effective, result is normal
+                } else if(types[recipient.type.type1].notEffective.includes(attack.element) && types[recipient.type.type2].veryEffective.includes(attack.element)){
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}` 
+                // type 1 and type 2 is not effective, result is resisted
+                } else if(types[recipient.type.type1].notEffective.includes(attack.element) && types[recipient.type.type2].notEffective.includes(attack.element)){
+                resisted = true
+                document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n but ${recipient.name} resisted...` 
+                // type 1 is not effective and type 2 is very effective, result is normal
+                } else if(types[recipient.type.type1].veryEffective.includes(attack.element) || types[recipient.type.type2].veryEffective.includes(attack.element)){
+                    veryEffective = true
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's very effective!` 
+                // type 1 or type 2 is not effective, result is not very effective
+                } else if(types[recipient.type.type1].notEffective.includes(attack.element) || types[recipient.type.type2].notEffective.includes(attack.element)){
+                    notEffective = true
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's not very effective..` 
+                } else {
+                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}`
+                }
+            }    
         } else {
-            document.querySelector('#dialogueBox').innerHTML = `${this.name} used ${attack.name} on ${recipient.name}`
+            document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name}`
         }
+        
 
         document.querySelector('#dialogueBox').style.display = 'block'
 
@@ -211,46 +242,66 @@ class Pogemon extends Sprite {
         //     if(attackType)
         // }
 
-        
-        console.log(recipient)
-
         let rollRange = getRandomInt(9, 12)
 
-        // damage Calculation would go here
-        let E = 1
-        let S = 1
+        // damage Calculation here
+
 
         let damageCalculation = ( attack, recipient ) =>{
+            let E = 1
+            let S = 1
+            let C = 1
+            let crit
+
+            let critRoll = Math.floor(Math.random() * 100)
+
+            if(attack.type === 'Special' || attack.type === 'Physical') {
+                if(critRoll < 5){
+                    crit = true
+                    C = 1.5
+                    queue.splice(1, 0, () =>{
+                        document.querySelector('#dialogueBox').textContent = `${this.name} landed a critical hit!!`
+                    })
+                }
+            }
+
+            if(STAB){
+                S = 1.5
+            }
+
             if (attack.type === 'Physical'){
                 let physDamage = Math.floor(attack.potency * (user.stats.Atk/recipient.stats.Def) / 10) * rollRange
                 if (physDamage <= 0) physDamage = 1
                 if(superEffective){
-                    E = 1.5
+                    E * 2
+                }else if(veryEffective){
+                    E * 1.5
                 } else if(notEffective){
-                    E = 0.5
+                    E * 0.75
+                } else if(resisted){
+                    E * 0.5
                 } else if(immuned){
                     physDamage = 0
                 }
-                if(STAB){
-                    S = 1.5
-                }
-                recipient.currHP -= physDamage * E * S
-                console.log(physDamage)
+                recipient.currHP -= Math.round(physDamage * C * S * E)
                 if(recipient.currHP < 0){
                     recipient.currHP = 0
                 }
             } else if (attack.type === 'Special'){
                 let speDamage = Math.floor(attack.potency * (user.stats.SpAtk/recipient.stats.SpDef) / 10) * rollRange
-                console.log(this)
                 if (speDamage <= 0) speDamage = 1
                 if(superEffective){
-                    speDamage = speDamage * 1.5
+                    E * 2
+                }else if(veryEffective){
+                    E * 1.5
                 } else if(notEffective){
-                    speDamage = speDamage * 0.5
+                    E * 0.75
+                } else if(resisted){
+                    E * 0.5
                 } else if(immuned){
-                    speDamage = 0
+                    E = 0
                 }
-                recipient.currHP -= speDamage
+                recipient.currHP -= Math.round(speDamage * E * S * C)
                 if(recipient.currHP < 0){
                     recipient.currHP = 0
                 }
@@ -265,14 +316,65 @@ class Pogemon extends Sprite {
 
         }
 
-        damageCalculation(attack, recipient)
+        let havePPLeft = true
+        let attackMissed
 
+        // manage pp
+
+        if(!this.isEnemy){
+            for(let i = 0; i < this.attacks.length; i++){
+                if(this.attacks[i].name === attack.name){
+                    if(this.attacks[i].pp < 1){
+                        document.querySelector('#dialogueBox').textContent = `${attack.name} has no more pp.`
+                        havePPLeft = false
+                        queue.splice(0,0,() =>{
+                            queue = []
+                        })
+                        return
+                    } else {
+                        this.attacks[i].pp--
+                        if(Math.floor(Math.random() * 100) <= attack.accuracy){
+                            damageCalculation(attack, recipient)
+                        } else {
+                            attackMissed = true
+                            queue.splice(1, 0, () =>{
+                                document.querySelector('#dialogueBox').textContent = `${this.name} missed ${attack.name}!....`
+                            })
+                            queue[0]()
+                            return
+                        }
+                    }
+                }
+            }
+        } else if (this.isEnemy) {
+            for(let i = 0; i < this.attacks.length; i++){
+                // enemy pp usage here
+                // take away from my pp too????
+                // this.attacks[i].pp--
+                if(Math.floor(Math.random() * 100) <= attack.accuracy){
+                    damageCalculation(attack, recipient)
+                } else {
+                    attackMissed = true
+                    queue.splice(0, 0, () =>{
+                        document.querySelector('#dialogueBox').textContent = `${this.name} missed ${attack.name}!....`
+                    })
+                    queue[0]()
+                    return
+                }
+            }
+        }
+
+        if(!havePPLeft || attackMissed) return
+
+        // move animations
+
+        let movementDistance
         switch (attack.name){
             case 'Tackle':
-                const tl = gsap.timeline()
-                let movementDistance = 20
+                const tackleTl = gsap.timeline()
+                movementDistance = 20
                 if (this.isEnemy) movementDistance= -20
-                tl.to(this.position, {
+                tackleTl.to(this.position, {
                     x: this.position.x - movementDistance
                 }).to(this.position, {
                     x: this.position.x + movementDistance * 2,
@@ -302,6 +404,59 @@ class Pogemon extends Sprite {
                     x: this.position.x - 20
                 })
                 break
+
+            case 'Lokick':
+                const LockickImage = new Image()
+                LockickImage.src = './img/move_animation/Lokick.png'
+                const Lokick = new Sprite({
+                    position: {
+                        x: recipient.position.x,
+                        y: recipient.position.y
+                    },
+                    image: LockickImage,
+                    frames: {
+                        max: 4,
+                        hold: 15
+                    },
+                    animate: true,
+                    rotation
+                })
+                renderedSprites.splice(2, 0, Lokick)
+                const lokickTl = gsap.timeline()
+                movementDistance = 20
+                if (this.isEnemy) movementDistance= -20
+                lokickTl.to(this.position, {
+                    x: this.position.x - movementDistance
+                }).to(this.position, {
+                    x: this.position.x + movementDistance * 2,
+                    duration: 0.1,
+                    onComplete: () => {
+                        // Enemy gets hit
+                        audio.tackleHit.play()
+                        gsap.to(enemyHealthbar, {
+                            width: hpInPercentBattle + '%',
+                            onComplete: () =>{
+                                renderedSprites.splice(2, 1)
+                            }
+                        })
+                        gsap.to(recipient.position, {
+                            x: recipient.position.x + 25,
+                            yoyo: true,
+                            repeat: 5,
+                            duration: 0.08
+                        })
+                        gsap.to(recipient, {
+                            opacity: 0,
+                            repeat: 5,
+                            yoyo: true,
+                            duration: 0.08
+                        })
+                    }
+                }).to(this.position, {
+                    x: this.position.x - 20
+                })
+                break
+            
             case 'Fireball':
                 audio.initFireball.play()
                 const fireballImage = new Image()
@@ -317,16 +472,15 @@ class Pogemon extends Sprite {
                         hold: 15
                     },
                     animate: true,
-                    rotation
                 })
-                renderedSprites.splice(1, 0, fireball)
+                renderedSprites.splice(2, 0, fireball)
                 gsap.to(fireball.position, {
                     x: recipient.position.x,
                     y: recipient.position.y,
                     duration: 0.75,
                     onComplete: () =>{
                         audio.fireballHit.play()
-                        renderedSprites.splice(1, 1)
+                        renderedSprites.splice(2, 1)
                         gsap.to(enemyHealthbar, {
                             width: hpInPercentBattle + '%',
                         })
@@ -345,6 +499,50 @@ class Pogemon extends Sprite {
                     }
                 })
                 break
+
+            case 'Strangering': 
+                const StrangeringImage = new Image()
+                StrangeringImage.src = './img/move_animation/strangering.png'
+                const Strangering = new Sprite({
+                    position: {
+                        x: recipient.position.x - 75,
+                        y: recipient.position.y
+                    },
+                    image: StrangeringImage,
+                    frames: {
+                        max: 4,
+                        hold: 15
+                    },
+                    animate: true,
+                    rotation
+                })
+                renderedSprites.splice(2, 0, Strangering)
+                audio.psyAttack1.play()
+                gsap.to(Strangering.position, {
+                    x: recipient.position.x - 75,
+                    y: recipient.position.y,
+                    duration: 1,
+                    onComplete: () =>{
+                        renderedSprites.splice(2, 1)
+                        gsap.to(enemyHealthbar, {
+                            width: hpInPercentBattle + '%',
+                        })
+                        gsap.to(recipient.position, {
+                            x: recipient.position.x + 25,
+                            yoyo: true,
+                            repeat: 5,
+                            duration: 0.08,
+                        })
+                        gsap.to(recipient, {
+                            opacity: 0,
+                            repeat: 5,
+                            yoyo: true,
+                            duration: 0.08,
+                        })
+                    }
+                })
+                break
+            
             case 'Rest': 
                 // Animation pour Rest a mettre
                 user.frames.hold = 500
@@ -390,12 +588,13 @@ class Pogemon extends Sprite {
 
     faint(opponent) {
         let currExpGain
+        let changeMove
+        let forgottenAttack
 
         this.fainted = true
+        this.frames.hold = 0
 
-        queue.push(() =>{
-            document.querySelector('#dialogueBox').innerHTML = this.name + ' fainted!' 
-        })
+        document.querySelector('#dialogueBox').textContent = this.name + ' fainted!' 
 
         const playerExpbarDOM = document.querySelector('#playerExpbar')
         const playerInfoDOM = document.querySelector('#playerInfo')
@@ -411,6 +610,29 @@ class Pogemon extends Sprite {
             const C = (this.currLevel + opponent.currLevel + 10)
             currExpGain =  (Math.floor(Math.floor(Math.sqrt(A)*(A*A))*B/Math.floor(Math.sqrt(C)*(C*C))) + 1) * expModifier
             opponent.currExp = opponent.currExp + Math.floor(currExpGain)
+        }
+
+        let buttonMouseEnter = e =>{
+            const selectedAttack = attacks[e.currentTarget.textContent]
+            document.querySelector('#attackName').textContent = `${selectedAttack.name}`
+            document.querySelector('#attackType').textContent = `${selectedAttack.element}`
+            document.querySelector('#attackPotency').textContent = `potency : ${selectedAttack.potency}`
+            document.querySelector('#attackAccuracy').textContent = `potency : ${selectedAttack.accuracy}`
+            currAlly.attacks.forEach(attack =>{
+                if(selectedAttack.name === attack.name){
+                    document.querySelector('#attackPP').textContent = `pp : ${attack.pp}`
+                }
+            })
+            const attackType = document.querySelector('#attackType')
+            if (selectedAttack.element === 'normal') attackType.style.color = 'grey'
+            else if (selectedAttack.element === 'fighting') attackType.style.color = '#DD7E6B'
+            else if (selectedAttack.element === 'fire') attackType.style.color = 'red'
+            else if (selectedAttack.element === 'ghost') attackType.style.color = 'darkgrey'
+        }
+
+        let attackButtonOnClick = e =>{
+            const selectedAttack = attacks[e.currentTarget.textContent]
+            _doActionNoSpam(selectedAttack)
         }
 
         let currLevel
@@ -433,7 +655,6 @@ class Pogemon extends Sprite {
                         opponent.currExp = 1250000
                         break
                 }
-                console.log('no exp awarded')
             } else {
                 expGained()
                 if(Math.floor(opponent.currLevel) === 100) {
@@ -450,7 +671,7 @@ class Pogemon extends Sprite {
                     }
                 }
                 queue.push(() =>{
-                    document.querySelector('#dialogueBox').innerHTML = this.name + ' fainted!' + '<br><br>' + opponent.name + ' gained ' + Math.floor(currExpGain) + ' EXP. '
+                    document.querySelector('#dialogueBox').innerText = `${this.name} fainted! \n\n ${opponent.name} gained ${Math.floor(currExpGain)} EXP.`
                     opponent.currLevel = defineCurrPogemonCurve(opponent)
                     currLevel = Math.floor(opponent.currLevel)
                     if(prevLevel < currLevel){
@@ -479,17 +700,153 @@ class Pogemon extends Sprite {
                             duration: 1
                         })
                         // push new attack here
-                        let newAttacks
-                        for(let i = 0; i < opponent.attackPool.length; i++){
-                            if(opponent.currLevel >= opponent.attackPool[i].lvl && !opponent.attackPool[i].learned){
-                                newAttacks = opponent.attackPool.filter(attack => attack.learned !== true)
+                        let newAttacks = []
+                        opponent.attackPool.forEach(attack =>{
+                            if(!attack.learned && Math.floor(opponent.currLevel) >= attack.lvl){
+                                newAttacks.push(attack)
                             }
+                        })
+                        let changeMoveDecision = () =>{
+                            if(mouse.event.target.textContent === 'cancel'){
+                                queue.splice(0, 0, () =>{
+                                    for(let i = 0; i < opponent.attackPool.length; i++){
+                                        if(opponent.currLevel >= opponent.attackPool[i].lvl && !opponent.attackPool[i].learned){
+                                            newAttacks = opponent.attackPool.filter(attack => attack.learned !== true)
+                                        }
+                                    }
+                                    changeMove = true
+                                    document.querySelector('#dialogueBox').textContent = `${opponent.name} did not learn ${newAttacks[0].move.name}`
+                                    document.querySelector('#changeAttacksBox').style.display = 'none'
+                                    document.querySelector('#newAttackInfo').style.display = 'none'
+                                    document.querySelector('#attacksBox').style.display = 'grid'
+                                    document.querySelector('#attackInfo').style.display = 'none'
+                                    document.querySelector('#dialogueBox').style.display = 'block'
+                                })
+                                queue[0]()
+                                queue.shift()
+                                queue.shift()
+                            }
+                        }
+
+                        let chooseIfMoveChanges = () =>{
+                            document.querySelector('#dialogueBox').removeEventListener('click', _doActionNoSpamChangeBattleAction, true)
+                            switch(mouse.event.target.textContent){
+                                case 'yes':
+                                    queue.splice(0, 0, () =>{
+                                        changeMove = true
+                                        document.querySelector('#answerButtonContainer').style.display = 'none'
+                                        document.querySelector('#dialogueBox').style.display = 'none'
+                                        document.querySelector('#attacksBox').style.display = 'none'
+                                        document.querySelector('#attackInfo').style.display = 'none'
+                                        document.querySelector('#newAttackInfo').style.display = 'grid'
+                                        document.querySelector('#changeAttacksBox').style.display = 'grid'
+                                        document.querySelector('#changeAttacksBox').replaceChildren()
+                                        for(let j = 0; j < opponent.attacks.length; j++){
+                                            const button = document.createElement('button')
+                                            button.textContent = opponent.attacks[j].name
+                                            button.tabIndex  = '3'
+                                            button.setAttribute('id', `${j}`)
+                                            button.setAttribute('class', `changeAttackButton`)
+                                            button.addEventListener('mouseenter', buttonMouseEnter, true)
+                                            document.querySelector('#changeAttacksBox').append(button)
+                                        } 
+                                        for(let j = 0; j < newAttacks.length; j++){
+                                            document.querySelector('#newAttackName').textContent = `${newAttacks[j].move.name}`
+                                            document.querySelector('#newAttackType').textContent = `${newAttacks[j].move.element}`
+                                            document.querySelector('#newAttackPotency').textContent = `potency : ${newAttacks[j].move.potency}`
+                                            document.querySelector('#newAttackAccuracy').textContent = `pp : ${newAttacks[j].move.accuracy}`
+                                            document.querySelector('#newAttackPP').textContent = `pp : ${newAttacks[j].move.pp}`
+                                            document.querySelector('#newAttackDesc').textContent = `${newAttacks[j].move.description}`
+                                        }                      
+                                        document.querySelectorAll('.changeAttackButton').forEach(button =>{
+                                            button.addEventListener('click', chooseMoveToChange, true)
+                                        })
+                                        document.querySelector('#newAttackCancelButton').addEventListener('click', changeMoveDecision, true)
+                                        document.removeEventListener('click', chooseIfMoveChanges, true)
+                                        document.querySelector('#dialogueBox').addEventListener('click', _doActionNoSpamChangeBattleAction, true)
+                                    })
+                                    queue[0]()
+                                    break
+                                case 'no':
+                                    queue.splice(0, 0, () =>{
+                                        for(let i = 0; i < opponent.attackPool.length; i++){
+                                            if(opponent.currLevel >= opponent.attackPool[i].lvl && !opponent.attackPool[i].learned){
+                                                newAttacks = opponent.attackPool.filter(attack => attack.learned !== true)
+                                            }
+                                        }
+                                        changeMove = true
+                                        document.querySelector('#dialogueBox').textContent = `${opponent.name} did not learn ${newAttacks[0].move.name}`
+                                        document.querySelector('#answerButtonContainer').style.display = 'none'
+                                    })
+                                    queue[0]()
+                                    document.removeEventListener('click', chooseIfMoveChanges, true)
+                                    document.querySelector('#dialogueBox').addEventListener('click', _doActionNoSpamChangeBattleAction, true)
+                                    break
+                            }
+                        }
+
+                        let chooseMoveToChange = () =>{
+                            document.querySelector(`#attackEventContainer`).style.display = 'none'
+                            document.querySelector(`#changeAttacksBox`).style.display = 'none'
+                            document.querySelector(`#attacksBox`).style.display = 'grid'
+                            document.querySelector('#dialogueBox').style.display = 'block'
+                            for(let i = 0; i < opponent.attackPool.length; i++){
+                                if(opponent.currLevel >= opponent.attackPool[i].lvl && !opponent.attackPool[i].learned){
+                                    newAttacks = opponent.attackPool.filter(attack => attack.learned !== true)
+                                }
+                            }
+                            forgottenAttack = opponent.attacks[mouse.event.target.id].name
+                            opponent.attacks[mouse.event.target.id] = newAttacks[0].move
+                            document.querySelectorAll(`.changeAttackButton`)[mouse.event.target.id].textContent = newAttacks[0].move.name
+                            document.querySelector(`#attacksBox`).replaceChildren()
+                            for(let i = 0; i < opponent.attacks.length; i++){
+                                for(let j = 0; j < newAttacks.length; j++){
+                                    newAttacks[j].learned = true
+                                    document.querySelector('#dialogueBox').textContent = `${opponent.name} learned ${newAttacks[j].move.name} and forgot ${forgottenAttack}!`
+                                    document.querySelector('#newAttackInfo').style.display = 'none'
+                                }
+                                const button = document.createElement('button')
+                                button.textContent = opponent.attacks[i].name
+                                button.tabIndex  = '3'
+                                button.setAttribute('class', `attackButton`)
+                                button.addEventListener('click', attackButtonOnClick , true)
+                                button.addEventListener('mouseenter', buttonMouseEnter, true)
+                                document.querySelector(`#attacksBox`).append(button)
+                            }
+                            document.querySelector(`#dialogueBox`).style.display = 'block'
+                            document.querySelector(`#attackEventContainer`).style.display = 'grid'
+                            document.removeEventListener('click', chooseMoveToChange, true)
+                            queue.shift()
                         }
                         if(newAttacks !== undefined){
                             for(let i = 0; i < newAttacks.length; i++){
-                                console.log(newAttacks)
-                                newAttacks[i].learned = true
-                                opponent.attacks.push(newAttacks[i].move)
+                                if(opponent.attacks.length <= 3){
+                                    queue.splice(i + 3, 0, () =>{
+                                            document.querySelector('#dialogueBox').textContent = `${opponent.name} learned ${newAttacks[i].move.name}!`
+                                    })
+                                    newAttacks[i].learned = true
+                                    opponent.attacks.push(newAttacks[i].move)
+                                    const button = document.createElement('button')
+                                    button.textContent = newAttacks[i].move.name 
+                                    button.tabIndex  = '3'
+                                    button.setAttribute('class', `attackButton`)
+                                    button.addEventListener('mouseenter', buttonMouseEnter, true)
+                                    button.addEventListener('click', attackButtonOnClick, true)
+                                    document.querySelector('#attacksBox').append(button)
+                                } else if (opponent.attacks.length >= 4) {
+                                    // ask if willing to switch moves here
+                                    queue.splice(i + 3, 0, () =>{
+                                        document.querySelector('#dialogueBox').textContent = `${opponent.name} is trying to learn ${newAttacks[i].move.name}!`
+                                        queue.splice(1, 0, () =>{
+                                            document.querySelector('#dialogueBox').textContent = `Do you want to teach ${newAttacks[i].move.name} to ${opponent.name}?`
+                                            document.querySelector('#answerButtonContainer').style.display = 'grid'
+                                            document.addEventListener('click', chooseIfMoveChanges, true)
+                                            document.querySelectorAll('.attackBox').forEach(button =>{
+                                                button.addEventListener('click', attackButtonOnClick, true)
+                                            })
+                                        })
+                                    })
+                                }
                             }
                         }
                     }
@@ -517,7 +874,7 @@ class Pogemon extends Sprite {
                 //switch
                 if(this.isEnemy){
                     if (trainerBattle === true){
-                        document.querySelector('#dialogueBox').innerHTML = this.name + ' entered the battlefield!' 
+                        document.querySelector('#dialogueBox').textContent = this.name + ' entered the battlefield!' 
                         currFoeTeam.shift()
                         currFoe = currFoeTeam[0]
                         definePogemonStats(currFoe)
@@ -558,6 +915,8 @@ class Pogemon extends Sprite {
         checkIfTeamKnockedOut()
         if(teamFainted){
             //this is fucky
+            audio.battle.stop()
+            audio.map.stop()
             audio.gameOver3.play()
             document.querySelector('#battleScene').style.display = 'none'
             document.querySelector('#KOContainer').style.display ='flex'
@@ -581,38 +940,165 @@ class Pogemon extends Sprite {
         }
     }      
 
+
     catch(currPogemon){
-        let caughtPogemon = new Pogemon(currPogemon)
-        definePogemonStats(caughtPogemon)
-        caughtPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
-        defineCurrPogemonCurve(caughtPogemon, 'catch')
-        caughtPogemon.currHP = caughtPogemon.stats.HP
-        //will make player catch pogemon
-        document.querySelector('#battleScene').style.display = 'none'
-        gsap.to('#overlappingDiv', {
-            opacity: 1,
-            duration: 0.5,
-            onComplete: () => {
-                gsap.to('#overlappingDiv', {
-                    opacity: 0,
-                    duration: 0.5,
+        if(team[0] !== undefined){
+            let pogeballImage = new Image()
+            pogeballImage.src = 'img/battle_scene/pogeballs/pogeball.png'
+    
+            let pogeballSprite = new Sprite({
+                position: {
+                    x: 0,
+                    y: 350
+                },
+                image: pogeballImage,
+                frames: {
+                    max: 4,
+                    hold: 20
+                },
+                animate: true
+            })
+    
+            renderedSprites.splice(2, 0, pogeballSprite)
+    
+            gsap.to(pogeballSprite.position, {
+                x: currPogemon.position.x + 125,
+                y: currPogemon.position.y,
+                duration: 0.75,
+                onComplete: () =>{
+                    pogeballSprite.animate = false
+                    gsap.to(currPogemon, {
+                        opacity: 0
+                    })
+                    gsap.to(pogeballSprite.position, {
+                        x: currPogemon.position.x + 125,
+                        y: currPogemon.position.y + 250,
+                    })
+                }
+            })
+    
+            // put catch rate here
+    
+            let ballModifier = 1
+    
+            let statusModifier = 1
+    
+            let catchValue = ((( 3 * currPogemon.stats.HP - 2 * currPogemon.currHP ) * (currPogemon.catchRate * ballModifier ) / (3 * currPogemon.stats.HP) ) * statusModifier)
+    
+            let catchRNG = Math.floor(Math.random() * 100 + catchValue) 
+            console.log(catchValue)
+            console.log(catchRNG)
+
+            if(catchRNG >= 100){
+                //catch
+                audio.battle.stop()
+                queue.push(() =>{
+                    document.querySelector('#dialogueBox').textContent = `You caught ${currPogemon.name}!!!`
+                    renderedSprites.splice(2, 1)
+                    queue.push(() =>{
+                        queue = []
+                        let caughtPogemon = new Pogemon(currPogemon)
+                        definePogemonStats(caughtPogemon)
+                        caughtPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
+                        defineCurrPogemonCurve(caughtPogemon, 'catch')
+                        caughtPogemon.currHP = caughtPogemon.stats.HP
+                        //will make player catch pogemon
+                        document.querySelector('#battleScene').style.display = 'none'
+                        gsap.to('#overlappingDiv', {
+                            opacity: 1,
+                            duration: 0.5,
+                            onComplete: () => {
+                                gsap.to('#overlappingDiv', {
+                                    opacity: 0,
+                                    duration: 0.5,
+                                })
+                                battle.initiated = false
+                                audio.map.play()
+                                cancelAnimationFrame(animateBattleId)
+                                animate()
+                            }
+                        })
+                        caughtPogemon.globalId = newGlobalId()
+                        if (team.length <= 5){
+                            team.push(caughtPogemon)
+                        } else if (team.length >= 6){
+                            for(let i = 0; i < pogemonStorage.length; i++){
+                                if (pogemonStorage[i].length <= 30){
+                                    pogemonStorage[i].push(caughtPogemon)
+                                    return
+                                } else return
+                            }
+                        }
+                        defineCurrTeamMenuInfo()
+                    })
+                    queue[0]
                 })
-                battle.initiated = false
-                audio.Map.play()
+            } else {
+                queue.push(() =>{
+                    document.querySelector('#dialogueBox').textContent = `Darn! ${currPogemon.name} broke free!!!!`
+                    renderedSprites.splice(2, 1)
+                    gsap.to(currPogemon, {
+                        opacity: 1,
+                        onComplete: () =>{
+                            const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
+                            if(!faintSwitch){
+                                queue.push(() =>{
+                                    currFoe.attack({ 
+                                        attack: randomAttack,
+                                        recipient: currAlly,
+                                        renderedSprites
+                                    })
+                                    if(currAlly.currHP < 1) {
+                                        queue.push(() =>{
+                                            currAlly.faint(currFoe)
+                                        })
+                                        queue.push(() =>{
+                                            gsap.to('#overlappingDiv', {
+                                                opacity: 1,
+                                                onComplete: () => {
+                                                    document.querySelector('#battleScene').style.display = 'none'
+                                                    console.log(teamFainted)
+                                                    if (teamFainted){
+                                                        if(battle.initiated){
+                                                            queue = []
+                                                            cancelAnimationFrame(animateBattleId)
+                                                            animate()
+                                                        }
+                                                        gsap.to('#overlappingDiv', {
+                                                            opacity: 0
+                                                        })
+                                                        battle.initiated = false
+                                                        audio.map.play()
+                                                    } else {
+                                                        queue = []
+                                                        faintSwitch = true
+                                                        teamMenu.open = true
+                                                        cancelAnimationFrame(animateBattleId)
+                                                        animateTeamMenu()
+                                                        gsap.to('#overlappingDiv', {
+                                                            opacity: 0
+                                                        })
+                                                    }
+                                                }
+                                            })
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    })
+                    document.addEventListener('click', menuButtonEvent, true)
+                })
             }
-        })
-        caughtPogemon.globalId = newGlobalId()
-        if (team.length <= 5){
-            team.push(caughtPogemon)
-        } else if (team.length >= 6){
-            for(let i = 0; i < pogemonStorage.length; i++){
-                if (pogemonStorage[i].length <= 30){
-                    pogemonStorage[i].push(caughtPogemon)
-                    return
-                } else return
-            }
+        } else {
+            let starterPogemon = new Pogemon(currPogemon)
+            definePogemonStats(starterPogemon)
+            starterPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
+            defineCurrPogemonCurve(starterPogemon, 'catch')
+            starterPogemon.currHP = starterPogemon.stats.HP
+            team.push(starterPogemon)
+            starterFlag.checked = true
         }
-        defineCurrTeamMenuInfo()
     }
 }
 
@@ -653,8 +1139,6 @@ class Trainer extends Boundary {
     defeat(){
         currSpeed = 1
         currTrainer.data.defeated = true
-        audio.battle.stop()
-        audio.victory.play()
     }
 
     draw(){

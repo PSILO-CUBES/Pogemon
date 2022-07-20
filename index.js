@@ -9,20 +9,22 @@ canvas.height = 1007
 
 let currMap
 let currChar = imgs.playerSprites.brendan
+let offset
 
 console.log(loadData())
 
 if(loadData() === null){
-    currMap = maps.paccIsleLab
+    currMap = maps.keyTown
+    offset = {
+        x: currMap.position.x,
+        y: currMap.position.y,
+    }
 } else if (loadData() != null) {
     currMap = loadData().currMap
-}
-
-let offset
-
-offset = {
-    x: 0,
-    y: 0,
+    offset = {
+        x: loadData().playerPos.x,
+        y: loadData().playerPos.y,
+    }
 }
 
 // x: -1115,
@@ -200,8 +202,27 @@ const defineChangeZonesPosition = () =>{
 
 defineChangeZonesPosition()
 
+let prevMap
+
 for(let i = 0; i < changeZones.length; i++){
-    changeZones[i].data = maps[currMap.name].changeMapArray[i]
+    if(currMap.name === 'pogemart'){
+        if(prevMap === undefined){
+            prevMap = loadData().prevMap
+            changeZones[i].data = {name:`${prevMap.name}`,
+            position: {
+                x: prevMap.pogemartPosition.x,
+                y: prevMap.pogemartPosition.y,
+            }}
+        } else {
+            changeZones[i].data = {name:`${prevMap.name}`,
+            position: {
+                x: prevMap.pogemartPosition.x,
+                y: prevMap.pogemartPosition.y,
+            }}
+        }
+    } else {
+        changeZones[i].data = maps[currMap.name].changeMapArray[i]
+    }
 }
 
 let currEventZonesData
@@ -479,6 +500,10 @@ let attackInitiated = false
 let trainerBattle = false
 let currTrainer
 let engageRematch
+let bagMenu = {
+    open: false
+}
+let prevMapName
 
 let timerId;
 let _doActionNoSpamCloseTeamMenuInCombat = () =>{
@@ -551,9 +576,9 @@ addEventListener('keydown', (e) =>{
             lastKey = 'Space'
             break
         case 'Escape':
-            //if pressed during encounter animation, teamMenu pops up after battle... not that big a deal but should fix ... something to so with the delay??
+            //if pressed during encounter animation, teamMenu is displayed after battle... not that big a deal but should fix ... something to so with the delay??
             keys.Escape.pressed = true
-            if (!menu.open && !battle.initiated) menu.open = true
+            if (!menu.open && !battle.initiated && !bagMenu.open) menu.open = true
             else if (menu.open && !battle.initiated) menu.open = false
             if(battle.initiated && !teamMenu.open){
                 _doActionNoSpamCloseTeamMenuInCombat()
@@ -561,7 +586,7 @@ addEventListener('keydown', (e) =>{
                     document.querySelector('#attackEventContainer').style.display = 'none'
                     document.querySelector('#battleOptionsContainer').style.display = 'grid'
                 }
-            } else {
+            } else if (team[0] !== undefined && team[0].currHP > 0) {
                 teamMenu.open = false
             }
             if(pcStorage.animation){
@@ -591,7 +616,22 @@ addEventListener('keydown', (e) =>{
                     }
                 })
             }
-            lastKey = 'Enter'
+            if(bagMenu.open){
+                gsap.to('#overlappingDiv', {
+                    opacity: 1,
+                    duration: 0.4,
+                    onComplete: () =>{
+                        bagMenu.open = false
+                        animate()
+                        document.querySelector('#itemMenu').style.display = 'none'
+                        gsap.to('#overlappingDiv', {
+                            opacity: 0,
+                            duration: 0.4
+                        })
+                    }
+                })
+            }
+            lastKey = 'Escape'
             break
     }
 })
@@ -615,11 +655,19 @@ document.querySelectorAll('.menuButton').forEach(button =>{
     button.addEventListener('click', e =>{
         switch(button.textContent) {
             case 'Team':
-                if(team[0] === undefined && e.target.textContent === 'Team') {
+                if(team[0] === undefined) {
                     audio.error.play()
                 }
                 else{
                     teamMenu.open = true
+                }
+                console.log(teamMenu.open)
+                break
+            case 'Items':
+                if(team[0] !== undefined){
+                    bagMenu.open = true
+                    initItemMenu()
+                    animateItemMenu()
                 }
                 break
             case 'Save':
@@ -628,9 +676,9 @@ document.querySelectorAll('.menuButton').forEach(button =>{
                     team,
                     pogemonStorage,
                     currMap,
+                    prevMap,
                     currChar,
                     playerPos: map.position,
-                    
                 }
                 saveData(saveDataObject)
                 break
@@ -644,6 +692,19 @@ document.querySelectorAll('.menuButton').forEach(button =>{
         }
     })
 })
+
+let downKeyCount = []
+
+let cancelKeyDown = () =>{
+    downKeyCount = []
+    Object.entries(keys).forEach(([key, value]) =>{
+        value.pressed = false
+        if(key === lastKey){
+            value.pressed = true
+        }
+    })
+    
+}
 
 addEventListener('keyup', (e) =>{
     switch (e.key){
@@ -680,6 +741,15 @@ addEventListener('keyup', (e) =>{
             keys.Escape.pressed = false
             break
     }
+    Object.entries(keys).forEach(([key, value]) =>{
+        if(value.pressed){
+            if(downKeyCount.length > 2){
+                cancelKeyDown()
+                return
+            }
+            downKeyCount.push(key)
+        }
+    })
 })
 
 let pcEvent = {
@@ -690,6 +760,8 @@ let pcEvent = {
 
 const animate = () =>{
     const animationId = requestAnimationFrame(animate)
+
+    audio.victory.stop()
 
     team.forEach(pogemon =>{
         if(pogemon.position !== undefined){
@@ -713,16 +785,20 @@ const animate = () =>{
         collision.draw()
     })
 
-    if (pcStorage.animation === true) {
+    if (pcStorage.animation) {
         cancelAnimationFrame(animationId)
         initPcStorageDisplay()
         animatePcStorage()
     }
 
-    if (teamMenu.open === true && battle.initiated === false){
+    if (teamMenu.open && !battle.initiated){
         cancelAnimationFrame(animationId)
         defineTeamSprite()
         animateTeamMenu()
+    }
+
+    if(bagMenu.open) {
+        cancelAnimationFrame(animationId)
     }
 
     player.draw()
@@ -933,6 +1009,16 @@ const animate = () =>{
                 openPcMenu()
             }
 
+            let isPPNotFull
+
+            team.forEach(pogemon =>{
+                pogemon.attacks.forEach(attack =>{
+                    if(attack.pp < attacks[attack.name].pp){
+                        isPPNotFull = true
+                    }
+                })
+            })
+
             if(pcEvent.menuOpened){
                 switch(mouse.event.target.textContent){
                     case 'Heal':
@@ -944,8 +1030,11 @@ const animate = () =>{
                             }
                         })
                         for (let i = 0; i < team.length; i++){
-                            if (team[i].currHP < team[i].stats.HP){
+                            if (team[i].currHP < team[i].stats.HP || isPPNotFull){
                                 team[i].currHP = team[i].stats.HP
+                                team[i].attacks.forEach(attack =>{
+                                    attack.pp = attacks[attack.name].pp
+                                })
                                 team[i].fainted = false
                                 team[i].opacity = 1
                                 teamFainted = false
@@ -1124,8 +1213,10 @@ const animate = () =>{
                 } else
                 cancelAnimationFrame(animationId)
 
-                audio.Map.stop()
-                audio.initBattle.play()
+                // audio for wild encounters
+
+                audio.map.stop()
+                audio.initWildBattle.play()
                 audio.battle.play()
 
                 battle.initiated = true
@@ -1151,8 +1242,6 @@ const animate = () =>{
                               })
                             }
                         })
-
-
                     }
                 })
                  
@@ -1161,15 +1250,35 @@ const animate = () =>{
 
         for (let i = 0; i < changeZones.length; i++){
             const mapZone = changeZones[i]
-            let prevMapName = currMap.name
+            prevMap = currMap
+            prevMapName = currMap.name
 
             rectangularCollision = ({rectangle1, rectangle2}) =>{
-                return (
+                if(mapZone.type === 'up') return (
                     rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
                     rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed&&
-                    rectangle1.position.y <= rectangle2.position.y + 25 &&
+                    rectangle1.position.y <= rectangle2.position.y &&
+                    rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 10
+                )
+                else if(mapZone.type === 'right') return (
+                    rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
+                    rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 10 - currSpeed&&
+                    rectangle1.position.y <= rectangle2.position.y &&
                     rectangle1.position.y + rectangle1.height >= rectangle2.position.y
                 )
+                else if(mapZone.type === 'down') return (
+                    rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
+                    rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed&&
+                    rectangle1.position.y <= rectangle2.position.y + 10 &&
+                    rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                )
+                else if(mapZone.type === 'left') return (
+                    rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x - 10 &&
+                    rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed&&
+                    rectangle1.position.y <= rectangle2.position.y &&
+                    rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                )
+                
             }
             if (
                 rectangularCollision({
@@ -1184,6 +1293,7 @@ const animate = () =>{
                 player.animate = false
                 audio.changeMap.play()
                 currSpeed = 0
+
 
                 currMap = maps[mapZone.data.name]
 
@@ -1203,9 +1313,16 @@ const animate = () =>{
 
                 currMapZonePos = defineChangeZonesPosition().filter(changeZone => changeZone.type.name === prevMapName)
 
-                offset = {
-                    x: maps[prevMapName].changeMapArray[i].position.x,
-                    y: maps[prevMapName].changeMapArray[i].position.y
+                if(prevMapName === 'pogemart'){
+                    offset = {
+                        x: maps[currMap.name].pogemartPosition.x,
+                        y: maps[currMap.name].pogemartPosition.y
+                    }
+                } else {
+                    offset = {
+                        x: maps[prevMapName].changeMapArray[i].position.x,
+                        y: maps[prevMapName].changeMapArray[i].position.y
+                    }
                 }
 
                 defineChangeZonesPosition()
@@ -1252,7 +1369,17 @@ const animate = () =>{
                 }
 
                 for(let i = 0; i < changeZones.length; i++){
-                    changeZones[i].data = maps[currMap.name].changeMapArray[i]
+                    // pogemart change map
+                    if(currMap.name === 'pogemart'){
+                        console.log(prevMap)
+                        changeZones[i].data = {name:`${prevMap.name}`,
+                        position: {
+                            x: prevMap.pogemartPosition.x,
+                            y: prevMap.pogemartPosition.y,
+                        }}
+                    } else {
+                        changeZones[i].data = maps[currMap.name].changeMapArray[i]
+                    }
                 }
             }
         }
@@ -1555,7 +1682,14 @@ const animate = () =>{
 let clicked = false
 addEventListener('click', () =>{
     if (!clicked) {
-        audio.Map.play()
+        audio.map.play()
         clicked = true
     }
-})
+}, {once: true})
+addEventListener('keydown', () =>{
+    if (!clicked) {
+        audio.map.play()
+        clicked = true
+    }
+}, {once: true})
+    

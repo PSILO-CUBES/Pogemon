@@ -1,7 +1,7 @@
 // all background images
 
 const pcSceneBackgroundImage = new Image()
-pcSceneBackgroundImage.src = 'img/pc_scenes/pcSceneBackground.png'
+pcSceneBackgroundImage.src = 'img/pc_scene/pcSceneBackground.png'
 
 const pcSceneBackgroundSprite = new Sprite({
     position:{
@@ -14,7 +14,7 @@ const pcSceneBackgroundSprite = new Sprite({
 })
 
 const pcDisplayTargetMenuImage = new Image()
-pcDisplayTargetMenuImage.src = 'img/pc_scenes/pcTargetMenu.png'
+pcDisplayTargetMenuImage.src = 'img/pc_scene/pcTargetMenu.png'
 
 const pcDisplayTargetMenuSprite = new Sprite({
     position:{
@@ -27,7 +27,7 @@ const pcDisplayTargetMenuSprite = new Sprite({
 })
 
 const pcDisplayTeamMenuImage = new Image()
-pcDisplayTeamMenuImage.src = 'img/pc_scenes/pcTeamMenu.png'
+pcDisplayTeamMenuImage.src = 'img/pc_scene/pcTeamMenu.png'
 
 const pcDisplayTeamMenuSprite = new Sprite({
     position:{
@@ -40,7 +40,7 @@ const pcDisplayTeamMenuSprite = new Sprite({
 })
 
 const boxDisplayImage = new Image()
-boxDisplayImage.src = 'img/pc_scenes/boxThemeForest.png'
+boxDisplayImage.src = 'img/pc_scene/boxThemeForest.png'
 
 let boxDisplaySprite = new Sprite({
     position:{
@@ -286,7 +286,7 @@ let displayCurrBox = () =>{
     switch(currBox){
         case 0:
             document.querySelector('#boxIdDisplayName').textContent = 'Box 1'
-            boxDisplayImage.src = 'img/pc_scenes/boxThemeForest.png'
+            boxDisplayImage.src = 'img/pc_scene/boxThemeForest.png'
             boxDisplaySprite = new Sprite({
                 position:{
                     x: 575,
@@ -299,7 +299,7 @@ let displayCurrBox = () =>{
             break
         case 1:
             document.querySelector('#boxIdDisplayName').textContent = 'Box 2'
-            boxDisplayImage.src = 'img/pc_scenes/boxThemeMystic.png'
+            boxDisplayImage.src = 'img/pc_scene/boxThemeMystic.png'
             boxDisplaySprite = new Sprite({
                 position:{
                     x: 575,
@@ -312,7 +312,7 @@ let displayCurrBox = () =>{
             break
         case 2:
             document.querySelector('#boxIdDisplayName').textContent = 'Box 3'
-            boxDisplayImage.src = 'img/pc_scenes/boxThemeCave.png'
+            boxDisplayImage.src = 'img/pc_scene/boxThemeCave.png'
             boxDisplaySprite = new Sprite({
                 position:{
                     x: 575,
@@ -325,7 +325,7 @@ let displayCurrBox = () =>{
             break
         case 3:
             document.querySelector('#boxIdDisplayName').textContent = 'Box 4'
-            boxDisplayImage.src = 'img/pc_scenes/boxThemeOcean.png'
+            boxDisplayImage.src = 'img/pc_scene/boxThemeOcean.png'
             boxDisplaySprite = new Sprite({
                 position:{
                     x: 575,
@@ -338,7 +338,7 @@ let displayCurrBox = () =>{
             break
         case 4:
             document.querySelector('#boxIdDisplayName').textContent = 'Box 5'
-            boxDisplayImage.src = 'img/pc_scenes/boxThemeCity.png'
+            boxDisplayImage.src = 'img/pc_scene/boxThemeCity.png'
             boxDisplaySprite = new Sprite({
                 position:{
                     x: 575,

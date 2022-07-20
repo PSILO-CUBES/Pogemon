@@ -10,13 +10,39 @@
     <link rel="stylesheet" href="/css/boxMenu.css">
     <link rel="stylesheet" href="/css/battleScene.css">
     <link rel="stylesheet" href="/css/summaryMenu.css">
+    <link rel="stylesheet" href="/css/evolutionScene.css">
+    <link rel="stylesheet" href="/css/itemMenu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:ital,wght@0,100;0,300;0,500;0,900;1,100;1,300;1,500;1,900&display=swap');
     </style>
     <style>
+        /* scrollbar stuff */
+        /* thx w3 <3 */
+        /* width */
+        ::-webkit-scrollbar {
+          width: 10px;
+        }
+        
+        /* Track */
+        ::-webkit-scrollbar-track {
+          background: transparent ; 
+        }
+         
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+          background: rgba(80, 0, 0, 0.85); 
+        }
+        
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(30, 0, 0, 0.85); 
+        }
+    </style>
+    <style>
         *, *::before, *::after{
-            padding: 0;
-            margin: 0;
+            padding: 0 !important;
+            margin: 0 !important;
             user-select: none;
             text-transform: uppercase !important;
         }
@@ -67,9 +93,7 @@
 
         <div
             id="userInterface">
-
             <!-- KO screen -->
-
             <div 
                 id="KOContainer">
 
@@ -78,8 +102,8 @@
                 >You fainted...</h1>
 
             </div>
-
             <!-- overWorld Menus -->
+            <!-- menu -->
             <div
                 id="menuContainer">
 
@@ -127,7 +151,7 @@
                     >Proutt</button>
                 </div>
             </div>
-
+            <!-- overWorld Dialogue Box -->
             <div 
                 id="overworldContainer">
 
@@ -139,34 +163,29 @@
                 >
 
                 <div 
-                id="overworldDialogueBox">
+                    id="overworldDialogueBox">
 
-                <h1 
-                    id="overworldDialogue">
+                    <h1 
+                        id="overworldDialogue">
 
-                </h1>
-
-                <div 
-                    id="overworldButtonContainer">
+                    </h1>
 
                     <div 
-                        id="yesButton">
+                        id="overworldButtonContainer">
 
+                        <div 
+                            id="yesButton">
+
+                        </div>
+
+                        <div 
+                            id="noButton">
+
+                        </div>
                     </div>
-
-                    <div 
-                        id="noButton">
-
-                    </div>
-                    
                 </div>
-
             </div>
-                
-            </div>
-
             <!-- PC MENU CONTAINER HERE -->
-
             <div 
                 id="pcMenuContainer">
                 <button 
@@ -184,9 +203,7 @@
                     class="pcMenuButton"
                 >Cancel</button>
             </div>
-
             <!-- pc Interface Here -->
-            
             <div 
                 id="boxInterfaceContainer">
 
@@ -343,9 +360,7 @@
                 </div>
             
             </div>
-
             <!-- team Container -->
-
             <div
                 id="teamContainer">
 
@@ -366,6 +381,11 @@
                                     class="backPogemonName"
 
                                 ></h1>
+
+                                <h2 
+                                    id="leedPogemonHP"
+
+                                ></h2>
                             </button>
 
                             <div 
@@ -409,6 +429,12 @@
                                     <h1 
                                         id="backPogemon1Name"
                                         class="backPogemonName"
+
+                                    ></h1>
+
+                                    <h1 
+                                        id="backPogemon1HP"
+                                        class="backPogemonHP"
 
                                     ></h1>
 
@@ -460,6 +486,12 @@
 
                                     ></h1>
 
+                                    <h1 
+                                        id="backPogemon2HP"
+                                        class="backPogemonHP"
+
+                                    ></h1>
+
                                 </button>
                                 <div 
                                     id="backPogemon2HealthbarContainer"
@@ -504,6 +536,12 @@
                                     <h1 
                                         id="backPogemon3Name"
                                         class="backPogemonName"
+
+                                    ></h1>
+
+                                    <h1 
+                                        id="backPogemon3HP"
+                                        class="backPogemonHP"
 
                                     ></h1>
 
@@ -553,6 +591,12 @@
                                         class="backPogemonName"
                                     
                                     ></h1>
+
+                                    <h1 
+                                        id="backPogemon4HP"
+                                        class="backPogemonHP"
+
+                                    ></h1>
                             
                                 </button>
                                 <div 
@@ -598,6 +642,12 @@
                                     <h1 
                                         id="backPogemon5Name"
                                         class="backPogemonName"
+
+                                    ></h1>
+
+                                    <h1 
+                                        id="backPogemon5HP"
+                                        class="backPogemonHP"
 
                                     ></h1>
 
@@ -678,9 +728,7 @@
                     </div>
                 </div>
             </div>
-
             <!-- summary Stuff -->
-
             <div 
                 id="summaryMenuContainer">
             
@@ -783,15 +831,27 @@
                             id="summaryAttackDescriptionContainer">
 
                             <h1 
-                                id="attackPower"
+                                id="summaryAttackName"
                             ></h1>
 
                             <h1 
-                                id="attackAccuracy"
+                                id="summaryAttackPower"
                             ></h1>
 
                             <h1 
-                                id="attackDescription"
+                                id="summaryAttackAccuracy"
+                            ></h1>
+
+                            <h1 
+                                id="summaryAttackPP"
+                            ></h1>
+
+                            <h1 
+                                id="summaryAttackType"
+                            ></h1>
+
+                            <h1 
+                                id="summaryAttackDescription"
                             ></h1>
                         
                         </div>
@@ -821,7 +881,6 @@
                 </div>
             
             </div>
-
             <!-- battle Scene -->
             <div
                 id="battleScene">
@@ -1023,7 +1082,29 @@
 
                         <div 
                             id="dialogueBox">
-                    
+
+                        </div>
+
+                        <div 
+                            id="evoDialogueBox">
+
+                        </div>
+
+                        <div 
+                            id="evoButtonContainer">
+                            <button id="evoYesButton">yes</button>
+                            <button id="evoNoButton">no</button>
+                        </div>
+
+                        <div 
+                            id="answerButtonContainer">
+                            <button id="newAttackYesButton">yes</button>
+                            <button id="newAttackNoButton">no</button>
+                        </div>
+
+                        <div 
+                            id="changeAttacksBox">
+                        
                         </div>
 
                         <div 
@@ -1036,12 +1117,416 @@
 
                             <div 
                                 id="attackInfo">
-                                Attack Info
+
+                                <div 
+                                    class="attackInfoHeadContainer"> 
+
+                                    <h4 
+                                        id="attackName">
+                                    </h4>
+
+                                    <h4
+                                        id="attackType">
+                                    </h4>
+
+                                </div>
+
+                                <div 
+                                    class="attackInfoHeadContainerBottom"> 
+
+                                    <h4
+                                        id="attackPotency">
+                                    </h4>
+
+                                    <h4
+                                        id="attackAccuracy">
+                                    </h4>
+
+                                    <h4
+                                        id="attackPP">
+                                    </h4>
+
+                                </div>
+
+                            </div>
+
+                            <div 
+                                id="newAttackInfo">
+
+                                <div 
+                                    class="attackInfoHeadContainer"> 
+
+                                    <h4 
+                                        id="newAttackName">
+                                    </h4>
+
+                                    <h4
+                                        id="newAttackType">
+                                    </h4>
+
+                                </div>
+
+                                <div 
+                                    class="attackInfoHeadContainerBottom"> 
+
+                                    <h4
+                                        id="newAttackPotency">
+                                    </h4>
+
+                                    <h4
+                                        id="newAttackAccuracy">
+                                    </h4>
+
+                                    <h4
+                                        id="newAttackPP">
+                                    </h4>
+
+                                </div>
+
+                                <h4
+                                    id="newAttackDesc">
+                                </h4>
+
+                                <div id="newAttackCancelButton">cancel</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>           
+            </div>
+            <!-- evolution Scene -->
+            <div
+                id="evolutionScene">
+
+                <div
+                    id="evolutionSceneFillContainer">
+
+                </div>
+
+                <div 
+                    id="evolutionDialogueBox">
+                    
+                </div>
+
+            </div>
+            <!-- item Menu -->
+            <div 
+                id="itemMenu">
+
+                <div 
+                    id="itemMenuTeamContainer">
+
+                    <div 
+                        id="pogemon1ItemContainer"
+                        class="pogemonItemContainer">
+
+                        <div id="0" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon1ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon1ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+
+                            <div 
+                                id="pogemon1ItemGreybar"
+                                class="pogemonItemGreybar">
+                        
+                            </div>
+
+                            <div 
+                                id="pogemon1ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div 
+                        id="pogemon2ItemContainer"
+                        class="pogemonItemContainer">
+
+                        <div id="1" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon2ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon2ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+
+                            <div 
+                                id="pogemon2ItemGreybar"
+                                class="pogemonItemGreybar">
+                            
+                            </div>
+
+                            <div 
+                                id="pogemon2ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
                             </div>
 
                         </div>
                     </div>
-                </div>           
+
+                    <div 
+                        id="pogemon3ItemContainer"
+                        class="pogemonItemContainer">
+
+                        <div id="2" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon3ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon3ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+                        
+                            <div 
+                                id="pogemon3ItemGreybar"
+                                class="pogemonItemGreybar">
+                            
+                            </div>
+
+                            <div 
+                                id="pogemon3ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div 
+                        id="pogemon4ItemContainer"
+                        class="pogemonItemContainer">
+
+                        <div id="3" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon4ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon4ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+                        
+                            <div 
+                                id="pogemon4ItemGreybar"
+                                class="pogemonItemGreybar">
+                            
+                            </div>
+
+                            <div 
+                                id="pogemon4ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div 
+                        id="pogemon5ItemContainer"
+                        class="pogemonItemContainer">
+                        
+                        <div id="4" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon5ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon5ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+                        
+                            <div 
+                                id="pogemon5ItemGreybar"
+                                class="pogemonItemGreybar">
+                            
+                            </div>
+
+                            <div 
+                                id="pogemon5ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                    <div 
+                        id="pogemon6ItemContainer"
+                        class="pogemonItemContainer">
+
+                        <div id="5" class="pogemonItemOverlappingDiv"></div>
+
+                        <div 
+                            class="pogemonItemNameContainer">
+
+                            <h4 
+                                id="pogemon6ItemNameData"
+                                class="pogemonItemNameData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHPDataContainer">
+
+                            <h4 
+                                id="pogemon6ItemHPData"
+                                class="pogemonItemHPData">
+                            
+                            </h4>
+                        </div>
+
+                        <div 
+                            class="pogemonItemHealthbarContainer">
+                        
+                            <div 
+                                id="pogemon6ItemGreybar"
+                                class="pogemonItemGreybar">
+                            
+                            </div>
+
+                            <div 
+                                id="pogemon6ItemHealthbar"
+                                class="pogemonItemHealthbar">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div 
+                    id="itemMenuInteractionContainer">
+            
+                    <div id="itemMenuTypeContainer">
+                    
+                        <img src='img/item_scene/healIcon.png' id="healIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/pogeballIcon.png' id="pogeballIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/battleItemsIcon.png' id="battleItemsIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/berryIcon.png' id="berryIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/miscIcon.png' id="miscIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/tmIcon.png' id="tmIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/valuableIcon.png' id="valuableIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                        <img src='img/item_scene/keysIcon.png' id="keysIcon" class="itemCategoryIcon" style="height:75px; Width:75px;">
+
+                    </div>
+
+                    <div 
+                        id="itemMenuItemContainer">
+                        <ul 
+                            id="itemList">
+                            
+                        </ul>
+                    </div>
+
+                    <div 
+                        id="itemMenuButtonContainer">
+                        
+                        <div 
+                            id="itemMenuDescTextContainer">
+                            
+                        </div>
+
+                        <div 
+                            id="itemMenuButtonHeadContainer">
+                            <div class="itemButton">use</div>
+                            <div class="itemButton">give</div>
+                            <div class="itemButton">discard</div>
+                            <div class="itemButton">cancel</div> 
+                        </div>
+                    </div>
+
+
+                </div>
+
             </div>
         </div>
     </div>
@@ -1060,11 +1545,14 @@
     <script src="data/pogemons.js"></script>
     <script src="data/trainers.js"></script>
     <script src="data/maps.js"></script>
+    <script src="data/items.js"></script>
     <script src="pogemonStorage.js"></script>
     <script src="index.js"></script>
     <script src="teamMenuScene.js"></script>
     <script src="pcMenuScene.js"></script>
     <script src="summaryMenuScene.js"></script>
     <script src="battleScene.js"></script>
+    <script src="itemMenuScene.js"></script>
+    <script src="evolutionScene.js"></script>
 </body>
 </html>

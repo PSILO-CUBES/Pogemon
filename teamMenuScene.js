@@ -221,42 +221,48 @@ let renderedTeamMenuSprites
 let defineCurrTeamMenuInfo = () =>{
     if (team[0] !== undefined) {
         let leedPogemonNameDOM = document.querySelector('#leedPogemonName')
-        leedPogemonNameDOM.textContent = team[0].name
+        leedPogemonNameDOM.textContent = `${team[0].name} Lvl ${Math.floor(team[0].currLevel)}`
+        document.querySelector('#leedPogemonHP').textContent = `${Math.floor(team[0].currHP)} / ${team[0].stats.HP}`
         team[0].isEnemy = false
         leedPogemonCurrHP = team[0].currHP
         leedPogemonMaxHP = team[0].stats.HP
     }
     if (team[1] !== undefined) {
         let backPogemon1NameDOM = document.querySelector('#backPogemon1Name')
-        backPogemon1NameDOM.textContent = team[1].name
+        backPogemon1NameDOM.textContent =  `${team[1].name} Lvl ${Math.floor(team[1].currLevel)}`
+        document.querySelector('#backPogemon1HP').textContent = `${Math.floor(team[1].currHP)} / ${team[1].stats.HP}`
         team[1].isEnemy = false
         backPogemon1CurrHP = team[1].currHP
         backPogemon1MaxHP = team[1].stats.HP
     }
     if (team[2] !== undefined) {
         let backPogemon2NameDOM = document.querySelector('#backPogemon2Name')
-        backPogemon2NameDOM.textContent = team[2].name
+        backPogemon2NameDOM.textContent = `${team[2].name} Lvl ${Math.floor(team[2].currLevel)}`
+        document.querySelector('#backPogemon2HP').textContent = `${Math.floor(team[2].currHP)} / ${team[2].stats.HP}`
         team[2].isEnemy = false
         backPogemon2CurrHP = team[2].currHP
         backPogemon2MaxHP = team[2].stats.HP
     }
     if (team[3] !== undefined) {
         let backPogemon3NameDOM = document.querySelector('#backPogemon3Name')
-        backPogemon3NameDOM.textContent = team[3].name
+        backPogemon3NameDOM.textContent = `${team[3].name} Lvl ${Math.floor(team[3].currLevel)}`
+        document.querySelector('#backPogemon3HP').textContent = `${Math.floor(team[3].currHP)} / ${team[3].stats.HP}`
         team[3].isEnemy = false
         backPogemon3CurrHP = team[3].currHP
         backPogemon3MaxHP = team[3].stats.HP
     }
     if (team[4] !== undefined) {
         let backPogemon4NameDOM = document.querySelector('#backPogemon4Name')
-        backPogemon4NameDOM.textContent = team[4].name
+        backPogemon4NameDOM.textContent = `${team[4].name} Lvl ${Math.floor(team[4].currLevel)}`
+        document.querySelector('#backPogemon4HP').textContent = `${Math.floor(team[4].currHP)} / ${team[4].stats.HP}`
         team[4].isEnemy = false
         backPogemon4CurrHP = team[4].currHP
         backPogemon4MaxHP = team[4].stats.HP
     }
     if (team[5] !== undefined) {
         let backPogemon5NameDOM = document.querySelector('#backPogemon5Name')
-        backPogemon5NameDOM.textContent = team[5].name
+        backPogemon5NameDOM.textContent = `${team[5].name} Lvl ${Math.floor(team[5].currLevel)}`
+        document.querySelector('#backPogemon5HP').textContent = `${Math.floor(team[5].currHP)} / ${team[5].stats.HP}`
         team[5].isEnemy = false
         backPogemon5CurrHP = team[5].currHP
         backPogemon5MaxHP = team[5].stats.HP
@@ -463,14 +469,15 @@ const animateTeamMenu = () =>{
     })
 
     let hpInPercentTeamMenuCalc = (currHP, totalHP, healthBar, pogemonSprite) =>{
-        let hpInPercentTeamMenu = 100 * currHP / totalHP
+        let hpInPercentTeamMenu
+        hpInPercentTeamMenu = 100 * currHP / totalHP
         if (hpInPercentTeamMenu > 50) {
             healthBar.style.backgroundColor = 'green'
             pogemonSprite.frames.hold = 50
         } else if (hpInPercentTeamMenu > 25 && hpInPercentTeamMenu <= 50){
             healthBar.style.backgroundColor = 'orange'
             pogemonSprite.frames.hold = 75
-        } else if (hpInPercentTeamMenu <= 25) {
+        } else if (hpInPercentTeamMenu <= 25 && hpInPercentTeamMenu >= 1) {
             healthBar.style.backgroundColor = 'red'
             pogemonSprite.frames.hold = 100
         } else if (hpInPercentTeamMenu === 0){
@@ -574,7 +581,6 @@ const animateTeamMenu = () =>{
                     document.querySelector('#teamContainer').style.display = 'none'
                     battleSwitch = true
                     initBattle()
-                    changeHP()
                     animateBattle()
                 } else animate()
                 document.querySelector('#teamContainer').style.display = 'none'

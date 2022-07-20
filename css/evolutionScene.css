@@ -1,0 +1,27 @@
+#evolutionScene{
+    display: none;
+    grid-template-rows: 75% 25%;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#evolutionDialogueBox{
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    margin: 0 5px 32px 5px;
+    padding: 5px;
+
+    border: 2px black solid;
+
+    background-color: white;
+}#evolutionDialogueBox:hover{
+    cursor: pointer;
+}

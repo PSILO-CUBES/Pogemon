@@ -10,11 +10,11 @@ const trainer = {
         defeated: false,
     },
     paccIlse_Professor: {
-        team: [pogemons.Disso, pogemons.Disso, pogemons.Disso],
+        team: [pogemons.Disso, pogemons.Jleesue, pogemons.Disso],
         setTeamLevel: () =>{
             console.log(currFoeTeamData)
             currFoeTeamData[0].currLevel = 15
-            currFoeTeamData[1].currLevel = 15
+            currFoeTeamData[1].currLevel = 5
             currFoeTeamData[2].currLevel = 15
         },
         dialogue: 'Come play with me young one ( ͡° ͜ʖ ͡°)',

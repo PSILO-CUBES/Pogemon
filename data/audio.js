@@ -1,18 +1,18 @@
 const audio = {
-    Map: new Howl({
+    map: new Howl({
         src: 'audio/map.wav',
         html5: true,
-        volume: 0.0
+        volume: 0.1
     }),
-    initBattle: new Howl({
-        src: 'audio/initBattle.wav',
+    initWildBattle: new Howl({
+        src: 'audio/initWildBattle.wav',
         html5: true,
-        volume: 0.05
+        volume: 0.1
     }),
     battle: new Howl({
         src: 'audio/battle.mp3',
         html5: true,
-        volume: 0
+        volume: 0.1
     }),
     tackleHit: new Howl({
         src: 'audio/tackleHit.wav',
@@ -28,6 +28,11 @@ const audio = {
         src: 'audio/initFireball.wav',
         html5: true,
         volume: 0.1
+    }),
+    psyAttack1: new Howl({
+        src: 'audio/psyAttack1.mp3',
+        html5: true,
+        volume: 0.5
     }),
     victory: new Howl({
         src: 'audio/victory.wav',
@@ -57,11 +62,21 @@ const audio = {
     changeMap: new Howl({
         src: 'audio/changeMap.wav',
         html5: true,
-        volume: 0.05
+        volume: 0.1
     }),
     error: new Howl({
         src: 'audio/error.mp3',
         html5: true,
-        volume: 0.05
+        volume: 0.1
+    }),
+    evolution: new Howl({
+        src: 'audio/evolution.mp3',
+        html5: true,
+        volume: 0.1
+    }),
+    evolutionDone: new Howl({
+        src: 'audio/evolutionDone.mp3',
+        html5: true,
+        volume: 0.1
     }),
 }

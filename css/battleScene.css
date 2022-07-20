@@ -1,3 +1,7 @@
+h4{
+    font-family: 'Press Start 2p', roboto !important;
+}
+
 #battleScene{
     display: none;
 }
@@ -16,7 +20,7 @@
     display: flex; 
     justify-content: end; 
     font-size: 22px; 
-    padding: 15px;
+    padding: 10px 5px 15px 15px !important;
 }
 
 #playerHPDisplay{
@@ -67,7 +71,7 @@
 
 #playerExpbar{
     background-color: rgb(255, 125, 0);
-    height: 10px; 
+    height: 8px; 
     position: absolute;
     top: 2px;
     left: 0; 
@@ -120,12 +124,12 @@
     display: flex; 
     justify-content: end; 
     font-size: 16px; 
-    padding: 15px;
+    padding: 10px 5px 15px 15px !important ;
 }
 
 #enemyHPDisplay{
     position: absolute; 
-    top: 25px; 
+    top: 26px; 
     display: inline-flex; 
     align-items: center; 
     z-index: 1; 
@@ -147,7 +151,7 @@
 #enemyHealthbar{
     background-color: green; 
     width: 100%;
-    height: 10px; 
+    height: 8px; 
     position: absolute; 
     top: 2px; 
     left: 0; 
@@ -192,7 +196,8 @@
     left: 0; 
     right: 0; 
     height: 100%;
-    font-size: 22px;
+    font-size: 16px;
+    padding: 15px !important;
 }
 
 #battleOptionsButtonContainer{
@@ -224,12 +229,18 @@
     left: 0; 
     right: 0; 
     background-color: white; 
-    padding: 24px; 
+    padding: 24px !important; 
     cursor: pointer;
 }
 
 #attacksBox{
     display: grid; 
+    grid-template-columns: repeat(2,1fr); 
+    width: 66.66%;
+}
+
+#changeAttacksBox{
+    display: none; 
     grid-template-columns: repeat(2,1fr); 
     width: 66.66%;
 }
@@ -243,5 +254,252 @@
 }
 
 #attackInfo{
+    display: grid;
+    position: relative;
+    grid-template-rows: 50% 50%;
     font-size: 16px;
+    height: 90%;
+    width: 100%;
+    top: -14px;
+}
+
+#attackName{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+}
+
+#attackType{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+
+}
+
+#attackPotency{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+#attackAccuracy{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+#attackPP{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+.attackInfoHeadContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}.attackInfoHeadContainer > h4{
+    font-family: 'Press Start 2p', roboto;
+}
+
+.attackInfoHeadContainerBottom{
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+}.attackInfoHeadContainerBottom > h4{
+    font-family: 'Press Start 2p', roboto;
+}
+
+#newAttackInfo{
+    display: none;
+    position: relative;
+    height: 90%;
+    width: 100%;
+    top: -14px;
+}
+
+#newAttackName{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+}
+
+#newAttackType{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+
+}
+
+#newAttackPotency{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+#newAttackAccuracy{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+#newAttackPP{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px black solid;
+    font-size: 14px;
+}
+
+#newAttackDesc{
+    padding: 15px;
+    border: 2px black solid;
+}
+
+#answerButtonContainer{
+    display: none;
+    grid-template-columns: 50% 50%;
+
+    position: absolute;
+
+    top: 39%;
+    left: 0;
+    right: 0;
+    bottom: 0%;
+
+    height: 80%;
+    width: 100%;
+
+    border-top:5px black solid;
+}
+
+#newAttackYesButton{
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: green;
+    border-right:2.5px black solid;
+
+    cursor: pointer;
+}#newAttackYesButton:hover{
+    background-color: darkgreen;
+}
+
+#newAttackNoButton{
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: red;
+    border-left:2.5px black solid;
+
+    cursor: pointer;
+}#newAttackNoButton:hover{
+    background-color: darkred;
+}
+
+#newAttackCancelButton{
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: red;
+    border: 2px black solid;
+    
+    cursor: pointer;
+}#newAttackCancelButton:hover{
+    background-color: darkred;
+}
+
+#evoDialogueBox{
+    position: absolute; 
+    display: none; 
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    background-color: white; 
+    padding: 24px; 
+    cursor: pointer;
+}
+
+#evoButtonContainer{
+    display: none;
+    grid-template-columns: 50% 50%;
+
+    position: absolute;
+
+    top: 39%;
+    left: 0;
+    right: 0;
+    bottom: 0%;
+
+    height: 80%;
+    width: 100%;
+
+    border-top:5px black solid;
+}
+
+#evoYesButton{
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: green;
+    border-right:2.5px black solid;
+
+    cursor: pointer;
+}#evoYesButton:hover{
+    background-color: darkgreen;
+}
+
+#evoNoButton{
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: red;
+    border-left:2.5px black solid;
+
+    cursor: pointer;
+}#evoNoButton:hover{
+    background-color: darkred;
 }

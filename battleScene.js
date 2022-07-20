@@ -1,5 +1,5 @@
 const battleBackgroundImage = new Image()
-battleBackgroundImage.src = 'img/battle_scenes/battleBackground.png'
+battleBackgroundImage.src = 'img/battle_scene/battleBackground.png'
 const battleBackground = new Sprite({
     position: {
         x: 0,
@@ -13,6 +13,7 @@ let currFoe
 let renderedSprites
 let animateBattleId
 let queue = []
+let menuButtonEvent
 let healthBar
 let displayHP
 let hpInPercentBattleOnLoad
@@ -20,6 +21,9 @@ let _doActionNoSpam
 let currFoeTeamData = []
 let switchAction = false
 let lastLeedPogemon
+let pogemonBeforeEvolution
+let faintSwitch
+let catchFailed
 
 const checkIfTeamKnockedOut = () =>{
     teamFainted = team.every(pogemon => pogemon.fainted === true)
@@ -33,6 +37,71 @@ let defineEnnemyInfo = () =>{
     enemyHPDisplay.textContent = Math.floor(currFoe.currHP) + '/' + currFoe.stats.HP 
 }
 
+let chooseIfEvolve = (answer) =>{
+    switch(answer){
+        case 'yes':
+            pogemonBeforeEvolution = currAlly
+            gsap.to('#overlappingDiv', {
+                opacity: 1,
+                onComplete: () => {
+                    document.querySelector('#battleScene').style.display = 'none'
+                    if(battle.initiated){
+                        if (trainerBattle){
+                            currTrainer.defeat()
+                        }
+                        cancelAnimationFrame(animateBattleId)
+                        initEvolution()
+                        animateEvolution()
+                        audio.battle.stop()
+                    }
+                    gsap.to('#overlappingDiv', {
+                        opacity: 0,
+                    })
+                    battle.initiated = false
+                }
+            }) 
+            break
+        case 'no':
+            gsap.to('#overlappingDiv', {
+                opacity: 1,
+                onComplete: () => {
+                    document.querySelector('#battleScene').style.display = 'none'
+                    if(battle.initiated){
+                        if (trainerBattle){
+                            currTrainer.defeat()
+                        }
+                        cancelAnimationFrame(animateBattleId)
+                        animate()
+                        audio.map.play()
+                    }
+                    gsap.to('#overlappingDiv', {
+                        opacity: 0,
+                    })
+                    battle.initiated = false
+                }
+            }) 
+            break
+    }
+}
+
+let currPogemonEvolve = () =>{
+    queue.splice(0, 0, () =>{
+        document.querySelector('#dialogueBox').style.display = 'none'
+        document.querySelector('#evoDialogueBox').style.display = 'block'
+        document.querySelector('#evoDialogueBox').innerText = `${team[0].name} is trying to evolve!! \n\n will you let ${team[0].name} evolve?`
+        document.querySelector('#battleOptionsContainer').style.display = 'none'
+        document.querySelector('#attackEventContainer').style.display = 'grid'
+        document.querySelector('#evoButtonContainer').style.display = 'grid'
+        document.querySelectorAll('#evoButtonContainer').forEach(button =>{
+            button.addEventListener('click', (e) =>{chooseIfEvolve(e.target.textContent)}, { once : true })
+        })
+        document.querySelector('#attackInfoContainer').style.display = 'none'
+        document.querySelector('#attacksBox').style.display = 'none'
+
+    })
+    queue[0]()
+}
+
 // initiate all battle Scenes and Menus
 const initBattle = () =>{
     menu.open = false
@@ -40,8 +109,19 @@ const initBattle = () =>{
     running = false
     queue = []
 
+    if(trainerBattle){
+        audio.battle.play()
+    }
+
+    audio.map.stop()
+
     document.querySelector('#levelUpDisplayContainer').style.display = 'none'
     document.querySelector('#levelUpDisplayContainer').style.left = '120%'
+    document.querySelector('#evoButtonContainer').style.display = 'none'
+    document.querySelector('#evoDialogueBox').style.display = 'none'
+    document.querySelector('#battleOptionsContainer').style.display = 'grid'
+    document.querySelector('#attackInfoContainer').style.display = 'flex'
+    document.querySelector('#attacksBox').style.display = 'grid'
 
     document.querySelector('#menuContainer').style.display = 'none'
     if(battleSwitch === true){
@@ -51,21 +131,60 @@ const initBattle = () =>{
         document.querySelector('#attackEventContainer').style.display = 'grid' 
         if (lastLeedPogemon){
             if(lastLeedPogemon.globalId !== currAlly.globalId){
+                document.querySelector('#attackInfo').style.display = 'none'
                 document.querySelector('#dialogueBox').style.display = 'block'
                 document.querySelector('#dialogueBox').textContent = team[0].name + ' entered the battlefield!'
-                queue.push(() =>{
-                    currFoe.attack({ 
-                        attack: randomAttack,
-                        recipient: currAlly,
-                        renderedSprites
+                if(!faintSwitch){
+                    queue.push(() =>{
+                        currFoe.attack({ 
+                            attack: randomAttack,
+                            recipient: currAlly,
+                            renderedSprites
+                        })
+                        if(currAlly.currHP < 1) {
+                            queue.push(() =>{
+                                currAlly.faint(currFoe)
+                            })
+                            queue.push(() =>{
+                            gsap.to('#overlappingDiv', {
+                                opacity: 1,
+                                onComplete: () => {
+                                    document.querySelector('#battleScene').style.display = 'none'
+                                    console.log(teamFainted)
+                                    if (teamFainted){
+                                        if(battle.initiated){
+                                            queue = []
+                                            cancelAnimationFrame(animateBattleId)
+                                            animate()
+                                        }
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0
+                                        })
+                                        battle.initiated = false
+                                        audio.map.play()
+                                    } else {
+                                        queue = []
+                                        faintSwitch = true
+                                        teamMenu.open = true
+                                        cancelAnimationFrame(animateBattleId)
+                                        animateTeamMenu()
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 0
+                                        })
+                                    }
+                                }
+                                })
+                            })
+                        }
                     })
-                })
+                }
             } else {
                 document.querySelector('#battleOptionsContainer').style.display = 'grid'
                 document.querySelector('#attackEventContainer').style.display = 'none'
             } 
         }
         battleSwitch = false
+        faintSwitch = false
         switchAction = true
     } else document.querySelector('#dialogueBox').style.display = 'none'
 
@@ -83,7 +202,14 @@ const initBattle = () =>{
 
     defineTeamSprite()
     
-    currAlly  = team[0]
+    for(let i = 0; i < team.length; i++){
+        if(!team[i].fainted) {
+            currAlly = team[i]
+            console.log(team[i])
+            break
+        }
+    }
+        
     currAlly.image.src = currAlly.sprites.backAnimation.src
 
     currAlly.position = {
@@ -122,9 +248,15 @@ const initBattle = () =>{
         y: 0
     }
 
-    definePogemonStats(currFoe)
-    currFoe.currHP = currFoe.stats.HP
-
+    if(switchAction){
+        currFoe.currHP = currFoeTeam[0].currHP
+        console.log(switchAction)
+    } else {
+        definePogemonStats(currFoe)
+        currFoe.currHP = currFoe.stats.HP
+        console.log(switchAction)
+    }
+    
     renderedSprites = [currAlly, currFoe]
     currFoe.isEnemy = true
 
@@ -178,15 +310,6 @@ const initBattle = () =>{
         document.querySelector('#attacksBox').append(button)
     })
 
-    let buttonMouseEnter = e =>{
-        const selectedAttack = attacks[e.currentTarget.textContent]
-        const attackInfo = document.querySelector('#attackInfo')
-        attackInfo.textContent = selectedAttack.element
-        if (selectedAttack.element === 'Normal') attackInfo.style.color = '#000'
-        else if (selectedAttack.element === 'Fighting') attackInfo.style.color = '#DD7E6B'
-        else if (selectedAttack.element === 'Fire') attackInfo.style.color = 'red'
-    }
-
     let attackButtonOnClick = e =>{
         const selectedAttack = attacks[e.currentTarget.textContent]
         _doActionNoSpam(selectedAttack)
@@ -194,24 +317,22 @@ const initBattle = () =>{
 
     //option menu
 
-    let menuButtonEvent = () => {
+    menuButtonEvent = () => {
         switch(mouse.textContent){
             case 'Fight':
                 document.querySelector('#battleOptionsContainer').style.display = 'none'
                 document.querySelector('#dialogueBox').style.display = 'none'
                 document.querySelector('#attackEventContainer').style.display = 'flex'
+                document.querySelector('#attackInfo').style.display = 'grid'
                 break
             case 'Catch':
                 if(!trainerBattle){
+                    currFoe.catch(currFoe)
                     document.querySelector('#battleOptionsContainer').style.display = 'none'
                     document.querySelector('#dialogueBox').style.display = 'flex'
                     document.querySelector('#attackEventContainer').style.display = 'flex'
                     document.querySelector('#dialogueBox').textContent = 'catching ' + currFoe.name
-                    cancelAnimationFrame(animateBattleId)
-                    queue.push(() =>{
-                        currFoe.catch(currFoe)
-                        animate()
-                    })
+                    document.querySelector('#attackInfo').style.display = 'none'
                 } else {
                     audio.error.play()
                 }
@@ -259,9 +380,11 @@ const initBattle = () =>{
                                 opacity: 0
                             })
                             battle.initiated = false
-                            audio.Map.play()
+                            audio.battle.stop()
+                            audio.map.play()
                         }
                     })
+                    document.removeEventListener('click', menuButtonEvent, true)
                 } else {
                     audio.error.play()
                 }
@@ -305,7 +428,8 @@ const initBattle = () =>{
                 clearTimeout(timerId);
             }
             timerId = setTimeout(() =>{
-                // speed Check Goes Here
+                
+                document.querySelector('#attackInfo').style.display = 'none'
 
                 // if ally is faster than ennemy
                 if (currAlly.stats.Spd > currFoe.stats.Spd) {
@@ -321,26 +445,34 @@ const initBattle = () =>{
                             //doesnt play on time
                             audio.battle.stop()
                             queue.push(() =>{
+                                audio.victory.play()
                                 currFoe.faint(currAlly)
                                 queue.push(() =>{
-                                    gsap.to('#overlappingDiv', {
-                                        opacity: 1,
-                                        onComplete: () => {
-                                            document.querySelector('#battleScene').style.display = 'none'
-                                            if(battle.initiated){
-                                                if (trainerBattle){
-                                                    currTrainer.defeat()
+                                    // evolution
+                                    if(Math.floor(currAlly.currLevel) >= currAlly.evolution.level && currAlly.evolution.name != 'none'){
+                                        //put evolution animation
+                                        currPogemonEvolve()
+                                    } else {
+                                        // should have if team fainted switch pogemon here
+                                        gsap.to('#overlappingDiv', {
+                                            opacity: 1,
+                                            onComplete: () => {
+                                                document.querySelector('#battleScene').style.display = 'none'
+                                                if(battle.initiated){
+                                                    if (trainerBattle){
+                                                        currTrainer.defeat()
+                                                    }
+                                                    cancelAnimationFrame(animateBattleId)
+                                                    animate()
                                                 }
-                                                cancelAnimationFrame(animateBattleId)
-                                                animate()
+                                                gsap.to('#overlappingDiv', {
+                                                    opacity: 0,
+                                                })
+                                                battle.initiated = false
+                                                audio.map.play()
                                             }
-                                            gsap.to('#overlappingDiv', {
-                                                opacity: 0,
-                                            })
-                                            battle.initiated = false
-                                            audio.Map.play()
-                                        }
-                                    })
+                                        })
+                                    }
                                 })
                             })
                         } else {
@@ -365,6 +497,7 @@ const initBattle = () =>{
                                     opacity: 1,
                                     onComplete: () => {
                                         document.querySelector('#battleScene').style.display = 'none'
+                                        console.log(teamFainted)
                                         if (teamFainted){
                                             if(battle.initiated){
                                                 queue = []
@@ -375,9 +508,11 @@ const initBattle = () =>{
                                                 opacity: 0
                                             })
                                             battle.initiated = false
-                                            audio.Map.play()
+                                            audio.map.play()
                                         } else {
                                             queue = []
+                                            faintSwitch = true
+                                            teamMenu.open = true
                                             cancelAnimationFrame(animateBattleId)
                                             animateTeamMenu()
                                             gsap.to('#overlappingDiv', {
@@ -408,6 +543,7 @@ const initBattle = () =>{
                                 opacity: 1,
                                 onComplete: () => {
                                     document.querySelector('#battleScene').style.display = 'none'
+                                    console.log(teamFainted)
                                     if (teamFainted){
                                         if(battle.initiated){
                                             cancelAnimationFrame(animateBattleId)
@@ -417,9 +553,11 @@ const initBattle = () =>{
                                             opacity: 0
                                         })
                                         battle.initiated = false
-                                        audio.Map.play()
+                                        audio.map.play()
                                     } else {
                                         queue = []
+                                        faintSwitch = true
+                                        teamMenu.open = true
                                         cancelAnimationFrame(animateBattleId)
                                         animateTeamMenu()
                                         gsap.to('#overlappingDiv', {
@@ -442,26 +580,33 @@ const initBattle = () =>{
                                     //doesnt play on time
                                     audio.battle.stop()
                                     queue.push(() =>{
+                                        audio.victory.play()
                                         currFoe.faint(currAlly)
                                         queue.push(() =>{
-                                            gsap.to('#overlappingDiv', {
-                                                opacity: 1,
-                                                onComplete: () => {
-                                                    document.querySelector('#battleScene').style.display = 'none'
-                                                    if(battle.initiated){
-                                                        if (trainerBattle){
-                                                            currTrainer.defeat()
+                                            // evolution here
+                                            if(Math.floor(currAlly.currLevel) >= currAlly.evolution.level && currAlly.evolution.name != 'none'){
+                                                //put evolution animation
+                                                currPogemonEvolve()
+                                            } else {
+                                                gsap.to('#overlappingDiv', {
+                                                    opacity: 1,
+                                                    onComplete: () => {
+                                                        document.querySelector('#battleScene').style.display = 'none'
+                                                        if(battle.initiated){
+                                                            if (trainerBattle){
+                                                                currTrainer.defeat()
+                                                            }
+                                                            cancelAnimationFrame(animateBattleId)
+                                                            animate()
                                                         }
-                                                        cancelAnimationFrame(animateBattleId)
-                                                        animate()
+                                                        gsap.to('#overlappingDiv', {
+                                                            opacity: 0,
+                                                        })
+                                                        battle.initiated = false
+                                                        audio.map.play()
                                                     }
-                                                    gsap.to('#overlappingDiv', {
-                                                        opacity: 0,
-                                                    })
-                                                    battle.initiated = false
-                                                    audio.Map.play()
-                                                }
-                                            })
+                                                })
+                                            }
                                         })
                                     })
                                 } else {
@@ -488,26 +633,33 @@ const initBattle = () =>{
                                 //doesnt play on time
                                 audio.battle.stop()
                                 queue.push(() =>{
+                                    audio.victory.play()
                                     currFoe.faint(currAlly)
                                     queue.push(() =>{
-                                        gsap.to('#overlappingDiv', {
-                                            opacity: 1,
-                                            onComplete: () => {
-                                                document.querySelector('#battleScene').style.display = 'none'
-                                                if(battle.initiated){
-                                                    if (trainerBattle){
-                                                        currTrainer.defeat()
+                                        // evolution
+                                        if(Math.floor(currAlly.currLevel) >= currAlly.evolution.level && currAlly.evolution.name != 'none'){
+                                            //put evolution animation
+                                            currPogemonEvolve()
+                                        } else {
+                                            gsap.to('#overlappingDiv', {
+                                                opacity: 1,
+                                                onComplete: () => {
+                                                    document.querySelector('#battleScene').style.display = 'none'
+                                                    if(battle.initiated){
+                                                        if (trainerBattle){
+                                                            currTrainer.defeat()
+                                                        }
+                                                        cancelAnimationFrame(animateBattleId)
+                                                        animate()
                                                     }
-                                                    cancelAnimationFrame(animateBattleId)
-                                                    animate()
+                                                    gsap.to('#overlappingDiv', {
+                                                        opacity: 0,
+                                                    })
+                                                    battle.initiated = false
+                                                    audio.map.play()
                                                 }
-                                                gsap.to('#overlappingDiv', {
-                                                    opacity: 0,
-                                                })
-                                                battle.initiated = false
-                                                audio.Map.play()
-                                            }
-                                        })
+                                            })
+                                        }
                                     })
                                 })
                             } else {
@@ -541,9 +693,11 @@ const initBattle = () =>{
                                                     opacity: 0
                                                 })
                                                 battle.initiated = false
-                                                audio.Map.play()
+                                                audio.map.play()
                                             } else {
                                                 queue = []
+                                                faintSwitch = true
+                                                teamMenu.open = true
                                                 cancelAnimationFrame(animateBattleId)
                                                 animateTeamMenu()
                                                 gsap.to('#overlappingDiv', {
@@ -556,7 +710,6 @@ const initBattle = () =>{
                             })
                         }
                     } else if(speedTie >= 50){
-
                         const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
                         currFoe.attack({ 
                             attack: randomAttack,
@@ -582,9 +735,11 @@ const initBattle = () =>{
                                             opacity: 0
                                         })
                                         battle.initiated = false
-                                        audio.Map.play()
+                                        audio.map.play()
                                     } else {
                                         queue = []
+                                        faintSwitch = true
+                                        teamMenu.open = true
                                         cancelAnimationFrame(animateBattleId)
                                         animateTeamMenu()
                                         gsap.to('#overlappingDiv', {
@@ -606,26 +761,33 @@ const initBattle = () =>{
                                         //doesnt play on time
                                         audio.battle.stop()
                                         queue.push(() =>{
+                                            audio.victory.play()
                                             currFoe.faint(currAlly)
                                             queue.push(() =>{
-                                                gsap.to('#overlappingDiv', {
-                                                    opacity: 1,
-                                                    onComplete: () => {
-                                                        document.querySelector('#battleScene').style.display = 'none'
-                                                        if(battle.initiated){
-                                                            if (trainerBattle){
-                                                                currTrainer.defeat()
+                                                // evolution
+                                                if(Math.floor(currAlly.currLevel) >= currAlly.evolution.level && currAlly.evolution.name != 'none'){
+                                                    //put evolution animation
+                                                    currPogemonEvolve()
+                                                } else {
+                                                    gsap.to('#overlappingDiv', {
+                                                        opacity: 1,
+                                                        onComplete: () => {
+                                                            document.querySelector('#battleScene').style.display = 'none'
+                                                            if(battle.initiated){
+                                                                if (trainerBattle){
+                                                                    currTrainer.defeat()
+                                                                }
+                                                                cancelAnimationFrame(animateBattleId)
+                                                                animate()
                                                             }
-                                                            cancelAnimationFrame(animateBattleId)
-                                                            animate()
+                                                            gsap.to('#overlappingDiv', {
+                                                                opacity: 0,
+                                                            })
+                                                            battle.initiated = false
+                                                            audio.map.play()
                                                         }
-                                                        gsap.to('#overlappingDiv', {
-                                                            opacity: 0,
-                                                        })
-                                                        battle.initiated = false
-                                                        audio.Map.play()
-                                                    }
-                                                })
+                                                    })
+                                                }
                                             })
                                         })
                                     } else {
@@ -641,17 +803,30 @@ const initBattle = () =>{
             }, 300);
         };
 
+        let buttonMouseEnter = e =>{
+            const selectedAttack = attacks[e.currentTarget.textContent]
+            const attackType = document.querySelector('#attackType')
+            if (selectedAttack.element === 'normal') attackType.style.color = '#000'
+            else if (selectedAttack.element === 'fighting') attackType.style.color = '#DD7E6B'
+            else if (selectedAttack.element === 'fire') attackType.style.color = 'red'
+            else if (selectedAttack.element === 'ghost') attackType.style.color = 'darkgrey'
+        }
 
         button.addEventListener('mouseenter', (e) => {
-            const selectedAttack = attacks[e.currentTarget.innerHTML]
-            document.querySelector('#attackInfo').innerHTML = selectedAttack.element
-            document.querySelector('#attackInfo').style.color = selectedAttack.color
+            const selectedAttack = attacks[e.currentTarget.textContent]
+            document.querySelector('#attackName').textContent = `${selectedAttack.name}`
+            document.querySelector('#attackType').textContent = `${selectedAttack.element}`
+            document.querySelector('#attackPotency').textContent = `potency : ${selectedAttack.potency}`
+            document.querySelector('#attackAccuracy').textContent = `accuracy : ${selectedAttack.accuracy}`
+            currAlly.attacks.forEach(attack =>{
+                if(selectedAttack.name === attack.name){
+                    document.querySelector('#attackPP').textContent = `pp : ${attack.pp}` 
+                }
+            })
         })
 
-        document.querySelectorAll('.attackButton').forEach(button =>{
-            button.addEventListener('mouseenter', buttonMouseEnter, true)
-            button.addEventListener('click', attackButtonOnClick , true)
-        })
+        button.addEventListener('mouseenter', buttonMouseEnter, true)
+        button.addEventListener('click', attackButtonOnClick , true)
     })
 }
 
@@ -679,7 +854,7 @@ const animateBattle = () => {
                         opacity: 0
                     })
                     battle.initiated = false
-                    audio.Map.play()
+                    audio.map.play()
                 } else {
                     queue = []
                     cancelAnimationFrame(animateBattleId)
@@ -692,7 +867,7 @@ const animateBattle = () => {
         })
     }
 
-    if(teamMenu.open === true && teamMenu.animate === true){
+    if(teamMenu.open && teamMenu.animate){
         gsap.to('#overlappingDiv',{
             opacity: 1,
             duration: 0.5,
@@ -702,22 +877,17 @@ const animateBattle = () => {
             }
         })
     }
+
+    if(catchFailed){
+        catchFailed = false
+        addEventListener('click', menuButtonEvent, true)
+    }
     
     battleBackground.draw()
-
     renderedSprites.forEach(sprite =>{
         sprite.draw()
     })
 }
-
-animate()
-// initSummaryMenu()
-// animateSummaryMenu()
-// pcStorage.animation = true
-// initPcStorageDisplay()
-// animatePcStorage()
-// initBattle()
-// animateBattle()
 
 let battleActionTimerId
 _doActionNoSpamChangeBattleAction = () =>{
@@ -738,6 +908,4 @@ _doActionNoSpamChangeBattleAction = () =>{
     }, 400);
 };
 
-document.querySelector('#dialogueBox').addEventListener('click', e =>{
-    _doActionNoSpamChangeBattleAction()
-})
+document.querySelector('#dialogueBox').addEventListener('click', _doActionNoSpamChangeBattleAction, true)

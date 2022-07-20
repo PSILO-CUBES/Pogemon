@@ -15,7 +15,7 @@ const summaryAttackInterfaceImage = new Image()
 summaryAttackInterfaceImage.src = 'img/summary_scene/attackSummaryInterface.png'
 summaryAttackInterfaceSprite = new Sprite({
     position:{
-        x: 1150,
+        x: 1200,
         y: 136
     },
     image: summaryAttackInterfaceImage,
@@ -24,7 +24,6 @@ summaryAttackInterfaceSprite = new Sprite({
 
 let summaryTargetSprite
 const summaryTargetImage = new Image()
-// summaryPogemonImage.src = 'img/pogemon/Disso/Disso_Animation.png'
 summaryTargetSprite = new Sprite({
     position:{
         x: 712.5,
@@ -95,7 +94,7 @@ let defineSummaryTargetData = () =>{
         let type1 = currDisplayedTarget.type.type1
         let typeDisplayContent = type1
         document.querySelector('#targetTypeData').style.fontSize = 'xx-large'
-        if(currDisplayedTarget.type.type2 !== 'null'){
+        if(currDisplayedTarget.type.type2 !== 'none'){
             let type2 = currDisplayedTarget.type.type2
             typeDisplayContent = type1 + '/' + type2
             document.querySelector('#targetTypeData').style.fontSize = 'x-large'
@@ -111,17 +110,17 @@ let defineSummaryTargetData = () =>{
             statArray.push(stat)
             let targetId = '#target' + statName + 'Data'
             if(stat[statName] <= 9){
-                document.querySelector(targetId).style.left = '610px'
+                document.querySelector(targetId).style.left = '617.5px'
                 if(statName === 'HP'){
                     document.querySelector('#targetHPData').style.left = '400px'
                 }
             } else if(stat[statName] > 9 && stat[statName] <= 99){
-                document.querySelector(targetId).style.left = '590px'
+                document.querySelector(targetId).style.left = '600px'
                 if(statName === 'HP'){
                     document.querySelector('#targetHPData').style.left = '415px'
                 }
             } else if(stat[statName] > 99 && stat[statName] <= 999){
-                document.querySelector(targetId).style.left = '575.5px'
+                document.querySelector(targetId).style.left = '590px'
                 if(statName === 'HP'){
                     document.querySelector('#targetHPData').style.left = '390px'
                 }
@@ -169,6 +168,8 @@ let initSummaryMenu = () =>{
     defineSummaryTargetData()
 }
 
+// make a switch button that enables the player to switch moves from the summary menu
+
 let animateSummaryMenu = () =>{
     let animateSummaryMenuId = requestAnimationFrame(animateSummaryMenu)
     document.querySelector('#summaryMenuContainer').style.display = 'grid'
@@ -186,10 +187,17 @@ let animateSummaryMenu = () =>{
             currAttackSummary = attacks[mouse.event.target.textContent]
             if(!currAttackSummary) return
             else if(currAttackSummary.type === 'Status'){
-                document.querySelector('#attackPower').textContent = '---'
-            } else document.querySelector('#attackPower').textContent = currAttackSummary.potency
-            document.querySelector('#attackAccuracy').textContent = currAttackSummary.accuracy
-            document.querySelector('#attackDescription').textContent = currAttackSummary.description
+                document.querySelector('#summaryAttackPower').textContent = '---'
+            } else document.querySelector('#summaryAttackPower').textContent = currAttackSummary.potency
+            document.querySelector('#summaryAttackName').textContent = currAttackSummary.name
+            document.querySelector('#summaryAttackType').textContent = currAttackSummary.element
+            document.querySelector('#summaryAttackAccuracy').textContent = currAttackSummary.accuracy
+            currDisplayedTarget.attacks.forEach(attack =>{
+                if(currAttackSummary.name === attack.name){
+                    document.querySelector('#summaryAttackPP').textContent = attack.pp
+                }
+            })
+            document.querySelector('#summaryAttackDescription').textContent = currAttackSummary.description
             summaryState.attackSummaryInterfaceOpen = true
         } else summaryState.attackSummaryInterfaceOpen = false
     }

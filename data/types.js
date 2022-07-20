@@ -1,96 +1,96 @@
 const types = {
     none:{
-        superEffective: [],
+        veryEffective: [],
         notEffective: [],
         immuned: [],
     },
     normal: {
-        superEffective: ['fighting'],
-        notEffective: ['rock, steel'],
+        veryEffective: ['fighting'],
+        notEffective: [],
         immuned: ['ghost'],
     },
     fire: {
-        superEffective: ['water', 'ground', 'rock'],
+        veryEffective: ['water', 'ground', 'rock'],
         notEffective: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'],
         immuned: [],
     },
     water: {
-        superEffective: ['electric', 'grass', 'rock'],
+        veryEffective: ['electric', 'grass', 'rock'],
         notEffective: ['fire', 'water', 'ice', 'steel'],
         immuned: [],
     },
     electric:{
-        superEffective: ['ground'],
+        veryEffective: ['ground'],
         notEffective: ['electric', 'flying', 'steel'],
         immuned: [],
     },
     grass:{
-        superEffective: ['fire', 'ice', 'poison', 'flying', 'bug'],
+        veryEffective: ['fire', 'ice', 'poison', 'flying', 'bug'],
         notEffective: ['water', 'electric', 'grass', 'ground'],
         immuned: [],
     },
     ice: {
-        superEffective: ['fire', 'fighting', 'rock', 'steel'],
+        veryEffective: ['fire', 'fighting', 'rock', 'steel'],
         notEffective: ['ice'],
         immuned: [],
     },
     fighting: {
-        superEffective: ['flying', 'psychic', 'fairy'],
+        veryEffective: ['flying', 'psychic', 'fairy'],
         notEffective: ['rock', 'bug', 'dark'],
         immuned: [],
     },
     poison: {
-        superEffective: ['ground', 'psychic'],
+        veryEffective: ['ground', 'psychic'],
         notEffective: ['grass', 'fighting', 'poison', 'bug', 'fairy'],
         immuned: [],
     },
     ground: {
-        superEffective: ['water', 'grass', 'ice'],
+        veryEffective: ['water', 'grass', 'ice'],
         notEffective: ['poison', 'rock'],
         immuned: ['electric'],
     },
     flying: {
-        superEffective: ['electric', 'ice'],
+        veryEffective: ['electric', 'ice'],
         notEffective: ['grass', 'fighting', 'poison', 'bug'],
         immuned: [],
     },
     psychic: {
-        superEffective: ['bug', 'ghost', 'dark'],
+        veryEffective: ['bug', 'ghost', 'dark'],
         notEffective: ['fighting', 'psychic'],
         immuned: [],
     },
     bug: {
-        superEffective: ['fire', 'flying', 'rock'],
+        veryEffective: ['fire', 'flying', 'rock'],
         notEffective: ['grass', 'ground'],
         immuned: [],
     },
     rock: {
-        superEffective: ['water', 'grass', 'fighting', 'ground', ],
+        veryEffective: ['water', 'grass', 'fighting', 'ground', ],
         notEffective: ['normal', 'fire'],
         immuned: [],
     },
     ghost: {
-        superEffective: ['ghost', 'dark'],
+        veryEffective: ['ghost', 'dark'],
         notEffective: ['poison', 'bug'],
         immuned: ['normal', 'fighting'],
     },
     dragon: {
-        superEffective: ['ice', 'dragon', 'fairy'],
+        veryEffective: ['ice', 'dragon', 'fairy'],
         notEffective: ['fire', 'water', 'electric', 'grass'],
         immuned: [],
     },
     dark: {
-        superEffective: ['fighting', 'bug', 'fairy'],
+        veryEffective: ['fighting', 'bug', 'fairy'],
         notEffective: ['ghost', 'dark'],
         immuned: ['psychic'],
     },
     steel: {
-        superEffective: ['fighting', 'ground', 'fire'],
+        veryEffective: ['fighting', 'ground', 'fire'],
         notEffective: ['normal', 'flying', 'rock', 'bug', 'steel', 'grass', 'psychic', 'ice', 'dragon', 'fairy'],
         immuned: ['poison']
     },
     fairy: {
-        superEffective: ['poison', 'steel'],
+        veryEffective: ['poison', 'steel'],
         notEffective: ['fighting', 'bug', 'dragon'],
         immuned: ['dragon']
     },

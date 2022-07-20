@@ -5,11 +5,22 @@ let pogemonStorage = [
     [],
     [],
 ]
+
 let pogemonSummary = {
     target: undefined
 }
 
 let team = []
+
+let inventory = {
+    heal: {
+        potion: {data: items.heal.potion, amount: 5},
+        revive: {data: items.heal.revive, amount: 2},
+    },
+    pogeball: {
+        pogeball: {data: items.pogeball.pogeball, amount: 5},
+    }
+}
 
 let saveData = dataToSave =>{
     menu.open = false

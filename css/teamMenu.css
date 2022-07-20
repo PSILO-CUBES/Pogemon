@@ -15,7 +15,7 @@
 }
 
 #leedPogemon{
-    background-color: transparent; position: relative; height: 292px; width: 99%; top: 103px; left: 4px; right: 0;
+    background-color: transparent; position: relative; height: 292px; width: 99%; top: 126px; left: 4px; right: 0;
 }#leedPogemonTargeted{
     background-color: rgba(153, 70, 70, 0.5);
 }
@@ -25,22 +25,24 @@
 
 #leedPogemonHealthbarContainer{
     position: relative;
-    top: 50px;
+    top: 90px;
     left: 5px;
     width: 747px;
 }
 
 #leedPogemonGreybar{
     background-color: rgb(93, 163, 93); 
-    height: 20px; 
-    top: 20.5px;
-    position: absolute;
+    height: 22px; 
+    top: 5px;
+    position: relative;
     border-top: 4px solid black;
 }
 
 #leedPogemonHealthbar{
     background-color: green; 
-    height: 20px; 
+    top: -13px;
+
+    height: 17.5px; 
     position: relative;
 }
 
@@ -48,24 +50,34 @@
     position: relative;
     float: right;
     top: -120px;
+
+    margin-right: 5px !important;
+
+    pointer-events: none;
 }
 
-#leedPogemonGreybar{
+#leedPogemonHP{
     position: relative;
+    float: right;
+    top: 100px;
+    left: 320px;
 }
 
 #backPogemonContainer{
-    display: grid; grid-template-rows: repeat(5, 160px); position: relative; top: -15px; left: 0; bottom: 0; right: 0; background-color: transparent; opacity: 1;
+    display: grid; grid-template-rows: repeat(5, 160px); position: relative; top: 7px; left: 1px; bottom: 0; right: 0; background-color: transparent; opacity: 1;
 }
 
 #leedPogemonExpbarContainer{
     position: relative;
-    top: 49px; right: 0; bottom: 0; left: 5px;
+    top: 75px; right: 0; bottom: 0; left: 5px;
 }  
 
 #leedPogemonExpGreybar{
+    position: relative;
+    top: 2px;
+
     background-color: rgb(255, 200, 125);
-    height: 10px;
+    height: 9px;
     width: 98.8%;
 }
 
@@ -102,7 +114,7 @@
 }
 
 .backPogemonExpGreybar{
-    position: absolute; top: 4px; left: 0px; bottom: 0; right: 0; height: 50%; width: 99.6%; background-color: grey; 
+    position: absolute; top: 4px; left: 0px; bottom: 0; right: 0; height: 50%; width: 99.6%; background-color: rgb(255, 200, 125);
 }
 
 .backPogemonExpbar{
@@ -112,6 +124,14 @@
 .backPogemonName{
     position: relative; top: -40px; float: right;
 }
+
+.backPogemonHP{
+    position: relative;
+    left: 650px;
+    top: 50px;
+    
+    font-size: 20px;
+} 
 
 #teamContainerTextBox{
     display: grid; grid-template-columns: 40% 60%; position: relative;  top: 0; left: 0; bottom: 0; right: 0; background-color: transparent;
