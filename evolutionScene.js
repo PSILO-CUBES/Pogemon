@@ -1,4 +1,5 @@
 let evoQueue = []
+let beforeEvoPogemon
 let currEvoPogemon
 let animateEvolutionId
 let pogemonToEvolveImage
@@ -20,9 +21,9 @@ let evolutionBackgroundSprite = new Sprite({
 
 let initEvolution = () =>{
 
+    // after evolution, pogemon currHP is inconsistent
     currEvoPogemon = team[0]
-
-    console.log(currEvoPogemon)
+    beforeEvoPogemon = currEvoPogemon
 
     let levelBeforeEvolution = currEvoPogemon.currLevel
     let attacksBeforeEvolution = currEvoPogemon.attacks
@@ -34,12 +35,11 @@ let initEvolution = () =>{
         }
     })
     currEvoPogemon = new Pogemon(pogemons[currEvoPogemon.evolution.name])
-    console.log(currEvoPogemon)
     currEvoPogemon.currLevel = levelBeforeEvolution
     currEvoPogemon.currExp = Math.pow(currEvoPogemon.currLevel, 3)
     definePogemonStats(currEvoPogemon)
     defineCurrPogemonCurve(currEvoPogemon, 'catch')
-    currEvoPogemon.currHP = currEvoPogemon.stats.HP
+    currEvoPogemon.currHP = beforeEvoPogemon.stats.HP
     defineCurrTeamMenuInfo()
     currEvoPogemon.attacks = attacksBeforeEvolution
     for (let i = 0; i < currEvoPogemon.attackPool.length; i++){
@@ -52,8 +52,6 @@ let initEvolution = () =>{
     currEvoPogemon.isEnemy = false
 
     team[0] = currEvoPogemon
-
-    console.log(pogemonBeforeEvolution)
 
     pogemonToEvolveImage = new Image()
     pogemonToEvolveImage.src = `img/pogemon/${pogemonBeforeEvolution.name}/${pogemonBeforeEvolution.name}_Animation.png`
@@ -89,7 +87,7 @@ let initEvolution = () =>{
     })
     audio.victory.stop()
     audio.evolution.play()
-    document.querySelector('#evolutionDialogueBox').textContent = `${pogemonBeforeEvolution.name} is evolving into ${currEvoPogemon.name}!!`
+    document.querySelector('#evolutionDialogueBox').textContent = `${pogemonBeforeEvolution.name} is eating doodoo into ${currEvoPogemon.name}!!`
     gsap.to(pogemonToEvolveSprite, {
         opacity: 0,
         yoyo: true,
@@ -150,7 +148,6 @@ let _doActionNoSpamEvoQueue = () =>{
 document.querySelector('#evolutionDialogueBox').addEventListener('click', _doActionNoSpamEvoQueue, true)
 
 animate()
-// initTeamMenu()
 // animateTeamMenu()
 // initSummaryMenu()
 // animateSummaryMenu()

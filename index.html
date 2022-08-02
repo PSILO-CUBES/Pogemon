@@ -45,6 +45,8 @@
             margin: 0 !important;
             user-select: none;
             text-transform: uppercase !important;
+            /* color: #eaeaea !important; */
+            /* text-shadow: -2.5px 2.5px #eaeaea !important; */
         }
         body {
             background-color: black;
@@ -123,7 +125,7 @@
                     <button
                         id="ItemButton"
                         class="menuButton"
-                    >Items</button>
+                    >Bag</button>
 
                     <button
                         id="SaveButton"
@@ -887,11 +889,26 @@
             
                 <div 
                     id="playerContainer">
-
-                    <h1 
-                        id="playerInfo">
                     
-                    </h1>
+                    <div 
+                        id="playerEffectContainer">
+
+                        <div 
+                            id="playerEffect">
+
+                        </div>
+
+                    </div>
+
+                    <div 
+                        id="playerInfoContainer">
+                        
+                        <h1 
+                            id="playerInfo">
+                    
+                        </h1>
+                    </div>
+
 
                     <h2 
                         id="playerHPDisplay">
@@ -1011,10 +1028,25 @@
                 <div 
                     id="enemyContainer">
 
-                    <h1 
-                        id="enemyInfo">
+                    <div 
+                        id="enemyEffectContainer">
+
+                        <div 
+                            id="enemyEffect">
+
+                        </div>
+
+                    </div>
+
+                    <div 
+                        id="enemyInfoContainer">
+
+                        <h1 
+                            id="enemyInfo">
                     
-                    </h1>
+                        </h1>
+
+                    </div>
 
                     <h2 
                         id="enemyHPDisplay">
@@ -1062,7 +1094,7 @@
                             <button 
                                 id="catchButton" 
                                 class="battleOptionsButton"
-                            >Catch</button>
+                            >Bag</button>
 
                             <button 
                                 id="pogemonButton" 
@@ -1224,7 +1256,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon1ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon1ItemNameData"
                                 class="pogemonItemNameData">
@@ -1267,7 +1302,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon2ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon2ItemNameData"
                                 class="pogemonItemNameData">
@@ -1311,7 +1349,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon3ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon3ItemNameData"
                                 class="pogemonItemNameData">
@@ -1354,7 +1395,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon4ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon4ItemNameData"
                                 class="pogemonItemNameData">
@@ -1397,7 +1441,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon5ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon5ItemNameData"
                                 class="pogemonItemNameData">
@@ -1440,7 +1487,10 @@
 
                         <div 
                             class="pogemonItemNameContainer">
-
+                            <div 
+                                class="pogemonItemSpriteContainer">
+                                <img class="pogemonItemSprite" id="pogemon6ItemSprite">
+                            </div>
                             <h4 
                                 id="pogemon6ItemNameData"
                                 class="pogemonItemNameData">

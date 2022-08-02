@@ -387,7 +387,9 @@ let animatePcStorage = () =>{
 
         let makeBoxButtonsTransparent = () =>{
             document.querySelectorAll('.targetBoxes').forEach(targetBox =>{
-                targetBox.style.backgroundColor = 'transparent'
+                if(targetCase === undefined){
+                    targetBox.style.backgroundColor = 'transparent'
+                }
             })
         }
 

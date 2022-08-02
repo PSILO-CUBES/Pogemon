@@ -312,10 +312,12 @@ const animateTeamMenu = () =>{
     }
 
     let checkIfTeamMenuTargetClicked = targetCase =>{
+
+        let selectedColor = 'rgb(60 3 0 / 60%)'
         
         if(targetCase === 'leedPogemon'){
             currPogemonTargetId = targetCase
-            document.querySelector('#leedPogemon').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#leedPogemon').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'leedPogemon'){
             document.querySelector('#leedPogemon').style.backgroundColor = 'transparent'
@@ -323,7 +325,7 @@ const animateTeamMenu = () =>{
 
         if(targetCase === 'backPogemon1'){
             currPogemonTargetId = targetCase        
-            document.querySelector('#backPogemon1').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#backPogemon1').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'backPogemon1'){
             document.querySelector('#backPogemon1').style.backgroundColor = 'transparent'
@@ -331,7 +333,7 @@ const animateTeamMenu = () =>{
 
         if(targetCase === 'backPogemon2'){
             currPogemonTargetId = targetCase        
-            document.querySelector('#backPogemon2').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#backPogemon2').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'backPogemon2'){
             document.querySelector('#backPogemon2').style.backgroundColor = 'transparent'
@@ -339,7 +341,7 @@ const animateTeamMenu = () =>{
 
         if(targetCase === 'backPogemon3'){
             currPogemonTargetId = targetCase        
-            document.querySelector('#backPogemon3').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#backPogemon3').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'backPogemon3'){
             document.querySelector('#backPogemon3').style.backgroundColor = 'transparent'
@@ -347,7 +349,7 @@ const animateTeamMenu = () =>{
 
         if(targetCase === 'backPogemon4'){
             currPogemonTargetId = targetCase        
-            document.querySelector('#backPogemon4').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#backPogemon4').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'backPogemon4'){
             document.querySelector('#backPogemon4').style.backgroundColor = 'transparent'
@@ -355,7 +357,7 @@ const animateTeamMenu = () =>{
 
         if(targetCase === 'backPogemon5'){
             currPogemonTargetId = targetCase        
-            document.querySelector('#backPogemon5').style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+            document.querySelector('#backPogemon5').style.backgroundColor = `${selectedColor}`
             document.querySelector('#teamContainerButton').style.display = 'grid'
         } else if (targetCase !== 'backPogemon5'){
             document.querySelector('#backPogemon5').style.backgroundColor = 'transparent'
@@ -368,7 +370,7 @@ const animateTeamMenu = () =>{
         if(targetCase === 'switchTeamButton' && teamSwitchButton.clicked === false){
             teamSwitchButton.clicked = true
             if(teamSwitchArray[0] !== undefined){
-                document.querySelector('#' + teamSwitchArray[0]).style.backgroundColor = 'rgba(175, 100, 100, 0.5)'
+                document.querySelector('#' + teamSwitchArray[0]).style.backgroundColor = 'rgba(175, 50, 50, 0.5)'
             }
         }
     }
@@ -490,7 +492,7 @@ const animateTeamMenu = () =>{
         
     if (teamMenu.open === true){
         defineCurrTeamMenuInfo()
-        document.querySelector('#teamContainerText').textContent = 'Select Pogemon Here ---'
+        document.querySelector('#teamContainerText').textContent = `Please Select A Pogemon`
         document.querySelector('#menuContainer').style.display = 'none'
         document.querySelector('#teamContainer').style.display = 'block'
 
@@ -518,6 +520,8 @@ const animateTeamMenu = () =>{
         if(team[1] !== undefined) {
             backPogemon1Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon1CurrHP, backPogemon1MaxHP, backPogemon1Healthbar, backPogemon1Sprite) + '%'
             backPogemon1Expbar.style.width = team[1].expInPerCent + '%'
+            document.querySelector('#backPogemon1Greybar').style.backgroundColor = 'lightgrey'
+            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon1Healthbar.style.width = 0 + '%'
             backPogemon1Expbar.style.width = 0 + '%'
@@ -528,6 +532,8 @@ const animateTeamMenu = () =>{
         if(team[2] !== undefined) {
             backPogemon2Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon2CurrHP, backPogemon2MaxHP, backPogemon2Healthbar, backPogemon2Sprite) + '%'
             backPogemon2Expbar.style.width = team[2].expInPerCent + '%'
+            document.querySelector('#backPogemon2Greybar').style.backgroundColor = 'lightgrey'
+            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon2Healthbar.style.width = 0 + '%'
             backPogemon2Expbar.style.width = 0 + '%'
@@ -538,6 +544,8 @@ const animateTeamMenu = () =>{
         if(team[3] !== undefined) {
             backPogemon3Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon3CurrHP, backPogemon3MaxHP, backPogemon3Healthbar, backPogemon3Sprite) + '%'
             backPogemon3Expbar.style.width = team[3].expInPerCent + '%'
+            document.querySelector('#backPogemon3Greybar').style.backgroundColor = 'lightgrey'
+            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon3Healthbar.style.width = 0 + '%'
             backPogemon3Expbar.style.width = 0 + '%'
@@ -548,6 +556,8 @@ const animateTeamMenu = () =>{
         if(team[4] !== undefined) {
             backPogemon4Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon4CurrHP, backPogemon4MaxHP, backPogemon4Healthbar, backPogemon4Sprite) + '%'
             backPogemon4Expbar.style.width = team[4].expInPerCent + '%'
+            document.querySelector('#backPogemon4Greybar').style.backgroundColor = 'lightgrey'
+            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon4Healthbar.style.width = 0 + '%'
             backPogemon4Expbar.style.width = 0 + '%'
@@ -558,6 +568,8 @@ const animateTeamMenu = () =>{
         if(team[5] !== undefined) {
             backPogemon5Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon5CurrHP, backPogemon5MaxHP, backPogemon5Healthbar, backPogemon5Sprite) + '%'
             backPogemon5Expbar.style.width = team[5].expInPerCent + '%'
+            document.querySelector('#backPogemon5Greybar').style.backgroundColor = 'lightgrey'
+            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon5Healthbar.style.width = 0 + '%'
             backPogemon5Expbar.style.width = 0 + '%'
@@ -579,7 +591,9 @@ const animateTeamMenu = () =>{
                 } else if(battle.initiated === true && team[0].currHP > 0){
                     document.querySelector('#menuContainer').style.display = 'none'
                     document.querySelector('#teamContainer').style.display = 'none'
-                    battleSwitch = true
+                    if(lastLeedPogemon.globalId !== team[0].globalId) battleSwitch = true 
+                    else battleSwitch = false
+                    returnFromTeamMenu = true
                     initBattle()
                     animateBattle()
                 } else animate()

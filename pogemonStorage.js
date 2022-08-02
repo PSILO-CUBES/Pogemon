@@ -19,28 +19,30 @@ let inventory = {
     },
     pogeball: {
         pogeball: {data: items.pogeball.pogeball, amount: 5},
+    },
+    berry:{
+        badBanana: {data: items.berry.badBanana, amount: 3},
     }
 }
 
 let saveData = dataToSave =>{
     menu.open = false
     alert('savgarde')
-    console.log(dataToSave)
     localStorage.setItem('saveDataKey', JSON.stringify(dataToSave))
 }
 
 let loadData = () =>{
     let loadedData = localStorage.getItem('saveDataKey')
     parsedData = JSON.parse(loadedData)
-    // console.log(parsedData)
     return parsedData
 }
+
+let saveDataObject = loadData()
 
 let resetData = dataToReset =>{
     menu.open = false
     team = []
     alert('reset succesful')
-    // console.log(dataToReset)
     localStorage.removeItem(dataToReset)
     document.location.reload()
 }
@@ -50,7 +52,7 @@ let currId
 let newId
 
 if(loadData() === null){
-    initGlobalId = 0
+    initGlobalId = 1
     currId = initGlobalId
 } else {
     initGlobalId = loadData().currGlobalId
@@ -61,7 +63,7 @@ let newGlobalId = () =>{
     newId = currId
     newId++
     currId = newId
-    // console.log(currId)
+    console.log(currId)
     return currId
 }
 
@@ -78,7 +80,6 @@ if (team.length === 0 && loadData() !== null){
         loadedTeam.push(new Pogemon(teamData[i]))
     }
     team = loadedTeam
-    // console.log(team)
 }
 
 // load storage
@@ -118,8 +119,7 @@ let defineCurrPogemonCurve = (currPogemon, type) =>{
     } else return currPogemonCurve
 }
 
-let definePogemonStats = (currPogemon) =>{
-    console.log(currPogemon)
+let definePogemonStats = currPogemon =>{
     let currPogemonLevel = Math.floor(currPogemon.currLevel)
     let generateNewHpState = Math.floor((2 * pogemons[currPogemon.name].baseStats.HP) * currPogemonLevel / 100 + currPogemonLevel + 10)
     let generateNewAtkState = Math.floor((2 * pogemons[currPogemon.name].baseStats.Atk ) * currPogemonLevel / 100 + 5)

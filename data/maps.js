@@ -1,4 +1,4 @@
-const maps = {
+let maps = {
     bedroom: {
         name: 'bedroom',
         position: {
@@ -317,6 +317,46 @@ const maps = {
         trainerArray: []
     },    
 
+    pogecenter: {
+        name: 'pogecenter',
+        position: {
+            x: -500,
+            y: -500
+        },   
+        changeMapArray:[
+
+        ],
+        width: 23, 
+        height: 11,
+        image: {
+            src: 'img/map/pogecenter/pogecenter.png',
+        },
+        backgroundImage: {
+            src: 'img/map/pogecenter/pogecenterBackground.png'
+        },
+        foreground1Image: {
+            src: 'img/map/pogecenter/pogecenterFG1.png'
+        },
+        foreground2Image: {
+            src: 'img/map/pogecenter/pogecenterFG2.png'
+        },
+        foreground3Image: {
+            src: 'img/map/pogecenter/pogecenterFG3.png'
+        },
+        foreground4Image: {
+            src: 'img/map/pogecenter/pogecenterFG4.png'
+        },
+        collisionsData: collisionsData.pogecenter,
+        battleZonesData: battleZonesData.pogecenter,
+        changeMapZonesData: changeMapZonesData.pogecenter,
+        eventZonesData: eventZonesData.pogecenter,
+        levelRange: {
+            min: 2,
+            max: 6
+        },
+        trainerArray: []
+    },    
+
     ghostsWoodBridge: {
         name: 'ghostsWoodBridge',
         position: {
@@ -497,7 +537,7 @@ const maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        trainerArray: [trainer.ghostsWood_BugCatcher1, trainer.ghostsWood_BugCatcher2, trainer.ghostsWood_BugCatcher3, trainer.ghostsWood_BugCatcher4]
     },  
 
     connectBeach: {
@@ -576,7 +616,7 @@ const maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        trainerArray: [trainer.connectBeach_Sailor1, trainer.connectBeach_KarateGuy1, trainer.connectBeach_SwimSuitGuy1, trainer.connectBeach_SwimSuitGirl1]
     },  
 
     keyTown: {
@@ -598,8 +638,8 @@ const maps = {
             }} ,
             {name:'pogecenter',
             position: {
-                x: -1125,
-                y: -650,
+                x: 230,
+                y: 150,
             }} ,
             {name:'keyTownHouse1',
             position: {
@@ -643,8 +683,8 @@ const maps = {
             }} ,
         ],
         pogecenterPosition:{
-            x: -500,
-            y: -1500
+            x: -1825,
+            y: -2100
         },
         pogemartPosition: {
             x: -675,

@@ -39,13 +39,15 @@ const pogemons = {
         expCurve: 'normalExpCurve',
         expYield: 1000,
         attackPool: [
-            {lvl:1,move:attacks.Lokick,learned:true},
-            {lvl:1,move:attacks.Rest,learned:true},
-            {lvl:6,move:attacks.Tackle,learned:false},
-            {lvl:7,move:attacks.Fireball,learned:false},
-            {lvl:8,move:attacks.Strangering,learned:false},
+            {lvl:1,move:attacks.Tackle,learned:true},
+            {lvl:1,move:attacks.Buff,learned:true},
+            {lvl:6,move:attacks.Growl,learned:false},
+            {lvl:7,move:attacks.Lokick,learned:false},
+            {lvl:7,move:attacks.Strangering,learned:false},
+            {lvl:7,move:attacks.Rest,learned:false},
         ],
-        attacks: [attacks.Lokick, attacks.Rest],
+        attacks: [attacks.Tackle, attacks.Buff],
+        abilities: [{name: 'Last Effort', desc: 'When the user HP is below 25%, fighting moves become stronger.'}, ],
         catchRate: 75,
         evolution: {
             name: 'Lokepit', 
@@ -97,6 +99,7 @@ const pogemons = {
             {lvl:8,move:attacks.Strangering,learned:false},
         ],
         attacks: [attacks.Lokick, attacks.Rest],
+        abilities: [{name: 'Last Effort', desc: 'When the user HP is below 25%, fighting moves become stronger.'}, ],
         catchRate: 50,
         evolution: {
             name: 'Lokorot', 
@@ -149,6 +152,7 @@ const pogemons = {
         ],
         attacks: [attacks.Lokick, attacks.Rest],
         catchRate: 25,
+        abilities: [{name: 'Last Effort', desc: 'When the user HP is below 25%, fighting moves become stronger.'}, ],
         evolution: {
             name: 'none', 
             level: null
@@ -195,7 +199,8 @@ const pogemons = {
         ],
         expCurve: 'normalExpCurve',
         expYield: 1000,
-        attacks: [attacks.Tackle, attacks.Fireball],
+        attacks: [attacks.Tackle],
+        abilities: [{name: 'Sharpened by Erosion', desc: 'When the user HP is below 25%, steel moves become stronger.'}, ],
         catchRate: 75,
         evolution: {
             name: 'Steeloor', 
@@ -244,6 +249,7 @@ const pogemons = {
         expCurve: 'normalExpCurve',
         expYield: 1000,
         attacks: [attacks.Tackle],
+        abilities: [{name: 'Sharpened by Erosion', desc: 'When the user HP is below 25%, steel moves become stronger.'}, ],
         catchRate: 50,
         evolution: {
             name: 'Steetorr', 
@@ -285,13 +291,14 @@ const pogemons = {
             SpDef: 120,
             Spd: 80,
         },
+        expYield: 1000,
         attackPool: [
             {lvl:1,move:attacks.Tackle,learned:true},
             {lvl:6,move:attacks.Rest,learned:false},
         ],
         expCurve: 'normalExpCurve',
-        expYield: 1000,
         attacks: [attacks.Tackle],
+        abilities: [{name: 'Sharpened by Erosion', desc: 'When the user HP is below 25%, steel moves become stronger.'}, ],
         catchRate: 25,
         evolution: {
             name: 'none', 
@@ -322,8 +329,8 @@ const pogemons = {
         isEnemy: true,
         name: 'Maaph',
         type: {
-            type1: 'ghost',
-            type2: 'none'
+            type1: 'fairy',
+            type2: 'ghost'
         },
         baseStats: {
             HP: 50,
@@ -336,14 +343,15 @@ const pogemons = {
         expCurve: 'normalExpCurve',
         expYield: 60,
         attackPool: [
-            {lvl:1,move:attacks.Fireball,learned:true},
+            {lvl:1,move:attacks.Strangering,learned:true},
             {lvl:1,move:attacks.Rest,learned:true},
-            {lvl:6,move:attacks.Strangering,learned:false},
+            {lvl:6,move:attacks.Fireball,learned:false},
             {lvl:7,move:attacks.Tackle,learned:false},
             {lvl:8,move:attacks.Lokick,learned:false},
         ],
-        attacks: [attacks.Fireball, attacks.Rest],
+        attacks: [attacks.Strangering, attacks.Rest],
         catchRate: 75,
+        abilities: [{name: `Final Chapter`, desc: 'When the user HP is below 25%, fairy moves become stronger.'}, ],
         evolution: {
             name: 'Maaphett', 
             level: 15
@@ -387,12 +395,12 @@ const pogemons = {
         expCurve: 'normalExpCurve',
         expYield: 140,
         attackPool: [
-            {lvl:1,move:attacks.Fireball,learned:true},
-            {lvl:1,move:attacks.Rest,learned:true},
-            {lvl:6,move:attacks.Tackle,learned:false},
+            {lvl:1,move:attacks.Strangering,learned:true},
+            {lvl:6,move:attacks.Rest,learned:true},
         ],
-        attacks: [attacks.Fireball, attacks.Rest],
+        attacks: [attacks.Strangering, attacks.Rest],
         catchRate: 50,
+        abilities: [{name: `Final Chapter`, desc: 'When the user HP is below 25%, fairy moves become stronger.'}, ],
         evolution: {
             name: 'Maapheeno',
             level: 40
@@ -436,12 +444,12 @@ const pogemons = {
         expCurve: 'normalExpCurve',
         expYield: 140,
         attackPool: [
-            {lvl:1,move:attacks.Fireball,learned:true},
-            {lvl:1,move:attacks.Rest,learned:true},
-            {lvl:6,move:attacks.Tackle,learned:false},
+            {lvl:1,move:attacks.Strangering,learned:true},
+            {lvl:6,move:attacks.Rest,learned:true},
         ],
-        attacks: [attacks.Fireball, attacks.Rest],
+        attacks: [attacks.Strangering, attacks.Rest],
         catchRate: 25,
+        abilities: [{name: `Final Chapter`, desc: 'When the user HP is below 25%, fairy moves become stronger.'}, ],
         evolution: {
             name: 'none',
             level: null
@@ -493,6 +501,7 @@ const pogemons = {
         ],
         attacks: [attacks.Lokick, attacks.Rest],
         catchRate: 75,
+        abilities: [{name: `Final Chapter`, desc: 'When the user HP is below 25%, fairy moves become stronger.'}, ],
         evolution: {
             name: 'Jleech', 
             level: 15
@@ -544,6 +553,7 @@ const pogemons = {
         ],
         attacks: [attacks.Lokick, attacks.Rest],
         catchRate: 50,
+        abilities: ['Run Away'],
         evolution: {
             name: 'Jleenox', 
             level: 15
@@ -588,9 +598,9 @@ const pogemons = {
         expYield: 40,
         attackPool: [
             {lvl:1,move:attacks.Tackle,learned:true},
-            {lvl:1,move:attacks.Fireball,learned:true},
             {lvl:6,move:attacks.Rest,learned:false},
         ],
+        abilities: ['Run Away'],
         catchRate: 99,
         attacks: [attacks.Tackle],
     }

@@ -1,5 +1,9 @@
 const attacks = {
 
+    // Physical Attacks
+
+    //Normal
+
     Tackle: {
         name: 'Tackle',
         potency: 40,
@@ -10,6 +14,8 @@ const attacks = {
         element: 'normal',
         description: 'The pogemon uses a limb to hit the ennemy',
     },
+
+    //Fighting
 
     Lokick: {
         name: 'Lokick',
@@ -22,6 +28,10 @@ const attacks = {
         description: 'The pogemon wildly swings its limbs',
     },
 
+    //Special Atttacks
+
+    //Fire
+
     Fireball: {
         name: 'Fireball',
         potency: 450,
@@ -32,6 +42,8 @@ const attacks = {
         element: 'fire',
         description: 'The pogemon hurls a fireball towards the ennemy',
     },
+
+    //Ghost
 
     Strangering: {
         name: 'Strangering',
@@ -44,9 +56,43 @@ const attacks = {
         description: 'The ennemy is squeezed by a strange ring.',
     },
 
+    // Status
+
+    // Stats
+
+    // Increase
+
+    Buff: {
+        name: 'Buff',
+        potency: 50,
+        accuracy: 100,
+        pp: 12,
+        type: 'Status',
+        effect: 'increaseStats',
+        stat: 'ATK',
+        element: 'normal',
+        description: 'The pogemon buffs its self, increases ATK by 50%', 
+    },
+
+    // Decrease
+
+    Growl: {
+        name: 'Growl',
+        potency: 75,
+        accuracy: 100,
+        pp: 12,
+        type: 'Status',
+        effect: 'decreaseStats',
+        stat: 'DEF',
+        element: 'normal',
+        description: 'The pogemon growls at the opponent, decreases DEF by 50%', 
+    },
+
+    // Heal
+
     Rest: {
         name: 'Rest',
-        potency: 20,
+        potency: 25,
         accuracy: 100,
         pp: 12,
         type: 'Status',

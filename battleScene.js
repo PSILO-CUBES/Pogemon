@@ -11,12 +11,14 @@ const battleBackground = new Sprite({
 let currAlly
 let currFoe
 let renderedSprites
+let attackInProcess
 let animateBattleId
 let queue = []
 let menuButtonEvent
 let healthBar
 let displayHP
 let hpInPercentBattleOnLoad
+let randomAttack
 let _doActionNoSpam
 let currFoeTeamData = []
 let switchAction = false
@@ -24,6 +26,24 @@ let lastLeedPogemon
 let pogemonBeforeEvolution
 let faintSwitch
 let catchFailed
+let openItemMenuFromBattle
+let currFoeSpdBoos
+let battleItemMenu = false
+let newBattle = true
+let disableMenuDuringAttack = false
+let returnFromTeamMenu
+
+let currAllyAtkBoost = 1
+let currAllyDefBoost = 1
+let currAllySpeAtkBoost = 1
+let currAllySpeDefBoost = 1
+let currAllySpdBoost = 1
+
+let currFoeAtkBoost = 1
+let currFoeDefBoost = 1
+let currFoeSpeAtkBoost = 1
+let currFoeSpeDefBoost = 1
+let currFoeSpdBoost = 1
 
 const checkIfTeamKnockedOut = () =>{
     teamFainted = team.every(pogemon => pogemon.fainted === true)
@@ -34,7 +54,7 @@ let defineEnnemyInfo = () =>{
     const enemyInfo = document.querySelector('#enemyInfo')
     enemyInfo.textContent = currFoe.name + ' Lv ' + currFoe.currLevel
     const enemyHPDisplay = document.querySelector('#enemyHPDisplay')
-    enemyHPDisplay.textContent = Math.floor(currFoe.currHP) + '/' + currFoe.stats.HP 
+    enemyHPDisplay.textContent = Math.floor(currFoe.currHP) + '/' + currFoe.stats.HP
 }
 
 let chooseIfEvolve = (answer) =>{
@@ -50,6 +70,7 @@ let chooseIfEvolve = (answer) =>{
                             currTrainer.defeat()
                         }
                         cancelAnimationFrame(animateBattleId)
+                        console.log('worke?')
                         initEvolution()
                         animateEvolution()
                         audio.battle.stop()
@@ -70,6 +91,7 @@ let chooseIfEvolve = (answer) =>{
                         if (trainerBattle){
                             currTrainer.defeat()
                         }
+                        removeBattleEventListener = true
                         cancelAnimationFrame(animateBattleId)
                         animate()
                         audio.map.play()
@@ -90,7 +112,7 @@ let currPogemonEvolve = () =>{
         document.querySelector('#evoDialogueBox').style.display = 'block'
         document.querySelector('#evoDialogueBox').innerText = `${team[0].name} is trying to evolve!! \n\n will you let ${team[0].name} evolve?`
         document.querySelector('#battleOptionsContainer').style.display = 'none'
-        document.querySelector('#attackEventContainer').style.display = 'grid'
+        document.querySelector('#attackEventContainer').style.display = 'flex'
         document.querySelector('#evoButtonContainer').style.display = 'grid'
         document.querySelectorAll('#evoButtonContainer').forEach(button =>{
             button.addEventListener('click', (e) =>{chooseIfEvolve(e.target.textContent)}, { once : true })
@@ -102,6 +124,44 @@ let currPogemonEvolve = () =>{
     queue[0]()
 }
 
+let chooseRandomAttack = () =>{
+    let availableAttacks = []
+    currFoe.attacks.forEach(attack =>{
+        if(attack.pp > 0){
+            availableAttacks.push(attack)
+        }
+    })
+    return randomAttack = availableAttacks[Math.floor(Math.random() * availableAttacks.length)]
+}
+
+let battleMusicPlaying = false
+
+let changeHpWhenItemUsedDuringBattle = currPogemon =>{
+    let currColor = undefined
+    let currHealthbar
+    let currDisplayHP
+    if(currPogemon.isEnemy){
+        currDisplayHP = document.querySelector('#enemyHPDisplay')
+        currHealthbar = document.querySelector('#playerHealthbar')
+    } else {
+        currDisplayHP = document.querySelector('#playerHPDisplay')
+        currHealthbar = document.querySelector('#playerHealthbar')
+    }
+    let hpInPercent = currPogemon.currHP * 100  / currPogemon.stats.HP
+    if (hpInPercent > 50) {
+        currColor = 'green'
+    } else if (hpInPercent > 25 && hpInPercent <= 50){
+        currColor = 'orange'
+    } else if (hpInPercent <= 25) {
+        currColor = 'red'
+    }
+    currHealthbar.style.width = hpInPercent + '%'
+    currHealthbar.style.backgroundColor = currColor
+    currDisplayHP.style.color = currColor
+    currDisplayHP.textContent = `${Math.floor(currPogemon.currHP)}/${currPogemon.stats.HP}`
+    console.log(currPogemon.currHP)
+}
+
 // initiate all battle Scenes and Menus
 const initBattle = () =>{
     menu.open = false
@@ -109,38 +169,166 @@ const initBattle = () =>{
     running = false
     queue = []
 
-    if(trainerBattle){
+    let useHeldItem = (currPogemon, item) =>{
+        cancelItemEscapeDuringTransition = true
+        if(item.type === 'berry'){
+            if(currPogemon.currHP < currPogemon.stats.HP){
+                document.querySelector('#dialogueBox').textContent = `${currPogemon.name} used a ${item.name} in a pinch!`
+                currPogemon.currHP = currPogemon.currHP + item.potency
+                if(currPogemon.currHP >= currPogemon.stats.HP){
+                    currPogemon.currHP = currPogemon.stats.HP
+                }
+                hpInPercent = currPogemon.currHP / 100 * currPogemon.stats.HP
+                changeHpWhenItemUsedDuringBattle(currPogemon)
+                inventory[item.category][item.name].amount--
+                currPogemon.item = undefined
+                if(battle.initiated){
+                    setTimeout(() =>{
+                        cancelItemEscapeDuringTransition = false
+                    }, 1500)
+                } else {
+                    setTimeout(() =>{
+                        cancelItemEscapeDuringTransition = false
+                    }, 1500)
+                }
+            } else {
+                itemUseFail()
+            }
+        } 
+    }
+
+    if(itemUsedDuringBattle || returnFromBagMenu || !battleSwitch){
+        currAllyAtkBoost = currAllyAtkBoost
+        currAllyDefBoost = currAllyDefBoost
+        currAllySpeAtkBoost = currAllySpeAtkBoost
+        currAllySpeDefBoost = currAllySpeDefBoost
+        currAllySpdBoost = currAllySpdBoost
+
+        currFoeAtkBoost = currFoeAtkBoost
+        currFoeDefBoost = currFoeDefBoost
+        currFoeSpeAtkBoost = currFoeSpeAtkBoost
+        currFoeSpeDefBoost = currFoeSpeDefBoost
+        currFoeSpdBoost = currFoeSpdBoost
+    } else if ( battleSwitch || faintSwitch){
+        currAllyAtkBoost = 1
+        currAllyDefBoost = 1
+        currAllySpeAtkBoost = 1
+        currAllySpeDefBoost = 1
+        currAllySpdBoost = 1
+
+        currFoeAtkBoost = currFoeAtkBoost
+        currFoeDefBoost = currFoeDefBoost
+        currFoeSpeAtkBoost = currFoeSpeAtkBoost
+        currFoeSpeDefBoost = currFoeSpeDefBoost
+        currFoeSpdBoost = currFoeSpdBoost
+    } else {
+        currAllyAtkBoost = 1
+        currAllyDefBoost = 1
+        currAllySpeAtkBoost = 1
+        currAllySpeDefBoost = 1
+        currAllySpdBoost = 1
+    
+        currFoeAtkBoost = 1
+        currFoeDefBoost = 1
+        currFoeSpeAtkBoost = 1
+        currFoeSpeDefBoost = 1
+        currFoeSpdBoost = 1
+    }
+
+    if(trainerBattle && !battleMusicPlaying){
+        battleMusicPlaying = true
         audio.battle.play()
     }
 
     audio.map.stop()
+
+    document.removeEventListener('click', menuButtonEvent, true)
 
     document.querySelector('#levelUpDisplayContainer').style.display = 'none'
     document.querySelector('#levelUpDisplayContainer').style.left = '120%'
     document.querySelector('#evoButtonContainer').style.display = 'none'
     document.querySelector('#evoDialogueBox').style.display = 'none'
     document.querySelector('#battleOptionsContainer').style.display = 'grid'
-    document.querySelector('#attackInfoContainer').style.display = 'flex'
+    document.querySelector('#attackInfoContainer').style.display = 'none'
     document.querySelector('#attacksBox').style.display = 'grid'
 
+    let checkIfThresholdForHeldItemIsMet = (currPogemon, item) =>{
+        if(item !== undefined){
+            let hpInPercent = currPogemon.currHP * 100 / currPogemon.stats.HP
+            if(hpInPercent <= item.threshold){
+                if(item.type === 'berry'){
+                    console.log('condition met')
+                    queue.splice(1, 0, () =>{
+                        useHeldItem(currPogemon, item)
+                    })
+                }
+            }
+        } else {
+            console.log('no item held')
+        }
+    }
+
     document.querySelector('#menuContainer').style.display = 'none'
-    if(battleSwitch === true){
+    if(battleSwitch || returnFromBagMenu){
         currAlly = team[0]
-        const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
-        document.querySelector('#battleOptionsContainer').style.display = 'none'
-        document.querySelector('#attackEventContainer').style.display = 'grid' 
-        if (lastLeedPogemon){
-            if(lastLeedPogemon.globalId !== currAlly.globalId){
-                document.querySelector('#attackInfo').style.display = 'none'
-                document.querySelector('#dialogueBox').style.display = 'block'
-                document.querySelector('#dialogueBox').textContent = team[0].name + ' entered the battlefield!'
-                if(!faintSwitch){
+        chooseRandomAttack()
+        if(itemUsedDuringBattle){
+            attackInProcess = true
+            disableMenuDuringAttack = true
+            document.querySelector('#attackEventContainer').style.display = 'flex'
+            document.querySelector('#dialogueBox').style.display = 'flex'
+            document.querySelector('#dialogueBox').textContent = `A ${selectedItem.name} was used on ${selectedItemPogemon.name}!`
+            document.querySelector('#attackInfoContainer').style.display = 'none'
+            document.querySelector('#battleOptionsContainer').style.display = 'none'
+            setTimeout(() =>{
+                attackInProcess = false
+            }, 750)
+        } else {
+            document.querySelector('#attackEventContainer').style.display = 'none'
+            document.querySelector('#battleOptionsContainer').style.display = 'grid' 
+        }
+
+        if (itemUsedDuringBattle || lastLeedPogemon){
+            if(itemUsedDuringBattle || lastLeedPogemon.globalId !== currAlly.globalId){
+                if(lastLeedPogemon){
+                    if(lastLeedPogemon.globalId !== currAlly.globalId){
+                        currAllyAtkBoost = 1
+                        currAllyDefBoost = 1
+                        currAllySpeAtkBoost = 1
+                        currAllySpeDefBoost = 1
+                        currAllySpdBoost = 1
+                    
+                        currFoeAtkBoost = currFoeAtkBoost
+                        currFoeDefBoost = currFoeDefBoost
+                        currFoeSpeAtkBoost = currFoeSpeAtkBoost
+                        currFoeSpeDefBoost = currFoeSpeDefBoost
+                        currFoeSpdBoost = currFoeSpdBoost
+
+                        document.querySelector('#battleOptionsContainer').style.display = 'none'
+                        document.querySelector('#attackEventContainer').style.display = 'block'
+                    }
+                }
+                if(lastLeedPogemon){
+                    if(lastLeedPogemon.globalId !== currAlly.globalId){
+                        document.querySelector('#attackInfo').style.display = 'none'
+                        document.querySelector('#dialogueBox').style.display = 'block'
+                        document.querySelector('#dialogueBox').textContent = team[0].name + ' entered the battlefield!'
+                    }
+                } else if (selectedItem.category === 'pogeball') { 
+                    document.querySelector('#attackInfo').style.display = 'none'
+                    document.querySelector('#dialogueBox').style.display = 'block'
+                    document.querySelector('#dialogueBox').textContent = `You threw a ${selectedItem.name} at ${team[0].name}!`
+                    attackInProcess = true
+                }
+                if(itemUsedDuringBattle || battleSwitch && !faintSwitch){
                     queue.push(() =>{
                         currFoe.attack({ 
                             attack: randomAttack,
                             recipient: currAlly,
                             renderedSprites
                         })
+                        checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                        checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                         if(currAlly.currHP < 1) {
                             queue.push(() =>{
                                 currAlly.faint(currFoe)
@@ -150,9 +338,10 @@ const initBattle = () =>{
                                 opacity: 1,
                                 onComplete: () => {
                                     document.querySelector('#battleScene').style.display = 'none'
-                                    console.log(teamFainted)
                                     if (teamFainted){
                                         if(battle.initiated){
+                                            battleMusicPlaying = false
+                                            removeBattleEventListener = true
                                             queue = []
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
@@ -166,6 +355,7 @@ const initBattle = () =>{
                                         queue = []
                                         faintSwitch = true
                                         teamMenu.open = true
+                                        battleMusicPlaying = false
                                         cancelAnimationFrame(animateBattleId)
                                         animateTeamMenu()
                                         gsap.to('#overlappingDiv', {
@@ -183,9 +373,9 @@ const initBattle = () =>{
                 document.querySelector('#attackEventContainer').style.display = 'none'
             } 
         }
+        itemUsedDuringBattle = false
         battleSwitch = false
         faintSwitch = false
-        switchAction = true
     } else document.querySelector('#dialogueBox').style.display = 'none'
 
     document.querySelector('#battleScene').style.display = 'block'
@@ -205,7 +395,6 @@ const initBattle = () =>{
     for(let i = 0; i < team.length; i++){
         if(!team[i].fainted) {
             currAlly = team[i]
-            console.log(team[i])
             break
         }
     }
@@ -219,27 +408,63 @@ const initBattle = () =>{
 
     let defineEnnemyTeam = trainer =>{
         currFoeTeamData = trainer.team
-        trainer.setTeamLevel()
         currFoeTeam = []
         for (let i = 0; i < currFoeTeamData.length; i++){
+            currFoeTeamData[i].currLevel = trainer.setTeamLevel[i]
             currFoePogemon = new Pogemon(currFoeTeamData[i])
             currFoeTeam.push(currFoePogemon)
             currFoeTeam[i].currLevel = currFoeTeamData[i].currLevel
         }
     }
-    
-    if (trainerBattle && !switchAction){
+
+    if (trainerBattle && newBattle){
         document.querySelector('#battleOptionsContainer').style.display = 'grid'
         document.querySelector('#attackEventContainer').style.display = 'none'
         defineEnnemyTeam(currTrainer.data)
         currFoe = currFoeTeam[0]
-    } else if (!trainerBattle && !switchAction) {
+        definePogemonStats(currFoe)
+        currFoe.currHP = currFoe.stats.HP
+        let determineFoeAttacks = foe =>{
+            foe.attackPool.forEach(attack =>{
+                if(foe.currLevel >= attack.lvl){
+                    if(foe.attacks.length >= 4 && !attack.learned){
+                        foe.attacks.push(attack.move)
+                        foe.attacks.shift()
+                    } else if (foe.attacks.length <= 3 && !attack.learned) {
+                        foe.attacks.push(attack.move)
+                    }
+                }
+            })
+            return foe.attacks
+        }
+        currFoe.attacks = determineFoeAttacks(currFoe)
+    } else if (!trainerBattle && newBattle) {
         let determineFoeLevel = (min, max) =>{
             return Math.floor(min + Math.random()*(max - min + 1))
         }
-        currFoe = new Pogemon(potentialEnemy)
-        currFoe.currLevel = determineFoeLevel(currMap.levelRange.min, currMap.levelRange.max)
-    } else if (!trainerBattle && switchAction) {
+        let determineFoeAttacks = foe =>{
+            foe.attackPool.forEach(attack =>{
+                if(foe.currLevel >= attack.lvl){
+                    if(foe.attacks.length >= 4 && !attack.learned){
+                        foe.attacks.push(attack.move)
+                        foe.attacks.shift()
+                    } else if (foe.attacks.length <= 3 && !attack.learned) {
+                        foe.attacks.push(attack.move)
+                    }
+                }
+            })
+            return foe.attacks
+        }
+        // currFoe = new Pogemon(potentialEnemy)
+        // currFoe.currLevel = determineFoeLevel(currMap.levelRange.min, currMap.levelRange.max)
+        currFoe = new Pogemon(pogemons.Lokump)
+        currFoe.currLevel = determineFoeLevel(7, 7)
+        currFoe.attacks = determineFoeAttacks(currFoe)
+        definePogemonStats(currFoe)
+        currFoe.currHP = currFoe.stats.HP
+        currFoe.isEnemy = true
+    } else if (!trainerBattle && !newBattle) {
+        // this is not right, should change it
         currFoe = new Pogemon(currFoe)
     }
 
@@ -248,14 +473,22 @@ const initBattle = () =>{
         y: 0
     }
 
-    if(switchAction){
+    // load correct pogemon HP after menu switch
+
+    if(switchAction && trainerBattle || returnFromBagMenu && trainerBattle || returnFromTeamMenu && trainerBattle){
+        definePogemonStats(currFoe)
         currFoe.currHP = currFoeTeam[0].currHP
-        console.log(switchAction)
+        returnFromBagMenu = false
+        returnFromTeamMenu = false
+    } else if(!trainerBattle && !newBattle){
+        currFoe.currHP = currFoe.currHP
     } else {
+        newBattle = false
+        currFoe.frames.hold = 50
         definePogemonStats(currFoe)
         currFoe.currHP = currFoe.stats.HP
-        console.log(switchAction)
     }
+
     
     renderedSprites = [currAlly, currFoe]
     currFoe.isEnemy = true
@@ -311,6 +544,7 @@ const initBattle = () =>{
     })
 
     let attackButtonOnClick = e =>{
+        disableMenuDuringAttack = true
         const selectedAttack = attacks[e.currentTarget.textContent]
         _doActionNoSpam(selectedAttack)
     }
@@ -318,81 +552,80 @@ const initBattle = () =>{
     //option menu
 
     menuButtonEvent = () => {
-        switch(mouse.textContent){
-            case 'Fight':
-                document.querySelector('#battleOptionsContainer').style.display = 'none'
-                document.querySelector('#dialogueBox').style.display = 'none'
-                document.querySelector('#attackEventContainer').style.display = 'flex'
-                document.querySelector('#attackInfo').style.display = 'grid'
-                break
-            case 'Catch':
-                if(!trainerBattle){
-                    currFoe.catch(currFoe)
+        if(battle.initiated){
+            switch(mouse.textContent){
+                case 'Fight':
                     document.querySelector('#battleOptionsContainer').style.display = 'none'
-                    document.querySelector('#dialogueBox').style.display = 'flex'
+                    document.querySelector('#dialogueBox').style.display = 'none'
                     document.querySelector('#attackEventContainer').style.display = 'flex'
-                    document.querySelector('#dialogueBox').textContent = 'catching ' + currFoe.name
-                    document.querySelector('#attackInfo').style.display = 'none'
-                } else {
-                    audio.error.play()
-                }
-                break
-            case 'Pogemon':
-                let teamMenuTimerId;
-                let dontSpamTeamMenuButton = () =>{
-                    if (!(teamMenuTimerId == null)) {
-                        clearTimeout(teamMenuTimerId);
+                    document.querySelector('#attackInfo').style.display = 'grid'
+                    document.querySelector('#attackInfoContainer').style.display = 'flex'
+                    break
+                case 'Bag':
+                        bagMenu.open = true
+                        battleItemMenu = true
+                    break
+                case 'Pogemon':
+                    let teamMenuTimerId;
+                    let dontSpamTeamMenuButton = () =>{
+                        if (!(teamMenuTimerId == null)) {
+                            clearTimeout(teamMenuTimerId);
+                        }
+                        teamMenuTimerId = setTimeout(() =>{
+                            document.querySelector('#battleScene').style.display = 'none'
+                            gsap.to('#overlappingDiv', {
+                                opacity: 1,
+                                duration: 0.5,
+                                onComplete: () =>{
+                                    gsap.to('#overlappingDiv', {
+                                        opacity: 0,
+                                        duration: 0.5
+                                    })
+                                }
+                            })
+                            teamMenu.animate = true
+                            teamMenu.open = true
+                        }, 400);
                     }
-                    teamMenuTimerId = setTimeout(() =>{
-                        document.querySelector('#battleScene').style.display = 'none'
+                    let flag = false
+                    if (flag === false){
+                        dontSpamTeamMenuButton()
+                        flag = true
+                    }
+                    document.removeEventListener('click', menuButtonEvent, true)
+                    break
+                case 'Run':
+                    if(!trainerBattle){
                         gsap.to('#overlappingDiv', {
                             opacity: 1,
-                            duration: 0.5,
-                            onComplete: () =>{
+                            onComplete: () => {
+                                document.querySelector('#battleScene').style.display = 'none'
+                                if(battle.initiated === true) {
+                                    battleMusicPlaying = false
+                                    removeBattleEventListener = true
+                                    cancelAnimationFrame(animateBattleId)
+                                    animate()
+                                }
                                 gsap.to('#overlappingDiv', {
-                                    opacity: 0,
-                                    duration: 0.5
+                                    opacity: 0
                                 })
+                                battle.initiated = false
+                                audio.battle.stop()
+                                audio.map.play()
                             }
                         })
-                        teamMenu.animate = true
-                        teamMenu.open = true
-                    }, 400);
-                }
-                let flag = false
-                if (flag === false){
-                    dontSpamTeamMenuButton()
-                    flag = true
-                }
-                document.removeEventListener('click', menuButtonEvent, true)
-                break
-            case 'Run':
-                if(!trainerBattle){
-                    gsap.to('#overlappingDiv', {
-                        opacity: 1,
-                        onComplete: () => {
-                            document.querySelector('#battleScene').style.display = 'none'
-                            if(battle.initiated === true) {
-                                cancelAnimationFrame(animateBattleId)
-                                animate()
-                            }
-                            gsap.to('#overlappingDiv', {
-                                opacity: 0
-                            })
-                            battle.initiated = false
-                            audio.battle.stop()
-                            audio.map.play()
-                        }
-                    })
-                    document.removeEventListener('click', menuButtonEvent, true)
-                } else {
-                    audio.error.play()
-                }
-                break
+                        document.removeEventListener('click', menuButtonEvent, true)
+                    } else {
+                        audio.error.play()
+                    }
+                    break
+            }
+        } else {
+            document.removeEventListener('click', menuButtonEvent, true)
         }
     }
 
-    document.addEventListener('click', menuButtonEvent, true)
+    document.addEventListener('click', menuButtonEvent, true)  
 
     let optionsButton = []
     document.querySelectorAll('.battleOptionsButton').forEach(button =>{
@@ -403,8 +636,8 @@ const initBattle = () =>{
                 case 'Fight':
                     battleOptionsDialogue.textContent = 'Do you want to fight ' + currFoe.name + '?'
                     break
-                case 'Catch':
-                    battleOptionsDialogue.textContent = 'Do you want to catch ' + currFoe.name + '?'
+                case 'Bag':
+                    battleOptionsDialogue.textContent = 'Do you want to look in your bag?'
                     break
                 case 'Pogemon':
                     battleOptionsDialogue.textContent = 'Do you want to switch?'
@@ -429,6 +662,8 @@ const initBattle = () =>{
             }
             timerId = setTimeout(() =>{
                 
+                attackInProcess = true
+                
                 document.querySelector('#attackInfo').style.display = 'none'
 
                 // if ally is faster than ennemy
@@ -438,7 +673,8 @@ const initBattle = () =>{
                         recipient: currFoe,
                         renderedSprites
                     })
-                    attackInitiated = true
+                    checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                    checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                     if(currFoe.currHP < 1) {
                         currFoe.frames.hold = 0
                         if(currFoeTeam.length <= 1){
@@ -462,6 +698,8 @@ const initBattle = () =>{
                                                     if (trainerBattle){
                                                         currTrainer.defeat()
                                                     }
+                                                    battleMusicPlaying = false
+                                                    removeBattleEventListener = true
                                                     cancelAnimationFrame(animateBattleId)
                                                     animate()
                                                 }
@@ -481,13 +719,15 @@ const initBattle = () =>{
                             })
                         }
                     } else {
-                        const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
+                        chooseRandomAttack()
                         queue.push(() =>{
                             currFoe.attack({ 
                                 attack: randomAttack,
                                 recipient: currAlly,
                                 renderedSprites
                             })
+                            checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                            checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                             if(currAlly.currHP < 1) {
                                 queue.push(() =>{
                                     currAlly.faint(currFoe)
@@ -497,9 +737,10 @@ const initBattle = () =>{
                                     opacity: 1,
                                     onComplete: () => {
                                         document.querySelector('#battleScene').style.display = 'none'
-                                        console.log(teamFainted)
                                         if (teamFainted){
                                             if(battle.initiated){
+                                                battleMusicPlaying = false
+                                                removeBattleEventListener = true
                                                 queue = []
                                                 cancelAnimationFrame(animateBattleId)
                                                 animate()
@@ -527,13 +768,14 @@ const initBattle = () =>{
                     }
                    // if ennemy is faster than ally
                 } else if (currFoe.stats.Spd > currAlly.stats.Spd) {
-                    const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
+                    chooseRandomAttack()
                     currFoe.attack({ 
                         attack: randomAttack,
                         recipient: currAlly,
                         renderedSprites
                     })
-                    attackInitiated = true
+                    checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                    checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                     if(currAlly.currHP < 1) {
                         queue.push(() =>{
                             currAlly.faint(currFoe)
@@ -543,9 +785,10 @@ const initBattle = () =>{
                                 opacity: 1,
                                 onComplete: () => {
                                     document.querySelector('#battleScene').style.display = 'none'
-                                    console.log(teamFainted)
                                     if (teamFainted){
                                         if(battle.initiated){
+                                            battleMusicPlaying = false
+                                            removeBattleEventListener = true
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
                                         }
@@ -574,6 +817,8 @@ const initBattle = () =>{
                                 recipient: currFoe,
                                 renderedSprites
                             })
+                            checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                            checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                             if(currFoe.currHP < 1) {
                                 currFoe.frames.hold = 0
                                 if(currFoeTeam.length <= 1){
@@ -596,6 +841,8 @@ const initBattle = () =>{
                                                             if (trainerBattle){
                                                                 currTrainer.defeat()
                                                             }
+                                                            battleMusicPlaying = false
+                                                            removeBattleEventListener = true
                                                             cancelAnimationFrame(animateBattleId)
                                                             animate()
                                                         }
@@ -626,7 +873,8 @@ const initBattle = () =>{
                             recipient: currFoe,
                             renderedSprites
                         })
-                        attackInitiated = true
+                        checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                        checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                         if(currFoe.currHP < 1) {
                             currFoe.frames.hold = 0
                             if(currFoeTeam.length <= 1){
@@ -649,6 +897,8 @@ const initBattle = () =>{
                                                         if (trainerBattle){
                                                             currTrainer.defeat()
                                                         }
+                                                        battleMusicPlaying = false
+                                                        removeBattleEventListener = true
                                                         cancelAnimationFrame(animateBattleId)
                                                         animate()
                                                     }
@@ -668,13 +918,15 @@ const initBattle = () =>{
                                 })
                             }
                         } else {
-                            const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
+                            chooseRandomAttack()
                             queue.push(() =>{
                                 currFoe.attack({ 
                                     attack: randomAttack,
                                     recipient: currAlly,
                                     renderedSprites
                                 })
+                                checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                                checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                                 if(currAlly.currHP < 1) {
                                     queue.push(() =>{
                                         currAlly.faint(currFoe)
@@ -686,6 +938,8 @@ const initBattle = () =>{
                                             document.querySelector('#battleScene').style.display = 'none'
                                             if (teamFainted){
                                                 if(battle.initiated){
+                                                    battleMusicPlaying = false
+                                                    removeBattleEventListener = true
                                                     cancelAnimationFrame(animateBattleId)
                                                     animate()
                                                 }
@@ -710,13 +964,14 @@ const initBattle = () =>{
                             })
                         }
                     } else if(speedTie >= 50){
-                        const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
+                        chooseRandomAttack()
                         currFoe.attack({ 
                             attack: randomAttack,
                             recipient: currAlly,
                             renderedSprites
                         })
-                        attackInitiated = true
+                        checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                        checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                         if(currAlly.currHP < 1) {
                             queue.push(() =>{
                                 currAlly.faint(currFoe)
@@ -728,6 +983,8 @@ const initBattle = () =>{
                                     document.querySelector('#battleScene').style.display = 'none'
                                     if (teamFainted){
                                         if(battle.initiated){
+                                            battleMusicPlaying = false
+                                            removeBattleEventListener = true
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
                                         }
@@ -755,6 +1012,8 @@ const initBattle = () =>{
                                     recipient: currFoe,
                                     renderedSprites
                                 })
+                                checkIfThresholdForHeldItemIsMet(currAlly, currAlly.item)
+                                checkIfThresholdForHeldItemIsMet(currFoe, currFoe.item)
                                 if(currFoe.currHP < 1) {
                                     currFoe.frames.hold = 0
                                     if(currFoeTeam.length <= 1){
@@ -777,6 +1036,8 @@ const initBattle = () =>{
                                                                 if (trainerBattle){
                                                                     currTrainer.defeat()
                                                                 }
+                                                                battleMusicPlaying = false
+                                                                removeBattleEventListener = true
                                                                 cancelAnimationFrame(animateBattleId)
                                                                 animate()
                                                             }
@@ -841,30 +1102,55 @@ const animateBattle = () => {
             currAlly.faint(currFoe)
         })
         queue.push(() =>{
-        gsap.to('#overlappingDiv', {
-            opacity: 1,
-            onComplete: () => {
-                document.querySelector('#battleScene').style.display = 'none'
-                if (teamFainted){
-                    if(battle.initiated){
+            gsap.to('#overlappingDiv', {
+                opacity: 1,
+                onComplete: () => {
+                    document.querySelector('#battleScene').style.display = 'none'
+                    if (teamFainted){
+                        if(battle.initiated){
+                            battleMusicPlaying = false
+                            removeBattleEventListener = true
+                            cancelAnimationFrame(animateBattleId)
+                            animate()
+                        }
+                        gsap.to('#overlappingDiv', {
+                            opacity: 0
+                        })
+                        battle.initiated = false
+                        audio.map.play()
+                    } else {
+                        queue = []
                         cancelAnimationFrame(animateBattleId)
-                        animate()
+                        animateTeamMenu()
+                        gsap.to('#overlappingDiv', {
+                            opacity: 0
+                        })
                     }
-                    gsap.to('#overlappingDiv', {
-                        opacity: 0
-                    })
-                    battle.initiated = false
-                    audio.map.play()
-                } else {
-                    queue = []
+                }
+            })
+        })
+    }
+
+    console.log(battleItemMenu)
+
+    if(battleItemMenu){
+        openItemMenuFromBattle = true
+        if(openItemMenuFromBattle){
+            battleItemMenu = false
+            openItemMenuFromBattle = false
+            gsap.to('#overlappingDiv', {
+                opacity: 1,
+                onComplete: () => {
+                    document.querySelector('#battleScene').style.display = 'none'
                     cancelAnimationFrame(animateBattleId)
-                    animateTeamMenu()
+                    initItemMenu()
+                    animateItemMenu()
                     gsap.to('#overlappingDiv', {
                         opacity: 0
                     })
                 }
-            }})
-        })
+            })
+        }
     }
 
     if(teamMenu.open && teamMenu.animate){
@@ -896,11 +1182,14 @@ _doActionNoSpamChangeBattleAction = () =>{
     }
     battleActionTimerId = setTimeout(() =>{
         if (queue.length > 0){
-            queue[0]()
-            queue.shift()
-        } else {
+            disableMenuDuringAttack = true
+            if(!attackInProcess){
+                queue[0]()
+                queue.shift()
+            }
+        } else if (!attackInProcess) {
             queue = []
-            attackInitiated = false
+            disableMenuDuringAttack = false
             document.querySelector('#dialogueBox').style.display = 'none'
             document.querySelector('#attackEventContainer').style.display = 'none'
             document.querySelector('#battleOptionsContainer').style.display = 'grid'

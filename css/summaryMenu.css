@@ -137,6 +137,18 @@
     width: 500px;
 }
 
+#summaryAttackDescription{
+    position: relative;
+    
+    left: 45px;
+    top: -300px;
+
+    width: 80%;
+
+    font-size: large;
+    line-height: 62.5px;
+}
+
 #summaryAttackName{
     position: relative;
 
@@ -180,16 +192,4 @@
     top: -341.5px;
 
     font-size: 20px;
-}
-
-#summaryAttackDescription{
-    position: relative;
-    
-    left: 45px;
-    top: -300px;
-
-    width: 80%;
-
-    font-size: x-large;
-    line-height: 62.5px;
 }

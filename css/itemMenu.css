@@ -63,6 +63,24 @@ ul{
     pointer-events: none;
 }
 
+.pogemonItemSpriteContainer{
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: inline-block;
+
+    height: 150px;
+    width: 150px
+} .pogemonItemSpriteContainer > img {
+    position: inherit;
+    top: 85px;
+    left: 725px;
+    height: 35px;
+}
+
 .pogemonItemNameData{
     position: relative;
     top: 25%;
@@ -109,7 +127,9 @@ ul{
     height: 100%;
     width: 100%;
 
-    background-color: lightgreen;
+    background-color: lightgrey;
+
+    border-top: 2px solid black;
 }
 
 .pogemonItemHealthbarContainer{
@@ -118,12 +138,12 @@ ul{
 
 .pogemonItemHealthbar{
     position: relative;
-    top: -31px;
+    top: -29px;
     right: 0;
     bottom: 0;
     left: 0;
 
-    height: 100%;
+    height: 92.5%;
     width: 100%;
 
     background-color: green;
@@ -155,7 +175,9 @@ ul{
     margin-top: 25px !important;
     margin-left: 40px !important;
 }#itemMenuTypeContainer > img:hover {
-    background: radial-gradient(#9A1E19EE, 65%,#9A1E1900);
+    background: radial-gradient(#eaeaea99, 55%,#00000000, #00000000) !important;
+    
+    transition: ease 0.1s;
 }
 
 #itemMenuItemContainer{
@@ -227,7 +249,9 @@ ul{
     
     cursor: pointer;
 }.itemContainer:hover{
-    background-color: #651311ee;
+    background-color: #68161266;
+    
+    transition: ease 0.1s;
 }.itemContainer > h4{
     position: relative;
     top: 50%;
@@ -275,4 +299,6 @@ ul{
     cursor: pointer;
 
     background-color: #651311ee;
+
+    transition: ease 0.1s;
 }

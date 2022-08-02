@@ -90,6 +90,9 @@ class Pogemon extends Sprite {
     expCurve,
     catchRate,
     globalId,
+    item,
+    abilities,
+    currAbility,
     }) {
     super({
         image, 
@@ -118,6 +121,9 @@ class Pogemon extends Sprite {
     this.evolution = evolution
     this.catchRate = catchRate
     this.globalId = globalId
+    this.item = item,
+    this.abilities = abilities
+    this.currAbility = currAbility
     }
 
     attack({attack, recipient, renderedSprites}) {
@@ -127,6 +133,7 @@ class Pogemon extends Sprite {
         let resisted
         let immuned
         let STAB
+        attackInProcess = true
 
         if(this.type.type1 === attack.element || this.type.type2 === attack.element){
             STAB = true
@@ -134,41 +141,41 @@ class Pogemon extends Sprite {
 
         // check for move effectiveness
 
-        //type 1 or type 2 is immuned, result is immued
+        //type 1 or type 2 is immuned, result is immuned
         if(attack.type === 'Special' || attack.type === 'Physical'){
             if(types[recipient.type.type1].immuned.includes(attack.element) || types[recipient.type.type2].immuned.includes(attack.element)){
                 immuned = true
-                document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n but ${recipient.name} is immuned...`
+                document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name} \n\n but ${recipient.name} is immuned...`
             //type 1 and type 2 are not immuned, proceed
             } else if(!types[recipient.type.type1].immuned.includes(attack.element) && !types[recipient.type.type2].immuned.includes(attack.element)){
                 // type 1 and type 2 are very effective, result is super effective
                 if(types[recipient.type.type1].veryEffective.includes(attack.element) && types[recipient.type.type2].veryEffective.includes(attack.element)){
                     superEffective = true
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's super effective!` 
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name} \n\n it's super effective!` 
                 // type 1 or type 2 are very effective, result is very effective
                 } else if(types[recipient.type.type1].veryEffective.includes(attack.element) && types[recipient.type.type2].notEffective.includes(attack.element)){
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}` 
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name}` 
                 // type 1 is very effective and type 2 is not effective, result is normal
                 } else if(types[recipient.type.type1].notEffective.includes(attack.element) && types[recipient.type.type2].veryEffective.includes(attack.element)){
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}` 
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name}` 
                 // type 1 and type 2 is not effective, result is resisted
                 } else if(types[recipient.type.type1].notEffective.includes(attack.element) && types[recipient.type.type2].notEffective.includes(attack.element)){
                 resisted = true
-                document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n but ${recipient.name} resisted...` 
+                document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name} \n\n but ${recipient.name} resisted...` 
                 // type 1 is not effective and type 2 is very effective, result is normal
                 } else if(types[recipient.type.type1].veryEffective.includes(attack.element) || types[recipient.type.type2].veryEffective.includes(attack.element)){
                     veryEffective = true
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's very effective!` 
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name} \n\n it's very effective!` 
                 // type 1 or type 2 is not effective, result is not very effective
                 } else if(types[recipient.type.type1].notEffective.includes(attack.element) || types[recipient.type.type2].notEffective.includes(attack.element)){
                     notEffective = true
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name} \n\n it's not very effective..` 
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name} \n\n it's not very effective..` 
                 } else {
-                    document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name} on ${recipient.name}`
+                    document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name} on ${recipient.name}`
                 }
             }    
         } else {
-            document.querySelector('#dialogueBox').innerText = `${this.name} used ${attack.name}`
+            document.querySelector('#dialogueBox').innerText = `${this.name} uses ${attack.name}`
         }
         
 
@@ -191,6 +198,8 @@ class Pogemon extends Sprite {
 
         let targetHPDisplay = document.querySelector(enemyHPDisplay)
         let userHPDisplay = document.querySelector(playerHPDisplay)
+
+        let prevAttackerPos = this.position
 
         let hpInPercentBattle
 
@@ -235,19 +244,11 @@ class Pogemon extends Sprite {
             return Math.floor(Math.random() * (max - min) + min) * 0.1
         }
 
-        // attack effectivness
-
-
-        // let checkEffectivness = ( attackType, recipientType ) => {
-        //     if(attackType)
-        // }
-
         let rollRange = getRandomInt(9, 12)
 
         // damage Calculation here
 
-
-        let damageCalculation = ( attack, recipient ) =>{
+        let attackCalculation = ( attack, recipient ) =>{
             let E = 1
             let S = 1
             let C = 1
@@ -256,7 +257,7 @@ class Pogemon extends Sprite {
             let critRoll = Math.floor(Math.random() * 100)
 
             if(attack.type === 'Special' || attack.type === 'Physical') {
-                if(critRoll < 5){
+                if(critRoll < 5 && !immuned){
                     crit = true
                     C = 1.5
                     queue.splice(1, 0, () =>{
@@ -270,7 +271,13 @@ class Pogemon extends Sprite {
             }
 
             if (attack.type === 'Physical'){
-                let physDamage = Math.floor(attack.potency * (user.stats.Atk/recipient.stats.Def) / 10) * rollRange
+                let physDamage
+                if(recipient.isEnemy){
+                    physDamage = Math.floor(attack.potency * ((user.stats.Atk * currAllyAtkBoost)/(recipient.stats.Def * currFoeDefBoost)) / 10) * rollRange
+                } else {
+                    physDamage = Math.floor(attack.potency * ((user.stats.Atk * currFoeAtkBoost)/(recipient.stats.Def * currAllyDefBoost)) / 10) * rollRange
+                }
+                
                 if (physDamage <= 0) physDamage = 1
                 if(superEffective){
                     E * 2
@@ -288,7 +295,12 @@ class Pogemon extends Sprite {
                     recipient.currHP = 0
                 }
             } else if (attack.type === 'Special'){
-                let speDamage = Math.floor(attack.potency * (user.stats.SpAtk/recipient.stats.SpDef) / 10) * rollRange
+                let speDamage
+                if(recipient.isEnemy){
+                    speDamage = Math.floor(attack.potency * (user.stats.SpAtk * currAllySpeAtkBoost/recipient.stats.SpDef * currFoeSpeDefBoost) / 10) * rollRange
+                } else {
+                    speDamage = Math.floor(attack.potency * (user.stats.SpAtk * currFoeSpeAtkBoost/recipient.stats.SpDef * currAllySpeDefBoost) / 10) * rollRange
+                }
                 if (speDamage <= 0) speDamage = 1
                 if(superEffective){
                     E * 2
@@ -306,6 +318,637 @@ class Pogemon extends Sprite {
                     recipient.currHP = 0
                 }
             } else if (attack.type === 'Status'){
+                // this is a nightmare but im too lazy to figure out how to loop the currAllyStat correctly
+                // put dialogue for status down vvv
+                // need to work on sharply raise and sharply lowered stat functionality
+                let r = document.querySelector(':root')
+                if(attack.effect === 'increaseStats'){
+                    if(recipient.isEnemy) {
+                        if(attack.stat === 'ATK'){
+                            // if stat maxed
+                            if(currAllyAtkBoost >= 4){
+                                currAllyAtkBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK cannot go up any further!`
+                                })
+                            // if stat was decreased at least one and did not get back to baseline 
+                            } else if (currAllyAtkBoost < 1) {
+                                // if(attack.stage === 1)
+                                currAllyAtkBoost = currAllyAtkBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK increased!`
+                                })
+                                //if(attack.stage === 2){
+                                    // put sharply raised here
+                                // }
+                            //if stat is above baseline and not maxed
+                            } else {
+                                currAllyAtkBoost += attack.potency / 100
+                                if(currAllyAtkBoost > 4){
+                                    currAllyAtkBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'DEF') {
+                            if(currAllyDefBoost >= 4){
+                                currAllyDefBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK cannot go up any further!`
+                                })
+                            } else if (currAllyDefBoost < 1) {
+                                currAllyDefBoost = currAllyDefBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF increased!`
+                                })
+                            } else {
+                                currAllyDefBoost += attack.potency / 100
+                                if(currAllyDefBoost > 4){
+                                    currAllyDefBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEATK') {
+                            if(currAllySpeAtkBoost >= 4){
+                                currAllySpeAtkBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK cannot go up any further!`
+                                })
+                            } else if (currAllySpeAtkBoost < 1) {
+                                currAllySpeAtkBoost = currAllySpeAtkBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK increased!`
+                                })
+                            } else{
+                                currAllySpeAtkBoost += attack.potency / 100
+                                if(currAllySpeAtkBoost > 4){
+                                    currAllySpeAtkBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEDEF') {
+                            if(currAllySpeDefBoost >= 4){
+                                currAllySpeDefBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF cannot go up any further!`
+                                })
+                            } else if (currAllySpeDefBoost < 1) {
+                                currAllySpeDefBoost = currAllySpeDefBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF increased!`
+                                })
+                            } else {
+                                currAllySpeDefBoost += attack.potency / 100
+                                if(currAllySpeDefBoost > 4){
+                                    currAllySpeDefBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPD') {
+                            if(currAllySpdBoost >= 4){
+                                currAllySpdBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD cannot go up any further!`
+                                })
+                            } else if (currAllySpdBoost < 1) {
+                                currAllySpdBoost = currAllySpdBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD increased!`
+                                })
+                            } else {
+                                currAllySpdBoost += attack.potency / 100
+                                if(currAllySpdBoost > 4){
+                                    currAllySpdBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD increased!`
+                                })
+                            }
+                        }
+                    } else if(!recipient.isEnemy){
+                        if(attack.stat === 'ATK'){
+                            if(currFoeAtkBoost >= 4){
+                                currFoeAtkBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK cannot go up any further!`
+                                })
+                            } else if (currAllyAtkBoost < 1) {
+                                currAllyAtkBoost = currAllyAtkBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK increased!`
+                                })
+                            } else {
+                                currFoeAtkBoost += attack.potency / 100
+                                if(currFoeAtkBoost > 4){
+                                    currFoeAtkBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'DEF') {
+                            if(currFoeDefBoost >= 4){
+                                currFoeDefBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF cannot go up any further!`
+                                })
+                            } else if (currAllyDefBoost < 1) {
+                                currAllyDefBoost = currAllyDefBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF increased!`
+                                })
+                            } else {
+                                currFoeDefBoost += attack.potency / 100
+                                if(currFoeDefBoost > 4){
+                                    currFoeDefBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEATK') {
+                            if(currFoeSpeAtkBoost >= 4){
+                                currFoeSpeAtkBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK cannot go up any further!`
+                                })
+                            } else if (currAllySpeAtkBoost < 1) {
+                                currAllySpeAtkBoost = currAllySpeAtkBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK increased!`
+                                })
+                            } else {
+                                currFoeSpeAtkBoost += attack.potency / 100
+                                if(currFoeSpeAtkBoost > 4){
+                                    currFoeSpeAtkBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK increased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEDEF') {
+                            if(currAllySpeDefBoost >= 4){
+                                currFoeSpeDefBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF cannot go up any further!`
+                                })
+                            } else if (currAllySpeDefBoost < 1) {
+                                currAllySpeDefBoost = currAllySpeDefBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF increased!`
+                                })
+                            } else {
+                                currFoeSpeDefBoost += attack.potency / 100
+                                if(currFoeSpeDefBoost > 4){
+                                    currFoeSpeDefBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF increased!`
+                                })
+                            }
+                            
+                        } else if(attack.stat === 'SPD') {
+                            if(currFoeSpdBoost >= 4){
+                                currFoeSpdBoost = 4
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD cannot go up any further!`
+                                })
+                            } else if (currAllySpdBoost < 1) {
+                                currAllySpdBoost = currAllySpdBoost / (attack.potency / 100)
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD increased!`
+                                })
+                            } else {
+                                currFoeSpdBoost += attack.potency / 100
+                                if(currFoeSpdBoost > 4){
+                                    currFoeSpdBoost = 4
+                                }
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD increased!`
+                                })
+                            }
+                        }
+                    }
+                } else if(attack.effect === 'decreaseStats'){
+                    if(!recipient.isEnemy) {
+                        if(attack.stat === 'ATK'){
+                            //if max lowered
+                            if(currAllyAtkBoost < 0.1778){
+                                currAllyAtkBoost = 0.1778
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK cannot be decreased any further!`
+                                })
+                            //if above baseline
+                            } else if (currAllyAtkBoost > 1) {
+                                currAllyAtkBoost = currAllyAtkBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s ATK decreased!`
+                                })
+                            // if normal/below baseline and not maxed
+                            } else {
+                                currAllyAtkBoost = currAllyAtkBoost * 0.75
+                                if(currAllyAtkBoost < 0.1778){
+                                    currAllyAtkBoost = 0.1778
+                                }
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'DEF') {
+                            if(currAllyDefBoost < 0.1778){
+                                currAllyDefBoost = 0.1778
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF cannot be decreased any further!`
+                                })
+                            } else if (currAllyDefBoost > 1) {
+                                currAllyDefBoost = currAllyDefBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s DEF decreased!`
+                                })
+                            } else {
+                                currAllyDefBoost = currAllyDefBoost * 0.75
+                                if(currAllyDefBoost < 0.1778){
+                                    currAllyDefBoost = 0.1778
+                                }
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEATK') {
+                            if(currAllySpeAtkBoost < 0.1778){
+                                currAllySpeAtkBoost = 0.1778
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK cannot be decreased any further!`
+                                })
+                            } else if (currAllySpeAtkBoost > 1) {
+                                currAllySpeAtkBoost = currAllySpeAtkBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SpeATK decreased!`
+                                })
+                            } else {
+                                currAllySpeAtkBoost = currAllySpeAtkBoost * 0.75
+                                if(currAllySpeAtkBoost < 0.1778){
+                                    currAllySpeAtkBoost = 0.1778
+                                }
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEDEF') {
+                            if(currAllySpeDefBoost < 0.1778){
+                                currAllySpeDefBoost = 0.1778
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF cannot be decreased any further!`
+                                })
+                            } else if (currAllySpeDefBoost > 1) {
+                                currAllySpeDefBoost = currAllySpeDefBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SpeDEF decreased!`
+                                })
+                            } else {
+                                currAllySpeDefBoost = currAllySpeDefBoost * 0.75
+                                if(currAllySpeDefBoost < 0.1778){
+                                    currAllySpeDefBoost = 0.1778
+                                }
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPD') {
+                            if(currAllySpdBoost < 0.1778){
+                                currAllySpdBoost = 0.1778
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD cannot be decreased any further!`
+                                })
+                            } else if (currAllySpdBoost > 1) {
+                                currAllySpdBoost = currAllySpdBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SPD decreased!`
+                                })
+                            } else {
+                                currAllySpdBoost = currAllySpdBoost * 0.75
+                                if(currAllySpdBoost > 0.1778){
+                                    currAllySpdBoost = 0.1778
+                                }
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#playerEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#playerEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD decreased!`
+                                })
+                            }
+                        }
+                    } else if(recipient.isEnemy){
+                        if(attack.stat === 'ATK'){
+                            //if max lowered
+                            if(currFoeAtkBoost < 0.177978515625){
+                                currFoeAtkBoost = 0.177978515625
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK cannot be decreased any further!`
+                                })
+                            //if above baseline
+                            } else if (currFoeAtkBoost > 1) {
+                                currFoeAtkBoost = currFoeAtkBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s ATK decreased!`
+                                })
+                            // if normal/below baseline and not maxed
+                            } else {
+                                currFoeAtkBoost = currFoeAtkBoost * 0.75
+                                if(currFoeAtkBoost <= 0.177978515625){
+                                    currFoeAtkBoost = 0.177978515625
+                                }
+                                r.style.setProperty('--statsChangeColor', 'red')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s ATK decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'DEF') {
+                            if(currFoeDefBoost <= 0.177978515625){
+                                currFoeDefBoost = 0.177978515625
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF cannot be decreased any further!`
+                                })
+                            } else if (currFoeDefBoost > 1) {
+                                currFoeDefBoost = currFoeDefBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s DEF decreased!`
+                                })
+                            } else {
+                                currFoeDefBoost = currFoeDefBoost * 0.75
+                                if(currFoeDefBoost <= 0.177978515625){
+                                    currFoeDefBoost = 0.177978515625
+                                }
+                                r.style.setProperty('--statsChangeColor', 'green')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s DEF decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEATK') {
+                            if(currFoeSpeAtkBoost <= 0.177978515625){
+                                currFoeSpeAtkBoost = 0.177978515625
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK cannot be decreased any further!`
+                                })
+                            } else if (currFoeSpeAtkBoost > 1) {
+                                currFoeSpeAtkBoost = currFoeSpeAtkBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SpeATK decreased!`
+                                })
+                            } else {
+                                currFoeSpeAtkBoost = currFoeSpeAtkBoost * 0.75
+                                if(currFoeSpeAtkBoost <= 0.177978515625){
+                                    currFoeSpeAtkBoost = 0.177978515625
+                                }
+                                r.style.setProperty('--statsChangeColor', 'orange')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeATK decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPEDEF') {
+                            if(currFoeSpeDefBoost <= 0.177978515625){
+                                currFoeSpeDefBoost = 0.177978515625
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF cannot be decreased any further!`
+                                })
+                            } else if (currFoeSpeDefBoost > 1) {
+                                currFoeSpeDefBoost = currFoeSpeDefBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SpeDEF decreased!`
+                                })
+                            } else {
+                                currFoeSpeDefBoost = currFoeSpeDefBoost * 0.75
+                                if(currFoeSpeDefBoost <= 0.177978515625){
+                                    currFoeSpeDefBoost = 0.177978515625
+                                }
+                                r.style.setProperty('--statsChangeColor', 'yellow')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SpeDEF decreased!`
+                                })
+                            }
+                        } else if(attack.stat === 'SPD') {
+                            if(currFoeSpdBoost <= 0.177978515625){
+                                currFoeSpdBoost = 0.177978515625
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD cannot be decreased any further!`
+                                })
+                            } else if (currFoeSpdBoost > 1) {
+                                currFoeSpdBoost = currFoeSpdBoost -= 0.5
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${recipient.name}'s SPD decreased!`
+                                })
+                            } else {
+                                currFoeSpdBoost = currFoeSpdBoost * 0.75
+                                if(currFoeSpdBoost <= 0.177978515625){
+                                    currFoeSpdBoost = 0.177978515625
+                                }
+                                r.style.setProperty('--statsChangeColor', 'cyan')
+                                document.querySelector('#enemyEffect').style.display = 'block'
+                                setTimeout(() =>{
+                                    document.querySelector('#enemyEffect').style.display = 'none'
+                                }, 1000)
+                                queue.splice(1, 0, () =>{
+                                    document.querySelector('#dialogueBox').textContent = `${this.name}'s SPD decreased!`
+                                })
+                            }
+                        }
+                    }
+                }
                 if(attack.effect === 'Heal'){
                     let healAmount = Math.floor(attack.potency * user.stats.HP / 100)
                     if(healAmount + user.currHP > user.stats.HP){
@@ -313,7 +956,6 @@ class Pogemon extends Sprite {
                     } else user.currHP += healAmount
                 }
             }
-
         }
 
         let havePPLeft = true
@@ -321,11 +963,12 @@ class Pogemon extends Sprite {
 
         // manage pp
 
-        if(!this.isEnemy){
+        if(!this.isEnemy && !immuned){
             for(let i = 0; i < this.attacks.length; i++){
                 if(this.attacks[i].name === attack.name){
                     if(this.attacks[i].pp < 1){
                         document.querySelector('#dialogueBox').textContent = `${attack.name} has no more pp.`
+                        attackInProcess = false
                         havePPLeft = false
                         queue.splice(0,0,() =>{
                             queue = []
@@ -334,11 +977,12 @@ class Pogemon extends Sprite {
                     } else {
                         this.attacks[i].pp--
                         if(Math.floor(Math.random() * 100) <= attack.accuracy){
-                            damageCalculation(attack, recipient)
+                            attackCalculation(attack, recipient)
                         } else {
                             attackMissed = true
                             queue.splice(1, 0, () =>{
                                 document.querySelector('#dialogueBox').textContent = `${this.name} missed ${attack.name}!....`
+                                attackInProcess = false
                             })
                             queue[0]()
                             return
@@ -347,20 +991,17 @@ class Pogemon extends Sprite {
                 }
             }
         } else if (this.isEnemy) {
-            for(let i = 0; i < this.attacks.length; i++){
-                // enemy pp usage here
-                // take away from my pp too????
-                // this.attacks[i].pp--
-                if(Math.floor(Math.random() * 100) <= attack.accuracy){
-                    damageCalculation(attack, recipient)
-                } else {
-                    attackMissed = true
-                    queue.splice(0, 0, () =>{
-                        document.querySelector('#dialogueBox').textContent = `${this.name} missed ${attack.name}!....`
-                    })
-                    queue[0]()
-                    return
-                }
+            if(Math.floor(Math.random() * 100) <= attack.accuracy){
+                attackCalculation(attack, recipient)
+                attack.pp--
+            } else {
+                attackMissed = true
+                queue.splice(0, 0, () =>{
+                    document.querySelector('#dialogueBox').textContent = `${this.name} missed ${attack.name}!....`
+                    attackInProcess = false
+                })
+                queue[0]()
+                return
             }
         }
 
@@ -370,6 +1011,9 @@ class Pogemon extends Sprite {
 
         let movementDistance
         switch (attack.name){
+            // Physical Attacks
+
+            // Normal
             case 'Tackle':
                 const tackleTl = gsap.timeline()
                 movementDistance = 20
@@ -401,10 +1045,14 @@ class Pogemon extends Sprite {
                         })
                     }
                 }).to(this.position, {
-                    x: this.position.x - 20
+                    x: this.position.x - 20,
+                    onComplete: () =>{
+                        attackInProcess = false
+                    },
                 })
                 break
 
+            // Fighting
             case 'Lokick':
                 const LockickImage = new Image()
                 LockickImage.src = './img/move_animation/Lokick.png'
@@ -419,9 +1067,23 @@ class Pogemon extends Sprite {
                         hold: 15
                     },
                     animate: true,
-                    rotation
+                    rotation,
                 })
+                if(this.isEnemy){
+                    Lokick.position = {
+                        x: recipient.position.x + 175,
+                        y: recipient.position.y + 175
+                    }
+                } else {
+                    Lokick.position = {
+                        x: recipient.position.x - 75,
+                        y: recipient.position.y
+                    }
+                }
                 renderedSprites.splice(2, 0, Lokick)
+                setTimeout(() =>{
+                    renderedSprites.splice(2, 1)
+                }, 600)
                 const lokickTl = gsap.timeline()
                 movementDistance = 20
                 if (this.isEnemy) movementDistance= -20
@@ -435,9 +1097,6 @@ class Pogemon extends Sprite {
                         audio.tackleHit.play()
                         gsap.to(enemyHealthbar, {
                             width: hpInPercentBattle + '%',
-                            onComplete: () =>{
-                                renderedSprites.splice(2, 1)
-                            }
                         })
                         gsap.to(recipient.position, {
                             x: recipient.position.x + 25,
@@ -453,10 +1112,16 @@ class Pogemon extends Sprite {
                         })
                     }
                 }).to(this.position, {
-                    x: this.position.x - 20
+                    x: this.position.x - 20,
+                    onComplete: () =>{
+                        attackInProcess = false
+                    },
                 })
                 break
             
+            // Special Attacks
+
+            // Fire
             case 'Fireball':
                 audio.initFireball.play()
                 const fireballImage = new Image()
@@ -495,19 +1160,19 @@ class Pogemon extends Sprite {
                             repeat: 5,
                             yoyo: true,
                             duration: 0.08,
+                            onComplete: () =>{
+                                attackInProcess = false
+                            },
                         })
                     }
                 })
                 break
 
+            // Ghost
             case 'Strangering': 
                 const StrangeringImage = new Image()
                 StrangeringImage.src = './img/move_animation/strangering.png'
                 const Strangering = new Sprite({
-                    position: {
-                        x: recipient.position.x - 75,
-                        y: recipient.position.y
-                    },
                     image: StrangeringImage,
                     frames: {
                         max: 4,
@@ -516,12 +1181,26 @@ class Pogemon extends Sprite {
                     animate: true,
                     rotation
                 })
+                if(this.isEnemy){
+                    Strangering.position = {
+                        x: recipient.position.x + 200,
+                        y: recipient.position.y + 175
+                    }
+                } else {
+                    Strangering.position = {
+                        x: recipient.position.x - 75,
+                        y: recipient.position.y
+                    }
+                }
                 renderedSprites.splice(2, 0, Strangering)
+                setTimeout(() =>{
+                    renderedSprites.splice(2, 1)
+                }, 600)
                 audio.psyAttack1.play()
                 gsap.to(Strangering.position, {
-                    x: recipient.position.x - 75,
-                    y: recipient.position.y,
-                    duration: 1,
+                    x: Strangering.position.x,
+                    y: Strangering.position.y,
+                    duration: 0.5,
                     onComplete: () =>{
                         renderedSprites.splice(2, 1)
                         gsap.to(enemyHealthbar, {
@@ -538,15 +1217,38 @@ class Pogemon extends Sprite {
                             repeat: 5,
                             yoyo: true,
                             duration: 0.08,
+                            onComplete: () =>{
+                                attackInProcess = false
+                            },
                         })
                     }
                 })
                 break
             
+            // Status
+
+            // Stats
+
+            // Increase
+
+            case 'Buff':
+                setTimeout(() =>{
+                    attackInProcess = false
+                }, 750)
+                break
+
+            // Decrease
+
+            case 'Growl':
+                setTimeout(() =>{
+                    attackInProcess = false
+                }, 750)
+                break
+
+            // Heal
             case 'Rest': 
                 // Animation pour Rest a mettre
                 user.frames.hold = 500
-                changeHP()
                 if(hpInPercentBattle > 100){
                     hpInPercentBattle = 100
                 } 
@@ -565,31 +1267,39 @@ class Pogemon extends Sprite {
                     animate: true,
                     rotation: '0deg'
                 })
-                renderedSprites.splice(1, 0, rest)
+                renderedSprites.splice(2, 0, rest)
                 gsap.to(rest.position, {
                     y: -50,
-                    duration: 5
+                    duration: 3
                 })
                 userHPDisplay.textContent = Math.ceil(user.currHP) + '/' + user.stats.HP
+                changeHP()
                 gsap.to(playerHealthbar, {
                     width: hpInPercentBattle + '%',
                     onComplete: () => {
-                        user.frames.hold = 100,
+                        user.frames.hold = 50,
                         gsap.to(rest, {
                             opacity: 0,
-                            duration: 1
+                            duration: 1,
+                            onComplete: () =>{
+                                renderedSprites.splice(2, 1)
+                                attackInProcess = false
+                            }
                         })
                     }
                 })
                 break
         }
         changeHP()
+        this.position = prevAttackerPos
     }  
 
     faint(opponent) {
         let currExpGain
         let changeMove
         let forgottenAttack
+        let learnedAttack
+        lastLeedPogemon = team[0]
 
         this.fainted = true
         this.frames.hold = 0
@@ -750,14 +1460,12 @@ class Pogemon extends Sprite {
                                             button.addEventListener('mouseenter', buttonMouseEnter, true)
                                             document.querySelector('#changeAttacksBox').append(button)
                                         } 
-                                        for(let j = 0; j < newAttacks.length; j++){
-                                            document.querySelector('#newAttackName').textContent = `${newAttacks[j].move.name}`
-                                            document.querySelector('#newAttackType').textContent = `${newAttacks[j].move.element}`
-                                            document.querySelector('#newAttackPotency').textContent = `potency : ${newAttacks[j].move.potency}`
-                                            document.querySelector('#newAttackAccuracy').textContent = `pp : ${newAttacks[j].move.accuracy}`
-                                            document.querySelector('#newAttackPP').textContent = `pp : ${newAttacks[j].move.pp}`
-                                            document.querySelector('#newAttackDesc').textContent = `${newAttacks[j].move.description}`
-                                        }                      
+                                        document.querySelector('#newAttackName').textContent = `${learnedAttack.name}`
+                                        document.querySelector('#newAttackType').textContent = `${learnedAttack.element}`
+                                        document.querySelector('#newAttackPotency').textContent = `potency : ${learnedAttack.potency}`
+                                        document.querySelector('#newAttackAccuracy').textContent = `pp : ${learnedAttack.accuracy}`
+                                        document.querySelector('#newAttackPP').textContent = `pp : ${learnedAttack.pp}`
+                                        document.querySelector('#newAttackDesc').textContent = `${learnedAttack.description}`                
                                         document.querySelectorAll('.changeAttackButton').forEach(button =>{
                                             button.addEventListener('click', chooseMoveToChange, true)
                                         })
@@ -786,6 +1494,7 @@ class Pogemon extends Sprite {
                         }
 
                         let chooseMoveToChange = () =>{
+                            //opponent is opponent of the pogemon that currently fainted, in this case, the player being the opponent of the AI // unclear lmao
                             document.querySelector(`#attackEventContainer`).style.display = 'none'
                             document.querySelector(`#changeAttacksBox`).style.display = 'none'
                             document.querySelector(`#attacksBox`).style.display = 'grid'
@@ -800,11 +1509,9 @@ class Pogemon extends Sprite {
                             document.querySelectorAll(`.changeAttackButton`)[mouse.event.target.id].textContent = newAttacks[0].move.name
                             document.querySelector(`#attacksBox`).replaceChildren()
                             for(let i = 0; i < opponent.attacks.length; i++){
-                                for(let j = 0; j < newAttacks.length; j++){
-                                    newAttacks[j].learned = true
-                                    document.querySelector('#dialogueBox').textContent = `${opponent.name} learned ${newAttacks[j].move.name} and forgot ${forgottenAttack}!`
-                                    document.querySelector('#newAttackInfo').style.display = 'none'
-                                }
+                                newAttacks[0].learned = true
+                                document.querySelector('#dialogueBox').textContent = `${opponent.name} learned ${newAttacks[0].move.name} and forgot ${forgottenAttack}!`
+                                document.querySelector('#newAttackInfo').style.display = 'none'
                                 const button = document.createElement('button')
                                 button.textContent = opponent.attacks[i].name
                                 button.tabIndex  = '3'
@@ -814,7 +1521,7 @@ class Pogemon extends Sprite {
                                 document.querySelector(`#attacksBox`).append(button)
                             }
                             document.querySelector(`#dialogueBox`).style.display = 'block'
-                            document.querySelector(`#attackEventContainer`).style.display = 'grid'
+                            document.querySelector(`#attackEventContainer`).style.display = 'flex'
                             document.removeEventListener('click', chooseMoveToChange, true)
                             queue.shift()
                         }
@@ -836,9 +1543,12 @@ class Pogemon extends Sprite {
                                 } else if (opponent.attacks.length >= 4) {
                                     // ask if willing to switch moves here
                                     queue.splice(i + 3, 0, () =>{
+                                        newAttacks = opponent.attackPool.filter(attack => attack.learned !== true)
+                                        i = 0
+                                        learnedAttack = newAttacks[i].move
                                         document.querySelector('#dialogueBox').textContent = `${opponent.name} is trying to learn ${newAttacks[i].move.name}!`
                                         queue.splice(1, 0, () =>{
-                                            document.querySelector('#dialogueBox').textContent = `Do you want to teach ${newAttacks[i].move.name} to ${opponent.name}?`
+                                            document.querySelector('#dialogueBox').textContent = `Do you want to teach ${learnedAttack.name} to ${opponent.name}?`
                                             document.querySelector('#answerButtonContainer').style.display = 'grid'
                                             document.addEventListener('click', chooseIfMoveChanges, true)
                                             document.querySelectorAll('.attackBox').forEach(button =>{
@@ -938,6 +1648,14 @@ class Pogemon extends Sprite {
                 }
             })
         }
+
+        if(opponent.isEnemy){
+            currFoeAtkBoost = 1
+            currFoeDefBoost = 1
+            currFoeSpeAtkBoost = 1
+            currFoeSpeDefBoost = 1
+            currFoeSpdBoost = 1
+        }
     }      
 
 
@@ -986,109 +1704,110 @@ class Pogemon extends Sprite {
             let catchValue = ((( 3 * currPogemon.stats.HP - 2 * currPogemon.currHP ) * (currPogemon.catchRate * ballModifier ) / (3 * currPogemon.stats.HP) ) * statusModifier)
     
             let catchRNG = Math.floor(Math.random() * 100 + catchValue) 
-            console.log(catchValue)
-            console.log(catchRNG)
 
-            if(catchRNG >= 100){
-                //catch
-                audio.battle.stop()
-                queue.push(() =>{
-                    document.querySelector('#dialogueBox').textContent = `You caught ${currPogemon.name}!!!`
-                    renderedSprites.splice(2, 1)
+            let engageCatch = false
+
+            if(!engageCatch){
+                if(catchRNG >= 100){
+                    //catch
+                    audio.battle.stop()
                     queue.push(() =>{
-                        queue = []
-                        let caughtPogemon = new Pogemon(currPogemon)
-                        definePogemonStats(caughtPogemon)
-                        caughtPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
-                        defineCurrPogemonCurve(caughtPogemon, 'catch')
-                        caughtPogemon.currHP = caughtPogemon.stats.HP
-                        //will make player catch pogemon
-                        document.querySelector('#battleScene').style.display = 'none'
-                        gsap.to('#overlappingDiv', {
+                        document.querySelector('#dialogueBox').textContent = `You caught ${currPogemon.name}!!!`
+                        renderedSprites.splice(2, 1)
+                        queue.push(() =>{
+                            queue = []
+                            let caughtPogemon = new Pogemon(currPogemon)
+                            definePogemonStats(caughtPogemon)
+                            caughtPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
+                            defineCurrPogemonCurve(caughtPogemon, 'catch')
+                            caughtPogemon.currHP = currPogemon.currHP
+                            //will make player catch pogemon
+                            document.querySelector('#battleScene').style.display = 'none'
+                            gsap.to('#overlappingDiv', {
+                                opacity: 1,
+                                duration: 0.5,
+                                onComplete: () => {
+                                    gsap.to('#overlappingDiv', {
+                                        opacity: 0,
+                                        duration: 0.5,
+                                    })
+                                    battle.initiated = false
+                                    audio.map.play()
+                                    cancelAnimationFrame(animateBattleId)
+                                    animate()
+                                }
+                            })
+                            caughtPogemon.globalId = newGlobalId()
+                            if (team.length <= 5){
+                                team.push(caughtPogemon)
+                            } else if (team.length >= 6){
+                                for(let i = 0; i < pogemonStorage.length; i++){
+                                    if (pogemonStorage[i].length <= 30){
+                                        pogemonStorage[i].push(caughtPogemon)
+                                        return
+                                    } else return
+                                }
+                            }
+                            defineCurrTeamMenuInfo()
+                        })
+                        queue[0]
+                    })
+                } else {
+                    queue.push(() =>{
+                        document.querySelector('#dialogueBox').textContent = `Darn! ${currPogemon.name} broke free!!!!`
+                        renderedSprites.splice(2, 1)
+                        gsap.to(currPogemon, {
                             opacity: 1,
-                            duration: 0.5,
-                            onComplete: () => {
-                                gsap.to('#overlappingDiv', {
-                                    opacity: 0,
-                                    duration: 0.5,
-                                })
-                                battle.initiated = false
-                                audio.map.play()
-                                cancelAnimationFrame(animateBattleId)
-                                animate()
+                            onComplete: () =>{
+                                chooseRandomAttack()
+                                if(!faintSwitch){
+                                    queue.push(() =>{
+                                        currFoe.attack({ 
+                                            attack: randomAttack,
+                                            recipient: currAlly,
+                                            renderedSprites
+                                        })
+                                        if(currAlly.currHP < 1) {
+                                            queue.push(() =>{
+                                                currAlly.faint(currFoe)
+                                            })
+                                            queue.push(() =>{
+                                                gsap.to('#overlappingDiv', {
+                                                    opacity: 1,
+                                                    onComplete: () => {
+                                                        document.querySelector('#battleScene').style.display = 'none'
+                                                        if (teamFainted){
+                                                            if(battle.initiated){
+                                                                queue = []
+                                                                cancelAnimationFrame(animateBattleId)
+                                                                animate()
+                                                            }
+                                                            gsap.to('#overlappingDiv', {
+                                                                opacity: 0
+                                                            })
+                                                            battle.initiated = false
+                                                            audio.map.play()
+                                                        } else {
+                                                            queue = []
+                                                            faintSwitch = true
+                                                            teamMenu.open = true
+                                                            cancelAnimationFrame(animateBattleId)
+                                                            animateTeamMenu()
+                                                            gsap.to('#overlappingDiv', {
+                                                                opacity: 0
+                                                            })
+                                                        }
+                                                    }
+                                                })
+                                            })
+                                        }
+                                    })
+                                }
                             }
                         })
-                        caughtPogemon.globalId = newGlobalId()
-                        if (team.length <= 5){
-                            team.push(caughtPogemon)
-                        } else if (team.length >= 6){
-                            for(let i = 0; i < pogemonStorage.length; i++){
-                                if (pogemonStorage[i].length <= 30){
-                                    pogemonStorage[i].push(caughtPogemon)
-                                    return
-                                } else return
-                            }
-                        }
-                        defineCurrTeamMenuInfo()
+                        document.addEventListener('click', menuButtonEvent, true)
                     })
-                    queue[0]
-                })
-            } else {
-                queue.push(() =>{
-                    document.querySelector('#dialogueBox').textContent = `Darn! ${currPogemon.name} broke free!!!!`
-                    renderedSprites.splice(2, 1)
-                    gsap.to(currPogemon, {
-                        opacity: 1,
-                        onComplete: () =>{
-                            const randomAttack = currFoe.attacks[Math.floor(Math.random() * currFoe.attacks.length)]
-                            if(!faintSwitch){
-                                queue.push(() =>{
-                                    currFoe.attack({ 
-                                        attack: randomAttack,
-                                        recipient: currAlly,
-                                        renderedSprites
-                                    })
-                                    if(currAlly.currHP < 1) {
-                                        queue.push(() =>{
-                                            currAlly.faint(currFoe)
-                                        })
-                                        queue.push(() =>{
-                                            gsap.to('#overlappingDiv', {
-                                                opacity: 1,
-                                                onComplete: () => {
-                                                    document.querySelector('#battleScene').style.display = 'none'
-                                                    console.log(teamFainted)
-                                                    if (teamFainted){
-                                                        if(battle.initiated){
-                                                            queue = []
-                                                            cancelAnimationFrame(animateBattleId)
-                                                            animate()
-                                                        }
-                                                        gsap.to('#overlappingDiv', {
-                                                            opacity: 0
-                                                        })
-                                                        battle.initiated = false
-                                                        audio.map.play()
-                                                    } else {
-                                                        queue = []
-                                                        faintSwitch = true
-                                                        teamMenu.open = true
-                                                        cancelAnimationFrame(animateBattleId)
-                                                        animateTeamMenu()
-                                                        gsap.to('#overlappingDiv', {
-                                                            opacity: 0
-                                                        })
-                                                    }
-                                                }
-                                            })
-                                        })
-                                    }
-                                })
-                            }
-                        }
-                    })
-                    document.addEventListener('click', menuButtonEvent, true)
-                })
+                }
             }
         } else {
             let starterPogemon = new Pogemon(currPogemon)
@@ -1137,8 +1856,9 @@ class Trainer extends Boundary {
     }
 
     defeat(){
-        currSpeed = 1
-        currTrainer.data.defeated = true
+        battleMusicPlaying = false
+        maps[currMap.name].trainerArray[currTrainer.index].defeated = true
+        currMap.trainerArray[currTrainer.index].defeated = true
     }
 
     draw(){

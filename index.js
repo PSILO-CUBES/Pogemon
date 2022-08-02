@@ -11,16 +11,22 @@ let currMap
 let currChar = imgs.playerSprites.brendan
 let offset
 
-console.log(loadData())
-
 if(loadData() === null){
-    currMap = maps.keyTown
+    currMap = maps.paccIsleLab
     offset = {
         x: currMap.position.x,
         y: currMap.position.y,
     }
 } else if (loadData() != null) {
+    maps = loadData().maps
     currMap = loadData().currMap
+    Object.entries(maps).forEach(([mapKey, mapValue]) =>{
+        Object.entries(loadData().maps).forEach(([loadMapKey, loadMapValue]) =>{
+            if(mapKey === loadMapKey){
+                mapValue = loadMapValue
+            }
+        })
+    })
     offset = {
         x: loadData().playerPos.x,
         y: loadData().playerPos.y,
@@ -220,6 +226,21 @@ for(let i = 0; i < changeZones.length; i++){
                 y: prevMap.pogemartPosition.y,
             }}
         }
+    } else if(currMap.name === 'pogecenter'){
+        if(prevMap === undefined){
+            prevMap = loadData().prevMap
+            changeZones[i].data = {name:`${prevMap.name}`,
+            position: {
+                x: prevMap.pogecenterPosition.x,
+                y: prevMap.pogecenterPosition.y,
+            }}
+        } else {
+            changeZones[i].data = {name:`${prevMap.name}`,
+            position: {
+                x: prevMap.pogecenterPosition.x,
+                y: prevMap.pogecenterPosition.y,
+            }}
+        }
     } else {
         changeZones[i].data = maps[currMap.name].changeMapArray[i]
     }
@@ -228,8 +249,10 @@ for(let i = 0; i < changeZones.length; i++){
 let currEventZonesData
 let eventZonesMap = []
 let eventZones = []
+let currTrainerIndex = 0
 const defineEventZonesPosition = () =>{
     currEventZonesData = maps[currMap.name].eventZonesData
+    
     eventZonesMap = []
     eventZones = []
     for (let i = 0; i < currEventZonesData.length; i += currMap.width){
@@ -251,7 +274,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
-                    type: 'NPC',
+                    type: 'Trainer',
                     direction: 'up'})
                 )
             } else if (symbol === 16){
@@ -260,7 +283,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
-                    type: 'NPC',
+                    type: 'Trainer',
                     direction: 'right'})
                 )
             } else if (symbol === 17){
@@ -269,7 +292,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
-                    type: 'NPC',
+                    type: 'Trainer',
                     direction: 'down'})
                 )
             } else if (symbol === 18){
@@ -278,7 +301,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
-                    type: 'NPC',
+                    type: 'Trainer',
                     direction: 'left'})
                 )
             } else if (symbol === 10){
@@ -301,11 +324,20 @@ let trainerIndex = -1
 
 // load trainer
 
-
-for(let i = 0; i < eventZones.length; i++){
-    if(eventZones[i].type === "NPC"){
-        trainerIndex++
-        eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+if (!loadData()){
+    for(let i = 0; i < eventZones.length; i++){
+        if(eventZones[i].type === "Trainer"){
+            trainerIndex++
+            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+        }
+    }
+} else {
+    for(let i = 0; i < eventZones.length; i++){
+        if(eventZones[i].type === "Trainer"){
+            trainerIndex++
+            maps[currMap.name].trainerArray[trainerIndex] = loadData().maps[currMap.name].trainerArray[trainerIndex]
+            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+        }
     }
 }
 
@@ -496,7 +528,6 @@ let currSpeed
 let lastKey = ''
 let lastMenuOpen
 let teamFainted
-let attackInitiated = false 
 let trainerBattle = false
 let currTrainer
 let engageRematch
@@ -504,6 +535,7 @@ let bagMenu = {
     open: false
 }
 let prevMapName
+let removeBattleEventListener
 
 let timerId;
 let _doActionNoSpamCloseTeamMenuInCombat = () =>{
@@ -582,9 +614,12 @@ addEventListener('keydown', (e) =>{
             else if (menu.open && !battle.initiated) menu.open = false
             if(battle.initiated && !teamMenu.open){
                 _doActionNoSpamCloseTeamMenuInCombat()
-                if(!attackInitiated){
+                if(!disableMenuDuringAttack){
                     document.querySelector('#attackEventContainer').style.display = 'none'
                     document.querySelector('#battleOptionsContainer').style.display = 'grid'
+                } else if(disableMenuDuringAttack){
+                    document.querySelector('#battleOptionsContainer').style.display = 'none'
+                    document.querySelector('#attackEventContainer').style.display = 'flex'
                 }
             } else if (team[0] !== undefined && team[0].currHP > 0) {
                 teamMenu.open = false
@@ -616,13 +651,22 @@ addEventListener('keydown', (e) =>{
                     }
                 })
             }
-            if(bagMenu.open){
+            if(bagMenu.open && !cancelItemEscapeDuringTransition){
+                // if hit while transition to battle, it gets fucky
+                returnFromBagMenu = true
+                switchAction = false
                 gsap.to('#overlappingDiv', {
                     opacity: 1,
                     duration: 0.4,
                     onComplete: () =>{
                         bagMenu.open = false
-                        animate()
+                        if(battle.initiated){
+                            initBattle()
+                            animateBattle()
+                        } else {
+                            returnFromBagMenu = false
+                            animate()
+                        }
                         document.querySelector('#itemMenu').style.display = 'none'
                         gsap.to('#overlappingDiv', {
                             opacity: 0,
@@ -661,9 +705,8 @@ document.querySelectorAll('.menuButton').forEach(button =>{
                 else{
                     teamMenu.open = true
                 }
-                console.log(teamMenu.open)
                 break
-            case 'Items':
+            case 'Bag':
                 if(team[0] !== undefined){
                     bagMenu.open = true
                     initItemMenu()
@@ -671,9 +714,11 @@ document.querySelectorAll('.menuButton').forEach(button =>{
                 }
                 break
             case 'Save':
-                let saveDataObject = {
+                saveDataObject = {
                     currGlobalId: currId,
                     team,
+                    eventZones,
+                    maps,
                     pogemonStorage,
                     currMap,
                     prevMap,
@@ -758,18 +803,11 @@ let pcEvent = {
 
 }
 
+let useHeldItem
+
 const animate = () =>{
     const animationId = requestAnimationFrame(animate)
 
-    audio.victory.stop()
-
-    team.forEach(pogemon =>{
-        if(pogemon.position !== undefined){
-            pogemon.position._gsap = null
-            pogemon._gsap = null
-        }
-    })
-    
     backgroundImage.src = 'img/map/blackBackground.png'
     backgroundMap.image = backgroundImage
     //draw these in a loop
@@ -783,6 +821,24 @@ const animate = () =>{
     })
     collisions.forEach(collision => {
         collision.draw()
+    })
+
+    player.draw()
+    if (foreground4.image) foreground4.draw()
+    if (foreground3.image) foreground3.draw()
+    if (foreground2.image) foreground2.draw()
+    if (foreground1.image) foreground1.draw()
+
+    let moving = true
+    player.animate = true
+
+    audio.victory.stop()
+
+    team.forEach(pogemon =>{
+        if(pogemon.position !== undefined){
+            pogemon.position._gsap = null
+            pogemon._gsap = null
+        }
     })
 
     if (pcStorage.animation) {
@@ -801,14 +857,11 @@ const animate = () =>{
         cancelAnimationFrame(animationId)
     }
 
-    player.draw()
-    if (foreground4.image) foreground4.draw()
-    if (foreground3.image) foreground3.draw()
-    if (foreground2.image) foreground2.draw()
-    if (foreground1.image) foreground1.draw()
-
-    let moving = true
-    player.animate = true
+    if(removeBattleEventListener) {
+        removeBattleEventListener = false
+        console.log(menuButtonEvent)
+        document.removeEventListener('click', menuButtonEvent, true)
+    }
 
     if (battle.initiated) return
 
@@ -880,6 +933,7 @@ const animate = () =>{
                             starter = new Pogemon(pogemons[eventZone.name])
                             starter.currExp = 125
                             starter.currLevel = 5
+                            starter.globalId = 1
                             definePogemonStats(starter)
                             starter.catch(starter)
                         }
@@ -984,6 +1038,7 @@ const animate = () =>{
             rectangle1: player,
             rectangle2: eventZone
             }) && eventZone.type === 'heal'
+            && team[0] !== undefined
         )){
             
             let openPcMenu = () =>{
@@ -1086,10 +1141,17 @@ const animate = () =>{
             pcEvent.menuOpened = false
         }}
 
-        if(eventZone.type === 'NPC'){
+        if(eventZone.type === 'Trainer'){
             for(let i = 0; i < maps[currMap.name].trainerArray.length; i++){
                 rectangularCollision = ({rectangle1, rectangle2}) =>{
-                    if(eventZone.direction === 'left'){
+                    if(eventZone.direction === 'up'){
+                        return (
+                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                            rectangle1.position.y <= rectangle2.position.y - 25 &&
+                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 250
+                        )
+                    } else if(eventZone.direction === 'left'){
                         return (
                             rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 250 &&
                             rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
@@ -1098,10 +1160,17 @@ const animate = () =>{
                         )
                     } else if(eventZone.direction === 'down'){
                         return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
+                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
                             rectangle1.position.y <= rectangle2.position.y + 250 &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 250
+                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 25
+                        )
+                    } else if(eventZone.direction === 'right'){
+                        return (
+                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
+                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 250 &&
+                            rectangle1.position.y <= rectangle2.position.y &&
+                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
                         )
                     } else {
                         return (
@@ -1117,9 +1186,10 @@ const animate = () =>{
                 rectangularCollision({
                 rectangle1: player,
                 rectangle2: eventZone
-                })
+                }) && eventZone.type === 'Trainer'
             )){
-
+                newBattle = true
+                //trainer encounter
                 if(!eventZone.data.defeated && team.length != 0){ 
                     document.querySelector('#overworldContainer').style.display = 'grid'
                     document.querySelector('#overworldDialogueBox').textContent = eventZone.data.dialogue
@@ -1136,14 +1206,15 @@ const animate = () =>{
                             trainerBattle = true
                             battle.initiated = true
                             currTrainer = eventZone
+                            currTrainer.index = i
                             cancelAnimationFrame(animationId)
                             initBattle()
                             animateBattle()
                         }
                     }
-                //rematch
                 }
 
+                //rematch
                 if(eventZone.data.defeated){
                     if(keys.Space.pressed || keys.e.pressed || keys.Enter.pressed) {
                         engageRematch = true
@@ -1161,6 +1232,7 @@ const animate = () =>{
                         exclamation.style.top = eventZone.position.y - 55 + 'px'
                         exclamation.style.left = eventZone.position.x + 22.5 + 'px'
                         currTrainer = eventZone
+                        currTrainer.index = i
                         currSpeed = 0
                         if(team.length > 0 && mouse.event.target.id === 'overworldDialogueBox'){
                             document.querySelector('#overworldContainer').style.display = 'none'
@@ -1178,7 +1250,7 @@ const animate = () =>{
         }  
     }
     
-    //activate battle
+    //activate wild battle
     if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
         for (let i = 0; i < battleZones.length; i++){
             const battleZone = battleZones[i]
@@ -1207,13 +1279,12 @@ const animate = () =>{
                 overlappingArea > (player.width * player.height) / 2
                 && Math.random() < 0.025
             ){
-                // deactivate curr animation loop
+                newBattle = true
+                // deactivate curr frame animation loop
                 if (team[0] === undefined) {
                     return
                 } else
                 cancelAnimationFrame(animationId)
-
-                // audio for wild encounters
 
                 audio.map.stop()
                 audio.initWildBattle.play()
@@ -1294,9 +1365,12 @@ const animate = () =>{
                 audio.changeMap.play()
                 currSpeed = 0
 
-
-                currMap = maps[mapZone.data.name]
-
+                if(loadData() === null){
+                    currMap = maps[mapZone.data.name]
+                } else {
+                    currMap = loadData().maps[mapZone.data.name]
+                }
+                
                 mapImage.src = 'img/map/' + currMap.name + '/' + currMap.name + '.png'
                 backgroundImage.src =  'img/map/' + currMap.name + '/' + currMap.name + 'Background.png'
                 foreground1Image.src = 'img/map/' + currMap.name + '/' + currMap.name + 'FG1.png'
@@ -1317,6 +1391,11 @@ const animate = () =>{
                     offset = {
                         x: maps[currMap.name].pogemartPosition.x,
                         y: maps[currMap.name].pogemartPosition.y
+                    }
+                } else if(prevMapName === 'pogecenter'){
+                    offset = {
+                        x: maps[currMap.name].pogecenterPosition.x,
+                        y: maps[currMap.name].pogecenterPosition.y
                     }
                 } else {
                     offset = {
@@ -1361,21 +1440,35 @@ const animate = () =>{
 
                 trainerIndex = -1
 
-                for(let i = 0; i < eventZones.length; i++){
-                    if(eventZones[i].type === "NPC"){
-                        trainerIndex++
-                        eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+                if (!loadData()){
+                    for(let i = 0; i < eventZones.length; i++){
+                        if(eventZones[i].type === "Trainer"){
+                            trainerIndex++
+                            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+                        }
+                    }
+                } else {
+                    for(let i = 0; i < eventZones.length; i++){
+                        if(eventZones[i].type === "Trainer"){
+                            trainerIndex++
+                            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+                        }
                     }
                 }
 
                 for(let i = 0; i < changeZones.length; i++){
                     // pogemart change map
                     if(currMap.name === 'pogemart'){
-                        console.log(prevMap)
                         changeZones[i].data = {name:`${prevMap.name}`,
                         position: {
                             x: prevMap.pogemartPosition.x,
                             y: prevMap.pogemartPosition.y,
+                        }}
+                    } else if(currMap.name === 'pogecenter'){
+                        changeZones[i].data = {name:`${prevMap.name}`,
+                        position: {
+                            x: prevMap.pogecenterPosition.x,
+                            y: prevMap.pogecenterPosition.y,
                         }}
                     } else {
                         changeZones[i].data = maps[currMap.name].changeMapArray[i]
@@ -1528,8 +1621,7 @@ const animate = () =>{
                 movable.position.x += currSpeed
             })
         }
-    }
-    else if (keys.s.pressed && lastKey === 's') {
+    } else if (keys.s.pressed && lastKey === 's') {
         player.animate = true
         player.image = player.sprites.walk.down
         for (let i = 0; i < collisions.length; i++){
