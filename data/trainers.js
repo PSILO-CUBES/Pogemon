@@ -14,7 +14,7 @@ const trainer = {
         setTeamLevel: [
             15,
         ],
-        dialogue: 'Insert Some you lazy mf',
+        dialogue: 'Insert something you lazy mf',
         defeated: false,
         index: 1,
     },
@@ -23,7 +23,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Insert Some you lazy mf',
+        dialogue: 'Insert something you lazy mf',
         defeated: false,
         index: 0,
     },
@@ -32,7 +32,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Insert Some you lazy mf',
+        dialogue: 'Insert Something you lazy mf',
         defeated: false,
         index: 1,
     },
@@ -41,7 +41,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Insert Some you lazy mf',
+        dialogue: 'Insert something you lazy mf',
         defeated: false,
         index: 3,
     },

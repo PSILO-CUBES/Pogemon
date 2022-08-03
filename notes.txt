@@ -1,4 +1,0 @@
-normal shiny odds = 0.1%
-legendary shiney odds = 0.05%
-
-pogbuck$ = $$$money$$$
