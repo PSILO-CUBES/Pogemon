@@ -12,7 +12,7 @@ let currChar = imgs.playerSprites.brendan
 let offset
 
 if(loadData() === null){
-    currMap = maps.fairyGym
+    currMap = maps.paccIsleLab
     offset = {
         x: currMap.position.x,
         y: currMap.position.y,
