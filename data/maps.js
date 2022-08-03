@@ -628,8 +628,8 @@ let maps = {
         changeMapArray: [
             {name:'fairyGym',
             position: {
-                x: -1125,
-                y: -650,
+                x: 165,
+                y: -1900,
             }} ,
             {name:'pogemart',
             position: {
@@ -714,6 +714,68 @@ let maps = {
         battleZonesData: battleZonesData.keyTown,
         changeMapZonesData: changeMapZonesData.keyTown,
         eventZonesData: eventZonesData.keyTown,
+        levelRange: {
+            min: 2,
+            max: 6
+        },
+        trainerArray: []
+    },  
+
+    fairyGym: {
+        name: 'fairyGym',
+        position: {
+            x: 165,
+            y: -1900
+        },            
+        changeMapArray: [
+            {name:'keyTown',
+            position: {
+                x: -1240,
+                y: -1000,
+            }} ,
+            {name:'keyTown',
+            position: {
+                x: -1240,
+                y: -1000,
+            }} ,
+            {name:'keyTown',
+            position: {
+                x: -1240,
+                y: -1000,
+            }} ,
+        ],
+        pogecenterPosition:{
+            x: -1825,
+            y: -2100
+        },
+        pogemartPosition: {
+            x: -675,
+            y: -2100
+        },
+        width: 25, 
+        height: 40,
+        image: {
+            src: 'img/map/fairyGym/fairyGym.png',
+        },
+        backgroundImage: {
+            src: 'img/map/fairyGym/fairyGymBackground.png'
+        },
+        foreground1Image: {
+            src: 'img/map/fairyGym/fairyGymFG1.png'
+        },
+        foreground2Image: {
+            src: 'img/map/fairyGym/fairyGymFG2.png'
+        },
+        foreground3Image: {
+            src: 'img/map/fairyGym/fairyGymFG3.png'
+        },
+        foreground4Image: {
+            src: 'img/map/fairyGym/fairyGymFG4.png'
+        },
+        collisionsData: collisionsData.fairyGym,
+        battleZonesData: battleZonesData.fairyGym,
+        changeMapZonesData: changeMapZonesData.fairyGym,
+        eventZonesData: eventZonesData.fairyGym,
         levelRange: {
             min: 2,
             max: 6

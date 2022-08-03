@@ -14,7 +14,7 @@ const trainer = {
         setTeamLevel: [
             15,
         ],
-        dialogue: 'Come play with me ( ͡° ͜ʖ ͡°)',
+        dialogue: 'Insert Some you lazy mf',
         defeated: false,
         index: 1,
     },
@@ -23,7 +23,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Come play with me young one ( ͡° ͜ʖ ͡°)',
+        dialogue: 'Insert Some you lazy mf',
         defeated: false,
         index: 0,
     },
@@ -32,7 +32,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Come play with me young one ( ͡° ͜ʖ ͡°)',
+        dialogue: 'Insert Some you lazy mf',
         defeated: false,
         index: 1,
     },
@@ -41,7 +41,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Come play with me young one ( ͡° ͜ʖ ͡°)',
+        dialogue: 'Insert Some you lazy mf',
         defeated: false,
         index: 3,
     },
@@ -50,7 +50,7 @@ const trainer = {
         setTeamLevel: [
             10,
         ],
-        dialogue: 'Come play with me young one ( ͡° ͜ʖ ͡°)',
+        dialogue: 'Insert someting you lazy mf',
         defeated: false,
         index: 4,
     },

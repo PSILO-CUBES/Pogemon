@@ -87,6 +87,7 @@
         >
 
         <div
+            id="shadeContainer"
             style="position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; right: 0;">
 
         </div>
@@ -740,21 +741,41 @@
                     <div 
                         id="generalDataContainer">
 
-                        <h1 
-                            id="targetLevelData"
-                        ></h1>
+                        <div 
+                            id="targetLevelDataContainer">
 
-                        <h1 
-                            id="targetNameData"
-                        ></h1>
+                            <h1 
+                                id="targetLevelData"
 
-                        <h1 
-                            id="targetTypeData"
-                        ></h1>
+                            ></h1>
+                        </div>
 
-                        <h1 
-                            id="targetItemData"
-                        ></h1>
+                        <div 
+                            id="targetNameDataContainer">
+
+                            <h1 
+                                id="targetNameData"
+                                
+                            ></h1>
+                        </div>
+
+                        <div 
+                            id="targetTypeDataContainer">
+                                
+                            <h1 
+                                id="targetTypeData"
+
+                            ></h1>
+                        </div>
+
+                        <div 
+                            id="targetItemDataContainer">
+
+                            <h1 
+                                id="targetItemData"
+
+                            ></h1>
+                        </div>
                     
                     </div>
 
@@ -767,33 +788,67 @@
 
                     <div 
                         id="statsDataContainer">
-                    
-                        <h1 
-                            id="targetHPData"
-                        ></h1>
 
-                        <h1 
-                            id="targetAtkData"
-                        ></h1>
+                        <div 
+                            id="targetHPDataContainer"
+                            class="targetDataContainer">
 
-                        <h1 
-                            id="targetDefData"
-                        ></h1>
+                            <h1 
+                                id="targetHPData"
 
-                        <h1 
-                            id="targetSpAtkData"
-                        ></h1>
+                            ></h1>
+                        </div>
+                        
+                        <div 
+                            id="targetAtkDataContainer"
+                            class="targetDataContainer">
 
-                        <h1 
-                            id="targetSpDefData"
-                        ></h1>
+                            <h1 
+                                id="targetAtkData"
 
-                        <h1 
-                            id="targetSpdData"
-                        ></h1>
-                    
-                    </div>
-                
+                            ></h1>
+                        </div>
+                       
+                        <div 
+                            id="targetDefDataContainer"
+                            class="targetDataContainer">
+
+                            <h1 
+                                id="targetDefData"
+
+                            ></h1>
+                        </div>
+                       
+                        <div 
+                            id="targetSpAtkDataContainer"
+                            class="targetDataContainer">
+
+                            <h1 
+                                id="targetSpAtkData"
+
+                            ></h1>
+                        </div>
+
+                        <div 
+                            id="targetSpDefDataContainer"
+                            class="targetDataContainer">
+
+                            <h1 
+                                id="targetSpDefData"
+
+                            ></h1>
+                        </div>
+
+                        <div 
+                            id="targetSpdDataContainer"
+                            class="targetDataContainer">
+
+                            <h1 
+                                id="targetSpdData"
+
+                            ></h1>
+                        </div>
+                    </div>      
                 </div>
 
                 <div 
@@ -804,23 +859,48 @@
                     
                         <div 
                             id="expDataContainer">
+
+                            <div 
+                                id="targetTotalExpDataContainer">
                         
-                            <h1 
-                                id="targetTotalExp"
-                            ></h1>
-                        
-                            <h1 
-                                id="targetExpToNextLvl"
-                            ></h1>
+                                <h1 
+                                    id="targetTotalExp"
+
+                                ></h1>
+                            </div>
+
+                            <div
+                                id="targetExpToNextLvlDataContainer">
+                            
+                                <h1 
+                                    id="targetExpToNextLvl"
+
+                                ></h1>
+                            </div>
                         
                         </div>
 
                         <div 
                             id="abilityDataContainer">
+
+                            <div 
+                                id="targetAbilityDataContainer">
+
+                                <h1 
+                                    id="targetAbilityData"
+
+                                ></h1>
+                            </div>
                         
-                            <h1 
-                                id="targetAbilityData"
-                            ></h1>
+
+                            <div 
+                                id="targetAbilityDescDataContainer">
+
+                                <h1 
+                                    id="targetAbilityDescData"
+
+                                ></h1>
+                            </div>
                         
                         </div>
                     
@@ -832,30 +912,70 @@
                         <div 
                             id="summaryAttackDescriptionContainer">
 
-                            <h1 
-                                id="summaryAttackName"
-                            ></h1>
+                            <div 
+                                id="summaryAttackDescriptionHeadContainer">
 
-                            <h1 
-                                id="summaryAttackPower"
-                            ></h1>
+                                <div 
+                                    id="summaryAttackNameContainer">
 
-                            <h1 
-                                id="summaryAttackAccuracy"
-                            ></h1>
+                                    <h1 
+                                        id="summaryAttackName"
 
-                            <h1 
-                                id="summaryAttackPP"
-                            ></h1>
+                                    ></h1>
+                                </div>
+                            </div>
 
-                            <h1 
-                                id="summaryAttackType"
-                            ></h1>
+                            <div 
+                                id="summaryAttackDescriptionMiddleContainer">
 
-                            <h1 
-                                id="summaryAttackDescription"
-                            ></h1>
-                        
+                                <div 
+                                    id="summaryAttackPowerContainer">
+
+                                    <h1 
+                                        id="summaryAttackPower"
+
+                                    ></h1>
+                                </div>
+
+                                <div 
+                                    id="summaryAttackAccuracyContainer">
+                                
+                                    <h1 
+                                        id="summaryAttackAccuracy"
+
+                                    ></h1>
+                                </div>
+
+                                <div 
+                                    id="summaryAttackPPContainer">
+
+                                    <h1 
+                                        id="summaryAttackPP"
+
+                                    ></h1>
+                                </div>
+                            </div>
+
+                            <div 
+                                id="summaryAttackDescriptionFooterContainer">
+                                <div 
+                                    id="summaryAttackTypeContainer">
+
+                                    <h1 
+                                        id="summaryAttackType"
+
+                                    ></h1>
+                                </div>
+
+                                <div 
+                                    id="summaryAttackDescriptionDataContainer">
+                                
+                                    <h1 
+                                        id="summaryAttackDescription"
+
+                                    ></h1>
+                                </div>
+                            </div>
                         </div>
                     
                         <button 

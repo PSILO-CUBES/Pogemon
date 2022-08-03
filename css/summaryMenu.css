@@ -43,27 +43,46 @@
     left: 225px;
 }
 
-#targetLevelData{
+#targetLevelDataContainer{
     position: relative;
+    
+    top: 70px;
+    left: 365px;
+    height: 75px;
+    width: 215px;
 
-    top: 67.5%;
-    left: 455px;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
 }
 
-#targetNameData{
+#targetNameDataContainer{
     position: relative;
 
-    top: 52.5%;
-    left: 235px;
+    top: 49px;
+    left: 200px;
+    height: 75px;
+    width: 375px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
 }
 
-#targetTypeData{
+#targetTypeDataContainer{
     position: relative;
 
-    top: 32.5px;
-    left: 235px;
+    top: 17.5px;
+    left: 200px;
+    height: 65px;
+    width: 375px;
 
-    font-size: x-large;
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
 }
 
 #statsDataContainer{
@@ -78,7 +97,20 @@
 #targetHPData{
     position: inherit;
 
-    top: 87.5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.targetDataContainer{
+    position: relative;
+    left: 516px;
+    top: 5px;
+    height: 67.5px;
+    width: 215px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #expAbilityDataContainer{
@@ -92,16 +124,70 @@
     left: 0;
 }
 
-#targetTotalExp{
+#targetAbilityDataContainer{
     position: relative;
-    top: 65px;
-    left: 67.5%;
+    top: -2.5px;
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: left;
+
+    width: 375px;
+    left: 329px;
 }
 
-#targetExpToNextLvl{
+#targetAbilityData{
+    font-size: x-large;
+
+    padding-left: 42.5px !important;
+}
+
+#targetAbilityDescDataContainer{
     position: relative;
-    top: 90px;
-    left: 67.75%;
+    top: -5px;
+    height: 72.5px;
+
+    width: 1065px;
+    left: 50px;
+}
+
+#targetAbilityDescData{
+    font-size: large;
+    padding: 10px !important;
+}
+
+#targetTotalExpDataContainer{
+    position: relative;
+    top: 55px;
+    left: 780px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: left;
+
+    height: 55px;
+    width: 335px;
+
+    padding-left: 10px !important;
+}
+
+#targetExpToNextLvlDataContainer{
+    position: relative;
+    top: 60px;
+    left: 780px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: left;
+
+    height: 55px;
+    width: 335px;
+
+    padding-left: 10px !important;
 }
 
 #attacksDataContainer{
@@ -116,6 +202,17 @@
     left: 5px;
 
     background-color: transparent;
+}
+
+#targetHPDataContainer{
+    position: relative;
+    height: 70px;
+    width: 435px;
+    left: 295px;
+    top: 72.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .summaryAttackButton{
@@ -137,59 +234,111 @@
     width: 500px;
 }
 
+#summaryAttackDescriptionDataContainer{
+    position: relative;
+    left: 35px;
+
+    width: 440px;
+    height: 265px;
+}
+
 #summaryAttackDescription{
     position: relative;
     
-    left: 45px;
-    top: -300px;
-
-    width: 80%;
+    left: 15px;
 
     font-size: large;
     line-height: 62.5px;
 }
 
-#summaryAttackName{
+#summaryAttackNameContainer{
     position: relative;
+    left: 140px;
+    top: 22.5px;
 
-    left: 150px;
-    top: 37.5px;
+    height: 56.5px;
+    width: 320px;
 
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: large;
+}
+
+#summaryAttackName{
     font-size: 24px;
+}
+
+#summaryAttackPowerContainer{
+    position: relative;
+    left: 80px;
+
+    height: 40px;
+    width: 100px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
 
 #summaryAttackPower{
-    position: relative;
-
-    left: 18.5%;
-    top: 5px;
-
     font-size: 24px;
+}
+
+#summaryAttackAccuracyContainer{
+    position: relative;
+    top: -40px;
+    left: 240px;
+
+    height: 40px;
+    width: 100px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
 
 #summaryAttackAccuracy{
-    position: relative;
-    
-    left: 51.5%;
-    top: -60px;
-
     font-size: 24px;
 }
 
-#summaryAttackPP{
+#summaryAttackPPContainer{
     position: relative;
-    
-    left: 422px;
-    top: -395px;
+    top: -80px;
+    left: 410px;
 
+    height: 40px;
+    width: 70px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+#summaryAttackPP{
     font-size: 24px;
+}
+
+#summaryAttackTypeContainer{
+    position: relative;
+    top: -7.5px;
+    left: 290px;
+    
+    height: 53.5px;
+    width: 185px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
 
 #summaryAttackType{
-    position: relative;
-
-    left: 314.5px;
-    top: -341.5px;
-
     font-size: 20px;
 }

@@ -12,7 +12,7 @@ let currChar = imgs.playerSprites.brendan
 let offset
 
 if(loadData() === null){
-    currMap = maps.paccIsleLab
+    currMap = maps.fairyGym
     offset = {
         x: currMap.position.x,
         y: currMap.position.y,
@@ -567,30 +567,30 @@ addEventListener('keydown', (e) =>{
             keys.w.pressed = true
             lastKey = 'w'
             break
-        case 'W':
-            keys.w.pressed = true
-            lastKey = 'w'
-            break
+        // case 'W':
+        //     keys.w.pressed = true
+        //     lastKey = 'w'
+        //     break
         case 'a':
             keys.a.pressed = true
             lastKey = 'a'
             break
-        case 'A':
-            keys.a.pressed = true
-            lastKey = 'a'
-            break
+        // case 'A':
+        //     keys.a.pressed = true
+        //     lastKey = 'a'
+        //     break
         case 's':
             keys.s.pressed = true
             lastKey = 's'
             break
-        case 'S':
-            keys.s.pressed = true
-            lastKey = 's'
-            break
-        case 'D':
-            keys.d.pressed = true
-            lastKey = 'd'
-            break
+        // case 'S':
+        //     keys.s.pressed = true
+        //     lastKey = 's'
+        //     break
+        // case 'D':
+        //     keys.d.pressed = true
+        //     lastKey = 'd'
+        //     break
         case 'd':
             keys.d.pressed = true
             lastKey = 'd'
@@ -861,6 +861,11 @@ const animate = () =>{
         removeBattleEventListener = false
         console.log(menuButtonEvent)
         document.removeEventListener('click', menuButtonEvent, true)
+    }
+
+    if (currMap.name === 'ghostWoods'){
+        console.log('worked')
+        document.querySelector('#shadeContainer').style.background = '#fefefeaa'
     }
 
     if (battle.initiated) return

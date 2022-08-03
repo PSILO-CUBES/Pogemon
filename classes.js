@@ -1721,6 +1721,8 @@ class Pogemon extends Sprite {
                             caughtPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
                             defineCurrPogemonCurve(caughtPogemon, 'catch')
                             caughtPogemon.currHP = currPogemon.currHP
+                            console.log(caughtPogemon.abilities[0])
+                            caughtPogemon.currAbility = caughtPogemon.abilities[0]
                             //will make player catch pogemon
                             document.querySelector('#battleScene').style.display = 'none'
                             gsap.to('#overlappingDiv', {
@@ -1811,6 +1813,7 @@ class Pogemon extends Sprite {
             }
         } else {
             let starterPogemon = new Pogemon(currPogemon)
+            starterPogemon.currAbility = starterPogemon.abilities[0]
             definePogemonStats(starterPogemon)
             starterPogemon.currExp = Math.pow(currPogemon.currLevel, 3)
             defineCurrPogemonCurve(starterPogemon, 'catch')

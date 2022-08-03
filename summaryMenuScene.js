@@ -103,30 +103,6 @@ let defineSummaryTargetData = () =>{
     }
     document.querySelector('#targetTypeData').textContent = typeDisplay()
     // display stats
-    for (let statName in currDisplayedTarget.stats){
-        if (currDisplayedTarget.stats.hasOwnProperty(statName)) {
-            let stat = {}
-            stat[statName] = currDisplayedTarget.stats[statName]
-            statArray.push(stat)
-            let targetId = '#target' + statName + 'Data'
-            if(stat[statName] <= 9){
-                document.querySelector(targetId).style.left = '617.5px'
-                if(statName === 'HP'){
-                    document.querySelector('#targetHPData').style.left = '400px'
-                }
-            } else if(stat[statName] > 9 && stat[statName] <= 99){
-                document.querySelector(targetId).style.left = '600px'
-                if(statName === 'HP'){
-                    document.querySelector('#targetHPData').style.left = '415px'
-                }
-            } else if(stat[statName] > 99 && stat[statName] <= 999){
-                document.querySelector(targetId).style.left = '590px'
-                if(statName === 'HP'){
-                    document.querySelector('#targetHPData').style.left = '390px'
-                }
-            }
-        }
-    }
     let levelBoxData = document.querySelector('#targetLevelData')
     if(currDisplayedTarget.currLevel <= 9) {
         levelBoxData.style.left = '455px'
@@ -148,8 +124,14 @@ let defineSummaryTargetData = () =>{
     document.querySelector('#targetSpdData').textContent = currDisplayedTarget.stats.Spd
     document.querySelector('#targetTotalExp').textContent = Math.floor(currDisplayedTarget.currExp)
     if(currDisplayedTarget.expNeededForNextLevel === undefined) {
+        //change that
         document.querySelector('#targetExpToNextLvl').textContent = '91'
     } else document.querySelector('#targetExpToNextLvl').textContent = Math.floor(currDisplayedTarget.expNeededForNextLevel)
+    document.querySelector('#targetTotalExp').textContent = Math.floor(currDisplayedTarget.currExp)
+    document.querySelector('#targetAbilityData').textContent = currDisplayedTarget.currAbility.name
+    document.querySelector('#targetAbilityDescData').textContent = currDisplayedTarget.currAbility.desc
+
+
 }
 
 let initSummaryMenu = () =>{

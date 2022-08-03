@@ -351,7 +351,7 @@ const pogemons = {
         ],
         attacks: [attacks.Strangering, attacks.Rest],
         catchRate: 75,
-        abilities: [{name: `Final Chapter`, desc: 'When the user HP is below 25%, fairy moves become stronger.'}, ],
+        abilities: [{name: `Final Chapter`, desc: `When the user HP is below 25%, fairy moves become stronger.`}, ],
         evolution: {
             name: 'Maaphett', 
             level: 15
