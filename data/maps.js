@@ -37,7 +37,7 @@ let maps = {
         battleZonesData: battleZonesData.bedroom,
         changeMapZonesData: changeMapZonesData.bedroom,
         eventZonesData: eventZonesData.bedroom,
-        trainerArray: []
+        NPCArray: []
     },  
 
     home: {
@@ -87,7 +87,7 @@ let maps = {
         battleZonesData: battleZonesData.home,
         changeMapZonesData: changeMapZonesData.home,
         eventZonesData: eventZonesData.home,
-        trainerArray: []
+        NPCArray: []
     },
 
     paccIsle: {
@@ -176,7 +176,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: [trainer.paccIlse_PoliceMan_1, trainer.paccIlse_Professor]
+        NPCArray: [NPCObject.paccIsle.trainers.policeMan, NPCObject.paccIsle.trainers.professor]
     },   
     
     paccIsleCave: {
@@ -225,7 +225,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },    
 
     paccIsleLab: {
@@ -274,7 +274,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: [NPCObject.paccIsleLab.NPC.policeMan1, NPCObject.paccIsleLab.NPC.policeMan2, NPCObject.paccIsleLab.NPC.professor, NPCObject.paccIsleLab.NPC.policeMan3, NPCObject.paccIsleLab.NPC.policeMan4]
     },    
 
     pogemart: {
@@ -314,7 +314,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },    
 
     pogecenter: {
@@ -354,7 +354,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },    
 
     ghostsWoodBridge: {
@@ -453,7 +453,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },  
 
     ghostsWood: {
@@ -537,7 +537,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: [trainer.ghostsWood_BugCatcher1, trainer.ghostsWood_BugCatcher2, trainer.ghostsWood_BugCatcher3, trainer.ghostsWood_BugCatcher4]
+        NPCArray: [NPCObject.ghostsWood.trainers.bugCatcher, NPCObject.ghostsWood.trainers.bugCatcher2, NPCObject.ghostsWood.trainers.bugCatcher3, NPCObject.ghostsWood.trainers.bugCatcher4]
     },  
 
     connectBeach: {
@@ -616,7 +616,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: [trainer.connectBeach_Sailor1, trainer.connectBeach_KarateGuy1, trainer.connectBeach_SwimSuitGuy1, trainer.connectBeach_SwimSuitGirl1]
+        NPCArray: [NPCObject.connectBeach.trainers.sailor1, NPCObject.connectBeach.trainers.karateGuy1, NPCObject.connectBeach.trainers.swimSuitGuy1, NPCObject.connectBeach.trainers.swimSuitGirl1]
     },  
 
     keyTown: {
@@ -718,7 +718,7 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },  
 
     fairyGym: {
@@ -780,6 +780,6 @@ let maps = {
             min: 2,
             max: 6
         },
-        trainerArray: []
+        NPCArray: []
     },  
 }

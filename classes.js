@@ -1856,12 +1856,36 @@ class Trainer extends Boundary {
         this.type = type
         this.direction = direction
         this.data = data
+        this.isNPC = true
     }
 
     defeat(){
         battleMusicPlaying = false
-        maps[currMap.name].trainerArray[currTrainer.index].defeated = true
-        currMap.trainerArray[currTrainer.index].defeated = true
+        maps[currMap.name].NPCArray[currTrainer.index].defeated = true
+        currMap.NPCArray[currTrainer.index].defeated = true
+    }
+
+    draw(){
+        c.fillStyle = 'rgba(255,0,0,0)'
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+    }
+}
+
+class NPC extends Boundary {
+    static width = 64
+    static height = 64
+
+    constructor({ position, type, data, direction }) {
+        super(
+            position
+        )
+        this.position = position
+        this.width = 64
+        this.height = 64
+        this.type = type
+        this.direction = direction
+        this.data = data
+        this.isNPC = true
     }
 
     draw(){

@@ -12,7 +12,7 @@ let currChar = imgs.playerSprites.brendan
 let offset
 
 if(loadData() === null){
-    currMap = maps.fairyGym
+    currMap = maps.paccIsleLab
     offset = {
         x: currMap.position.x,
         y: currMap.position.y,
@@ -260,20 +260,21 @@ const defineEventZonesPosition = () =>{
     }
     eventZonesMap.forEach((row, i) =>{
         row.forEach((symbol, j) =>{
-            if (symbol === 19) {
+            if (symbol === 10){
                 eventZones.push(new Boundary({
                     position :{
                         x: j * Boundary.width + offset.x,
                         y: i * Boundary.height + offset.y
                     },
-                    type: 'starter',
-            }))
+                    type: 'heal',
+                }))
             } else if (symbol === 15){
                 eventZones.push(new Trainer({
                     position :{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
+                    isNPC: true,
                     type: 'Trainer',
                     direction: 'up'})
                 )
@@ -283,6 +284,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
+                    isNPC: true,
                     type: 'Trainer',
                     direction: 'right'})
                 )
@@ -292,6 +294,7 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
+                    isNPC: true,
                     type: 'Trainer',
                     direction: 'down'})
                 )
@@ -301,17 +304,58 @@ const defineEventZonesPosition = () =>{
                         x: j * Trainer.width + offset.x,
                         y: i * Trainer.height + offset.y
                     },
+                    isNPC: true,
                     type: 'Trainer',
                     direction: 'left'})
                 )
-            } else if (symbol === 10){
+            } else if (symbol === 19) {
                 eventZones.push(new Boundary({
                     position :{
                         x: j * Boundary.width + offset.x,
                         y: i * Boundary.height + offset.y
                     },
-                    type: 'heal',
-            }))
+                    type: 'starter',
+                })) 
+            } else if (symbol === 35){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'NPC',
+                    direction: 'up'})
+                )
+            } else if (symbol === 36){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'NPC',
+                    direction: 'right'})
+                )
+            } else if (symbol === 37){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'NPC',
+                    direction: 'down'})
+                )
+            } else if (symbol === 38){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'NPC',
+                    direction: 'left'})
+                )
             }
         })
     })
@@ -321,27 +365,35 @@ const defineEventZonesPosition = () =>{
 defineEventZonesPosition()
 
 let trainerIndex = -1
+let NPCIndex = -1
 
-// load trainer
+// load trainer and talkable NPC's
+
+for(let i = 0; i < eventZones.length; i++){
+    if(eventZones[i].type === "NPC"){
+        NPCIndex++
+        eventZones[i].data = maps[currMap.name].NPCArray[NPCIndex]
+    }
+}
 
 if (!loadData()){
     for(let i = 0; i < eventZones.length; i++){
         if(eventZones[i].type === "Trainer"){
             trainerIndex++
-            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
         }
     }
 } else {
     for(let i = 0; i < eventZones.length; i++){
         if(eventZones[i].type === "Trainer"){
             trainerIndex++
-            maps[currMap.name].trainerArray[trainerIndex] = loadData().maps[currMap.name].trainerArray[trainerIndex]
-            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+            maps[currMap.name].NPCArray[trainerIndex] = loadData().maps[currMap.name].NPCArray[trainerIndex]
+            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
         }
     }
 }
 
-let rectangularCollision = ({rectangle1, rectangle2}) =>{
+let rectangularColission = ({rectangle1, rectangle2}) =>{
     return (
         rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
         rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed &&
@@ -536,6 +588,8 @@ let bagMenu = {
 }
 let prevMapName
 let removeBattleEventListener
+let openNPCDialogueBool = false
+let currNPCWithEngagedDialogue
 
 let timerId;
 let _doActionNoSpamCloseTeamMenuInCombat = () =>{
@@ -884,11 +938,11 @@ const animate = () =>{
         const eventZone = eventZones[i]
         // determine starter picked
         if(eventZones[i].type === 'starter'){
-            eventZones[1].name = 'Lokump'
-            eventZones[2].name = 'Steeli'
-            eventZones[3].name = 'Maaph'
+            eventZones[3].name = 'Lokump'
+            eventZones[4].name = 'Steeli'
+            eventZones[5].name = 'Maaph'
         }
-        rectangularCollision = ({rectangle1, rectangle2}) =>{
+        rectangularColission = ({rectangle1, rectangle2}) =>{
             return (
                 rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
                 rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
@@ -898,7 +952,7 @@ const animate = () =>{
         }
         // event Tile collisions
         if ((
-            rectangularCollision({
+            rectangularColission({
             rectangle1: player,
             rectangle2: eventZone
             }) && eventZone.type === 'starter'
@@ -1028,7 +1082,7 @@ const animate = () =>{
         }
 
         if(eventZone.type === 'heal'){
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 return (
                     rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
                     rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed&&
@@ -1039,7 +1093,7 @@ const animate = () =>{
         }
 
         if ((
-            rectangularCollision({
+            rectangularColission({
             rectangle1: player,
             rectangle2: eventZone
             }) && eventZone.type === 'heal'
@@ -1129,7 +1183,7 @@ const animate = () =>{
                 }
             }
         } else if ((
-            !rectangularCollision({
+            !rectangularColission({
             rectangle1: player,
             rectangle2: eventZone
             }) && eventZone.type === 'heal'
@@ -1146,56 +1200,120 @@ const animate = () =>{
             pcEvent.menuOpened = false
         }}
 
-        if(eventZone.type === 'Trainer'){
-            for(let i = 0; i < maps[currMap.name].trainerArray.length; i++){
-                rectangularCollision = ({rectangle1, rectangle2}) =>{
-                    if(eventZone.direction === 'up'){
-                        return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
-                            rectangle1.position.y <= rectangle2.position.y - 25 &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 250
-                        )
-                    } else if(eventZone.direction === 'left'){
-                        return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 250 &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
-                            rectangle1.position.y <= rectangle2.position.y &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
-                        )
-                    } else if(eventZone.direction === 'down'){
-                        return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
-                            rectangle1.position.y <= rectangle2.position.y + 250 &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 25
-                        )
-                    } else if(eventZone.direction === 'right'){
-                        return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 250 &&
-                            rectangle1.position.y <= rectangle2.position.y &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
-                        )
-                    } else {
-                        return (
-                            rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-                            rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
-                            rectangle1.position.y <= rectangle2.position.y &&
-                            rectangle1.position.y + rectangle1.height >= rectangle2.position.y
-                        )
+        let closeOverworldDialogueBox = () => {
+            document.querySelector('#overworldContainer').style.display = 'none'
+            document.querySelector('#overworldDialogue').textContent = ``
+            document.querySelector('#overworldDialogue').removeEventListener('click', closeOverworldDialogueBox, true)
+            openNPCDialogueBool = false
+        }
+
+        let _doActionNoSpamTalkToNPC = () =>{
+            if (!(timerId == null)) {
+                clearTimeout(timerId);
+            }
+            timerId = setTimeout(() =>{
+                openNPCDialogueBool = true
+                console.log(openNPCDialogueBool)
+                document.querySelector('#overworldContainer').style.display = 'flex'
+                document.querySelector('#overworldButtonContainer').style.display = 'none'
+                document.querySelector('#overworldDialogue').textContent = `${currNPCWithEngagedDialogue.dialogue}`
+                document.querySelector('#overworldDialogue').addEventListener('click', closeOverworldDialogueBox, true)
+            }, 100);
+        }
+
+        if(eventZone.isNPC){
+            for(let i = 0; i < maps[currMap.name].NPCArray.length; i++){
+                rectangularColission = ({rectangle1, rectangle2}) =>{
+                    if(eventZone.type === 'Trainer'){
+                        if(eventZone.direction === 'up'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                                rectangle1.position.y <= rectangle2.position.y - 25 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 250
+                            )
+                        } else if(eventZone.direction === 'left'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 250 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        } else if(eventZone.direction === 'down'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
+                                rectangle1.position.y <= rectangle2.position.y + 250 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 25
+                            )
+                        } else if(eventZone.direction === 'right'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 250 &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        } else {
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        }
+                    } else if(eventZone.type === 'NPC'){
+                        if(eventZone.direction === 'up'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                                rectangle1.position.y <= rectangle2.position.y - 25 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 25
+                            )
+                        } else if(eventZone.direction === 'left'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        } else if(eventZone.direction === 'down'){
+                            return (
+                                //left side of player
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 25 &&
+                                //right side of player
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 25 &&
+                                //top side of player
+                                rectangle1.position.y <= rectangle2.position.y + 25 &&
+                                //bottom side of player
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 15
+                            )
+                        } else if(eventZone.direction === 'right'){
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 25 &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        } else {
+                            return (
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                                rectangle1.position.y <= rectangle2.position.y &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                            )
+                        }
                     }
                 }
             }
             if ((
-                rectangularCollision({
+                rectangularColission({
                 rectangle1: player,
                 rectangle2: eventZone
                 }) && eventZone.type === 'Trainer'
             )){
                 newBattle = true
                 //trainer encounter
-                if(!eventZone.data.defeated && team.length != 0){ 
+                if(!eventZone.data.defeated && team.length != 0){
                     document.querySelector('#overworldContainer').style.display = 'grid'
                     document.querySelector('#overworldDialogueBox').textContent = eventZone.data.dialogue
                     let exclamation = document.querySelector('#exclamationNPC')
@@ -1251,7 +1369,22 @@ const animate = () =>{
                         }
                     }
                 }
-            } 
+            } else if ((
+                rectangularColission({
+                rectangle1: player,
+                rectangle2: eventZone
+                }) && eventZone.type === 'NPC'
+            )){
+                if(!openNPCDialogueBool){
+                    if(keys.Enter.pressed || keys.e.pressed || keys.Space.pressed){
+                        currNPCWithEngagedDialogue = eventZone.data
+                        _doActionNoSpamTalkToNPC()
+                    }
+                } else if(openNPCDialogueBool){
+                    console.log(`${eventZone.data.dialogue}`)
+                    // openNPCDialogueBool = false
+                }
+            }
         }  
     }
     
@@ -1277,7 +1410,7 @@ const animate = () =>{
                     battleZone.position.y
                 ))
             if (
-                rectangularCollision({
+                rectangularColission({
                     rectangle1: player,
                     rectangle2: battleZone
                 }) &&
@@ -1329,7 +1462,7 @@ const animate = () =>{
             prevMap = currMap
             prevMapName = currMap.name
 
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 if(mapZone.type === 'up') return (
                     rectangle1.position.x + rectangle1.width - currSpeed >= rectangle2.position.x &&
                     rectangle1.position.x <= rectangle2.position.x + rectangle2.width - currSpeed&&
@@ -1357,7 +1490,7 @@ const animate = () =>{
                 
             }
             if (
-                rectangularCollision({
+                rectangularColission({
                 rectangle1: player,
                 rectangle2: mapZone
                 })
@@ -1449,14 +1582,14 @@ const animate = () =>{
                     for(let i = 0; i < eventZones.length; i++){
                         if(eventZones[i].type === "Trainer"){
                             trainerIndex++
-                            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+                            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
                         }
                     }
                 } else {
                     for(let i = 0; i < eventZones.length; i++){
                         if(eventZones[i].type === "Trainer"){
                             trainerIndex++
-                            eventZones[i].data = maps[currMap.name].trainerArray[trainerIndex]
+                            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
                         }
                     }
                 }
@@ -1489,7 +1622,7 @@ const animate = () =>{
         for (let i = 0; i < collisions.length; i++){
             boundary = collisions[i]
             //repetitive, dont know how to pass boundary.type other wise
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 switch (boundary.type){
                         case 'full': 
                             return (
@@ -1536,7 +1669,7 @@ const animate = () =>{
                     }
             }
             if (
-                rectangularCollision({
+                rectangularColission({
                     rectangle1: player,
                     rectangle2: {...boundary, 
                         position: {
@@ -1560,7 +1693,7 @@ const animate = () =>{
         player.image = player.sprites.walk.left
         for (let i = 0; i < collisions.length; i++){
             boundary = collisions[i]
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 switch (boundary.type){
                         case 'full': 
                             return (
@@ -1607,7 +1740,7 @@ const animate = () =>{
                     }
             }
             if (
-                rectangularCollision({
+                rectangularColission({
                     rectangle1: player,
                     rectangle2: {...boundary, 
                         position: {
@@ -1631,7 +1764,7 @@ const animate = () =>{
         player.image = player.sprites.walk.down
         for (let i = 0; i < collisions.length; i++){
             boundary = collisions[i]
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 switch (boundary.type){
                         case 'full': 
                             return (
@@ -1678,7 +1811,7 @@ const animate = () =>{
                     }
             }
             if (
-                rectangularCollision({
+                rectangularColission({
                     rectangle1: player,
                     rectangle2: {...boundary, 
                         position: {
@@ -1703,7 +1836,7 @@ const animate = () =>{
         player.image = player.sprites.walk.right
         for (let i = 0; i < collisions.length; i++){
             boundary = collisions[i]
-            rectangularCollision = ({rectangle1, rectangle2}) =>{
+            rectangularColission = ({rectangle1, rectangle2}) =>{
                 switch (boundary.type){
                         case 'full': 
                             return (
@@ -1750,7 +1883,7 @@ const animate = () =>{
                     }
             }
             if (
-                rectangularCollision({
+                rectangularColission({
                     rectangle1: player,
                     rectangle2: {...boundary, 
                         position: {

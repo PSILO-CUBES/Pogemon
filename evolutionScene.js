@@ -87,7 +87,7 @@ let initEvolution = () =>{
     })
     audio.victory.stop()
     audio.evolution.play()
-    document.querySelector('#evolutionDialogueBox').textContent = `${pogemonBeforeEvolution.name} is eating doodoo into ${currEvoPogemon.name}!!`
+    document.querySelector('#evolutionDialogueBox').textContent = `${pogemonBeforeEvolution.name} is evolving into ${currEvoPogemon.name}!!`
     gsap.to(pogemonToEvolveSprite, {
         opacity: 0,
         yoyo: true,

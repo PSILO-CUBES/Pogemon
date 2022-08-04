@@ -59,6 +59,8 @@
     border: 5px black solid;
 
     padding: 15px !important;
+
+    cursor: pointer;
 }
 
 #overworldDialogue{
