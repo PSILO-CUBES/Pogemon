@@ -187,6 +187,44 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div 
+                    id="shopContainer">
+
+                    <div 
+                        id="shopContainerHeader">
+                    
+                        <div 
+                            id="shopContainerHeaderShopContainer">
+                                <img id="shopContainerHeaderShopIcon" src="img/shop.ico">
+                                <h1 id="shopContainerHeaderShopIconText"> pogemart </h1>
+                        </div>
+
+                        <div 
+                            id="shopContainerHeaderMoneyContainer">
+                                <img id="shopContainerHeaderMoneyIcon" src="img/pogebuck.png">
+                                <h1 id="shopContainerHeaderMoneyIconText"> 0 </h1>
+                        </div>
+                    </div>
+
+                    <div 
+                        id="shopContainerBody">
+
+                        <ul 
+                            id="shopList">
+
+                        </ul>
+                    </div>
+
+                    <div 
+                        id="shopContainerFooter">
+                
+                        <input id="shopContainerFooterAmountOfItemToBuy" name="itemAmount" type="text" min="0" max="99" maxlength="2" placeholder="amount">
+                        <input id="shopContainerFooterAmountOfItemPrice" name="itemPrice" type="text" min="0" max="99" maxlength="2" value="price" onkeydown="return false;">
+                        <button id="shopContainerFooterCancelButton">Cancel</button>
+                    </div>
+                </div>
             </div>
             <!-- PC MENU CONTAINER HERE -->
             <div 
@@ -769,6 +807,15 @@
                         </div>
 
                         <div 
+                            id="targetGIDDataContainer">
+
+                            <h1 
+                                id="targetGIDData"
+
+                            ></h1>
+                        </div>
+
+                        <div 
                             id="targetItemDataContainer">
 
                             <h1 
@@ -776,7 +823,8 @@
 
                             ></h1>
                         </div>
-                    
+
+                        <img id="targetItemIcon">
                     </div>
 
                     <div 
@@ -1716,6 +1764,7 @@
     <script src="data/NPCs.js"></script>
     <script src="data/maps.js"></script>
     <script src="data/items.js"></script>
+    <script src="data/shops.js"></script>
     <script src="pogemonStorage.js"></script>
     <script src="index.js"></script>
     <script src="teamMenuScene.js"></script>

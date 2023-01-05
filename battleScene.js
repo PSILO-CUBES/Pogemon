@@ -70,7 +70,7 @@ let chooseIfEvolve = (answer) =>{
                             currTrainer.defeat()
                         }
                         cancelAnimationFrame(animateBattleId)
-                        console.log('worke?')
+                        disableMenuDuringAttack = false
                         initEvolution()
                         animateEvolution()
                         audio.battle.stop()
@@ -92,8 +92,10 @@ let chooseIfEvolve = (answer) =>{
                             currTrainer.defeat()
                         }
                         removeBattleEventListener = true
+                        disableMenuDuringAttack = false
                         cancelAnimationFrame(animateBattleId)
                         animate()
+                        console.log('how many times')
                         audio.map.play()
                     }
                     gsap.to('#overlappingDiv', {
@@ -341,10 +343,12 @@ const initBattle = () =>{
                                     if (teamFainted){
                                         if(battle.initiated){
                                             battleMusicPlaying = false
+                                            disableMenuDuringAttack = false
                                             removeBattleEventListener = true
                                             queue = []
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
+                                            console.log('how many times')
                                         }
                                         gsap.to('#overlappingDiv', {
                                             opacity: 0
@@ -602,9 +606,11 @@ const initBattle = () =>{
                                 document.querySelector('#battleScene').style.display = 'none'
                                 if(battle.initiated === true) {
                                     battleMusicPlaying = false
+                                    disableMenuDuringAttack = false
                                     removeBattleEventListener = true
                                     cancelAnimationFrame(animateBattleId)
                                     animate()
+                                    console.log('how many times')
                                 }
                                 gsap.to('#overlappingDiv', {
                                     opacity: 0
@@ -683,7 +689,12 @@ const initBattle = () =>{
                             queue.push(() =>{
                                 audio.victory.play()
                                 currFoe.faint(currAlly)
+                                console.log(currTrainer)
                                 queue.push(() =>{
+                                    document.querySelector('#dialogueBox').textContent = `${currTrainer.data.name} has been defeated! \n\nYou are awarded ${currTrainer.data.prize}p!`
+                                })
+                                queue.push(() =>{
+                                    
                                     // evolution
                                     if(Math.floor(currAlly.currLevel) >= currAlly.evolution.level && currAlly.evolution.name != 'none'){
                                         //put evolution animation
@@ -699,9 +710,11 @@ const initBattle = () =>{
                                                         currTrainer.defeat()
                                                     }
                                                     battleMusicPlaying = false
+                                                    disableMenuDuringAttack = false
                                                     removeBattleEventListener = true
                                                     cancelAnimationFrame(animateBattleId)
                                                     animate()
+                                                    console.log('how many times')
                                                 }
                                                 gsap.to('#overlappingDiv', {
                                                     opacity: 0,
@@ -740,10 +753,12 @@ const initBattle = () =>{
                                         if (teamFainted){
                                             if(battle.initiated){
                                                 battleMusicPlaying = false
+                                                disableMenuDuringAttack = false
                                                 removeBattleEventListener = true
                                                 queue = []
                                                 cancelAnimationFrame(animateBattleId)
                                                 animate()
+                                                console.log('how many times')
                                             }
                                             gsap.to('#overlappingDiv', {
                                                 opacity: 0
@@ -788,9 +803,11 @@ const initBattle = () =>{
                                     if (teamFainted){
                                         if(battle.initiated){
                                             battleMusicPlaying = false
+                                            disableMenuDuringAttack = false
                                             removeBattleEventListener = true
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
+                                            console.log('how many times')
                                         }
                                         gsap.to('#overlappingDiv', {
                                             opacity: 0
@@ -842,9 +859,11 @@ const initBattle = () =>{
                                                                 currTrainer.defeat()
                                                             }
                                                             battleMusicPlaying = false
+                                                            disableMenuDuringAttack = false
                                                             removeBattleEventListener = true
                                                             cancelAnimationFrame(animateBattleId)
                                                             animate()
+                                                            console.log('how many times')
                                                         }
                                                         gsap.to('#overlappingDiv', {
                                                             opacity: 0,
@@ -898,9 +917,11 @@ const initBattle = () =>{
                                                             currTrainer.defeat()
                                                         }
                                                         battleMusicPlaying = false
+                                                        disableMenuDuringAttack = false
                                                         removeBattleEventListener = true
                                                         cancelAnimationFrame(animateBattleId)
                                                         animate()
+                                                        console.log('how many times')
                                                     }
                                                     gsap.to('#overlappingDiv', {
                                                         opacity: 0,
@@ -939,9 +960,11 @@ const initBattle = () =>{
                                             if (teamFainted){
                                                 if(battle.initiated){
                                                     battleMusicPlaying = false
+                                                    disableMenuDuringAttack = false
                                                     removeBattleEventListener = true
                                                     cancelAnimationFrame(animateBattleId)
                                                     animate()
+                                                    console.log('how many times')
                                                 }
                                                 gsap.to('#overlappingDiv', {
                                                     opacity: 0
@@ -984,9 +1007,11 @@ const initBattle = () =>{
                                     if (teamFainted){
                                         if(battle.initiated){
                                             battleMusicPlaying = false
+                                            disableMenuDuringAttack = false
                                             removeBattleEventListener = true
                                             cancelAnimationFrame(animateBattleId)
                                             animate()
+                                            console.log('how many times')
                                         }
                                         gsap.to('#overlappingDiv', {
                                             opacity: 0
@@ -1037,9 +1062,11 @@ const initBattle = () =>{
                                                                     currTrainer.defeat()
                                                                 }
                                                                 battleMusicPlaying = false
+                                                                disableMenuDuringAttack = false
                                                                 removeBattleEventListener = true
                                                                 cancelAnimationFrame(animateBattleId)
                                                                 animate()
+                                                                console.log('how many times')
                                                             }
                                                             gsap.to('#overlappingDiv', {
                                                                 opacity: 0,
@@ -1109,9 +1136,11 @@ const animateBattle = () => {
                     if (teamFainted){
                         if(battle.initiated){
                             battleMusicPlaying = false
+                            disableMenuDuringAttack = false
                             removeBattleEventListener = true
                             cancelAnimationFrame(animateBattleId)
                             animate()
+                            console.log('how many times')
                         }
                         gsap.to('#overlappingDiv', {
                             opacity: 0
@@ -1130,8 +1159,6 @@ const animateBattle = () => {
             })
         })
     }
-
-    console.log(battleItemMenu)
 
     if(battleItemMenu){
         openItemMenuFromBattle = true
@@ -1187,7 +1214,7 @@ _doActionNoSpamChangeBattleAction = () =>{
                 queue[0]()
                 queue.shift()
             }
-        } else if (!attackInProcess) {
+        } else {
             queue = []
             disableMenuDuringAttack = false
             document.querySelector('#dialogueBox').style.display = 'none'

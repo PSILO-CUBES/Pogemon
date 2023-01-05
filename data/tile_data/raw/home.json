@@ -82,7 +82,7 @@
          "name":"Battle Zones",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":22,
          "x":0,
          "y":0
@@ -94,7 +94,7 @@
          "name":"Event Zones",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":22,
          "x":0,
          "y":0
@@ -106,7 +106,7 @@
          "name":"Change Map",
          "opacity":0.4,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":22,
          "x":0,
          "y":0
@@ -118,7 +118,7 @@
          "name":"Collisions",
          "opacity":0.3,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":22,
          "x":0,
          "y":0

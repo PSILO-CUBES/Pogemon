@@ -7,6 +7,7 @@ let pogemonToEvolveSprite
 let evolutionImage
 let evolutionSprite
 let showEvolutionImage
+let ongoingEvo
 
 let evolutionBackgroundImage = new Image()
 evolutionBackgroundImage.src = 'img/evolution_scene/evolutionBackground.png'
@@ -20,7 +21,7 @@ let evolutionBackgroundSprite = new Sprite({
 })
 
 let initEvolution = () =>{
-
+    ongoingEvo = true
     // after evolution, pogemon currHP is inconsistent
     currEvoPogemon = team[0]
     beforeEvoPogemon = currEvoPogemon
@@ -40,6 +41,10 @@ let initEvolution = () =>{
     definePogemonStats(currEvoPogemon)
     defineCurrPogemonCurve(currEvoPogemon, 'catch')
     currEvoPogemon.currHP = beforeEvoPogemon.stats.HP
+    currEvoPogemon.globalId = beforeEvoPogemon.globalId
+    if(beforeEvoPogemon.item !== undefined) currEvoPogemon.item = beforeEvoPogemon.item
+    else currEvoPogemon.item = undefined
+    currEvoPogemon.currAbility = beforeEvoPogemon.currAbility
     defineCurrTeamMenuInfo()
     currEvoPogemon.attacks = attacksBeforeEvolution
     for (let i = 0; i < currEvoPogemon.attackPool.length; i++){
@@ -85,6 +90,7 @@ let initEvolution = () =>{
         animate: true,
         image: evolutionImage,
     })
+
     audio.victory.stop()
     audio.evolution.play()
     document.querySelector('#evolutionDialogueBox').textContent = `${pogemonBeforeEvolution.name} is evolving into ${currEvoPogemon.name}!!`
@@ -100,11 +106,14 @@ let initEvolution = () =>{
                     audio.evolution.stop()
                     audio.evolutionDone.play()
                     document.querySelector('#evolutionDialogueBox').textContent = `Congratulation, ${pogemonBeforeEvolution.name} evolved into ${currEvoPogemon.name}!!`
+                    document.querySelector('#evolutionDialogueBox').addEventListener('click', _doActionNoSpamEvoQueue, {once: true})
                     evoQueue.push(() =>{
                         gsap.to('#overlappingDiv', {
                             opacity: 1,
                             onComplete: () =>{
                                 document.querySelector('#evolutionScene').style.display = 'none'
+                                ongoingEvo = false
+                                // if escaped spammed, i think 2 or more animationframes start playing
                                 cancelAnimationFrame(animateEvolutionId)
                                 animate()
                                 gsap.to('#overlappingDiv', {
@@ -140,12 +149,10 @@ let _doActionNoSpamEvoQueue = () =>{
         clearTimeout(evolutionActionTimerId);
     }
     timerId = setTimeout(() =>{
-        evoQueue[0]()
-        evoQueue.shift
+            evoQueue[0]()
+            evoQueue.shift
     }, 400);
 };
-
-document.querySelector('#evolutionDialogueBox').addEventListener('click', _doActionNoSpamEvoQueue, true)
 
 animate()
 // animateTeamMenu()

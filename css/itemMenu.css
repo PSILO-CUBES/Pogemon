@@ -248,6 +248,8 @@ ul{
     border: 1px solid black;
     
     cursor: pointer;
+
+    pointer-events: all;
 }.itemContainer:hover{
     background-color: #68161266;
     

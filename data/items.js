@@ -6,6 +6,7 @@ const items = {
             type: 'potion',
             potency: 25,
             description: 'Heals Pogemon for 20 HP.',
+            price: 200,
         },
         revive: {
             name: 'revive',
@@ -13,6 +14,7 @@ const items = {
             type: 'revive',
             potency: 25,
             description: 'Revives a fainted pogemon.',
+            price: 500,
         },
     },
     pogeball:{
@@ -22,6 +24,7 @@ const items = {
             type: 'pogeball',
             potency: 1,
             description: 'A standard pogeball.',
+            price: 250,
         }
     },
     berry:{
@@ -32,6 +35,7 @@ const items = {
             potency: 15,
             threshold: 50,
             description: 'if held, Can be used to heal mid-turn.',
+            price: null,
         },
     }
 }

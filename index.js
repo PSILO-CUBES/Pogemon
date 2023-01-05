@@ -214,11 +214,13 @@ for(let i = 0; i < changeZones.length; i++){
     if(currMap.name === 'pogemart'){
         if(prevMap === undefined){
             prevMap = loadData().prevMap
-            changeZones[i].data = {name:`${prevMap.name}`,
-            position: {
-                x: prevMap.pogemartPosition.x,
-                y: prevMap.pogemartPosition.y,
-            }}
+            changeZones[i].data = {
+                name:`${prevMap.name}`,
+                position: {
+                    x: prevMap.pogemartPosition.x,
+                    y: prevMap.pogemartPosition.y,
+                }
+            }
         } else {
             changeZones[i].data = {name:`${prevMap.name}`,
             position: {
@@ -354,6 +356,46 @@ const defineEventZonesPosition = () =>{
                     },
                     isNPC: true,
                     type: 'NPC',
+                    direction: 'left'})
+                )
+            } else if (symbol === 55){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'pogemart',
+                    direction: 'up'})
+                )
+            } else if (symbol === 56){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'pogemart',
+                    direction: 'right'})
+                )
+            } else if (symbol === 57){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'pogemart',
+                    direction: 'down'})
+                )
+            } else if (symbol === 58){
+                eventZones.push(new NPC({
+                    position :{
+                        x: j * NPC.width + offset.x,
+                        y: i * NPC.height + offset.y
+                    },
+                    isNPC: true,
+                    type: 'pogemart',
                     direction: 'left'})
                 )
             }
@@ -590,6 +632,16 @@ let prevMapName
 let removeBattleEventListener
 let openNPCDialogueBool = false
 let currNPCWithEngagedDialogue
+let shop = {
+    open: false,
+    items: []
+}
+let priceEventFlag = false
+let mountItemButtonEvent = false
+let currSelectedShopItem = null
+let buyEvent = false
+let clearSelectedShopButtons
+let rematchFlag = false
 
 let timerId;
 let _doActionNoSpamCloseTeamMenuInCombat = () =>{
@@ -604,11 +656,11 @@ let _doActionNoSpamCloseTeamMenuInCombat = () =>{
 
 addEventListener('keydown', (e) =>{
 
-    if (e.key === 'Shift' && !running) {
+    if (e.key === 'Shift' && !running && !shop.open) {
         speedModifier = 2
         player.frames.hold = 10
         running = true
-    } else if (e.key == 'Shift' && running) {
+    } else if (e.key == 'Shift' && running && !shop.open) {
         speedModifier = 1
         player.frames.hold = 20
         running = false
@@ -618,38 +670,27 @@ addEventListener('keydown', (e) =>{
 
     switch (e.key){
         case 'w':
+        case 'W':
             keys.w.pressed = true
             lastKey = 'w'
             break
-        // case 'W':
-        //     keys.w.pressed = true
-        //     lastKey = 'w'
-        //     break
         case 'a':
+        case 'A':
             keys.a.pressed = true
             lastKey = 'a'
             break
-        // case 'A':
-        //     keys.a.pressed = true
-        //     lastKey = 'a'
-        //     break
         case 's':
+        case 'S':
             keys.s.pressed = true
             lastKey = 's'
             break
-        // case 'S':
-        //     keys.s.pressed = true
-        //     lastKey = 's'
-        //     break
-        // case 'D':
-        //     keys.d.pressed = true
-        //     lastKey = 'd'
-        //     break
         case 'd':
+        case 'D':
             keys.d.pressed = true
             lastKey = 'd'
             break
         case 'e':
+        case 'E':
             keys.e.pressed = true
             lastKey = 'e'
             break
@@ -664,7 +705,11 @@ addEventListener('keydown', (e) =>{
         case 'Escape':
             //if pressed during encounter animation, teamMenu is displayed after battle... not that big a deal but should fix ... something to so with the delay??
             keys.Escape.pressed = true
-            if (!menu.open && !battle.initiated && !bagMenu.open) menu.open = true
+            if (ongoingEvo) {
+                console.log(ongoingEvo)
+                return
+            }
+            if (!menu.open && !battle.initiated && !bagMenu.open && !shop.open) menu.open = true
             else if (menu.open && !battle.initiated) menu.open = false
             if(battle.initiated && !teamMenu.open){
                 _doActionNoSpamCloseTeamMenuInCombat()
@@ -728,6 +773,20 @@ addEventListener('keydown', (e) =>{
                         })
                     }
                 })
+            }
+            if(shop.open){
+                if(running){
+                    speedModifier = 2
+                } else {
+                    speedModifier = 1
+                }
+                shop.open = false
+                mountItemButtonEvent = false
+                document.querySelector('#shopDialogueBox').setAttribute('id', 'overworldDialogueBox')
+                document.querySelector('#shopButtonContainer').setAttribute('id', 'overworldButtonContainer')
+                document.querySelector('#overworldContainer').style.display = 'none'
+                document.querySelector('#shopContainer').style.display = 'none'
+                clearSelectedShopButtons()
             }
             lastKey = 'Escape'
             break
@@ -851,6 +910,29 @@ addEventListener('keyup', (e) =>{
     })
 })
 
+let loadPogemartNPC = () =>{
+    if (!loadData()){
+        for(let i = 0; i < eventZones.length; i++){
+            if(eventZones[i].type === "pogemart"){
+                trainerIndex++
+                eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
+            }
+        }
+    } else {
+        for(let i = 0; i < eventZones.length; i++){
+            if(eventZones[i].type === "pogemart"){
+                trainerIndex++
+                eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
+            }
+        }
+    }
+}
+
+if(currMap.name === 'pogemart'){
+    loadPogemartNPC()
+}
+
+
 let pcEvent = {
     menuOpen: false,
     menuOpened: false
@@ -913,12 +995,10 @@ const animate = () =>{
 
     if(removeBattleEventListener) {
         removeBattleEventListener = false
-        console.log(menuButtonEvent)
         document.removeEventListener('click', menuButtonEvent, true)
     }
 
     if (currMap.name === 'ghostWoods'){
-        console.log('worked')
         document.querySelector('#shadeContainer').style.background = '#fefefeaa'
     }
 
@@ -1205,6 +1285,11 @@ const animate = () =>{
             document.querySelector('#overworldDialogue').textContent = ``
             document.querySelector('#overworldDialogue').removeEventListener('click', closeOverworldDialogueBox, true)
             openNPCDialogueBool = false
+            if(running){
+                speedModifier = 2
+            } else {
+                speedModifier = 1
+            }
         }
 
         let _doActionNoSpamTalkToNPC = () =>{
@@ -1213,18 +1298,228 @@ const animate = () =>{
             }
             timerId = setTimeout(() =>{
                 openNPCDialogueBool = true
-                console.log(openNPCDialogueBool)
                 document.querySelector('#overworldContainer').style.display = 'flex'
                 document.querySelector('#overworldButtonContainer').style.display = 'none'
-                document.querySelector('#overworldDialogue').textContent = `${currNPCWithEngagedDialogue.dialogue}`
+                document.querySelector('#overworldDialogue').textContent = `${currNPCWithEngagedDialogue.data.dialogue}`
                 document.querySelector('#overworldDialogue').addEventListener('click', closeOverworldDialogueBox, true)
             }, 100);
+        }
+
+        let changeDisplayedItemData = () => {
+            let amountInput = document.querySelector('#shopContainerFooterAmountOfItemToBuy')
+            let currItemAmount = amountInput.value
+            let currItemAmountParsed = parseInt(currItemAmount)
+            amountInput.value = currItemAmountParsed
+            currItemAmount = currItemAmountParsed
+            console.log(currItemAmountParsed)
+            priceEventFlag = false
+            let totalPrice = currItemAmount * currSelectedShopItem.price
+            if(currItemAmountParsed > 1){
+                document.querySelector('#overworldDialogue').textContent = `So, you want to buy ${currItemAmount} ${currSelectedShopItem.name}s? \n\nYou have ${inventory[currSelectedShopItem.category][currSelectedShopItem.name].amount} of those in your bag currently.`
+                document.querySelector('#shopButtonContainer').style.display = 'grid'
+            } else if (currItemAmountParsed === 1) {
+                document.querySelector('#overworldDialogue').textContent = `So, you want to buy a ${currSelectedShopItem.name}?`
+                document.querySelector('#shopButtonContainer').style.display = 'grid'
+            } else if (currItemAmountParsed === 0 || currItemAmount === ''){
+                document.querySelector('#overworldDialogue').textContent = `Please, choose the amount of ${currSelectedShopItem.name}'s you wish to buy.`
+                document.querySelector('#shopButtonContainer').style.display = 'none'
+            }
+            if(isNaN(currItemAmountParsed)){
+                console.log('worked')
+                document.querySelector('#yesButton').addEventListener('click', proceedToBuyEvent, true)
+                document.querySelector('#noButton').style.background = 'rgba(70, 6, 4, 0.6)'
+                document.querySelector('#shopButtonContainer').style.display = 'none'
+                document.querySelector('#shopContainerFooterAmountOfItemToBuy').value = ''
+                document.querySelector('#shopContainerFooterAmountOfItemPrice').value = `PRICE`
+                document.querySelector('#overworldDialogue').textContent = `Please, choose the amount of ${currSelectedShopItem.name}'s you wish to buy.`
+            } else {
+                document.querySelector('#shopContainerFooterAmountOfItemPrice').value = `${totalPrice}`
+            }
+            document.querySelector('#yesButton').removeEventListener('click', lastBuyChoice, {once: true})
+            document.querySelector('#noButton').removeEventListener('click', lastBuyChoice, {once: true})
+        }
+        
+        let selectCurrShopItem = () =>{
+            mountItemButtonEvent = true
+            currSelectedShopItem = shop.items[mouse.event.target.id]
+            document.querySelectorAll(`.shopItemButton`).forEach(button =>{
+                button.style.background = 'transparent'
+            })
+            document.querySelector(`[id='${mouse.event.target.id}']`).style.background = '#46060499'
+            document.querySelector('#noButton').style.background = 'rgba(70, 6, 4, 0.6)'
+            document.querySelector('#yesButton').removeEventListener('click', proceedToBuyEvent, true)
+            document.querySelector('#yesButton').addEventListener('click', proceedToBuyEvent, true)
+            changeDisplayedItemData()
+        }
+
+        clearSelectedShopButtons = () =>{
+            document.querySelectorAll('.shopItemButton').forEach(button =>{
+                button.style.background = 'transparent'
+            })
+            document.querySelector('#shopContainerFooterAmountOfItemToBuy').value = ''
+            console.log(document.querySelector('#shopContainerFooterAmountOfItemToBuy').value)
+            document.querySelector('#shopContainerFooterAmountOfItemPrice').value = 'PRICE'
+            document.querySelector('#shopButtonContainer').style.display = 'none'
+            currSelectedShopItem = null
+        }
+
+        let displayShopItems = itemsToDisplay =>{
+            shop.items = shops[itemsToDisplay]
+            document.querySelector('#shopList').replaceChildren()
+            for(let i = 0; i < shop.items.length; i++){
+                let itemButton = document.createElement('li')
+                itemButton.setAttribute('id', `${i}`)
+                itemButton.setAttribute('class', `shopItemButton`)
+                itemButton.addEventListener('click', selectCurrShopItem, true)
+                document.querySelector('#shopList').appendChild(itemButton)
+
+                let itemButtonIcon = document.createElement('img')
+                itemButtonIcon.src = `img/items/${shop.items[i].category}/${shop.items[i].name}.png`
+                itemButtonIcon.setAttribute('id', 'shopItemIcon')
+                itemButton.appendChild(itemButtonIcon)
+
+                let itemButtonDesc = document.createElement('h4')
+                itemButtonDesc.textContent = `${shop.items[i].description}`
+                itemButton.appendChild(itemButtonDesc)
+
+                let itemButtonPriceContainer = document.createElement('div')
+                itemButton.appendChild(itemButtonPriceContainer)
+
+                let itemButtonPrice = document.createElement('h4')
+                itemButtonPrice.textContent = `${shop.items[i].price}`
+                itemButtonPrice.setAttribute('id', 'shopItemPrice')
+                itemButtonPriceContainer.appendChild(itemButtonPrice)
+
+                let itemButtonPogebuck = document.createElement('img')
+                itemButtonPogebuck.src = 'img/pogebuck.png'
+                itemButtonPogebuck.setAttribute('id', 'shopItemPogebuck')
+                itemButtonPriceContainer.appendChild(itemButtonPogebuck)
+            }
+        }
+
+        let calculateItemsPrice = () =>{
+            document.querySelector('#shopContainerFooterAmountOfItemToBuy').addEventListener('keyup', () => {
+                changeDisplayedItemData()
+            }, {once: true})
+        }
+
+        if(!priceEventFlag){
+            if(currSelectedShopItem !== null){
+                priceEventFlag = true
+                document.querySelector('#shopContainerFooterAmountOfItemToBuy').addEventListener('keydown', calculateItemsPrice())
+            }
+        }
+
+        let closeShopWithCancelButtonEvent = () =>{
+            shop.open = false
+            mountItemButtonEvent = false
+            clearSelectedShopButtons()
+            document.querySelector('#shopDialogueBox').setAttribute('id', 'overworldDialogueBox')
+            document.querySelector('#shopButtonContainer').setAttribute('id', 'overworldButtonContainer')
+            document.querySelector('#overworldDialogueBox').style.display = 'none'
+            document.querySelector('#shopContainer').style.display = 'none'
+            if(running){
+                speedModifier = 2
+            } else {
+                speedModifier = 1
+            }
+        }
+
+        let buyItem = (item, amount, price) => {
+            pogebucks = pogebucks - price
+            inventory[item.category][item.name].amount = inventory[item.category][item.name].amount + amount
+            document.querySelector('#overworldDialogue').textContent = `Your bought ${amount} ${item.name} for ${price}.`
+            document.querySelector('#shopContainerHeaderMoneyIconText').textContent = `${pogebucks}`
+            clearSelectedShopButtons()
+        }
+
+        let lastBuyChoice = () =>{
+            switch(mouse.event.target.textContent){
+                case 'yes':
+                    console.log('Buy')
+                    document.querySelector('#noButton').removeEventListener('click', lastBuyChoice, {once: true})
+                    let amountInput = document.querySelector('#shopContainerFooterAmountOfItemToBuy')
+                    let currItemAmount = amountInput.value
+                    let currItemAmountParsed = parseInt(currItemAmount)
+                    amountInput.value = currItemAmountParsed
+                    currItemAmount = currItemAmountParsed
+                    let totalPrice = currItemAmount * currSelectedShopItem.price
+                    if(pogebucks >= totalPrice){
+                        buyItem(currSelectedShopItem, currItemAmount, totalPrice)
+                    } else {
+                        document.querySelector('#overworldDialogue').textContent = `You don't have enought pogebucks!`
+                    }
+                    clearSelectedShopButtons()
+                    break
+                case 'no':
+                    console.log('Cancel')
+                    document.querySelector('#yesButton').removeEventListener('click', lastBuyChoice, {once: true})
+                    document.querySelector('#overworldDialogue').textContent = `Your order has been canceled.`
+                    clearSelectedShopButtons()
+                    break
+            }
+        }
+
+        if(buyEvent){
+            buyEvent = false
+            document.querySelector('#yesButton').addEventListener('click', lastBuyChoice, {once: true})
+            document.querySelector('#noButton').addEventListener('click', lastBuyChoice, {once: true})
+        }
+
+        let proceedToBuyEvent = () =>{
+            if(currSelectedShopItem !== null && !isNaN(document.querySelector('#shopContainerFooterAmountOfItemToBuy').value)){
+                buyEvent = true
+                document.querySelector('#yesButton').removeEventListener('click', proceedToBuyEvent, true)
+                document.querySelector('#overworldDialogue').textContent = `Are you sure you want to buy ${currSelectedShopItem.name}?`
+                document.querySelector('#noButton').style.background = 'red'
+                let amountInput = document.querySelector('#shopContainerFooterAmountOfItemToBuy')
+                let currItemAmount = amountInput.value
+                let currItemAmountParsed = parseInt(currItemAmount)
+                amountInput.value = currItemAmountParsed
+                currItemAmount = currItemAmountParsed
+                let totalPrice = currItemAmount * currSelectedShopItem.price
+                if(currItemAmountParsed > 1){
+                    document.querySelector('#overworldDialogue').textContent = `Are you sure you want to buy ${currItemAmount} ${currSelectedShopItem.name}s? \n\nThat will be ${totalPrice}  in total.`
+                    document.querySelector('#shopButtonContainer').style.display = 'grid'
+                } else if (currItemAmountParsed === 1) {
+                    document.querySelector('#overworldDialogue').textContent = `Are you sure you want to buy a ${currSelectedShopItem.name}? \n\nFor a single ${currSelectedShopItem.name}, the price is ${totalPrice} .`
+                    document.querySelector('#shopButtonContainer').style.display = 'grid'
+                }
+            }
+        }
+
+        let _doActionNoSpamOpenShop = () =>{
+            if (!(timerId == null)) {
+                clearTimeout(timerId);
+            }
+            timerId = setTimeout(() =>{
+                shop.open = true
+
+                document.querySelector('#overworldContainer').style.display = 'block'
+
+                document.querySelector('#shopContainer').style.display = 'grid'
+
+                document.querySelector('#overworldDialogueBox').setAttribute('id', 'shopDialogueBox')
+                document.querySelector('#shopDialogueBox').style.display = 'block'
+                document.querySelector('#overworldButtonContainer').setAttribute('id', 'shopButtonContainer')
+                document.querySelector('#yesButton').textContent = 'yes'
+                document.querySelector('#noButton').textContent = 'no'
+                document.querySelector('#noButton').style.background = '#46060499'
+
+                document.querySelector('#shopContainerFooterCancelButton').addEventListener('click', closeShopWithCancelButtonEvent, {once: true})
+                document.querySelector('#yesButton').addEventListener('click', proceedToBuyEvent, true)
+
+                document.querySelector('#overworldDialogue').textContent = `Welcome to ${prevMap.name}'s pogemart! How may i help you today?`
+
+                document.querySelector('#shopContainerHeaderMoneyIconText').textContent = `${pogebucks}`
+                displayShopItems(eventZone.data.pogemartTier)
+            }, 250);
         }
 
         if(eventZone.isNPC){
             for(let i = 0; i < maps[currMap.name].NPCArray.length; i++){
                 rectangularColission = ({rectangle1, rectangle2}) =>{
-                    if(eventZone.type === 'Trainer'){
+                    if(eventZone.type === 'Trainer' || eventZone.type === 'pogemart'){
                         if(eventZone.direction === 'up'){
                             return (
                                 rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
@@ -1248,10 +1543,10 @@ const animate = () =>{
                             )
                         } else if(eventZone.direction === 'right'){
                             return (
-                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
-                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 250 &&
-                                rectangle1.position.y <= rectangle2.position.y &&
-                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 15 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 100 &&
+                                rectangle1.position.y <= rectangle2.position.y + 25 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 25
                             )
                         } else {
                             return (
@@ -1264,8 +1559,8 @@ const animate = () =>{
                     } else if(eventZone.type === 'NPC'){
                         if(eventZone.direction === 'up'){
                             return (
-                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
-                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 25 &&
                                 rectangle1.position.y <= rectangle2.position.y - 25 &&
                                 rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 25
                             )
@@ -1273,26 +1568,26 @@ const animate = () =>{
                             return (
                                 rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 25 &&
                                 rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 25 &&
-                                rectangle1.position.y <= rectangle2.position.y &&
-                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                                rectangle1.position.y <= rectangle2.position.y + 25 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 25
                             )
                         } else if(eventZone.direction === 'down'){
                             return (
                                 //left side of player
-                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x - 25 &&
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
                                 //right side of player
-                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 25 &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
                                 //top side of player
                                 rectangle1.position.y <= rectangle2.position.y + 25 &&
                                 //bottom side of player
-                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 15
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y + 50
                             )
                         } else if(eventZone.direction === 'right'){
                             return (
-                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x + 25 &&
-                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width + 25 &&
-                                rectangle1.position.y <= rectangle2.position.y &&
-                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+                                rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+                                rectangle1.position.x <= rectangle2.position.x + rectangle2.width - 50 &&
+                                rectangle1.position.y <= rectangle2.position.y + 25 &&
+                                rectangle1.position.y + rectangle1.height >= rectangle2.position.y - 25
                             )
                         } else {
                             return (
@@ -1305,17 +1600,18 @@ const animate = () =>{
                     }
                 }
             }
+
             if ((
                 rectangularColission({
                 rectangle1: player,
                 rectangle2: eventZone
                 }) && eventZone.type === 'Trainer'
-            )){
+            ) && team[0] !== undefined){
                 newBattle = true
                 //trainer encounter
                 if(!eventZone.data.defeated && team.length != 0){
                     document.querySelector('#overworldContainer').style.display = 'grid'
-                    document.querySelector('#overworldDialogueBox').textContent = eventZone.data.dialogue
+                    document.querySelector('#overworldDialogue').textContent = eventZone.data.dialogue
                     let exclamation = document.querySelector('#exclamationNPC')
                     if(team.length !== 0){
                         document.querySelector('#overworldContainer').style.display = 'block'
@@ -1349,7 +1645,7 @@ const animate = () =>{
                     }
         
                     if(engageRematch){
-                        document.querySelector('#overworldDialogueBox').textContent = eventZone.data.dialogue
+                        document.querySelector('#overworldDialogue').textContent = eventZone.data.dialogue
                         let exclamation = document.querySelector('#exclamationNPC')
                         document.querySelector('#overworldContainer').style.display = 'block'
                         exclamation.style.top = eventZone.position.y - 55 + 'px'
@@ -1357,15 +1653,23 @@ const animate = () =>{
                         currTrainer = eventZone
                         currTrainer.index = i
                         currSpeed = 0
-                        if(team.length > 0 && mouse.event.target.id === 'overworldDialogueBox'){
-                            document.querySelector('#overworldContainer').style.display = 'none'
-                            document.querySelector('#exclamationNPC').style.top =  -55 + 'px'
-                            trainerBattle = true
-                            battle.initiated = true
-                            cancelAnimationFrame(animationId)
-                            initBattle()
-                            animateBattle()
-                            engageRematch = false
+                        if(team.length > 0){
+                            console.log(rematchFlag)
+                            if(!rematchFlag){
+                                document.querySelector('#overworldDialogueBox').addEventListener('click', () =>{
+                                        document.querySelector('#overworldContainer').style.display = 'none'
+                                        document.querySelector('#exclamationNPC').style.top =  -55 + 'px'
+                                        trainerBattle = true
+                                        battle.initiated = true
+                                        cancelAnimationFrame(animationId)
+                                        initBattle()
+                                        animateBattle()
+                                        engageRematch = false
+                                        rematchFlag = false
+                                        console.log('how many times?')
+                                }, {once: true})
+                            }
+                            rematchFlag = true
                         }
                     }
                 }
@@ -1377,12 +1681,24 @@ const animate = () =>{
             )){
                 if(!openNPCDialogueBool){
                     if(keys.Enter.pressed || keys.e.pressed || keys.Space.pressed){
-                        currNPCWithEngagedDialogue = eventZone.data
+                        currNPCWithEngagedDialogue = eventZone
+                        speedModifier = 0
                         _doActionNoSpamTalkToNPC()
                     }
                 } else if(openNPCDialogueBool){
-                    console.log(`${eventZone.data.dialogue}`)
                     // openNPCDialogueBool = false
+                }
+            } else if ((
+                rectangularColission({
+                rectangle1: player,
+                rectangle2: eventZone
+                }) && eventZone.type === 'pogemart'
+            )){
+                if(keys.e.pressed || keys.Enter.pressed || keys.Space.pressed){
+                    if(shop.open === false){
+                        speedModifier = 0
+                        _doActionNoSpamOpenShop()
+                    }
                 }
             }
         }  
@@ -1459,7 +1775,10 @@ const animate = () =>{
 
         for (let i = 0; i < changeZones.length; i++){
             const mapZone = changeZones[i]
-            prevMap = currMap
+            if(currMap.name !== 'pogemart' && currMap.name !== 'pogecenter'){
+                prevMap = currMap
+            }
+
             prevMapName = currMap.name
 
             rectangularColission = ({rectangle1, rectangle2}) =>{
@@ -1533,7 +1852,7 @@ const animate = () =>{
                 } else if(prevMapName === 'pogecenter'){
                     offset = {
                         x: maps[currMap.name].pogecenterPosition.x,
-                        y: maps[currMap.name].pogecenterPosition.y
+                        y: maps[currMap.name].pogecenterPosition.y,
                     }
                 } else {
                     offset = {
@@ -1546,6 +1865,15 @@ const animate = () =>{
                 defineCollisionsPosition()
                 defineBattleZonesPosition()
                 defineEventZonesPosition()
+
+                NPCIndex = -1
+
+                for(let i = 0; i < eventZones.length; i++){
+                    NPCIndex++
+                    if(eventZones[i].type === 'Trainer' || eventZones[i].type === 'NPC' || eventZones[i].type === 'pogemart' || eventZones[i].type === 'pogecenter'){
+                        eventZones[i].data = maps[currMap.name].NPCArray[NPCIndex]
+                    }
+                }
 
                 map.position.x = offset.x
                 map.position.y = offset.y
@@ -1578,21 +1906,7 @@ const animate = () =>{
 
                 trainerIndex = -1
 
-                if (!loadData()){
-                    for(let i = 0; i < eventZones.length; i++){
-                        if(eventZones[i].type === "Trainer"){
-                            trainerIndex++
-                            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
-                        }
-                    }
-                } else {
-                    for(let i = 0; i < eventZones.length; i++){
-                        if(eventZones[i].type === "Trainer"){
-                            trainerIndex++
-                            eventZones[i].data = maps[currMap.name].NPCArray[trainerIndex]
-                        }
-                    }
-                }
+                loadPogemartNPC()
 
                 for(let i = 0; i < changeZones.length; i++){
                     // pogemart change map

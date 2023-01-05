@@ -92,9 +92,9 @@
 #leedPogemonExpbar{
     position: absolute;
     background-color: rgb(255, 125, 0);
-    height: 9px;
+    height: 5px;
     width: 98.9%;
-    top: 2px;
+    top: 4px;
 }
 
 .backPogemon{

@@ -521,7 +521,7 @@ const animateTeamMenu = () =>{
             backPogemon1Healthbar.style.width = hpInPercentTeamMenuCalc(backPogemon1CurrHP, backPogemon1MaxHP, backPogemon1Healthbar, backPogemon1Sprite) + '%'
             backPogemon1Expbar.style.width = team[1].expInPerCent + '%'
             document.querySelector('#backPogemon1Greybar').style.backgroundColor = 'lightgrey'
-            document.querySelector('#backPogemon3ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
+            document.querySelector('#backPogemon1ExpGreybar').style.backgroundColor = 'rgb(255, 200, 125)'
         } else {
             backPogemon1Healthbar.style.width = 0 + '%'
             backPogemon1Expbar.style.width = 0 + '%'

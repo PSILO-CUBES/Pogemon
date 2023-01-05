@@ -967,6 +967,7 @@ class Pogemon extends Sprite {
             for(let i = 0; i < this.attacks.length; i++){
                 if(this.attacks[i].name === attack.name){
                     if(this.attacks[i].pp < 1){
+                        //problem with pp, lokick pp was shared between team[0] and team[1]
                         document.querySelector('#dialogueBox').textContent = `${attack.name} has no more pp.`
                         attackInProcess = false
                         havePPLeft = false

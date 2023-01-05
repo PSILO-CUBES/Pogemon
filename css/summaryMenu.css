@@ -33,7 +33,7 @@
 
 #generalDataContainer{
     display: grid;
-    grid-template-rows: 20% 20% 15% 45%;
+    grid-template-rows: 20% 20% 15% 15% 30%;
 }
 
 #targetGlobalIdData{
@@ -83,6 +83,59 @@
     
     justify-content: center;
     align-items: center;
+}
+
+#targetGIDContainer{
+    position: relative;
+
+    top: 17.5px;
+    left: 200px;
+    height: 65px;
+    width: 375px;
+
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+#targetGIDData{
+    position: relative;
+    left: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 85px;
+}
+
+#targetItemContainer{
+    position: relative;
+
+    top: 17.5px;
+    left: 200px;
+    height: 65px;
+    width: 375px;
+
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+}
+
+#targetItemData{
+    position: relative;
+    left: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 85px;
+}
+
+#targetItemIcon{
+    position: relative;
+    top: -100px;
+    left: 600px;
+    height: 75px;
 }
 
 #statsDataContainer{

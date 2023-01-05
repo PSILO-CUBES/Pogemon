@@ -44,7 +44,7 @@ let initItemMenu = () =>{
     for(let i = 0; i < team.length; i++){
         console.log(team[i].item)
         if(team[i].item !== undefined){
-            document.querySelector(`#pogemon${i + 1}ItemSprite`).src = `img/item_scene/items/${team[i].item.category}/${team[i].item.name}.png`
+            document.querySelector(`#pogemon${i + 1}ItemSprite`).src = `img/items/${team[i].item.category}/${team[i].item.name}.png`
         } else {
             document.querySelector(`#pogemon${i + 1}ItemSprite`).src = ``
         }
@@ -168,7 +168,7 @@ let initItemMenu = () =>{
             const itemH4Name = document.createElement('H4')
             const itemH4Amount = document.createElement('H4')
             const itemIMG = new Image()
-            itemIMG.src = `img/item_scene/items/${item.data.category}/${item.data.name}.png`
+            itemIMG.src = `img/items/${item.data.category}/${item.data.name}.png`
             itemDIV.setAttribute('class', 'itemContainer')
             itemDIV.setAttribute('id', `item${itemIndex++}`)
             itemDIVData.setAttribute('class', 'itemDataContainer') 
@@ -290,7 +290,7 @@ let initItemMenu = () =>{
                     document.querySelector('#itemMenuDescTextContainer').textContent = ``
                 }, 1500)
                 document.querySelectorAll('.itemButton')[1].textContent = `take`
-                document.querySelector(`#pogemon${parseInt(selectedItemPogemonIndex) + 1}ItemSprite`).src = `img/item_scene/items/${currCategory}/${item.name}.png`
+                document.querySelector(`#pogemon${parseInt(selectedItemPogemonIndex) + 1}ItemSprite`).src = `img/items/${currCategory}/${item.name}.png`
             } else {
                 console.log('heee... nice try?.')
             }

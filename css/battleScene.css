@@ -360,6 +360,8 @@ h4{
     background: radial-gradient(#DD3D25, 85%, #881713);
 
     border: 2px solid black;
+
+    white-space: break-spaces;
 }
 
 #attacksBox{
@@ -510,12 +512,12 @@ h4{
 
     position: absolute;
 
-    top: 39%;
+    top: 67.5%;
     left: 0;
     right: 0;
     bottom: 0%;
 
-    height: 80%;
+    height: 32.5%;
     width: 100%;
 }
 
@@ -534,6 +536,8 @@ h4{
     cursor: pointer;
 
     border-top: 2px solid black;
+
+    padding-bottom: 30px !important;
 }#newAttackYesButton:hover{
     background-color: darkgreen;
 }
@@ -553,6 +557,8 @@ h4{
     cursor: pointer;
 
     border-top: 2px solid black;
+
+    padding-bottom: 30px !important;
 }#newAttackNoButton:hover{
     background-color: darkred;
 }
@@ -596,12 +602,12 @@ h4{
 
     position: absolute;
 
-    top: 39%;
+    top: 67.5%;
     left: 0;
     right: 0;
     bottom: 0%;
 
-    height: 80%;
+    height: 32.5%;
     width: 100%;
 
     border-top: 2px solid black;
@@ -620,6 +626,8 @@ h4{
     background-color: green;
 
     cursor: pointer;
+
+    padding-bottom: 30px !important;
 }#evoYesButton:hover{
     background-color: darkgreen;
 }
@@ -637,6 +645,8 @@ h4{
     background-color: red;
 
     cursor: pointer;
+
+    padding-bottom: 30px !important;
 }#evoNoButton:hover{
     background-color: darkred;
 }

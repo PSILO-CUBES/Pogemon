@@ -12,6 +12,8 @@ let pogemonSummary = {
 
 let team = []
 
+let pogebucks =  250
+
 let inventory = {
     heal: {
         potion: {data: items.heal.potion, amount: 5},
@@ -77,6 +79,7 @@ if (team.length === 0 && loadData() !== null){
     let teamData = loadData().team
     let loadedTeam = []
     for (let i = 0; i < teamData.length; i++){
+        teamData[i].image.src = `img/pogemon/${teamData[i].name}/${teamData[i].name}.png`
         loadedTeam.push(new Pogemon(teamData[i]))
     }
     team = loadedTeam
@@ -118,6 +121,8 @@ let defineCurrPogemonCurve = (currPogemon, type) =>{
         return currPogemonCurve
     } else return currPogemonCurve
 }
+
+// something here
 
 let definePogemonStats = currPogemon =>{
     let currPogemonLevel = Math.floor(currPogemon.currLevel)

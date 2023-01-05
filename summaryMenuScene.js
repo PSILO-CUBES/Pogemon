@@ -102,15 +102,13 @@ let defineSummaryTargetData = () =>{
         return typeDisplayContent
     }
     document.querySelector('#targetTypeData').textContent = typeDisplay()
-    // display stats
-    let levelBoxData = document.querySelector('#targetLevelData')
-    if(currDisplayedTarget.currLevel <= 9) {
-        levelBoxData.style.left = '455px'
-    } else if (currDisplayedTarget.currLevel > 9 && currDisplayedTarget.currLevel <= 99) {
-        levelBoxData.style.left = '440px'
-    } else if (currDisplayedTarget.currLevel === 100) {
-        levelBoxData.style.left = '420px'
+    document.querySelector('#targetGIDData').textContent = currDisplayedTarget.globalId
+    document.querySelector('#targetItemData').textContent = '---'
+    if(currDisplayedTarget.item !== undefined && currDisplayedTarget.item !== null){
+        document.querySelector('#targetItemData').textContent = currDisplayedTarget.item.name
+        document.querySelector('#targetItemIcon').src = `img/items/${currDisplayedTarget.item.category}/${currDisplayedTarget.item.name}.png`
     }
+    // display stats
     for (let i = 0; i < currDisplayedTarget.attacks.length; i++){
         let summaryAttackButtonDOM = document.querySelectorAll('.summaryAttackButton')[i]
         summaryAttackButtonDOM.textContent = currDisplayedTarget.attacks[i].name
@@ -130,8 +128,6 @@ let defineSummaryTargetData = () =>{
     document.querySelector('#targetTotalExp').textContent = Math.floor(currDisplayedTarget.currExp)
     document.querySelector('#targetAbilityData').textContent = currDisplayedTarget.currAbility.name
     document.querySelector('#targetAbilityDescData').textContent = currDisplayedTarget.currAbility.desc
-
-
 }
 
 let initSummaryMenu = () =>{

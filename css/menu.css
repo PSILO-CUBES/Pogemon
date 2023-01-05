@@ -54,23 +54,44 @@
     right: 50px;
     bottom: 5%;
 
-    background: radial-gradient(#9A1E19, #881713);
+    background: radial-gradient(#DD3D25, 85%, #881713);
 
-    border: 5px black solid;
+    border: 2.5px black solid;
 
     padding: 15px !important;
 
     cursor: pointer;
+} #shopDialogueBox{
+    display: grid;
+
+    position: absolute;
+
+    top: 70.35%;
+    left: 50px;
+    right: 800px;
+    bottom: 5%;
+
+    height: 200px;
+
+    background: radial-gradient(#DD3D25, 85%, #881713);
+
+    border: 2.5px black solid;
+
+    padding: 15px !important;
+
+    cursor: auto;
 }
 
 #overworldDialogue{
     display: inline;
-    font-size: 1.5rem;
+    font-size: large;
     padding: 1.5rem;
+    white-space: pre-wrap;
+    pointer-events: none;
 }
 
 #overworldButtonContainer{
-    display: grid;
+    display: none;
     grid-template-columns: 50% 50%;
 
     position: absolute;
@@ -83,7 +104,22 @@
     height: 60%;
     width: 100%;
 
-    border-top:5px black solid;
+    border-top: 2.5px black solid;
+} #shopButtonContainer{
+    display: none;
+    grid-template-columns: 50% 50%;
+
+    position: absolute;
+
+    top: 70%;
+    left: 0;
+    right: 0;
+    bottom: 0%;
+
+    height: 30%;
+    width: 100%;
+
+    border-top: 2.5px black solid;
 }
 
 #yesButton{
@@ -97,7 +133,7 @@
     justify-content: center;
 
     background-color: green;
-    border-right:2.5px black solid;
+    border-right: 2.5px black solid;
 
     cursor: pointer;
 }#yesButton:hover{
@@ -115,7 +151,7 @@
     justify-content: center;
 
     background-color: red;
-    border-left:2.5px black solid;
+    border-left: 2.5px black solid;
 
     cursor: pointer;
 }#noButton:hover{
@@ -138,4 +174,217 @@
     background: transparent
 }.pcMenuButton:hover{
     background: #46060499;
+}
+
+#shopContainer{
+    position: absolute;
+    top: 100px;
+    right: 50px;
+    left: 1150px;
+    bottom: 100px;
+
+    display: none;
+    grid-template-rows: 57.5px 692px 57.5px;
+
+    background: radial-gradient(#DD3D25, 85%, #881713);
+
+    border: 2.5px black solid;
+}
+
+#shopContainerHeader{
+    position: relative;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    left: -1px;
+
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    width: 100.25%;
+    height: 57.5px;
+
+    border-bottom: 2.5px black solid;
+}
+
+#shopContainerHeaderShopContainer{
+    height: 57.5px;
+}
+
+#shopContainerHeaderShopIcon{
+    height: 50px;
+    padding: 7.5px 0 0 10px !important;
+}
+
+#shopContainerHeaderShopIconText{
+    position: relative;
+    top: -40px;
+    left: 65px;
+
+    color: black;
+}
+
+#shopContainerHeaderMoneyContainer{
+    height: 57.5px;
+}
+
+#shopContainerHeaderMoneyIcon{
+    height: 50px;
+    padding: 5px 0 0 310px !important;
+}
+
+#shopContainerHeaderMoneyIconText{
+    position: relative;
+    top: -40px;
+    left: -55px;
+
+    display: flex;
+    align-items: center;
+
+    color: black;
+
+    direction: rtl;  
+}
+
+#shopContainerBody{
+    position: relative;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    left: -1px;
+
+    width: 100.25%;
+    height: 692px;
+
+    background: transparent;
+} #shopContainerBody > ul{
+    position: relative;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    left: -1px;
+
+    width: 101.5%;
+
+    overflow: hidden;
+    overflow-y: scroll;
+
+    max-height: 675px;
+} 
+
+input[type=number] {
+    line-height: 30px;
+}
+  
+input[type=number]::-webkit-inner-spin-button {
+    width: 30px;
+    height: 300px;
+}
+
+#shopList::-webkit-scrollbar-track {
+  background: transparent ; 
+} #shopList::-webkit-scrollbar-thumb {
+  background: rgba(80, 0, 0, 0.85);
+} #shopList::-webkit-scrollbar-thumb:hover {
+    background: rgba(30, 0, 0, 0.85); 
+} #shopList > li{
+    width: 100%;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 2.5px solid black;
+} #shopList > li:hover{
+    background: #46060499;
+    cursor: pointer;
+} li > * {
+    pointer-events: none;
+}
+
+#shopItemIcon{
+    height: 50px;
+}
+
+#shopItemPogebuck{
+    height: 15px;
+}
+
+#shopItemPrice{
+    position: relative;
+    top: 12.5px;
+    left: -15px;
+}
+
+#shopItemPogebuck{
+    position: relative;
+    top: -6.5px;
+    left: 30px;
+}
+
+#shopContainerFooter{
+    position: relative;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    left: -1px;
+
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+
+    width: 100.25%;
+    height: 57.5px;
+}
+
+#shopContainerFooterBuyButton{
+    background: transparent;
+} #shopContainerFooterBuyButton:hover{
+    background: #46060499
+}
+
+#shopContainerFooterCancelButton{
+    background: transparent;
+} #shopContainerFooterCancelButton:hover{
+    background: #46060499
+}
+
+#shopContainerFooterAmountOfItemToBuy{
+    position: relative;
+
+    width: 100%;
+
+    background: transparent;
+    border: none;
+        
+    font-family: 'Press Start 2p';
+    font-size: medium;
+    color: black;
+
+    display: flex;
+    
+    text-align: center;
+    direction: ltr;
+} #shopContainerFooterAmountOfItemToBuy:hover{
+    background: radial-gradient(#46060499, 50%, #FFFFFF00, #FFFFFF00);
+}
+
+#shopContainerFooterAmountOfItemPrice{
+    background: transparent;
+    border: none;
+
+    font-family: 'Press Start 2p';
+    font-size: medium;
+    color: black;
+
+    display: flex;
+    
+    text-align: center;
+    direction: ltr;
+
+    pointer-events: none;
+}
+
+#shopContainerFooterCancelButton{
+    background: transparent;
 }

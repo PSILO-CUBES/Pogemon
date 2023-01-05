@@ -39,7 +39,6 @@ let maps = {
         eventZonesData: eventZonesData.bedroom,
         NPCArray: []
     },  
-
     home: {
         name: 'home',
         position: {
@@ -89,7 +88,6 @@ let maps = {
         eventZonesData: eventZonesData.home,
         NPCArray: []
     },
-
     paccIsle: {
         name: 'paccIsle',
         position: {
@@ -177,8 +175,7 @@ let maps = {
             max: 6
         },
         NPCArray: [NPCObject.paccIsle.trainers.policeMan, NPCObject.paccIsle.trainers.professor]
-    },   
-    
+    },      
     paccIsleCave: {
         name: 'paccIsleCave',
         position: {
@@ -227,7 +224,6 @@ let maps = {
         },
         NPCArray: []
     },    
-
     paccIsleLab: {
         name: 'paccIsleLab',
         position: {
@@ -276,16 +272,12 @@ let maps = {
         },
         NPCArray: [NPCObject.paccIsleLab.NPC.policeMan1, NPCObject.paccIsleLab.NPC.policeMan2, NPCObject.paccIsleLab.NPC.professor, NPCObject.paccIsleLab.NPC.policeMan3, NPCObject.paccIsleLab.NPC.policeMan4]
     },    
-
     pogemart: {
         name: 'pogemart',
         position: {
             x: -500,
             y: -500
-        },   
-        changeMapArray:[
-
-        ],
+        },
         width: 21, 
         height: 11,
         image: {
@@ -314,18 +306,14 @@ let maps = {
             min: 2,
             max: 6
         },
-        NPCArray: []
+        NPCArray: [NPCObject.pogemart.pogemart.clerk1, NPCObject.pogemart.pogemart.clerk2]
     },    
-
     pogecenter: {
         name: 'pogecenter',
         position: {
             x: -500,
-            y: -500
-        },   
-        changeMapArray:[
-
-        ],
+            y: -400
+        },
         width: 23, 
         height: 11,
         image: {
@@ -356,7 +344,6 @@ let maps = {
         },
         NPCArray: []
     },    
-
     ghostsWoodBridge: {
         name: 'ghostsWoodBridge',
         position: {
@@ -455,7 +442,6 @@ let maps = {
         },
         NPCArray: []
     },  
-
     ghostsWood: {
         name: 'ghostsWood',
         position: {
@@ -537,9 +523,8 @@ let maps = {
             min: 2,
             max: 6
         },
-        NPCArray: [NPCObject.ghostsWood.trainers.bugCatcher, NPCObject.ghostsWood.trainers.bugCatcher2, NPCObject.ghostsWood.trainers.bugCatcher3, NPCObject.ghostsWood.trainers.bugCatcher4]
+        NPCArray: [NPCObject.ghostsWood.trainers.bugCatcher1, NPCObject.ghostsWood.trainers.bugCatcher2, NPCObject.ghostsWood.trainers.bugCatcher3, NPCObject.ghostsWood.trainers.bugCatcher4]
     },  
-
     connectBeach: {
         name: 'connectBeach',
         position: {
@@ -618,7 +603,6 @@ let maps = {
         },
         NPCArray: [NPCObject.connectBeach.trainers.sailor1, NPCObject.connectBeach.trainers.karateGuy1, NPCObject.connectBeach.trainers.swimSuitGuy1, NPCObject.connectBeach.trainers.swimSuitGirl1]
     },  
-
     keyTown: {
         name: 'keyTown',
         position: {
@@ -639,7 +623,7 @@ let maps = {
             {name:'pogecenter',
             position: {
                 x: 230,
-                y: 150,
+                y: 50,
             }} ,
             {name:'keyTownHouse1',
             position: {
@@ -687,7 +671,7 @@ let maps = {
             y: -2100
         },
         pogemartPosition: {
-            x: -675,
+            x: -665,
             y: -2100
         },
         width: 70, 
@@ -720,7 +704,6 @@ let maps = {
         },
         NPCArray: []
     },  
-
     fairyGym: {
         name: 'fairyGym',
         position: {
@@ -744,14 +727,6 @@ let maps = {
                 y: -1000,
             }} ,
         ],
-        pogecenterPosition:{
-            x: -1825,
-            y: -2100
-        },
-        pogemartPosition: {
-            x: -675,
-            y: -2100
-        },
         width: 25, 
         height: 40,
         image: {
