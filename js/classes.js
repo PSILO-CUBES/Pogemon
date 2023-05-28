@@ -1,30 +1,32 @@
 import { c, canvas } from "./scripts/canvas.js"
 
 export class Sprite {
-  constructor({name, position, img}){
-    this.name = name
+  constructor({position, img, frames = {max : 1}}){
     this.position = position,
     this.img = img
+    this.frames = frames
+    this.img.onload = () =>{
+      this.width = this.img.width / this.frames.max
+      this.height = this.img.height
+    }
   }
 
   draw(){
-    if(this.name === 'player'){
-      c.drawImage(
-        this.img,
-        0,
-        0,
-        this.img.width / 2,
-        this.img.height,
-        canvas.width / 2 - this.img.width / 2, 
-        canvas.height / 2  - this.img.height / 2,
-        this.img.width / 2,
-        this.img.height
-      )
-    } else {
-      c.drawImage(this.img, this.position.x, this.position.y)
-    }
+    c.drawImage(
+      this.img,
+      0,
+      0,
+      this.img.width / this.frames.max,
+      this.img.height,
+      this.position.x,
+      this.position.y,
+      this.img.width / this.frames.max,
+      this.img.height
+    )
   }
 }
+
+
 
 const tileSetPixelSize = 16
 const zoom = 4

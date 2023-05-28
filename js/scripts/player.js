@@ -1,6 +1,7 @@
 // all data pertaining to the player
 
-import { Sprite } from "../classes.js"
+import { Boundary, Sprite } from "../classes.js"
+import { generateCanvas } from "./canvas.js"
 
 export const keys = {
   w: {
@@ -20,20 +21,24 @@ export const keys = {
 let lastKey = ''
 
 let walkSpeed = 5
-let runSpeed = walkSpeed * 4.5
+let runSpeed = walkSpeed * 1.5
 let moveSpeed = walkSpeed
 
-export function generatesPlayerImg (){
+let player
+let playerHeight = 132
+let playerWidth  = 84
+
+export function generatePlayerImg(canvas){
   const playerImg = new Image()
   playerImg.src = './img/protagSprites/brendan/brendanStandDown.png'
 
-  const player = new Sprite({
-    name: 'player',
+  player = new Sprite({
     position:{
-      x: playerImg.width,
-      y: 0
+      x: canvas.width / 2 - playerWidth / 2,
+      y: canvas.height / 2 -  playerHeight / 2
     },
-    img: playerImg
+    img: playerImg,
+    frames: {max: 2}
   })
 
   return player
@@ -92,7 +97,16 @@ function playerMovementEvent() {
   })
 }
 
-export function playerMovement(movables) {
+function rectangularColission({ rectangle1, rectangle2}){
+  return (
+    rectangle1.position.x <= rectangle2.position.x + rectangle2.width
+    && rectangle1.position.x + rectangle1.width >= rectangle2.position.x
+    && rectangle1.position.y <= rectangle2.position.y + rectangle2.height
+    && rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+    )
+}
+
+export function playerMovement(movables, boundaries) {
   if(keys.w.pressed && lastKey === 'w'){
     movables.forEach(movable =>{
       movable.position.y += moveSpeed
@@ -112,7 +126,18 @@ export function playerMovement(movables) {
     movables.forEach(movable =>{
       movable.position.x += moveSpeed
     })
-  } 
+  }
+
+  boundaries.forEach(boundary =>{
+    if(
+      rectangularColission({
+        rectangle1: player,
+        rectangle2: boundary
+      })
+    ){
+      console.log('collision')
+    }
+  })
 }
 
 playerMovementEvent()

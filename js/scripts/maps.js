@@ -2,6 +2,7 @@
 
 import { Sprite, Boundary } from "../classes.js"
 import { mapsData } from "../../img/maps/mapsData.js"
+import { generateCanvas } from "./canvas.js"
 
 let startMap = mapsData.paccIsle
 let currMap = startMap
@@ -41,9 +42,9 @@ export function generateMap() {
   mapImg.src = currMap.mapImg
 
   const background = new Sprite({
-    name: currMap.name,
     position: currMap.spawnPosition,
-    img: mapImg
+    img: mapImg,
+    frames: {max: 1}
   })
   
   return {background, boundaries}
