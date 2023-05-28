@@ -1,5 +1,6 @@
+// printing map data onto canvas
+
 import { generatesPlayerImg } from './player.js' 
-import { generateMap } from './maps.js'
 
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
@@ -13,8 +14,10 @@ function generateCanvas(){
   c.fillRect(0, 0, canvas.width, canvas.height)
 }
 
-export function printImages(background){
-  background.draw()
+export function printImages(movables){
+  movables.forEach(movable =>{
+    movable.draw()
+  })
   player.draw()
 }
 

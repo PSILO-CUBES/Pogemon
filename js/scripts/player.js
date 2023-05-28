@@ -1,3 +1,5 @@
+// all data pertaining to the player
+
 import { Sprite } from "../classes.js"
 
 export const keys = {
@@ -18,7 +20,7 @@ export const keys = {
 let lastKey = ''
 
 let walkSpeed = 5
-let runSpeed = walkSpeed * 1.5
+let runSpeed = walkSpeed * 4.5
 let moveSpeed = walkSpeed
 
 export function generatesPlayerImg (){
@@ -90,11 +92,27 @@ function playerMovementEvent() {
   })
 }
 
-export function playerMovement(background) {
-  if(keys.w.pressed && lastKey === 'w') background.position.y = background.position.y + moveSpeed
-  else if (keys.d.pressed && lastKey === 'd') background.position.x = background.position.x - moveSpeed
-  else if (keys.s.pressed && lastKey === 's') background.position.y = background.position.y - moveSpeed
-  else if (keys.a.pressed && lastKey === 'a') background.position.x = background.position.x + moveSpeed
+export function playerMovement(movables) {
+  if(keys.w.pressed && lastKey === 'w'){
+    movables.forEach(movable =>{
+      movable.position.y += moveSpeed
+    })
+  } 
+  else if (keys.d.pressed && lastKey === 'd'){
+    movables.forEach(movable =>{
+      movable.position.x -= moveSpeed
+    })
+  } 
+  else if (keys.s.pressed && lastKey === 's'){
+    movables.forEach(movable =>{
+      movable.position.y -= moveSpeed
+    })
+  } 
+  else if (keys.a.pressed && lastKey === 'a'){
+    movables.forEach(movable =>{
+      movable.position.x += moveSpeed
+    })
+  } 
 }
 
 playerMovementEvent()
