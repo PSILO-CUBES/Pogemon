@@ -1,7 +1,7 @@
 // data pertaining to the map
 
 import { Sprite, Boundary } from "../classes.js"
-import { mapsData } from "../../img/maps/mapsData.js"
+import { mapsData } from "../data/mapsData.js"
 import { generateCanvas } from "./canvas.js"
 
 let startMap = mapsData.paccIsle
@@ -46,6 +46,35 @@ export function generateMap() {
     img: mapImg,
     frames: {max: 1}
   })
-  
-  return {background, boundaries}
+
+  const FG1Img = new Image()
+  FG1Img.src = currMap.FG1Img
+
+  const FG1 = new Sprite({
+    position: currMap.spawnPosition,
+    img: FG1Img,
+    frames: {max: 1}
+  })
+
+  const FG2Img = new Image()
+  FG2Img.src = currMap.FG2Img
+
+  const FG2 = new Sprite({
+    position: currMap.spawnPosition,
+    img: FG2Img,
+    frames: {max: 1}
+  })
+
+  const FG3Img = new Image()
+  FG3Img.src = currMap.FG3Img
+
+  const FG3 = new Sprite({
+    position: currMap.spawnPosition,
+    img: FG3Img,
+    frames: {max: 1}
+  })
+
+  let foregroundObj = { FG1, FG2, FG3 }
+
+  return {background, boundaries, foregroundObj}
 }

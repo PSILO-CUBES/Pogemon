@@ -2,9 +2,14 @@ export const mapsData = {
   paccIsle : {
     name: 'paccIsle',
     mapImg: './img/maps/paccIsle/paccIsle.png',
+    FG1Img: './img/maps/paccIsle/paccIsleFG1.png',
+    FG2Img: './img/maps/paccIsle/paccIsleFG2.png',
+    FG3Img: './img/maps/paccIsle/paccIsleFG3.png',
+    FG4Img: './img/maps/paccIsle/paccIsleFG4.png',
+    FG5Img: './img/maps/paccIsle/paccIsleFG5.png',
     spawnPosition: {
-      x: -512.5,
-      y: -575
+      x: -490,
+      y: -625
     },
     height: 70,
     width: 70,
