@@ -1,11 +1,12 @@
 // printing map data onto canvas
 
-import { generatePlayerImg } from './player.js' 
+import { generatePlayerImg } from './player.js'
+import { generateMapData } from './maps.js'
 
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
 
-export function generateCanvas(){
+function generateCanvas(){
   canvas.width = 1920
   canvas.height = 979
 
@@ -19,13 +20,12 @@ generateCanvas()
 
 const player = generatePlayerImg(canvas)
 
-export function printImages(FG1, FG2, FG3, background, boundaries){
+export function printImages(background, FG, map, boundaries){
   background.draw()
-  for(let i = 0; i < boundaries.length; i++){
-    boundaries[i].draw()
-  }
+  map.draw()
   player.draw()
-  FG1.draw()
-  FG2.draw()
-  FG3.draw()
+  FG.draw()
+  // for(let i = 0; i < boundaries.length; i++){
+  //   boundaries[i].draw()
+  // }
 }

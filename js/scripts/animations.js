@@ -2,24 +2,22 @@
 
 import { printImages } from './canvas.js'
 import { playerMovement } from './player.js'
-import { generateMap } from './maps.js'
-import { generateCanvas } from './canvas.js'
+import { generateMapData } from './maps.js'
 
-let frameRate = 240
+let frameRate = 60
 let frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
-const {background, boundaries, foregroundObj} = generateMap()
-const movables = [background, ...boundaries]
-const { FG1, FG2, FG3 } = foregroundObj
+const {background, map, boundaries, FG} = generateMapData()
+const movables = [map, ...boundaries]
 
 export const overWorldAnimation = timeSpent =>{
   requestAnimationFrame(overWorldAnimation)
 
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
+  // console.log('spent')
   lastFrameSpent = timeSpent
-  console.log(timeSpent)
 
-  printImages(FG1, FG2, FG3, background, boundaries)
+  printImages(background, FG, map, boundaries)
   playerMovement(movables, boundaries)
 }

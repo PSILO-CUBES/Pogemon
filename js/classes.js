@@ -1,20 +1,23 @@
-import { c, canvas } from "./scripts/canvas.js"
+import { c } from "./scripts/canvas.js"
 
 export class Sprite {
-  constructor({position, img, frames = {max : 1}}){
+  constructor({position, img, frames = {max : 1}, sprites}){
     this.position = position,
     this.img = img
-    this.frames = frames
+    this.frames = {...frames, val: 0, elapsed: 0}
     this.img.onload = () =>{
       this.width = this.img.width / this.frames.max
       this.height = this.img.height
     }
+    this.moving = false
+    this.running = false
+    this.sprites = sprites
   }
 
   draw(){
     c.drawImage(
       this.img,
-      0,
+      this.frames.val * this.width,
       0,
       this.img.width / this.frames.max,
       this.img.height,
@@ -23,6 +26,26 @@ export class Sprite {
       this.img.width / this.frames.max,
       this.img.height
     )
+
+    if (!this.moving) {
+      this.frames.val = 0 
+      return
+    }
+
+    if(this.frames.max > 1) this.frames.elapsed++
+
+    if(!this.running){
+      if (this.frames.elapsed % 10 === 0){
+        if(this.frames.val < this.frames.max - 1) this.frames.val++
+        else this.frames.val = 0
+      }
+    } else {
+      if (this.frames.elapsed % 5 === 0){
+        if(this.frames.val < this.frames.max - 1) this.frames.val++
+        else this.frames.val = 0
+      }
+    }
+
   }
 }
 
@@ -40,10 +63,20 @@ export class Boundary {
     this.type = type
     this.width = tileSize
     this.height = tileSize
+    this.color
+    this.generateInfo()
+  }
+
+  generateInfo(){
+    switch(this.type){
+      case 1:
+        this.color = 'rgba(255,0,0,0.5)'
+        break
+    }
   }
 
   draw(){
-    c.fillStyle = 'rgba(255,0,0,0.5)'
+    c.fillStyle = this.color
     c.fillRect(
       this.position.x,
       this.position.y,

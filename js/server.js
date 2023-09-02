@@ -3,8 +3,9 @@ const fs = require('fs')
 const port = 3000
 
 const server = http.createServer((req, res) =>{
+  const ext = req.url.split('.')[1]
   console.log(req.url)
-  if(req.url.endsWith('.js')){
+  if(ext == 'js'){
     fs.readFile(`../${req.url}`, (err, data) =>{
       if(err){
         res.writeHead(404)
@@ -15,7 +16,7 @@ const server = http.createServer((req, res) =>{
       }
       res.end()
     })
-  } else if(req.url === '/'){
+  } else if(ext === undefined){
     fs.readFile('../index.html', (err, data) =>{
       if(err){
         res.writeHead(404)
@@ -26,7 +27,7 @@ const server = http.createServer((req, res) =>{
       }
       res.end()
     })
-  } else if(req.url === `${req.url}`){
+  } else if(req.url == `${req.url}`){
     fs.readFile(`../${req.url}`, (err, data) =>{
       if(err){
         console.log(`Error: File Not Found ${err}`)
