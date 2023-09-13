@@ -1,13 +1,14 @@
 import { movesObj } from "../data/movesData.js"
 import { mapsObj } from "../data/mapsData.js"
 import { pogemonsObj } from "../data/pogemonData.js"
+import { audioObj } from "../data/audioData.js"
 
 import { Sprite, Pogemon } from "../classes.js"
 
 import { overWorldAnimation } from "./animations.js"
 import { currMap } from "./maps.js"
 import { generatePlayer, player } from "./player.js"
-import { audioObj } from "../data/audioData.js"
+import { _preventActionSpam } from "../app.js"
 
 export const battle = {
   initiated: false
@@ -120,50 +121,52 @@ function returnToEncounterInterface(e) {
   }
 }
 
-window.addEventListener('keydown', (e) => returnToEncounterInterface(e), true)
+window.addEventListener('keydown', (e) => _preventActionSpam(returnToEncounterInterface, e), true)
 
 const battleSceneDom = document.querySelector('#battleScene')
 let dialogueInterfaceDom = document.querySelector('#dialogueInterface')
 
 function optionButtonInteraction(e) {
-  switch(e.target.textContent){
-    case 'Fight':
-      encounterInterfaceDom.style.display = 'none'
-      movesInterfaceDom.style.display = 'grid'
-      break
-    case 'Switch':
-      textBox.textContent = e.target.textContent
-      break
-    case 'Items':
-      textBox.textContent = e.target.textContent
-      break
-    case 'Flee':
-      textBox.textContent = e.target.textContent
-      encounterInterfaceDom.style.display = 'none'
-      movesInterfaceDom.style.display = 'none'
-      dialogueInterfaceDom.style.display = 'block'
-      dialogueInterfaceDom.textContent = 'You fleed'
-      audioObj.flee.play()
-      // need to put rng check based on speed stat
-      queue.push(() =>{
-        gsap.to('#overlapping', {
-          opacity: 1,
-          yoyo: true,
-          duration: 1,
-          onComplete(){
-            battle.initiated = false
-            manageBattleState()
-            audioObj.flee.stop()
-            audioObj.map.play()
-            overWorldAnimation()
-            gsap.to('#overlapping', {
-              opacity: 0,
-              duration: 0.4
-            })
-          }
+  if(battle.initiated){
+    switch(e.target.textContent){
+      case 'Fight':
+        encounterInterfaceDom.style.display = 'none'
+        movesInterfaceDom.style.display = 'grid'
+        break
+      case 'Switch':
+        textBox.textContent = e.target.textContent
+        break
+      case 'Items':
+        textBox.textContent = e.target.textContent
+        break
+      case 'Flee':
+        textBox.textContent = e.target.textContent
+        encounterInterfaceDom.style.display = 'none'
+        movesInterfaceDom.style.display = 'none'
+        dialogueInterfaceDom.style.display = 'block'
+        dialogueInterfaceDom.textContent = 'You fleed'
+        audioObj.flee.play()
+        // need to put rng check based on speed stat
+        queue.push(() =>{
+          battle.initiated = false
+          gsap.to('#overlapping', {
+            opacity: 1,
+            yoyo: true,
+            duration: 1,
+            onComplete(){
+              manageBattleState()
+              audioObj.flee.stop()
+              audioObj.map.play()
+              overWorldAnimation()
+              gsap.to('#overlapping', {
+                opacity: 0,
+                duration: 0.4
+              })
+            }
+          })
         })
-      })
-      break
+        break
+    }
   }
 }
 
@@ -225,7 +228,7 @@ function createEncounterMenuButtons() {
   }
   optionButtonsArr = document.querySelectorAll('.optionButton')
   optionButtonsArr.forEach(optionButton =>{
-    optionButton.addEventListener('click', (e) => optionButtonInteraction(e), true)
+    optionButton.addEventListener('click', (e) => _preventActionSpam(optionButtonInteraction, e), true)
   })
 }
 
@@ -235,7 +238,7 @@ function setUserMoves(){
   movesButtonArr = document.querySelectorAll('.movesButton')
   for(let i = 0; movesButtonArr.length > i; i++){
     if(ally.moves[i] === undefined) return
-    movesButtonArr[i].addEventListener('click', e => attackMove(e))
+    movesButtonArr[i].addEventListener('click', e => _preventActionSpam(attackMove, e))
     movesButtonArr[i].textContent = ally.moves[i].name
   }
 }
@@ -318,7 +321,7 @@ function spendQueue(){
     return
   } else {
     dialogueInterfaceDom.style.display = 'none'
-    encounterInterfaceDom.style.display = 'grid'
+    if(battle.initiated) encounterInterfaceDom.style.display = 'grid'
   }
 }
 
@@ -335,7 +338,7 @@ function setBattleScene(){
   menuDom.append(dialogueInterfaceDom)
   dialogueInterfaceDom.setAttribute('id','dialogueInterface')
   dialogueInterfaceDom.style.display = 'none'
-  dialogueInterfaceDom.addEventListener('click', e => spendQueue(e), true)
+  dialogueInterfaceDom.addEventListener('click', e => _preventActionSpam(spendQueue, e), true)
   dialogueInterfaceDom.textContent = ''  
 }
 
