@@ -1,20 +1,26 @@
 // data pertaining to the map
 
+import { mapsObj } from "../data/mapsData.js"
+import { audioObj } from "../data/audioData.js"
+
 import { Sprite, Boundary } from "../classes.js"
-import { mapsData } from "../data/mapsData.js"
+
 import { tileSize } from '../classes.js'
 
 
-let startMap = mapsData.geneTown
-let currMap = startMap
+let startMap = mapsObj.geneTown
+export let currMap = startMap
+
+audioObj.map.play()
 
 function generateBoundaries(){
-  // saves row of boundries and doesn't use the Boundary class
-  const collisionsMap = []
   // uses the Boundary class
   const boundaries = []
+  const battleZones = []
 
-  for(let i = 0; i < mapsData.paccIsle.collisions.length; i += currMap.width){
+  // saves row of boundries as numnbers and doesn't use the Boundary class
+  const collisionsMap = []
+  for(let i = 0; i < currMap.collisions.length; i += currMap.width){
     collisionsMap.push(currMap.collisions.slice(i, currMap.width + i))
   }
 
@@ -27,43 +33,43 @@ function generateBoundaries(){
             x: j * Boundary.width + currMap.spawnPosition.x,
             y: i * Boundary.height + currMap.spawnPosition.y
           },
-          type
+          type: 1
         })
       )
     })
   })
 
-  console.log(boundaries)
+  const battleZonesMap = []
+  for(let i = 0; i < currMap.collisions.length; i += currMap.width){
+    battleZonesMap.push(currMap.battleZones.slice(i, currMap.width + i))
+  }
 
-  return boundaries
+  battleZonesMap.forEach((row, i) =>{
+    row.forEach((type, j) =>{
+      if(type === 0) return
+      battleZones.push(
+        new Boundary({
+          position:{
+            x: j * Boundary.width + currMap.spawnPosition.x,
+            y: i * Boundary.height + currMap.spawnPosition.y
+          },
+          type: 2
+        })
+      )
+    })
+  })
+
+  return [boundaries, battleZones]
 }
 
 export function generateMapData() {
-  const boundaries = generateBoundaries()
-  for(let i = 0 ; i < boundaries.length; i++){
-
-    const boundary = boundaries[i]
-    let type = boundary.type
-  
-    switch(type){
-      case 1:
-        break
-      case 2:
-        boundary.height = tileSize * 0.1
-        break
-      case 3:
-        break
-      case 4:
-        break
-      case 5:
-        break
-    }
-  }
+  const [boundaries, battleZones] = generateBoundaries()
 
   const mapImg = new Image()
   mapImg.src = currMap.mapImg
 
   const map = new Sprite({
+    type: 'map',
     position: currMap.spawnPosition,
     img: mapImg,
     frames: {max: 1}
@@ -73,15 +79,17 @@ export function generateMapData() {
   FGImg.src = currMap.FGImg
 
   const FG = new Sprite({
+    type: 'FG',
     position: currMap.spawnPosition,
     img: FGImg,
     frames: {max: 1}
   })
 
   const backgroundImg = new Image()
-  backgroundImg.src = mapsData.background
+  backgroundImg.src = mapsObj.background
 
   const background = new Sprite({
+    type: 'background',
     position:{
       x: 0,
       y: 0
@@ -90,5 +98,5 @@ export function generateMapData() {
     frames: {max: 1}
   })
 
-  return {background, map, boundaries, FG}
+  return {background, map, boundaries, battleZones, FG}
 }

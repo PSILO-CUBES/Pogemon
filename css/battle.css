@@ -1,0 +1,167 @@
+#foeHealthBarContainer{
+  position: absolute;
+  top: 4.5%;
+
+  background: black;
+
+  height: 100px;
+  width: 37.5%;
+}
+
+#allyHealthBarContainer{
+  position: absolute;
+  top: 62.5%;
+  right: 0;
+
+  background: black;
+
+  height: 100px;
+  width: 37.5%;
+}
+
+.infoContainer{
+  display: grid;
+  grid-template-columns: 40% 60%;
+}
+
+.battleName{
+  position: relative;
+  left: 15px;
+  top: 15px;
+}
+
+.battleLvl{
+  display: flex;
+  justify-content: flex-end;
+
+  position: relative;
+  right: 15px;
+  top: 15px;
+}
+
+#battleScene{
+  position: absolute;
+  top: 0;
+
+  display: none;
+  grid-template-rows: 75% 25%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#menu{
+  height: 100%;
+  width: 100%;
+
+  background: rgb(0, 0, 0);
+}
+
+#dialogueInterface{
+  display: none;
+  cursor: pointer;
+  padding: 30px;
+  height: 100%;
+  width: 100%;
+}
+
+.menuInterface{
+  display: grid;
+  grid-template-columns: 60% 40%;
+
+  height: 100%;
+}
+
+#textBox{
+  margin: 43px;
+}
+
+#optionBox, #movesBox{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.optionButton, .movesButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 47.5%;
+  height: 50%;
+}
+
+.optionButton:hover, .movesButton:hover{
+  background-color: rgba(255, 255, 255, 0.25);
+
+  cursor: pointer;
+}
+
+#movesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+
+.movesDescContainer{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.descContainer{
+  display: flex;
+  width: 100%;
+}
+
+.descContainer > div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: auto;
+}
+
+.healthContainer{
+  position: relative;
+  top: 46%;
+
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.healthBarContainer{
+  position: relative;
+}
+
+.healthBar{
+  position: relative;
+  width: 100%;
+
+  height: 30px;
+
+  background: green;
+
+  z-index: 3;
+  
+  transition: ease-out 0.5s;
+}
+
+.healthBarBackground{
+  position: relative;
+  width: 100%;
+
+  transform: translateY(-100%);
+
+  height: 30px;
+
+  background: darkgrey;
+
+  display: inline-block;
+
+  z-index: 2;
+}
+
+/* somehow put gradient from green on the denominator to the color representing the state of the current hp */
+.hp{
+  display: flex;
+  justify-content: center;
+}

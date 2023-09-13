@@ -1,6 +1,9 @@
 // all data pertaining to the player
+import { audioObj } from "../data/audioData.js"
 
 import { Boundary, Sprite } from "../classes.js"
+
+import { battle, manageBattleState, battleAnimation } from "./battle.js"
 
 export const keys = {
   w: {
@@ -23,7 +26,7 @@ let walkSpeed = 6
 let runSpeed = walkSpeed * 1.5
 let moveSpeed = walkSpeed
 
-let player
+export let player
 let playerHeight = 132
 let playerWidth  = 84
 
@@ -39,22 +42,25 @@ playerDownImg.src = './img/protagSprites/brendan/down.png'
 const playerLeftImg = new Image()
 playerLeftImg.src = './img/protagSprites/brendan/left.png'
 
-export function generatePlayerImg(canvas){
+export function generatePlayer(canvas){
   player = new Sprite({
+    type: 'player',
     position:{
       x: canvas.width / 2 - playerWidth / 2,
       y: Math.floor(canvas.height / 2 -  playerHeight / 2)
     },
     img: playerDownImg,
     frames: {
-      max: 4
+      max: 4,
+      hold: 10
     },
     sprites : {
       up: playerUpImg,
       right: playerRightImg,
       down: playerDownImg,
       left: playerLeftImg,
-    }
+    },
+    team: []
   })
 
   return player
@@ -67,25 +73,25 @@ function playerMovementEvent() {
       case 'W':
         keys.w.pressed = true
         lastKey = 'w'
-        player.moving = true
+        player.animate = true
         break
       case 'd':
       case 'D':
         keys.d.pressed = true
         lastKey = 'd'
-        player.moving = true
+        player.animate = true
         break
       case 's':
       case 'S':
         keys.s.pressed = true
         lastKey = 's'
-        player.moving = true
+        player.animate = true
         break
       case 'a':
       case 'A':
         keys.a.pressed = true
         lastKey = 'a'
-        player.moving = true
+        player.animate = true
         break
       case 'Shift':
         moveSpeed = runSpeed
@@ -93,27 +99,28 @@ function playerMovementEvent() {
         break
     }
   })
+
   window.addEventListener('keyup', e =>{
     switch(e.key){
       case 'w':
       case 'W':
         keys.w.pressed = false
-        player.moving = false
+        player.animate = false
         break
       case 'd':
       case 'D':
         keys.d.pressed = false
-        player.moving = false
+        player.animate = false
         break
       case 's':
       case 'S':
         keys.s.pressed = false
-        player.moving = false
+        player.animate = false
         break
       case 'a':
       case 'A':
         keys.a.pressed = false
-        player.moving = false
+        player.animate = false
         break
       case 'Shift':
         moveSpeed = walkSpeed
@@ -140,14 +147,14 @@ function stopMotionWhenColliding(boundaries, direction){
   for(let i = 0; i < boundaries.length; i++){
     const boundary = boundaries[i]
 
-    player.moving = true
+    player.animate = true
 
     let type = boundary.type
 
     let xOffset
     let yOffset
 
-    let playerOffset = Math.floor(playerHeight / 16)
+    let playerOffset = 16
     
     switch(type){
       case 1:
@@ -181,12 +188,45 @@ function stopMotionWhenColliding(boundaries, direction){
         }}
       })
     ){
-      console.log(
-        {boundary: {start: {x: boundary.position.x, y: boundary.position.y}, end: {x: boundary.position.x + 64, y: boundary.position.y + 64 + yOffset}}},
-        {player: {x: player.position.x, y: player.position.y}},
-        boundary.type
-      )
-      player.moving = false
+      player.animate = false
+      break
+    }
+  }
+}
+
+function engageRandomBattle(animationId, battleZones) {
+  for(let i = 0; i < battleZones.length; i++){
+    const battleZone = battleZones[i]
+    const overlappingArea = Math.max(player.position.x, battleZone.position.x) 
+    + Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width)
+    * Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height)
+    - Math.max(player.position.y, battleZone.position.y)
+    if(
+      rectangularColission({
+        rectangle1: player,
+        rectangle2: battleZone
+      }) &&
+      overlappingArea > (player.width * player.height) / 2
+      && Math.random() < 0.005
+    ){
+      audioObj.map.stop()
+      audioObj.initEncounter.play()
+      window.cancelAnimationFrame(animationId)
+      gsap.to('#overlapping', {
+        opacity: 1,
+        repeat: 2,
+        yoyo: true,
+        duration: 0.4,
+        onComplete(){
+          gsap.to('#overlapping', {
+            opacity: 0,
+            duration: 0.4
+          })
+          battle.initiated = true
+          audioObj.battle.play()
+          manageBattleState(animationId)
+        }
+      })
       break
     }
   }
@@ -219,29 +259,36 @@ function move(direction, movables, moveSpeed){
   }
 }
 
-function playerInputEvent(direction, movables, boundaries){
-  lastDirection = direction
+//player gets stuck to walls when changing direcitons for some reason1
+
+function playerInputEvent(animationId, direction, movables, boundaries, battleZones){
   stopMotionWhenColliding(boundaries, lastDirection)
-  if(player.moving) {
+  player.img = eval(`player${direction}Img`)
+  if(player.animate) {
+    engageRandomBattle(animationId, battleZones)
+    lastDirection = direction
     move(direction, movables, moveSpeed)
-    //might want to change
-    player.img = eval(`player${direction}Img`)
+    if(player.running){
+    player.frames.hold = 5
+    } else {
+      player.frames.hold = 10
+    }
   }
 }
 
-export function playerMovement(movables, boundaries) {
+export function playerMovement(animationId, movables, boundaries, battleZones) {
   if(keys.w.pressed && lastKey === 'w'){
     lastDirection = 'Up'
-    playerInputEvent(lastDirection, movables, boundaries)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
   } else if(keys.d.pressed && lastKey === 'd'){
     lastDirection = 'Right'
-    playerInputEvent(lastDirection, movables, boundaries)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
   } else if(keys.s.pressed && lastKey === 's'){
     lastDirection = 'Down'
-    playerInputEvent(lastDirection, movables, boundaries)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
   } else if(keys.a.pressed && lastKey === 'a'){
     lastDirection = 'Left'
-    playerInputEvent(lastDirection, movables, boundaries)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
   }
 }
 
