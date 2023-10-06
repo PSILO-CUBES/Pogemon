@@ -18,6 +18,11 @@ generateCanvas()
 
 const player = generatePlayer(canvas)
 
+export let scenes = new Map()
+scenes.set('overworld', {initiated: false})
+scenes.set('battle', {initiated: false})
+scenes.set('evolution', {initiated: false})
+
 export function printImages(background, FG, map, boundaries, battleZones){
   background.draw()
   map.draw()

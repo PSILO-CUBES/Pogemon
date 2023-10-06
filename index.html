@@ -1,17 +1,19 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/battle.css">
+<link rel="stylesheet" href="css/evolution.css">
+<link rel="stylesheet" href="css/team.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="js/app.js" defer type="module"></script>
+
 <div>
   <div id="overlapping"></div>
   
   <canvas></canvas>
 
   <div id="battleScene">
-
     <div id="scene">
-      <div id="healthInterface">
+      <div id="sceneInterface">
 
         <div id="foeHealthBarContainer">
           <div class="infoContainer">
@@ -20,10 +22,40 @@
           </div>
           <div class="healthContainer">
             <div id="foeHp" class="hp"></div>
-            <div class="healthBarContainer">
-              <div id="foeHealthBar" class="healthBar"></div>
-              <div class="healthBarBackground"></div>
+            <div id="foeHealthBarAjustment"class="statusContainer">
+              <div class="healthBarContainer">
+                <div id="foeHealthBar" class="healthBar"></div>
+                <div class="healthBarBackground"></div>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <div id="lvlUpWindow">
+          <div id="lvlUpLvl" class="lvlUpDisplay"></div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Hp : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Atk : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Def : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">SpAtk : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">SpDef : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Spd : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
           </div>
         </div>
     
@@ -34,9 +66,15 @@
           </div>
           <div class="healthContainer">
             <div id="allyHp" class="hp"></div>
-            <div class="healthBarContainer">
-              <div id="allyHealthBar" class="healthBar"></div>
-              <div class="healthBarBackground"></div>
+            <div class="statusContainer">
+              <div class="healthBarContainer">
+                <div id="allyHealthBar" class="healthBar"></div>
+                <div class="healthBarBackground"></div>
+              </div>
+              <div class="expBarContainer">
+                <div id="expBar" class="expBar"></div>
+                <div class="expBarBackground"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -44,7 +82,6 @@
     </div>
     
     <div id="menu">
-      <!-- <div id="dialogueInterface"></div> -->
   
       <div id="encounterInterface" class="menuInterface">
         <div id="textBox">You sent out Disso!</div>
@@ -53,12 +90,7 @@
       </div>
       
       <div id="movesInterface" class="menuInterface">
-        <div id="movesBox">
-          <div class="movesButton"></div>
-          <div class="movesButton"></div>
-          <div class="movesButton"></div>
-          <div class="movesButton"></div>
-        </div>
+        <div id="movesBox"></div>
         <div id="movesDesc">
           <div class="movesDescContainer">
             <div class="descContainer">
@@ -75,7 +107,76 @@
           </div>
         </div>
       </div>
+
+      <div id="learnMoveInterface" class="menuInterface">
+        <div id="learnMoveDialogue"></div>
+        <div id="learnMoveOptionButtonContainer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="evolutionScene">
+    <div></div>
+    
+    <div id="evolutionInterface">
+      <div id="evolutionDialogue"></div>
+    </div>
+
+    <div id="evolutionMovesInterface" class="evoMenuInterface">
+      <div id="evolutionMovesBox"></div>
+      <div id="movesDesc">
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="moveDescPow">Pow : --</div>
+            <div id="moveDescAcc">Acc : --</div>
+            <div id="moveDescPP">PP : --</div>
+          </div>
+        </div>
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="moveDescElement">Element : --</div>
+            <div id="moveDescType">Type : --</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="evolutionLearnMovesInterface" class="evoMenuInterface">
+      <div id="evolutionLearnMoveDialogue"></div>
+      <div id="evolutionLearnMoveOptionButtonContainer">
+      </div>
     </div>
   </div>
   
+  <!-- <div id="teamScene">
+    <div id="containerLeft">
+        <div id="slotsPogemon">
+                <div class="slots"></div>
+                <div class="slots"></div>
+                <div class="slots"></div>
+                <div class="slots"></div>
+                <div class="slots"></div>
+                <div class="slots"></div>
+        </div>
+    </div>
+    <div id="containerRight">
+        <div id="containerTopRight">
+            <div id="containerSlotInfoPogemon">
+
+            </div>
+            <div id="containerSlotPogemon">
+                Box Pogemon
+            </div>
+        </div>
+        <div id="containerBottomRight">
+            <div id="containerMore">
+                Box autres
+            </div>
+        </div>
+    </div>
+  </div> -->
 </div>
+
+<input type="checkbox" style="display: none;" id="scroll-check" checked>
+<input type="checkbox" style="display: none;" id="keyboard-check" checked>

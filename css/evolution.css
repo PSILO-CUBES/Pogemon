@@ -1,0 +1,69 @@
+#evolutionScene{
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: none;
+  grid-template-rows: 70% 30%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.evoMenuInterface{
+  position: absolute;
+  bottom: 0;
+
+  height: 300px;
+  width: 100%;
+}
+
+#evolutionInterface{
+  display: block;
+}
+
+#evolutionMovesInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+#evolutionLearnMovesInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+#evolutionDialogue{
+  height: 100%;
+  width: 100%;
+
+  background-color: black;
+
+  padding: 25;
+
+  cursor: pointer;
+}
+
+#evolutionLearnMoveDialogue{
+  padding: 25;
+}
+
+#evolutionMovesBox{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.evolutionMovesButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+.evolutionMovesButton:hover{
+  background-color: rgba(255, 255, 255, 0.25);
+
+  cursor: pointer;
+}
+

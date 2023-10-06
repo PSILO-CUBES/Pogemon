@@ -5,9 +5,6 @@ import { audioObj } from "../data/audioData.js"
 
 import { Sprite, Boundary } from "../classes.js"
 
-import { tileSize } from '../classes.js'
-
-
 let startMap = mapsObj.geneTown
 export let currMap = startMap
 

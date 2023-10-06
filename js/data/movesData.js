@@ -1,23 +1,74 @@
 import { audioObj } from "./audioData.js"
 
 export const movesObj = {
+  // + physical
+  // - normal
   tackle:{
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 2,
-    acc: 95,
+    pow: 10,
+    acc: 100,
     pp: 50,
-    effects: null
-  }  ,
-  fireBall:{
-    name: 'fireBall',
+    effects: null,
+    priority: 0
+  },
+  quickattack:{
+    name: 'quickattack',
+    type: 'physical',
+    element: 'normal',
+    pow: 40,
+    acc: 100,
+    pp: 1,
+    effects: null,
+    priority: 1
+  },
+  headbutt:{
+    name: 'headbutt',
+    type: 'physical',
+    element: 'normal',
+    pow: 80,
+    acc: 85,
+    pp: 25,
+    effects: null,
+    priority: 0
+  },
+  slash:{
+    name: 'slash',
+    type: 'physical',
+    element: 'normal',
+    pow: 70,
+    acc: 100,
+    pp: 30,
+    effects: {crit: 1},
+    priority: 0,
+    sprite: '../../img/moves/slash.png'
+  },
+  //special
+  //fire
+  fireball:{
+    name: 'fireball',
     type: 'special',
     element: 'fire',
-    pow: 40,
+    pow: 1000,
     acc: 90,
     pp: 30,
-    effects: ['burn'],
+    effects: {burn: true},
+    priority: 0,
+    sprite: '../../img/moves/fireball.png',
+    initAudio: audioObj.initFireBall,
+    hitAudio: audioObj.hitFireBall
+  },
+  //ghost
+  shadowball:{
+    name: 'shadowball',
+    type: 'special',
+    element: 'ghost',
+    pow: 1000,
+    acc: 90,
+    pp: 30,
+    effects: {spdef: -1},
+    priority: 0,
     sprite: '../../img/moves/fireball.png',
     initAudio: audioObj.initFireBall,
     hitAudio: audioObj.hitFireBall

@@ -6,6 +6,8 @@
   text-transform: uppercase;
   font-family: 'Press Start 2P';
   font-variant: small-caps;
+
+  user-select: none;
 }
 
 body{

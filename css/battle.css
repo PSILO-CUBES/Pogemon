@@ -4,8 +4,8 @@
 
   background: black;
 
-  height: 100px;
-  width: 37.5%;
+  height: 100;
+  width: 40%;
 }
 
 #allyHealthBarContainer{
@@ -15,8 +15,8 @@
 
   background: black;
 
-  height: 100px;
-  width: 37.5%;
+  height: 100;
+  width: 40%;
 }
 
 .infoContainer{
@@ -26,8 +26,8 @@
 
 .battleName{
   position: relative;
-  left: 15px;
-  top: 15px;
+  left: 15;
+  top: 15;
 }
 
 .battleLvl{
@@ -35,8 +35,8 @@
   justify-content: flex-end;
 
   position: relative;
-  right: 15px;
-  top: 15px;
+  right: 15;
+  top: 15;
 }
 
 #battleScene{
@@ -60,7 +60,7 @@
 #dialogueInterface{
   display: none;
   cursor: pointer;
-  padding: 30px;
+  padding: 30;
   height: 100%;
   width: 100%;
 }
@@ -73,7 +73,7 @@
 }
 
 #textBox{
-  margin: 43px;
+  padding: 25;
 }
 
 #optionBox, #movesBox{
@@ -90,7 +90,7 @@
   height: 50%;
 }
 
-.optionButton:hover, .movesButton:hover{
+.optionButton:hover, .movesButton:hover, .learnMoveOptionButton:hover{
   background-color: rgba(255, 255, 255, 0.25);
 
   cursor: pointer;
@@ -120,6 +120,14 @@
   height: auto;
 }
 
+.statusContainer{
+  position: relative;
+
+  display: grid;
+
+  grid-template-rows: 50%;
+}
+
 .healthContainer{
   position: relative;
   top: 46%;
@@ -130,13 +138,15 @@
 
 .healthBarContainer{
   position: relative;
+
+  clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
 }
 
 .healthBar{
   position: relative;
   width: 100%;
 
-  height: 30px;
+  height: 30.5;
 
   background: green;
 
@@ -147,11 +157,10 @@
 
 .healthBarBackground{
   position: relative;
+  top: -100%;
+
   width: 100%;
-
-  transform: translateY(-100%);
-
-  height: 30px;
+  height: 30;
 
   background: darkgrey;
 
@@ -164,4 +173,106 @@
 .hp{
   display: flex;
   justify-content: center;
+}
+
+.expBarContainer{
+  pointer-events: none;
+
+  clip-path: polygon(0% 0%, 0% 0%, 100% 1000%, 100% 0%);
+}
+
+.expBar{
+  position: relative;
+
+  height: 72.5%;
+  width: 0%;
+
+  background-color: aqua;
+
+  z-index: 2;
+
+  transition: ease-out 1s;
+}
+
+.expBarBackground{
+  position: relative;
+  top: -72.5%;
+
+  height: 72.5%;
+  width: 100%;
+
+  background-color:aquamarine;
+
+  display: inline-block;
+
+  z-index: 1;
+}
+
+#lvlUpWindow{
+  position: absolute;
+
+  height: 400;
+  width: 375;
+
+  left: 2900;
+  top: 41.25%;
+  transform: translate(-50%,-50%);
+  
+  display: none;
+  grid-template-rows: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+
+  background-color: black;
+
+  transition: 1s ease-out;
+}
+
+.lvlUpStatsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.lvlUpDisplay{
+  display: flex;
+
+  justify-content: end;
+  align-items: center;
+
+  font-size: 22;
+}
+
+#lvlUpLvl{
+  justify-content: center;
+}
+
+.lvlUpStatsName{
+  justify-content: start;
+
+  padding-left: 25;
+}
+
+.lvlUpStats{
+  padding-right: 25;
+}
+
+#learnMoveInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+.learnMoveOptionButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 50%;
+
+  cursor: pointer;
+}
+
+#learnMoveDialogue{
+  padding: 25;
+}
+
+#foeHealthBar{
+  top: -1;
 }

@@ -1,9 +1,12 @@
 // all data pertaining to the player
 import { audioObj } from "../data/audioData.js"
 
-import { Boundary, Sprite } from "../classes.js"
+import { Boundary, Sprite, Trainer } from "../classes.js"
 
-import { battle, manageBattleState, battleAnimation } from "./battle.js"
+import { manageBattleState, battleAnimation } from "./scenes/battle.js"
+import { pogemonsObj } from "../data/pogemonData.js"
+import { manageOverWorldState } from "./scenes/overworld.js"
+import { scenes } from "./canvas.js"
 
 export const keys = {
   w: {
@@ -27,6 +30,7 @@ let runSpeed = walkSpeed * 1.5
 let moveSpeed = walkSpeed
 
 export let player
+
 let playerHeight = 132
 let playerWidth  = 84
 
@@ -43,7 +47,7 @@ const playerLeftImg = new Image()
 playerLeftImg.src = './img/protagSprites/brendan/left.png'
 
 export function generatePlayer(canvas){
-  player = new Sprite({
+  player = new Trainer([], new Sprite({
     type: 'player',
     position:{
       x: canvas.width / 2 - playerWidth / 2,
@@ -60,8 +64,7 @@ export function generatePlayer(canvas){
       down: playerDownImg,
       left: playerLeftImg,
     },
-    team: []
-  })
+  }))
 
   return player
 }
@@ -194,7 +197,7 @@ function stopMotionWhenColliding(boundaries, direction){
   }
 }
 
-function engageRandomBattle(animationId, battleZones) {
+function engageBattle(animationId, battleZones) {
   for(let i = 0; i < battleZones.length; i++){
     const battleZone = battleZones[i]
     const overlappingArea = Math.max(player.position.x, battleZone.position.x) 
@@ -211,7 +214,7 @@ function engageRandomBattle(animationId, battleZones) {
     ){
       audioObj.map.stop()
       audioObj.initEncounter.play()
-      window.cancelAnimationFrame(animationId)
+      manageOverWorldState(false)
       gsap.to('#overlapping', {
         opacity: 1,
         repeat: 2,
@@ -222,7 +225,7 @@ function engageRandomBattle(animationId, battleZones) {
             opacity: 0,
             duration: 0.4
           })
-          battle.initiated = true
+          scenes.set('battle', {initiated : true})
           audioObj.battle.play()
           manageBattleState(animationId)
         }
@@ -265,7 +268,7 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
   stopMotionWhenColliding(boundaries, lastDirection)
   player.img = eval(`player${direction}Img`)
   if(player.animate) {
-    engageRandomBattle(animationId, battleZones)
+    engageBattle(animationId, battleZones)
     lastDirection = direction
     move(direction, movables, moveSpeed)
     if(player.running){
