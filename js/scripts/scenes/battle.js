@@ -139,7 +139,7 @@ function clearBattleScene(){
       audioObj.victory.stop()
       audioObj.map.play()
 
-      scenes.set('battle', {initiated : {initiated : false}})
+      scenes.set('battle', {initiated : false})
 
       manageOverWorldState(true)
 
@@ -173,25 +173,9 @@ let movesButtonArr = document.querySelectorAll('.movesButton')
 
 let learntMove
 
-let moveLearning = {
+export let moveLearning = {
   initiated: false
 }
-
-function returnToEncounterInterface(e) {
-  if(e.key === 'Escape'){
-    if(scenes.get('battle').initiated){
-      encounterInterfaceDom.style.display = 'grid'
-      movesInterfaceDom.style.display = 'none'
-    } else if (moveLearning.initiated) {
-      dialogueInterfaceDom.style.display = 'block'
-      learnMoveInterfaceDom.style.display = 'none'
-      ally.moves.splice(movesButtonArr.length, 1)
-      ally.dialogue('battle', `${ally.name} gave up on learning ${learntMove.name}.`)
-    }
-  }
-}
-
-window.addEventListener('keydown', (e) => _preventActionSpam(returnToEncounterInterface, e), true)
 
 const battleSceneDom = document.querySelector('#battleScene')
 
@@ -301,7 +285,7 @@ function createEncounterMenuButtons(){
   }
   optionButtonsArr = document.querySelectorAll('.optionButton')
   optionButtonsArr.forEach(optionButton =>{
-    optionButton.addEventListener('click', (e) => _preventActionSpam(optionButtonInteraction, e), true)
+    optionButton.addEventListener('click', (e) => _preventActionSpam(optionButtonInteraction, e, 200), true)
   })
 }
 
@@ -344,8 +328,8 @@ function setUserMovesEvents(eventType, currMovesBox){
     if(ally.moves[i] === undefined) return
 
 
-    if(eventType === 'attack') currMovesBox.childNodes[i].addEventListener('click', e => _preventActionSpam(attackMove, e))
-    if(eventType === 'switchMove') currMovesBox.childNodes[i].addEventListener('click', e => _preventActionSpam(switchLearnedMoveForSelectedMove, e))
+    if(eventType === 'attack') currMovesBox.childNodes[i].addEventListener('click', e => _preventActionSpam(attackMove, e, 200))
+    if(eventType === 'switchMove') currMovesBox.childNodes[i].addEventListener('click', e => _preventActionSpam(switchLearnedMoveForSelectedMove, e, 200))
 
     currMovesBox.childNodes[i].textContent = ally.moves[i].name
   }
@@ -685,7 +669,7 @@ function setBattleScene(){
   menuDom.append(dialogueInterfaceDom)
   dialogueInterfaceDom.setAttribute('id','dialogueInterface')
   dialogueInterfaceDom.style.display = 'none'
-  dialogueInterfaceDom.addEventListener('click', e => _preventActionSpam(spendQueue, e), true)
+  dialogueInterfaceDom.addEventListener('click', e => _preventActionSpam(spendQueue, e, 200), true)
   dialogueInterfaceDom.textContent = ''  
 }
 

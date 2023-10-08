@@ -3,14 +3,14 @@ import { battleAnimation } from './scripts/scenes/battle.js'
 import { evolutionAnimation } from './scripts/scenes/evolution.js';
 
 let timerId;
-export let _preventActionSpam = (callback, e) =>{
+export let _preventActionSpam = (callback, e, duration) =>{
     if (!(timerId == null)) {
         clearTimeout(timerId);
     }
     timerId = setTimeout(() =>{
       if(e !== undefined) callback(e)
       else callback()
-    }, 200);
+    }, duration);
 }
 
 function preventScrolling(){

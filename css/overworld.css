@@ -1,0 +1,84 @@
+@import url('https://fonts.cdnfonts.com/css/press-start-2p');
+
+* {
+  color: white;
+  font-size: x-large;
+  text-transform: uppercase;
+  font-family: 'Press Start 2P';
+  font-variant: small-caps;
+
+  user-select: none;
+}
+
+body{
+  background-color: black;
+
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+}
+
+#overlapping{
+  position: absolute;
+
+  background-color: black;
+
+  height: 100%;
+  width: 100%;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  z-index: 10;
+}
+
+#overworldScene{
+  position: absolute;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  top: 0;
+
+  height: 100%;
+  width: 100%;
+}
+
+#overworldMenu{
+  position: relative;
+
+  display: grid;
+  grid-template-columns: repeat(3, 33.33%);
+
+  z-index: 11;
+}
+
+.overworldMenuSections{
+  position: relative;
+  height: 85%;
+  width: 85%;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  background-color: rgb(50, 50, 50);
+  color: black;
+}
+
+.overworldMenuSections:hover{
+  background-color: rgb(75, 75, 75);
+  cursor: pointer;
+}

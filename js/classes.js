@@ -24,7 +24,6 @@ export class Sprite {
       this.height = this.img.height
     }
     this.animate = animate
-    this.running = false
     this.sprites = sprites
     this.opacity = 1
     this.rotation = rotation
@@ -647,5 +646,7 @@ export class Trainer extends Sprite{
       rotation
     })
     this.team = team
+    this.running = false
+    this.disabled = false
   }
 }

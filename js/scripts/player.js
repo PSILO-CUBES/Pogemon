@@ -71,6 +71,7 @@ export function generatePlayer(canvas){
 
 function playerMovementEvent() {
   window.addEventListener('keydown', e =>{
+    if(player.disabled) return
     switch(e.key){
       case 'w':
       case 'W':

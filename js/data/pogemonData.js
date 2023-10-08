@@ -62,7 +62,7 @@ export const pogemonsObj = {
       spdef: 60,
       spd: 30,
     },
-    evo: {name: 'jleech', lvl: 10},
+    evo: {name: 'jleech', lvl: 20},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'

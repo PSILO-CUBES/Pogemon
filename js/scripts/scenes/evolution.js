@@ -74,7 +74,7 @@ function setEvoScene(){
 }
 
 function initEvo(target){
-  scenes.set('evolution', {initiated : {initiated : true}})
+  scenes.set('evolution', {initiated : true})
 
   targetEvo = pogemonsObj[target.evo.name]
   
@@ -152,7 +152,7 @@ function clearEvolutionScene(target){
 
       cancelAnimationFrame(evolutionAnimationId)
       // dont forget to put the audio
-      scenes.set('evolution', {initiated : {initiated : false}})
+      scenes.set('evolution', {initiated : false})
       manageOverWorldState(true)
       gsap.to('#overlapping', {
         opacity: 0
