@@ -4,7 +4,6 @@ import { pogemonsObj } from "./data/pogemonData.js"
 
 import { c } from "./scripts/canvas.js"
 
-
 export class Sprite {
   constructor({
     type, 
@@ -148,6 +147,7 @@ export class Pogemon extends Sprite{
     this.exp = exp
     this.lvl = this.generateLevel()
     this.nature = this.generateNature()
+    this.gender = this.generateGender()
     this.ivs = this.generateIVs()
     this.stats = this.generateStats()
     this.hp = this.stats.baseHp
@@ -168,6 +168,16 @@ export class Pogemon extends Sprite{
     const name = Object.keys(natureObj)[rng]
     const values = natureObj[name]
     return {name, values}
+  }
+
+  generateGender(){
+    //should add param that changes odds based on species
+    let gender
+    const rng = Math.floor(Math.random() * 100)
+    if(rng < 50) gender = 'male'
+    else gender = 'female'
+
+    return gender
   }
 
   generateIVs(){
@@ -626,6 +636,7 @@ export class Pogemon extends Sprite{
 export class Trainer extends Sprite{
   constructor(
     team,
+    bag,
     {
       type, 
       position, 
@@ -646,7 +657,25 @@ export class Trainer extends Sprite{
       rotation
     })
     this.team = team
+    this.bag = bag
     this.running = false
     this.disabled = false
+  }
+
+  catch(pogemon, lvl, isEnemy){
+    const pogemonImg = new Image()
+    const pogemonSprite = new Sprite({
+      type: 'pogemon',
+      img: pogemonImg,
+      frames:{
+        max: 4,
+        hold: 100
+      },
+      animate: true
+    })
+
+    const newPogemon = new Pogemon(pogemon, Math.pow(lvl, 3), isEnemy, pogemonSprite)
+
+    if(this.team.length < 6) this.team.push(newPogemon)
   }
 }

@@ -1,19 +1,32 @@
-experience and stat growth
+experience and stat growth x
 
-general overworld menu
+evolutions x
+
+general overworld menu x
+
+team scene x
+
+bag scene x
+item menu x
+pogeballs
 
 team management
 
 save state
 
-evolutions
-
-item menu
-battle items
 held items
 evolution items
-pogeballs
+
+attack effects
+
+super effective
+
+pogedex scene
 
 change maps
 
 pc
+
+options
+
+trainer card scene

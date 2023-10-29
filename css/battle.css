@@ -21,7 +21,7 @@
 
 .infoContainer{
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 80% auto auto;
 }
 
 .battleName{
@@ -86,7 +86,7 @@
   justify-content: center;
   align-items: center;
 
-  width: 47.5%;
+  width: 50%;
   height: 50%;
 }
 
@@ -275,4 +275,19 @@
 
 #foeHealthBar{
   top: -1;
+}
+
+.genderImgContainer{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.genderImg{
+  position: absolute;
+  top: 3.5;
+
+  height: 25px;
+  
+  padding: 10;
 }

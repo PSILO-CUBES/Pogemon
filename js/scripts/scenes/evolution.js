@@ -78,7 +78,7 @@ function initEvo(target){
 
   targetEvo = pogemonsObj[target.evo.name]
   
-  target.img.src = `${target.pogemon.sprites.frontSprite}.png`
+  target.img.src = target.pogemon.sprites.frontSprite
 
   target.position = {
     x: window.innerWidth / 2.35,
@@ -101,7 +101,7 @@ function initEvo(target){
       yoyo: true,
       duration: 0.5,
       onComplete: () =>{
-        target.img.src = `${targetEvo.sprites.frontSprite}.png`
+        target.img.src = targetEvo.sprites.frontSprite
         gsap.to(target, {
           opacity: 1,
           duration: 0.5,

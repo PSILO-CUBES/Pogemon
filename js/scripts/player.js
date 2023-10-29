@@ -47,7 +47,7 @@ const playerLeftImg = new Image()
 playerLeftImg.src = './img/protagSprites/brendan/left.png'
 
 export function generatePlayer(canvas){
-  player = new Trainer([], new Sprite({
+  player = new Trainer([], new Map(), new Sprite({
     type: 'player',
     position:{
       x: canvas.width / 2 - playerWidth / 2,

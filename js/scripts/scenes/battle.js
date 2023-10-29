@@ -10,6 +10,8 @@ import { currMap } from "../maps.js"
 import { _preventActionSpam } from "../../app.js"
 import { player } from "../player.js"
 import { scenes } from "../canvas.js"
+import { manageTeamState } from "./team.js"
+import { manageBagState } from "./bag.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
@@ -45,38 +47,15 @@ const foeSprite = new Sprite({
   animate: true
 })
 
-const allyImage = new Image()
-const allySprite = new Sprite({
-  type: 'ally',
-  position:{
-    x:300,
-    y:15
-  },
-  frames: {
-    max: 4,
-    hold: 100
-  },
-  img: allyImage,
-  animate: true
-})
-
 let foe
 let ally
 
 let renderedSprites
 
-let allyObj
-
-function loadAlly(allyArg){
-  if(player.team.length == 0){
-    allyObj = allyArg
-    allyImage.src = `../../img/pogemon/${allyObj.name}/${allyObj.name}_Back_Animation.png`
-    ally = new Pogemon(allyObj, Math.pow(5, 3), false, allySprite)
-    player.team.push(ally)
-  } else {
-
-    ally = player.team[0]
-  }
+function loadAlly(){
+  ally = player.team[0]
+  ally.img.src = pogemonsObj[`${ally.name}`].sprites.backSprite
+  document.querySelector("#allyGenderImg").src = `../../../img/${ally.gender}_icon.png`
 }
 
 function foeRNGEncounter(){
@@ -94,12 +73,15 @@ function initWildEncouter() {
 
   const rngLvl = Math.floor(Math.random() * (foeRNGEncounter().lvls[1] - foeRNGEncounter().lvls[0]) + foeRNGEncounter().lvls[0] + 1)
 
-  foeImage.src = `../../img/pogemon/${foeObj.name}/${foeObj.name}_Animation.png`
+  foeImage.src = foeObj.sprites.frontSprite
   foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, foeSprite)
+
+  document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
 
 export function initBattle(){
   scenes.set('battle', {initiated : {initiated : true}})
+  document.querySelector('#overworldScene').style.display = 'none'
 
   loadAlly(pogemonsObj.jlissue)
 
@@ -125,7 +107,7 @@ export function initBattle(){
   battleAnimation()
 }
 
-function clearBattleScene(){
+function clearBattleScene(nextScene){
   gsap.to('#overlapping', {
     opacity: 1,
     onComplete: () =>{
@@ -141,8 +123,10 @@ function clearBattleScene(){
 
       scenes.set('battle', {initiated : false})
 
-      manageOverWorldState(true)
-
+      if(nextScene == 'team') manageTeamState(true, 'battle')
+      else if (nextScene == 'bag') manageBagState(true, 'battle')
+      else manageOverWorldState(true)
+      
       gsap.to('#overlapping', {opacity: 0})
     }
   })
@@ -187,13 +171,35 @@ function optionButtonInteraction(e) {
         movesInterfaceDom.style.display = 'grid'
         break
       case 'Switch':
-        textBox.textContent = e.target.textContent
+          manageBattleState(false, 'team')
+          gsap.to('#overlapping', {
+            opacity: 1,
+            yoyo: true,
+            duration: 1,
+            onComplete(){
+              gsap.to('#overlapping', {
+                opacity: 0,
+                duration: 0.4
+              })
+            }
+          })
         break
       case 'Items':
         textBox.textContent = e.target.textContent
+        manageBattleState(false, 'bag')
+        gsap.to('#overlapping', {
+          opacity: 1,
+          yoyo: true,
+          duration: 1,
+          onComplete(){
+            gsap.to('#overlapping', {
+              opacity: 0,
+              duration: 0.4
+            })
+          }
+        })
         break
       case 'Flee':
-        textBox.textContent = e.target.textContent
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'none'
         dialogueInterfaceDom.style.display = 'block'
@@ -201,7 +207,7 @@ function optionButtonInteraction(e) {
         audioObj.flee.play()
         // need to put rng check based on speed stat
         queue.push(() =>{
-          manageBattleState(false)
+          manageBattleState(false, 'overworld')
           gsap.to('#overlapping', {
             opacity: 1,
             yoyo: true,
@@ -598,8 +604,8 @@ function attackMove(e) {
       manageLearnedMoves(ally, queue, 'battle')
 
       if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
-      else queue.push(() => manageBattleState(false))
-    } else queue.push(() => manageBattleState(false))
+      else queue.push(() => manageBattleState(false, 'evo'))
+    } else queue.push(() => manageBattleState(false, 'overworld'))
   }
 
   function faintEvent(target){
@@ -607,7 +613,7 @@ function attackMove(e) {
       queue.push(() => {
         manageFaintingEvent(target)
       })
-    } else queue.push(() => manageBattleState(false))
+    } else queue.push(() => manageBattleState(false, 'overworld'))
   }
   
   if(attackLanded(fasterMove, true)) {
@@ -673,7 +679,7 @@ function setBattleScene(){
   dialogueInterfaceDom.textContent = ''  
 }
 
-export function manageBattleState(state) {
+export function manageBattleState(state, nextScene) {
   if(state) initBattle()
-  else clearBattleScene()
+  else clearBattleScene(nextScene)
 }

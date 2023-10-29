@@ -4,7 +4,9 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player } from '../player.js'
 import { generateMapData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { moveLearning } from './battle.js'
+import { manageBattleState, moveLearning } from './battle.js'
+import { manageTeamState } from './team.js'
+import { manageBagState } from './bag.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -19,8 +21,9 @@ const menu = {
   initiated: false
 }
 
+const overworldMenuDom = document.querySelector('#overworldMenu')
+
 function initOverworldMenu(){
-  const overworldMenuDom = document.querySelector('#overworldMenu')
   let options = ['pogedex', 'team', 'bag', 'trainer', 'save', 'options']
   for(let i = 0; i < options.length; i++){
     const sectionDom = document.createElement('div')
@@ -32,11 +35,38 @@ function initOverworldMenu(){
 }
 
 function overworldMenuClickEvent(e){
-  console.log(e.target.textContent)
+  switch(e.target.textContent){
+    case 'team':
+      if(player.team < 1) return
+      manageOverWorldState(false)
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageTeamState(true, 'overworld')
+          gsap.to('#overlapping', {
+            opacity: 0,
+          })
+        }
+      })
+
+      break
+    case 'bag':
+      if(player.team < 1) return
+      manageOverWorldState(false)
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageBagState(true, 'overworld')
+          gsap.to('#overlapping', {
+            opacity: 0,
+          })
+        }
+      })
+      break
+  }
 }
 
 function manageMenuSections(state){
-  const overworldMenuDom = document.querySelector('#overworldMenu')
   if(state){
     initOverworldMenu()
   } else {
@@ -102,8 +132,39 @@ function manageMenuState(state){
   }
 }
 
+let prevScene
+export function returnPrevScene(scene){
+  prevScene = scene
+}
+
+function transitionScenes(prevScene){
+  switch(prevScene){
+    case 'overworld':
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageOverWorldState(true)
+          gsap.to('#overlapping', {opacity: 0})
+        }
+      })
+      break
+    case 'battle':
+      // bit wrong, dont want to start a new battle, but resume the one currntly in progress
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageBattleState(true)
+          gsap.to('#overlapping', {opacity: 0})
+        }
+      })
+      break
+  }
+}
+
 function escapeKeyEventOptions(e) {
+  const encounterInterfaceDom = document.querySelector('#encounterInterface')
   if(e.key === 'Escape'){
+
     if(scenes.get('overworld').initiated){
       manageMenuState(menu.initiated)
     }
@@ -117,6 +178,18 @@ function escapeKeyEventOptions(e) {
       ally.moves.splice(movesButtonArr.length, 1)
       ally.dialogue('battle', `${ally.name} gave up on learning ${learntMove.name}.`)
     }
+
+    if(scenes.get('team').initiated){
+      manageTeamState(false)
+      transitionScenes(prevScene)
+    }
+
+    if(scenes.get('bag').initiated){
+      manageBagState(false)
+      transitionScenes(prevScene)
+    }
+  } else if(e.key == '`'){
+    console.log(player)
   }
 }
 
@@ -136,9 +209,13 @@ export function manageOverWorldState(state){
   if(state) {
     overWorldAnimation()
     scenes.set('overworld', {initiated : true})
+    player.disabled = false
+    menu.initiated = false
+    overworldMenuDom.replaceChildren()
   }
   else {
     cancelAnimationFrame(animationId)
+    document.querySelector('#overworldScene').style.display = 'none'
     scenes.set('overworld', {initiated : false})
   }
 }

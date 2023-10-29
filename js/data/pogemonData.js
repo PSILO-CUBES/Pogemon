@@ -31,8 +31,10 @@ export const pogemonsObj = {
       1: {move: movesObj.tackle, lvl: 1}
     },
     sprites: {
-      frontSprite: '../../img/pogemon/Disso/Disso_Animation',
-      backSprite: '../../img/pogemon/Disso/Disso_Back_Animation',
+      frontSprite: 'img/pogemon/Disso/Disso_Animation.png',
+      backSprite: 'img/pogemon/Disso/Disso_Back_Animation.png',
+      teamSprite: 'img/pogemon/Disso/Disso_Team_Animation.png',
+      bagSprite: 'img/pogemon/Disso/Disso_Bag_Animation.png',
     },
     animationPositions:{
       launch:{
@@ -62,7 +64,7 @@ export const pogemonsObj = {
       spdef: 60,
       spd: 30,
     },
-    evo: {name: 'jleech', lvl: 20},
+    evo: {name: 'jleech', lvl: 10},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -75,8 +77,10 @@ export const pogemonsObj = {
       6: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
-      frontSprite: '../../img/pogemon/Jlissue/Jlissue_Animation',
-      backSprite: '../../img/pogemon/Jlissue/Jlissue_Back_Animation',
+      frontSprite: 'img/pogemon/Jlissue/Jlissue_Animation.png',
+      backSprite: 'img/pogemon/Jlissue/Jlissue_Back_Animation.png',
+      teamSprite: 'img/pogemon/Jlissue/Jlissue_Team_Animation.png',
+      bagSprite: 'img/pogemon/Jlissue/Jlissue_Bag_Animation.png',
     },
     animationPositions:{
       launch:{
@@ -119,8 +123,10 @@ export const pogemonsObj = {
       5: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
-      frontSprite: '../../img/pogemon/Jleech/Jleech_Animation',
-      backSprite: '../../img/pogemon/Jleech/Jleech_Back_Animation',
+      frontSprite: 'img/pogemon/Jleech/Jleech_Animation.png',
+      backSprite: 'img/pogemon/Jleech/Jleech_Back_Animation.png',
+      teamSprite: 'img/pogemon/Jleech/Jleech_Team_Animation.png',
+      bagSprite: 'img/pogemon/Jleech/Jleech_Bag_Animation.png',
     },
     animationPositions:{
       launch:{
