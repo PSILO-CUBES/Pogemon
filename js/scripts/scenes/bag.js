@@ -2,17 +2,35 @@ import { Sprite } from "../../classes.js"
 
 import { player } from "../player.js"
 import { scenes } from "../canvas.js"
-import { returnPrevScene } from "./overworld.js"
+import { prevScene, returnPrevScene } from "./overworld.js"
+import { itemsObj } from "../../data/itemsData.js"
+import { manageBattleState } from "./battle.js"
 
 const bagMenuButtonOption = ['use', 'give', 'discard']
 let nodeArr = ['bagSceneItem','bagSceneMenuButton']
 
-let choosePogemon = false
-
 const defaultType = 'med'
 let currType = defaultType
 
+let queue = []
+
+function spendQueue(){
+  if(queue.length > 0){
+    queue[0]()
+    queue.shift()
+    return
+  } else {
+    console.log('all spent')
+  }
+}
+
 let currItemsArr = []
+
+let currItem
+let currItemDom
+
+let itemChosen = false
+let choosePogemon = false
 
 async function sortCurrItemsArr(){
   currItemsArr = []
@@ -21,59 +39,95 @@ async function sortCurrItemsArr(){
   })
 }
 
-sortCurrItemsArr()
-
 function bagSceneHoverEvent(e, state){
+  if(returnToBattle) return
+  const dialogueInferface = document.querySelector('.bagSceneItemDialogueContainer')
   if(state) {
     if(e.target.id != 'selected') {
-      e.target.style.backgroundColor = 'rgba(128,128,128,0.2)'
-      if(e.target.classList[0] == 'bagSceneTeamSection'){
-        if(!choosePogemon) e.target.style.backgroundColor = 'transparent'
+      e.target.style.cursor = 'pointer'
+      e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
+      if(e.target.classList[0] == 'bagSceneTeamSection' && !choosePogemon ) {
+        e.target.style.cursor = 'auto'
+        e.target.style.backgroundColor = 'transparent'
+      }
+      if(e.target.classList[0] == 'bagSceneItem' && !itemChosen) {
+        e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
+        dialogueInferface.style.display = 'block'
+        dialogueInferface.textContent = itemsObj[`${e.target.childNodes[1].childNodes[0].childNodes[0].textContent}`].desc
       }
     }
-    e.target.style.cursor = 'pointer'
   } else {
-    if(e.target.id != 'selected') e.target.style.backgroundColor = 'transparent'
-    e.target.style.cursor = 'auto'
+    e.target.style.cursor = 'cursor'
+    if(e.target.classList[0] == 'bagSceneTeamSection' && choosePogemon) {
+      e.target.style.backgroundColor = 'transparent'
+    }
+    if(e.target.classList[0] == 'bagSceneItem' && e.target.id != 'selected') {
+      e.target.style.backgroundColor = 'transparent'
+      if(itemChosen) return
+      if(returnToBattle) return
+      dialogueInferface.style.display = 'none'
+      dialogueInferface.textContent = ''
+    }
+    if(e.target.classList[0] == 'bagSceneMenuButton'){
+      e.target.style.backgroundColor = 'transparent'
+    }
+    if(e.target.classList[0] == 'bagSceneItemTypeImg'){
+      if(e.target.id != 'selected'){
+        e.target.style.backgroundColor = 'transparent'
+      }
+    }
   }
 }
 
 function bagSceneMenuButtonOnClick(e){
   document.querySelector('.bagSceneItemMenuContainer').style.display = 'none'
-  nodeArr.push('bagSceneTeamSection')
   const dialogueBox = document.querySelector('.bagSceneItemDialogueContainer')
   dialogueBox.style.display = 'block'
-  choosePogemon = true
+  player.team[0].animate = true
   switch(e.target.textContent){
     case 'use':
-      dialogueBox.textContent = 'On which pogemon should *this.item* be used?'
+      if(prevScene == 'battle' && currItem.type == 'ball'){
+        itemUsed.item = currItem
+        itemUsed.used = true
+
+        manageBagState(false, 'battle')
+        return
+      }
+      choosePogemon = true
+      dialogueBox.textContent = `On which pogemon should this ${currItem.name} be used?`
       break
     case 'give':
-      dialogueBox.textContent = 'To which pogemon should *this.item* be given?'
+      choosePogemon = true
+      dialogueBox.textContent = `To which pogemon should this ${currItem.name} be given?`
       break
     case 'discard':
-      dialogueBox.textContent = 'How many *this.item*s should discarded?'
+      dialogueBox.textContent = `How many ${currItem.name}'s should be discarded?`
       break
   }
 }
 
+let returnToBattle = false
+
 function bagSceneSectionOnClickEvent(e, state){
-  if(e.target.classList[0] === 'bagSceneTeamSectionImgContainer') return
+  choosePogemon = false
+
+  if(returnToBattle) return
   
-  document.querySelectorAll(`.${e.target.classList.value}`).forEach(node =>{
+  console.log(itemUsed.used)
+  if(itemUsed.used == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
+
+  if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
+
+  currItem = itemsObj[`${e.target.childNodes[1].childNodes[0].textContent}`]
+  currItemDom = document.querySelector(`.${e.target.classList[1]}`)
+
+  document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
     node.style.backgroundColor = 'transparent'
     node.removeAttribute('id')
   })
 
   e.target.style.backgroundColor = 'rgb(128, 128, 128, 0.3)'
   e.target.id = 'selected'
-
-  if(`${e.target.classList.value}` === `bagSceneTeamSection`){
-    choosePogemon = false
-    document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
-    document.querySelector('.bagSceneConfirmationContainer').style.display = 'grid'
-    document.querySelector('.bagSceneConfirmationDialogue').textContent = `Are you sure you want to use *this.item* on *this.pogemon*?`
-  }
   
   if(!state) return
 
@@ -85,7 +139,14 @@ function bagSceneItemTypeOnClick(e){
     node.childNodes[0].style.backgroundColor = 'transparent'
   })
 
+  document.querySelector('.bagSceneItemMenuContainer').style.display = 'none'
+
   nodeArr.push('bagSceneItemTypeImg')
+
+  e.target.parentNode.parentNode.childNodes.forEach(node =>{
+    node.childNodes[0].id = ''
+    console.log(node)
+  })
 
   e.target.id = 'selected'
 
@@ -107,8 +168,93 @@ function bagSceneConfimationButtonOnClick(e){
   document.querySelector('.bagSceneConfirmationContainer').style.display = 'none'
 }
 
+
+export let itemUsed = {item: null, used: false}
+
+function heal(target, dom, item){
+  const hpDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+  const healthBarDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+
+  if(target.hp == target.stats.baseHp) return
+
+  target.hp = target.hp + item.pow
+  if(target.hp > target.stats.baseHp) target.hp = target.stats.baseHp
+
+  healthBarDom.style.width = `${target.convertToPercentage(target.hp, target.stats.baseHp)}%`
+  hpDom.textContent = `${target.hp}/${target.stats.baseHp}`
+}
+
+function useItemOnClickEvent(e){
+  if(choosePogemon){
+    let index = e.target.classList[1].substr(-1, 1)
+    let targetPogemon = player.team[index]
+
+    const currQuantity = player.bag.get(`${currItem.name}`).quantity
+
+    if(currQuantity < 1) return
+
+    const dialogueInterfaceDom = document.querySelector('.bagSceneItemDialogueContainer')
+    dialogueInterfaceDom.style.display = 'block'
+
+    switch(currItem.type){
+      case 'med':
+        switch(currItem.effect){
+          case 'heal':
+            if(targetPogemon.hp < targetPogemon.stats.baseHp){
+              let prevHp = targetPogemon.hp
+              heal(targetPogemon, e.target.classList[1], currItem)
+
+              player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
+              currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+
+              itemUsed.item = currItem
+          
+              dialogueInterfaceDom.innerText = `A ${currItem.name} was used on ${targetPogemon.name}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
+            } else {
+              dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be healed.`
+            }
+            break
+          case 'revive':
+            if(targetPogemon.hp <= 0){
+              dialogueInterfaceDom.innerText = `${targetPogemon.name} has been revived.`
+            } else {
+              dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be revived.`
+            }
+            break
+        }
+        break
+      case 'ball':
+        if(prevScene == 'battle') return
+        dialogueInterfaceDom.innerText = `Can't use this.`
+        break
+    }
+
+    if(prevScene == 'battle') {
+      returnToBattle = true
+      setTimeout(() =>{
+        dialogueInterfaceDom.style.cursor = 'default'
+        returnToBattle = false
+        gsap.to('#overlapping', {
+          opacity: 1,
+          onComplete: () =>{
+            manageBagState(false, 'battle')
+            gsap.to('#overlapping', {
+              opacity: 0,
+            })
+          }
+        })
+      }, 1500)
+    }
+  }
+}
+
 function cancelEventOnDocumentClick(e){
   if(scenes.get('bag').initiated != true) return
+
+  if(!nodeArr.includes(e.target.classList[0])){
+    choosePogemon = false
+    itemChosen = false
+  }
 
   const teamSection = document.querySelector('.bagSceneTeamContainer')
   const itemsArr = document.querySelectorAll('.bagSceneItem')
@@ -131,15 +277,16 @@ function cancelEventOnDocumentClick(e){
     node.style.backgroundColor = 'transparent'
     node.removeAttribute('id')
   })
-  
-  menuInterface.style.display = 'none'
 
-  dialogueInferface.textContent = ''
-  dialogueInferface.style.display = 'none'
+  if(nodeArr.includes('bagSceneTeamSection')) nodeArr.splice(nodeArr.indexOf('bagSceneTeamSection'), 1)
+
+  menuInterface.style.display = 'none'
 
   confirmationInferface.style.display = 'none'
 
-  if(nodeArr.includes('bagSceneTeamSection')) nodeArr.splice(nodeArr.indexOf('bagSceneTeamSection'), 1)
+  if(itemUsed.used == false || returnToBattle != true){
+    dialogueInferface.textContent = ''
+  }
 }
 
 addEventListener('click', e => cancelEventOnDocumentClick(e))
@@ -148,7 +295,8 @@ function printItems(bagSceneItemSectionDom){
   bagSceneItemSectionDom.replaceChildren()
   // list container
   bagSceneItemSectionDom.classList.add('bagSceneItemListContainer')
-  //need to add amount of item in bag.currType.length or smthn like that 
+  //need to add amount of item in bag.currType.length or smthn like that
+  sortCurrItemsArr()
   for(let i = 0; i < currItemsArr.length; i++){
     const item = currItemsArr[i].item
     //item container
@@ -158,7 +306,7 @@ function printItems(bagSceneItemSectionDom){
 
     //indiv item
     const bagSceneItemDom = document.createElement('div')
-    bagSceneItemDom.classList.add('bagSceneItem')
+    bagSceneItemDom.classList.add('bagSceneItem', `item${i}`)
     bagSceneItemDom.addEventListener('mouseover', e => bagSceneHoverEvent(e, true))
     bagSceneItemDom.addEventListener('mouseout', e => bagSceneHoverEvent(e, false))
     bagSceneItemDom.addEventListener('click', e => bagSceneSectionOnClickEvent(e, true))
@@ -206,8 +354,7 @@ function printBagScene(){
   }
 
   bagSceneMiscHeaderContainerDom.childNodes[0].classList.add('bagScenePogebuckAmount')
-  bagSceneMiscHeaderContainerDom.childNodes[0].textContent = `10000`
-  
+  bagSceneMiscHeaderContainerDom.childNodes[0].textContent = `${player.money}`
 
   const bagScenePogemonIconDom = document.createElement('img')
   bagScenePogemonIconDom.classList.add('bagScenePogemonIcon')
@@ -223,7 +370,8 @@ function printBagScene(){
   for(let i = 0; i < 6; i++){
     //each section from the team column
     const bagSceneTeamSectionDom = document.createElement('div')
-    bagSceneTeamSectionDom.classList.add('bagSceneTeamSection')
+    bagSceneTeamSectionDom.classList.add('bagSceneTeamSection', `bagTeam${i}`)
+    bagSceneTeamSectionDom.addEventListener('click', e => useItemOnClickEvent(e))
     bagSceneTeamContainerDom.appendChild(bagSceneTeamSectionDom)
 
     if(player.team.length > i){
@@ -246,7 +394,7 @@ function printBagScene(){
       bagSceneTeamSectionInfoContainerDom.appendChild(bagSceneTeamSectionInfoTopContainerDom)
   
       const bagSceneTeamSectionInfoNameDom = document.createElement('span')
-      bagSceneTeamSectionInfoNameDom.textContent = 'name'
+      bagSceneTeamSectionInfoNameDom.textContent = `${player.team[i].name}`
       bagSceneTeamSectionInfoNameDom.classList.add('bagSceneTeamSectionInfoName')
       bagSceneTeamSectionInfoTopContainerDom.appendChild(bagSceneTeamSectionInfoNameDom)
   
@@ -262,6 +410,7 @@ function printBagScene(){
   
       const bagSceneTeamSectionGreenBarDom = document.createElement('div')
       bagSceneTeamSectionGreenBarDom.classList.add('bagSceneTeamSectionGreenBar')
+      bagSceneTeamSectionGreenBarDom.style.width = `${player.team[i].convertToPercentage(player.team[i].hp, player.team[i].stats.baseHp)}%`
   
       const bagSceneTeamSectionGreyBarDom = document.createElement('div')
       bagSceneTeamSectionGreyBarDom.classList.add('bagSceneTeamSectionGreyBar')
@@ -272,11 +421,11 @@ function printBagScene(){
       bagSceneTeamSectionHealthBarDom.appendChild(bagSceneTeamSectionGreyBarDom)
   
       const bagSceneTeamSectionHPDom = document.createElement('div')
-      bagSceneTeamSectionHPDom.textContent = '1000/1000'
+      bagSceneTeamSectionHPDom.textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
       bagSceneTeamSectionHPDom.classList.add('bagSceneTeamSectionHP')
   
       const bagSceneTeamSectionLvlDom = document.createElement('div')
-      bagSceneTeamSectionLvlDom.textContent = 'Lv 100'
+      bagSceneTeamSectionLvlDom.textContent = `Lv ${player.team[i].lvl}`
       bagSceneTeamSectionLvlDom.classList.add('bagSceneTeamSectionLvl')
   
       const bagSceneTeamSectionHealthBarContainerDom = document.createElement('div')
@@ -295,7 +444,7 @@ function printBagScene(){
   const bagSceneItemContainerDom = document.createElement('div')
   bagSceneItemContainerDom.classList.add('bagSceneContainer')
 
-  const itemsTypeArr = ['misc', 'med', 'balls', 'berry', 'tm', 'bi', 'vals', 'key', 'sort']
+  const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'bi', 'vals', 'key', 'sort']
 
   for(let i = 0; i < 3; i++){
     const bagSceneItemSectionDom = document.createElement('div')
@@ -316,12 +465,13 @@ function printBagScene(){
           bagSceneItemTypeImgDom.src = `img/item_scene/${j}.png`
           if(bagSceneItemTypeImgDom.classList[1] == currType){
             bagSceneItemTypeImgDom.style.backgroundColor = 'rgba(128, 128, 128, 0.3)'
+            bagSceneItemTypeImgDom.id = 'selected'
           }
           bagSceneItemTypeImgDom.addEventListener('mouseover', e => bagSceneHoverEvent(e, true))
           bagSceneItemTypeImgDom.addEventListener('mouseout', e => bagSceneHoverEvent(e, false))
           bagSceneItemTypeImgDom.addEventListener('click', e => bagSceneItemTypeOnClick(e))
           bagSceneItemTypeDom.appendChild(bagSceneItemTypeImgDom)
-        }        
+        }
         break
       case 1:
         printItems(bagSceneItemSectionDom)
@@ -333,6 +483,7 @@ function printBagScene(){
         //dialogue box container
         const bagSceneItemDialogueContainerDom = document.createElement('div')
         bagSceneItemDialogueContainerDom.classList.add('bagSceneItemDialogueContainer')
+        bagSceneItemDialogueContainerDom.addEventListener('click', e => spendQueue(), true)
         bagSceneItemSectionDom.appendChild(bagSceneItemDialogueContainerDom)
 
         //menu options container
@@ -414,21 +565,21 @@ const backgroundSprite = new Sprite({
     max: 1
   },
   img: backgroundImg,
-  animate: true
+  animate: false
 })
 
 function bagSceneAnimation(){
   bagSceneAnimationId = window.requestAnimationFrame(bagSceneAnimation)
   
-  backgroundSprite.draw(
+  backgroundSprite.draw()
 
-  )
   for(let i = 0; i < player.team.length; i++){
     player.team[i].position = {
       x: 43,
       y: window.innerHeight / 10 + 150 * i
     }
     player.team[i].img.src = player.team[i].pogemon.sprites.bagSprite
+    // player.team[i].animate = false
     player.team[i].draw()
   }
 }
@@ -440,13 +591,17 @@ function initBagScene(prevScene){
   printBagScene()
 }
 
-function clearBagScene(){
+function clearBagScene(prevScene){
   scenes.set('bag', {initiated: false})
   document.querySelector('#bagScene').style.display = 'none'
-  window.cancelAnimationFrame(bagSceneAnimationId) 
+  window.cancelAnimationFrame(bagSceneAnimationId)
+  if(prevScene == 'battle') {
+    returnPrevScene('bag')
+    manageBattleState(true)
+  }
 }
 
 export function manageBagState(state, prevScene){
   if(state) initBagScene(prevScene)
-  else clearBagScene()
+  else clearBagScene(prevScene)
 }

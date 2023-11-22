@@ -6,9 +6,9 @@ import { generateMapData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { manageBattleState, moveLearning } from './battle.js'
 import { manageTeamState } from './team.js'
-import { manageBagState } from './bag.js'
+import { itemUsed, manageBagState } from './bag.js'
 
-const frameRate = 60
+const frameRate = 144
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
@@ -132,7 +132,7 @@ function manageMenuState(state){
   }
 }
 
-let prevScene
+export let prevScene
 export function returnPrevScene(scene){
   prevScene = scene
 }
@@ -185,6 +185,7 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('bag').initiated){
+      if(itemUsed.used == true) return
       manageBagState(false)
       transitionScenes(prevScene)
     }

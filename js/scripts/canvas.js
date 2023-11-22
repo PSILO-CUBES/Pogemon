@@ -21,17 +21,18 @@ export function generateCanvas(){
 generateCanvas()
 
 const player = generatePlayer(canvas)
-player.catch(pogemonsObj['jlissue'], 5, false)
+player.catch(pogemonsObj['jlissue'], true)
+
 
 const itemArr = [
   {name: 'potion', quantity: 999}, 
-  {name: 'resurrect', quantity: 999}
+  {name: 'resurrect', quantity: 999},
+  {name: 'pogeball', quantity: 999}
 ]
 
 for(let i = 0; i < itemArr.length; i++){
   player.bag.set(itemArr[i].name, {item: itemsObj[itemArr[i].name], quantity: itemArr[i].quantity})
 }
-
 
 export const scenes = new Map()
 scenes.set('overworld', {initiated: false})

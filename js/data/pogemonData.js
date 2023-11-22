@@ -20,7 +20,7 @@ export const pogemonsObj = {
       def: 48,
       spatk: 48,
       spdef: 48,
-      spd: 1
+      spd: 499
     },
     evo: {name: 'evo1', lvl: 20},
     abilities: {
@@ -28,7 +28,8 @@ export const pogemonsObj = {
       2: 'Kamiii'
     },
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1}
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
       frontSprite: 'img/pogemon/Disso/Disso_Animation.png',
@@ -46,7 +47,8 @@ export const pogemonsObj = {
         hit: {x: -150, y:-250}
       }
     },
-    yeild: 1000
+    yeild: 1000,
+    catchRate: 75
   },
 
   jlissue: {
@@ -72,8 +74,8 @@ export const pogemonsObj = {
     movepool: {
       2: {move: movesObj.quickattack, lvl: 1},
       3: {move: movesObj.fireball, lvl: 2},
-      4: {move: movesObj.tackle, lvl: 7},
-      5: {move: movesObj.headbutt, lvl: 10},
+      4: {move: movesObj.tackle, lvl: 3},
+      5: {move: movesObj.shadowball, lvl: 10},
       6: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
@@ -92,7 +94,8 @@ export const pogemonsObj = {
         hit: {x: -150, y:-250}
       }
     },
-    yeild: 70
+    yeild: 70,
+    catchRate: 75
   },
 
   jleech: {
@@ -118,8 +121,8 @@ export const pogemonsObj = {
     movepool: {
       1: {move: movesObj.quickattack, lvl: 1},
       2: {move: movesObj.fireball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 7},
-      4: {move: movesObj.headbutt, lvl: 10},
+      3: {move: movesObj.tackle, lvl: 3},
+      4: {move: movesObj.shadowball, lvl: 10},
       5: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
@@ -138,8 +141,7 @@ export const pogemonsObj = {
         hit: {x: -150, y:-250}
       }
     },
-    yeild: 70
+    yeild: 70,
+    catchRate: 75
   },
-
-
 }

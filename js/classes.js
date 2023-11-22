@@ -1,8 +1,9 @@
 import { audioObj } from "./data/audioData.js"
+import { movesObj } from "./data/movesData.js"
 import { natureObj } from "./data/natureData.js"
 import { pogemonsObj } from "./data/pogemonData.js"
 
-import { c } from "./scripts/canvas.js"
+import { c, scenes } from "./scripts/canvas.js"
 
 export class Sprite {
   constructor({
@@ -151,6 +152,7 @@ export class Pogemon extends Sprite{
     this.ivs = this.generateIVs()
     this.stats = this.generateStats()
     this.hp = this.stats.baseHp
+    this.fainted = false
     this.evo = this.pogemon.evo
     this.ability = this.generateAbility()
     this.moves = this.generateMoves(true, 'battle')
@@ -293,6 +295,10 @@ export class Pogemon extends Sprite{
         evolutionDialogueDom.style.display = 'block'
         evolutionDialogueDom.textContent = text
         break
+      case 'bag':
+        document.querySelector('.bagSceneItemDialogueContainer').style.display = 'block'
+        document.querySelector('.bagSceneItemDialogueContainer').textContent = text
+        break
     }
   }
 
@@ -327,7 +333,8 @@ export class Pogemon extends Sprite{
       if(this.moves[i].name === move.name){
         movePP = this.moves[i].pp
         if(pressure) movePP = movePP - 2
-        else movePP--
+        else if(movePP > 0) movePP--
+
         this.moves[i].pp = movePP
       }
     }
@@ -335,6 +342,8 @@ export class Pogemon extends Sprite{
 
   move({move, recipient, renderedSprites, critHit}){
     this.managePP(move, false)
+
+    if(move.pp == 0) move = movesObj['struggle']
 
     let recipientHealthBar = '#foeHealthBar'
     let hpDom = document.querySelector('#foeHp')
@@ -364,7 +373,7 @@ export class Pogemon extends Sprite{
       if(move.element === this.element[1] || move.element === this.element[2]) stab = 1.5
 
       let crit = 1
-      if(critHit) crit = 1.5
+      if(critHit(this)) crit = 1.5
 
       if(move.type === 'physical'){
         recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.atk / recipient.stats.def / 50 + 2) * roll * stab * crit)
@@ -383,6 +392,7 @@ export class Pogemon extends Sprite{
         hitImg.src = move.sprite
 
         const hitSprite = new Sprite({
+          type: 'attack',
           position: {
             x: recipient.position.x,
             y: recipient.position.y
@@ -438,6 +448,7 @@ export class Pogemon extends Sprite{
       const projectileImg = new Image()
       projectileImg.src = move.sprite
       const projectileSprite = new Sprite({
+        type: 'attack',
         position: {
           x: this.position.x + attackPos.init.x,
           y: this.position.y + attackPos.init.y
@@ -489,6 +500,8 @@ export class Pogemon extends Sprite{
       case 'tackle': 
       case 'quickattack':
       case 'headbutt':
+        //should put struggle apart
+      case 'struggle':
         hitAnimation(false)
         break
       case 'slash':
@@ -501,7 +514,7 @@ export class Pogemon extends Sprite{
     }
   }
 
-  //should change for distupt and pass it 'miss' and 'flinched' arguments
+  //should change for disrupt and pass it 'miss' and 'flinched' arguments
   miss(){
     this.dialogue('battle', `${this.name} missed!`)
     gsap.to(this.position, {
@@ -514,7 +527,9 @@ export class Pogemon extends Sprite{
   }
 
   faint(scenes){
-    this.dialogue('battle', `${this.name} fainted!`)
+    if(this.hp > 0) return
+
+    this.fainted = true
     audioObj.faint.play()
     gsap.to(this.position, {
       y: this.position.y + 20,
@@ -637,6 +652,7 @@ export class Trainer extends Sprite{
   constructor(
     team,
     bag,
+    money,
     {
       type, 
       position, 
@@ -658,24 +674,134 @@ export class Trainer extends Sprite{
     })
     this.team = team
     this.bag = bag
+    this.money = money
     this.running = false
     this.disabled = false
   }
 
-  catch(pogemon, lvl, isEnemy){
-    const pogemonImg = new Image()
-    const pogemonSprite = new Sprite({
-      type: 'pogemon',
-      img: pogemonImg,
-      frames:{
-        max: 4,
-        hold: 100
-      },
-      animate: true
-    })
+  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse){
+    let newPogemon
 
-    const newPogemon = new Pogemon(pogemon, Math.pow(lvl, 3), isEnemy, pogemonSprite)
+    const catchCalc = ball => {
+      let statusBonus = 1
+      const rng = Math.floor(Math.random() * 100)
+      const rate = Math.floor(((3 * pogemon.stats.baseHp - 2 * pogemon.hp) * pogemon.pogemon.catchRate * ball.pow / (3 * pogemon.stats.baseHp) * statusBonus))
+      return {rng, rate} 
+    }
 
-    if(this.team.length < 6) this.team.push(newPogemon)
+    if(starter){
+      const pogemonImg = new Image()
+      const pogemonSprite = new Sprite({
+        type: 'pogemon',
+        img: pogemonImg,
+        frames:{
+          max: 4,
+          hold: 25
+        },
+        animate: true
+      })
+
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, pogemonSprite)
+
+      this.team.push(newPogemon)
+    } else {
+
+      //working here
+      //trying to make animation for pogeball
+      newPogemon = pogemon
+
+      const ballImg = new Image()
+      ballImg.src = ball.animation
+      const ballSprite = new Sprite({
+        type: 'catch',
+        position: {
+          x: 0,
+          y: 100
+        },
+        img: ballImg,
+        frames: {
+          max: 4,
+          hold: 50
+        },
+        animate: true,
+      })
+  
+      renderedSprites.splice(1, 0, ballSprite)
+  
+      gsap.to(ballSprite.position, {
+        x: pogemon.position.x + pogemon.width / 3,
+        y: pogemon.position.y + pogemon.height / 2,
+        duration: 1,
+        onComplete: () =>{
+          ballSprite.animate = false
+          gsap.to(pogemon, {
+            opacity: 0,
+            duration: 0.5,
+            onComplete: () =>{
+              gsap.to(ballSprite.position, {
+                y: pogemon.position.y + 250,
+                onComplete: () => {
+                  gsap.to(ballSprite, {
+                    rotation: '-0.5',
+                    onComplete: () => {
+                      gsap.to(ballSprite, {
+                        rotation: '0.5',
+                        onComplete: () => {
+                          gsap.to(ballSprite, {
+                            rotation: '-0.5',
+                            onComplete: () => {
+                              gsap.to(ballSprite, {
+                                rotation: '0',
+                                onComplete: () =>{
+                                  let {rng, rate} = catchCalc(ball)
+                                  console.log({rng, rate})
+                                  if(rng <= rate){
+                                    renderedSprites.splice(1,1)
+                                    if(this.team.length < 6) this.team.push(newPogemon)
+                                    document.querySelector('#dialogueInterface').textContent = `${pogemon.name} was caught`
+                                    backToOverWorld()
+                                    manageQueue(true)
+                                  } else {
+                                    ballSprite.animate = true
+                                    gsap.to(ballSprite, {
+                                      opacity: 0,
+                                      duration: 1,
+                                      onComplete: () =>{
+                                        ballSprite.animate = false
+                                        gsap.to(pogemon, {
+                                          opacity: 1,
+                                          onComplete: () =>{
+                                            let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
+                                            pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded})
+                                            pogemonInUse.faint(scenes)
+                                            console.log(pogemonInUse.fainted)
+                                            //put this in a queue
+                                            if(pogemonInUse.fainted) {
+                                              gsap.to('#overlapping', {
+                                                opacity: 1,
+                                                textContent: 'Git Gud'
+                                              })
+                                            }
+                                            manageQueue(true)
+                                          }
+                                        })
+                                      }
+                                    })
+                                  }
+                                }
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
+    }
   }
 }

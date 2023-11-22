@@ -36,7 +36,8 @@
   justify-content: space-between;
   align-items: start;
 
-  padding: 20;
+  padding: 15;
+  margin-top: 5;
 }
 
 .teamMenuGenderImg{
@@ -46,7 +47,12 @@
 .teamMenuInfoLvl{
   position: relative;
   top: 6.5px;
-  left: -250px;
+  left: -255px;
+}
+
+.teamMenuHealthBarSection{
+  position: relative;
+  left: 5px;
 }
 
 .teamMenuInfoHealthBarContainer{
@@ -69,7 +75,7 @@
 }
 
 .teamMenuInfoHP{
-  padding-left: 15px;
+  padding-left: 10px;
 }
 
 .teamMenuInfoGreenBar{

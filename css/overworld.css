@@ -25,6 +25,10 @@ body{
 }
 
 #overlapping{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+
   position: absolute;
 
   background-color: black;

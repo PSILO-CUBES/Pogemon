@@ -7,8 +7,8 @@ export const movesObj = {
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 10,
-    acc: 100,
+    pow: 35,
+    acc: 95,
     pp: 50,
     effects: null,
     priority: 0
@@ -19,7 +19,7 @@ export const movesObj = {
     element: 'normal',
     pow: 40,
     acc: 100,
-    pp: 1,
+    pp: 50,
     effects: null,
     priority: 1
   },
@@ -43,6 +43,16 @@ export const movesObj = {
     effects: {crit: 1},
     priority: 0,
     sprite: '../../img/moves/slash.png'
+  },
+  struggle:{
+    name: 'struggle',
+    type: 'physical',
+    element: 'normal',
+    pow: 1,
+    acc: 50,
+    pp: 100,
+    effects: null,
+    priority: 0
   },
   //special
   //fire

@@ -5,16 +5,18 @@ import { audioObj } from "../../data/audioData.js"
 
 import { Sprite, Pogemon } from "../../classes.js"
 
-import { manageOverWorldState } from "./overworld.js"
+import { manageOverWorldState, prevScene } from "./overworld.js"
 import { currMap } from "../maps.js"
 import { _preventActionSpam } from "../../app.js"
 import { player } from "../player.js"
 import { scenes } from "../canvas.js"
 import { manageTeamState } from "./team.js"
-import { manageBagState } from "./bag.js"
+import { itemUsed, manageBagState } from "./bag.js"
+import { itemsObj } from "../../data/itemsData.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
+let queueEnabled = true
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = '../../img/battleBackground/battleBackground.png'
@@ -34,14 +36,14 @@ const battleBackground = new Sprite({
 
 const foeImage = new Image()
 const foeSprite = new Sprite({
-  type: 'foe',
+  type: 'pogemon',
   position:{
     x:1415,
     y:15
   },
   frames: {
     max: 4,
-    hold: 100
+    hold: 25
   },
   img: foeImage,
   animate: true
@@ -79,9 +81,84 @@ function initWildEncouter() {
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
 
+
+function critLanded(pogemon){
+  let critHit = false
+  const critRNG = Math.floor(Math.random() * 100)
+  const critThreshold = 16
+
+  if(critRNG <= critThreshold){
+    critHit = true
+    queue.push(() => pogemon.dialogue('battle', `${pogemon.name} landed a critical hit!!!`))
+  }
+
+  return critHit
+}
+
+function changeHPColor(DOM, target){
+  let percentHP = target.convertToPercentage(target.hp, target.stats.baseHp)
+  DOM.style.width = `${percentHP}%`
+  if(percentHP > 51){
+    DOM.style.backgroundColor = 'green'
+  } else if (percentHP < 51 && percentHP > 26){
+    DOM.style.backgroundColor = 'yellow'
+  } else if (percentHP < 26){
+    DOM.style.backgroundColor = 'red'
+  }
+}
+
 export function initBattle(){
   scenes.set('battle', {initiated : {initiated : true}})
   document.querySelector('#overworldScene').style.display = 'none'
+
+  if(itemUsed.used){
+    ally.position = {
+      x: 300,
+      y: 15
+    }
+
+    ally.img.src = ally.pogemon.sprites.backSprite
+
+    document.querySelector('#allyHealthBar').style.width = `${ally.convertToPercentage(ally.hp, ally.stats.baseHp)}%`
+
+    setBattleScene()
+
+    battleAnimation()
+
+    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+
+    document.querySelector('#encounterInterface').style.display = 'none'
+    document.querySelector('#movesInterface').style.display = 'none'
+    document.querySelector('#dialogueInterface').style.display = 'block'
+
+    changeHPColor(document.querySelector('#foeHealthBar'), foe)
+    changeHPColor(document.querySelector('#allyHealthBar'), ally)
+
+    if(itemUsed.used == false) return
+
+    if(itemUsed.item.type == 'ball'){
+      queueEnabled = false
+      function backToOverWorld(){
+        queue.push(() => manageBattleState(false, 'overworld'))
+      }
+      let pogemonInUse = ally
+      player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
+      itemUsed.item = null
+      itemUsed.used = false
+      
+      return
+    }
+
+    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
+    console.log(ally.hp)
+    // if(ally.hp <= 0) {
+    //   ally.faint(scenes)
+    // }
+    itemUsed.item = null
+    itemUsed.used = false
+
+    return
+  }
 
   loadAlly(pogemonsObj.jlissue)
 
@@ -90,15 +167,14 @@ export function initBattle(){
     y: 15
   }
 
-  initWildEncouter()
-
+  console.log(prevScene)
+  if(prevScene == 'overworld') initWildEncouter()
+  
+  changeHPColor(document.querySelector('#foeHealthBar'), foe)
+  changeHPColor(document.querySelector('#allyHealthBar'), ally)
+  
   // let allyExp = ally.convertToPercentage(ally.exp, Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3))
   if(ally.exp === 0) allyExp = 0
-  
-  document.querySelector('#foeHealthBar').style.width = '100%'
-  document.querySelector('#foeHealthBar').style.backgroundColor = 'green'
-
-  document.querySelector('#allyHealthBar').style.width = `${ally.convertToPercentage(ally.hp, ally.stats.baseHp)}%`
 
   setBattleScene()
 
@@ -170,7 +246,7 @@ function optionButtonInteraction(e) {
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'grid'
         break
-      case 'Switch':
+      case 'PKMN':
           manageBattleState(false, 'team')
           gsap.to('#overlapping', {
             opacity: 1,
@@ -184,7 +260,7 @@ function optionButtonInteraction(e) {
             }
           })
         break
-      case 'Items':
+      case 'Item':
         textBox.textContent = e.target.textContent
         manageBattleState(false, 'bag')
         gsap.to('#overlapping', {
@@ -199,7 +275,7 @@ function optionButtonInteraction(e) {
           }
         })
         break
-      case 'Flee':
+      case 'Run':
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'none'
         dialogueInterfaceDom.style.display = 'block'
@@ -275,7 +351,7 @@ function setBattlersInfo(){
 }
 
 const optionBox = document.querySelector('#optionBox')
-const options = ['Fight', 'Switch', 'Items', 'Flee']
+const options = ['Fight', 'pkmn', 'Item', 'Run']
 
 let optionButtonsArr
 
@@ -395,13 +471,21 @@ function checkSpeed(e) {
     foe: foeRNGMove.priority
   }
 
-  if(ally.stats.spd > foe.stats.spd || priority.ally > priority.foe){
+  console.log(priority)
+
+  if(priority.ally > priority.foe){
     faster = ally
     slower = foe
-  } else if (foe.stats.spd > ally.stats.spd || priority.foe > priority.ally) {
+  } else if (priority.foe > priority.ally) {
     faster = foe
     slower = ally
-  } else if (ally.stats.spd === foe.stats.spd) {
+  } else if(ally.stats.spd > foe.stats.spd){
+    faster = ally
+    slower = foe
+  } else if (foe.stats.spd > ally.stats.spd) {
+    faster = foe
+    slower = ally
+  } else if (ally.stats.spd === foe.stats.spd && priority.ally == priority.foe) {
     faster = options[rng]
     options.splice(rng, 1)
     slower = options[0]
@@ -579,17 +663,6 @@ function attackMove(e) {
     if(accRNG < move.acc) return true
   }
 
-  let critHit = false
-
-  function critLanded(){
-    const critRNG = Math.floor(Math.random() * 100)
-    const critThreshold = 16
-    if(critRNG <= critThreshold){
-      critHit = true
-      queue.push(() => faster.dialogue('battle', `${faster.name} landed a critical hit!!!`))
-    }
-  }
-
   const lvlBeforeExpGained = ally.lvl
 
   function manageFaintingEvent(target){
@@ -609,48 +682,67 @@ function attackMove(e) {
   }
 
   function faintEvent(target){
+    target.dialogue('battle', `${target.name} fainted!`)
     if(target.isEnemy){
       queue.push(() => {
         manageFaintingEvent(target)
       })
-    } else queue.push(() => manageBattleState(false, 'overworld'))
+    } else queue.push(() => {
+      // manageBattleState(false, 'overworld')
+      document.querySelector('#overlapping').textContent = 'Git Gud'
+      gsap.to('#overlapping', {
+        opacity: 1,
+      })
+      //here
+      document.querySelector('#overlapping').addEventListener('click', spendQueue)
+      document.querySelector('#overlapping').style.cursor = 'pointer'
+      document.querySelector('#overlapping').style.pointerEvents = 'auto'
+      queue.push(() =>{
+        location.reload()
+      })
+    })
   }
   
   if(attackLanded(fasterMove, true)) {
-    critLanded()
-    faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit})
+    console.log('here')
+    faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded})
   } else faster.miss()
 
   if(slower.hp <= 0){
+    audioObj.battle.stop()
+    audioObj.victory.play()
     queue.push(() =>{
-      slower.faint(scenes)
-      audioObj.battle.stop()
-      audioObj.victory.play()
       faintEvent(slower)
+      slower.faint(scenes)
     })
 
     return
   }
   
   queue.push(() =>{
-
     if(attackLanded(slowerMove, true)) {
-      critLanded()
-      slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit})
+      console.log('here')
+      slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded})
     } else slower.miss()
 
     if(faster.hp <= 0){
-      faster.faint(battle)
       audioObj.battle.stop()
       audioObj.victory.play()
-      faintEvent(faster)
-
+      queue.push(() =>{
+        faintEvent(faster)
+        faster.faint(scenes)
+      })
       return
     }
   })}
 }
 
+export function manageBattleQueue(state){
+  queueEnabled = state
+}
+
 function spendQueue(){
+  if(!queueEnabled) return
   if(queue.length > 0){
     queue[0]()
     queue.shift()

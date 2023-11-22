@@ -77,6 +77,7 @@ function printTeamInfo(i, teamSceneDom){
   }
 
   player.team[i].img.src = player.team[i].pogemon.sprites.teamSprite
+  player.team[i].opacity = 1
 
   pogemonSpriteArr.push(player.team[i])
 

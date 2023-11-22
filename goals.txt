@@ -8,7 +8,7 @@ team scene x
 
 bag scene x
 item menu x
-pogeballs
+pogeballs x
 
 team management
 
@@ -30,3 +30,21 @@ pc
 options
 
 trainer card scene
+
+EV
+
+make more pogemon
+
+make more items
+
+make trainers
+
+make gyms
+
+make league
+
+fishing?
+
+breeding??
+
+multiplayer?????

@@ -60,8 +60,6 @@
   
   height: 80%;
   width: 87.5%;
-
-  border: 5px solid rgb(75, 75, 75);
 }.bagSceneTeamSection > * {
   pointer-events: none;
 }
@@ -72,8 +70,6 @@
   
   height: 100%;
   width: 100%;
-
-  background-color: rgb(75, 75, 75);
 }
 
 .bagSceneTeamSectionInfoTopContainer{
@@ -91,18 +87,17 @@
 }
 
 .bagSceneTeamSectionLvl{
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-
   position: relative;
   left: -125px;
   width: 0;
+
+  word-break: keep-all;
 
   font-size: medium;
 }
 
 .bagSceneTeamSectionHP{
+  padding-left: 15px;
   font-size: large;
 }
 
@@ -117,7 +112,7 @@
 
 .bagSceneTeamSectionHealthBar{
   height: 40%;
-  width: 100%;
+  width: 75%;
   clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
 }
 
@@ -125,9 +120,11 @@
   height: 100%;
   width: 100%;
 
-  float: right;
+  float: left;
   
   background-color: green;
+
+  transition: ease-out 1s;
 }
 
 .bagSceneTeamSectionGreyBar{
@@ -191,10 +188,8 @@
   display: grid;
   grid-template-columns: 125px auto;
   
-  height: 76.6%;
+  height: 83.3%;
   width: 90%;
-
-  border: 5px solid rgb(75, 75, 75);
 }.bagSceneItem:hover{
   cursor: pointer;
 }.bagSceneItem > * {
@@ -217,8 +212,6 @@
 
   justify-items: center;
   align-items: center;
-
-  background: rgb(75, 75, 75);
 }
 
 .bagSceneItemInfoQuantityContainer{
@@ -227,14 +220,12 @@
 }
 
 .bagSceneItemDialogueContainer{
-  display: none;
-
   position: relative;
   
   margin: 25px;
 
   height: 125px;
-  width: 100%;
+  width: 95%;
 }
 
 .bagSceneItemMenuContainer{

@@ -5,7 +5,7 @@ import { Boundary, Sprite, Trainer } from "../classes.js"
 
 import { manageBattleState, battleAnimation } from "./scenes/battle.js"
 import { pogemonsObj } from "../data/pogemonData.js"
-import { manageOverWorldState } from "./scenes/overworld.js"
+import { manageOverWorldState, prevScene, returnPrevScene } from "./scenes/overworld.js"
 import { scenes } from "./canvas.js"
 
 export const keys = {
@@ -47,7 +47,7 @@ const playerLeftImg = new Image()
 playerLeftImg.src = './img/protagSprites/brendan/left.png'
 
 export function generatePlayer(canvas){
-  player = new Trainer([], new Map(), new Sprite({
+  player = new Trainer([], new Map(), 500, new Sprite({
     type: 'player',
     position:{
       x: canvas.width / 2 - playerWidth / 2,
@@ -269,6 +269,7 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
   stopMotionWhenColliding(boundaries, lastDirection)
   player.img = eval(`player${direction}Img`)
   if(player.animate) {
+    returnPrevScene('overworld')
     engageBattle(animationId, battleZones)
     lastDirection = direction
     move(direction, movables, moveSpeed)
