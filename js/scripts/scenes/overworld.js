@@ -94,6 +94,7 @@ function manageMenuState(state){
       opacity: 0.85,
       duration: 0.25,
     })
+
     menuSectionDomArr.forEach(menuSection =>{
       gsap.to(menuSection,{
         fontSize: 24 + 'px',
@@ -161,8 +162,11 @@ function transitionScenes(prevScene){
   }
 }
 
+export const disableOWMenu = {active : false}
+
 function escapeKeyEventOptions(e) {
   const encounterInterfaceDom = document.querySelector('#encounterInterface')
+  if(disableOWMenu.active) return
   if(e.key === 'Escape'){
 
     if(scenes.get('overworld').initiated){
@@ -180,7 +184,7 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('team').initiated){
-      manageTeamState(false)
+      manageTeamState(false, prevScene)
       transitionScenes(prevScene)
     }
 

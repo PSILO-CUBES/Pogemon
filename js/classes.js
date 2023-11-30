@@ -382,6 +382,8 @@ export class Pogemon extends Sprite{
       } else if(move.type === 'status'){
 
       }
+
+      if(recipient.hp < 0) recipient.hp = 0
     }
 
     damageCalculation()
@@ -526,7 +528,7 @@ export class Pogemon extends Sprite{
     })
   }
 
-  faint(scenes){
+  faint(){
     if(this.hp > 0) return
 
     this.fainted = true
@@ -542,7 +544,19 @@ export class Pogemon extends Sprite{
     gsap.to(this, {
       opacity: 0
     })
-    scenes.set('battle', {initiated : false})
+  }
+
+  heal(dom, item){
+    const hpDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+    const healthBarDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+  
+    if(this.hp == this.stats.baseHp) return
+  
+    this.hp = this.hp + item.pow
+    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+  
+    healthBarDom.style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
+    hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
   }
 
   expGain(yeilder, battleType){

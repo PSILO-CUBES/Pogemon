@@ -10,7 +10,7 @@ import { currMap } from "../maps.js"
 import { _preventActionSpam } from "../../app.js"
 import { player } from "../player.js"
 import { scenes } from "../canvas.js"
-import { manageTeamState } from "./team.js"
+import { teamEvent, manageTeamState } from "./team.js"
 import { itemUsed, manageBagState } from "./bag.js"
 import { itemsObj } from "../../data/itemsData.js"
 
@@ -125,8 +125,6 @@ export function initBattle(){
 
     battleAnimation()
 
-    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
-
     document.querySelector('#encounterInterface').style.display = 'none'
     document.querySelector('#movesInterface').style.display = 'none'
     document.querySelector('#dialogueInterface').style.display = 'block'
@@ -134,34 +132,41 @@ export function initBattle(){
     changeHPColor(document.querySelector('#foeHealthBar'), foe)
     changeHPColor(document.querySelector('#allyHealthBar'), ally)
 
-    if(itemUsed.used == false) return
+    if(itemUsed.used == true){
+      if(itemUsed.item.type == 'ball'){
+        queueEnabled = false
+        function backToOverWorld(){
+          queue.push(() => manageBattleState(false, 'overworld'))
+        }
+        let pogemonInUse = ally
+        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
+        itemUsed.item = null
+        itemUsed.used = false
 
-    if(itemUsed.item.type == 'ball'){
-      queueEnabled = false
-      function backToOverWorld(){
-        queue.push(() => manageBattleState(false, 'overworld'))
+        return
       }
-      let pogemonInUse = ally
-      player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
       itemUsed.item = null
       itemUsed.used = false
-      
-      return
     }
 
+    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
-    console.log(ally.hp)
-    // if(ally.hp <= 0) {
-    //   ally.faint(scenes)
-    // }
-    itemUsed.item = null
-    itemUsed.used = false
 
+    if(ally.hp <= 0){
+      audioObj.battle.stop()
+      audioObj.victory.play()
+      queue.push(() =>{
+        faintEvent(ally)
+        ally.faint(scenes)
+      })
+    }
     return
   }
 
   loadAlly(pogemonsObj.jlissue)
 
+  ally.animate = true
+  ally.hold = 100
   ally.position = {
     x: 300,
     y: 15
@@ -181,6 +186,26 @@ export function initBattle(){
   renderedSprites = [foe, ally]
 
   battleAnimation()
+
+  if(teamEvent.switch && teamEvent.previousScene == 'battle'){
+    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
+
+    if(ally.hp <= 0){
+      audioObj.battle.stop()
+      audioObj.victory.play()
+      queue.push(() =>{
+        faintEvent(ally)
+        ally.faint(scenes)
+      })
+    }
+
+    teamEvent.switch = false
+    teamEvent.previousScene = null
+    document.querySelector('#encounterInterface').style.display = 'none'
+  }
+
+  console.log(teamEvent)
 }
 
 function clearBattleScene(nextScene){
@@ -246,7 +271,7 @@ function optionButtonInteraction(e) {
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'grid'
         break
-      case 'PKMN':
+      case 'pkmn':
           manageBattleState(false, 'team')
           gsap.to('#overlapping', {
             opacity: 1,
@@ -638,6 +663,62 @@ function manageEvolution(f){
   })
 }
 
+let lvlBeforeExpGained
+
+function manageFaintingEvent(target){
+  const oldStats = ally.stats
+  const prevLvl = ally.lvl
+
+  ally.expGain(target, battleType)
+
+  if(lvlBeforeExpGained < ally.lvl) {
+    //all queue events happen here
+    manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
+    manageLearnedMoves(ally, queue, 'battle')
+
+    if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
+    else queue.push(() => manageBattleState(false, 'evo'))
+  } else queue.push(() => manageBattleState(false, 'overworld'))
+}
+
+function checkIfTeamWipedOut(){
+  let wiped = true
+  player.team.forEach(pogemon =>{
+    console.log(pogemon.fainted)
+    if(!pogemon.fainted) wiped = false
+  })
+  return wiped
+}
+
+function faintEvent(target){
+  target.dialogue('battle', `${target.name} fainted!`)
+  target.faint()
+
+  if(target.isEnemy){
+    queue.push(() => {
+      manageFaintingEvent(target)
+    })
+  } else if(checkIfTeamWipedOut()){
+      queue.push(() => {
+      // manageBattleState(false, 'overworld')
+      document.querySelector('#overlapping').textContent = 'Git Gud'
+      gsap.to('#overlapping', {
+        opacity: 1,
+      })
+      //here
+      document.querySelector('#overlapping').addEventListener('click', spendQueue)
+      document.querySelector('#overlapping').style.cursor = 'pointer'
+      document.querySelector('#overlapping').style.pointerEvents = 'auto'
+      queue.push(() =>{
+        location.reload()
+      })
+    })
+  } else {
+    manageBattleState(false, 'team')
+    // manageTeamState(true, 'battle')
+  }
+}
+
 function attackMove(e) {
   let currMove
   
@@ -663,45 +744,7 @@ function attackMove(e) {
     if(accRNG < move.acc) return true
   }
 
-  const lvlBeforeExpGained = ally.lvl
-
-  function manageFaintingEvent(target){
-    const oldStats = ally.stats
-    const prevLvl = ally.lvl
-
-    ally.expGain(target, battleType)
-
-    if(lvlBeforeExpGained < ally.lvl) {
-      //all queue events happen here
-      manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
-      manageLearnedMoves(ally, queue, 'battle')
-
-      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
-      else queue.push(() => manageBattleState(false, 'evo'))
-    } else queue.push(() => manageBattleState(false, 'overworld'))
-  }
-
-  function faintEvent(target){
-    target.dialogue('battle', `${target.name} fainted!`)
-    if(target.isEnemy){
-      queue.push(() => {
-        manageFaintingEvent(target)
-      })
-    } else queue.push(() => {
-      // manageBattleState(false, 'overworld')
-      document.querySelector('#overlapping').textContent = 'Git Gud'
-      gsap.to('#overlapping', {
-        opacity: 1,
-      })
-      //here
-      document.querySelector('#overlapping').addEventListener('click', spendQueue)
-      document.querySelector('#overlapping').style.cursor = 'pointer'
-      document.querySelector('#overlapping').style.pointerEvents = 'auto'
-      queue.push(() =>{
-        location.reload()
-      })
-    })
-  }
+  lvlBeforeExpGained = ally.lvl
   
   if(attackLanded(fasterMove, true)) {
     console.log('here')

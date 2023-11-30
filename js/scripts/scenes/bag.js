@@ -41,15 +41,19 @@ async function sortCurrItemsArr(){
 
 function bagSceneHoverEvent(e, state){
   if(returnToBattle) return
+
   const dialogueInferface = document.querySelector('.bagSceneItemDialogueContainer')
   if(state) {
     if(e.target.id != 'selected') {
+      if(e.target.classList[0] == 'bagSceneTeamSection' && !choosePogemon ) return
+
       e.target.style.cursor = 'pointer'
       e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
-      if(e.target.classList[0] == 'bagSceneTeamSection' && !choosePogemon ) {
-        e.target.style.cursor = 'auto'
-        e.target.style.backgroundColor = 'transparent'
-      }
+
+      if(e.target.classList[0] != 'bagSceneTeamSection') return
+      player.team.forEach(pogemon =>{
+        pogemon.animate = true
+      })
       if(e.target.classList[0] == 'bagSceneItem' && !itemChosen) {
         e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
         dialogueInferface.style.display = 'block'
@@ -57,6 +61,9 @@ function bagSceneHoverEvent(e, state){
       }
     }
   } else {
+    player.team.forEach(pogemon =>{
+      pogemon.animate = false
+    })
     e.target.style.cursor = 'cursor'
     if(e.target.classList[0] == 'bagSceneTeamSection' && choosePogemon) {
       e.target.style.backgroundColor = 'transparent'
@@ -65,7 +72,7 @@ function bagSceneHoverEvent(e, state){
       e.target.style.backgroundColor = 'transparent'
       if(itemChosen) return
       if(returnToBattle) return
-      dialogueInferface.style.display = 'none'
+      dialogueInferface.style.display = 'null'
       dialogueInferface.textContent = ''
     }
     if(e.target.classList[0] == 'bagSceneMenuButton'){
@@ -83,18 +90,19 @@ function bagSceneMenuButtonOnClick(e){
   document.querySelector('.bagSceneItemMenuContainer').style.display = 'none'
   const dialogueBox = document.querySelector('.bagSceneItemDialogueContainer')
   dialogueBox.style.display = 'block'
-  player.team[0].animate = true
   switch(e.target.textContent){
     case 'use':
       if(prevScene == 'battle' && currItem.type == 'ball'){
         itemUsed.item = currItem
         itemUsed.used = true
 
+        console.log(itemUsed.used)
+
         manageBagState(false, 'battle')
         return
       }
       choosePogemon = true
-      dialogueBox.textContent = `On which pogemon should this ${currItem.name} be used?`
+      dialogueBox.textContent = `Which pogemon should this ${currItem.name} be used on?`
       break
     case 'give':
       choosePogemon = true
@@ -113,8 +121,7 @@ function bagSceneSectionOnClickEvent(e, state){
 
   if(returnToBattle) return
   
-  console.log(itemUsed.used)
-  if(itemUsed.used == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
+  if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
 
   if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
 
@@ -168,21 +175,7 @@ function bagSceneConfimationButtonOnClick(e){
   document.querySelector('.bagSceneConfirmationContainer').style.display = 'none'
 }
 
-
 export let itemUsed = {item: null, used: false}
-
-function heal(target, dom, item){
-  const hpDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[0]
-  const healthBarDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
-
-  if(target.hp == target.stats.baseHp) return
-
-  target.hp = target.hp + item.pow
-  if(target.hp > target.stats.baseHp) target.hp = target.stats.baseHp
-
-  healthBarDom.style.width = `${target.convertToPercentage(target.hp, target.stats.baseHp)}%`
-  hpDom.textContent = `${target.hp}/${target.stats.baseHp}`
-}
 
 function useItemOnClickEvent(e){
   if(choosePogemon){
@@ -202,7 +195,7 @@ function useItemOnClickEvent(e){
           case 'heal':
             if(targetPogemon.hp < targetPogemon.stats.baseHp){
               let prevHp = targetPogemon.hp
-              heal(targetPogemon, e.target.classList[1], currItem)
+              targetPogemon.heal(e.target.classList[1], currItem)
 
               player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
               currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
@@ -211,7 +204,10 @@ function useItemOnClickEvent(e){
           
               dialogueInterfaceDom.innerText = `A ${currItem.name} was used on ${targetPogemon.name}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
             } else {
-              dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be healed.`
+
+              dialogueInterfaceDom.textContent = `${targetPogemon.name} doesnt need to be healed.`
+              dialogueInterfaceDom.style.display = 'block'
+              console.log(dialogueInterfaceDom.textContent)
             }
             break
           case 'revive':
@@ -237,6 +233,7 @@ function useItemOnClickEvent(e){
         gsap.to('#overlapping', {
           opacity: 1,
           onComplete: () =>{
+            itemUsed.used = true
             manageBagState(false, 'battle')
             gsap.to('#overlapping', {
               opacity: 0,
@@ -245,6 +242,9 @@ function useItemOnClickEvent(e){
         })
       }, 1500)
     }
+    document.querySelectorAll('.bagSceneTeamSection').forEach(node =>{
+      node.style.cursor = 'auto'
+    })
   }
 }
 
@@ -284,12 +284,8 @@ function cancelEventOnDocumentClick(e){
 
   confirmationInferface.style.display = 'none'
 
-  if(itemUsed.used == false || returnToBattle != true){
-    dialogueInferface.textContent = ''
-  }
+  // itemUsed = {item: null, used : false}
 }
-
-addEventListener('click', e => cancelEventOnDocumentClick(e))
 
 function printItems(bagSceneItemSectionDom){
   bagSceneItemSectionDom.replaceChildren()
@@ -335,7 +331,6 @@ function printItems(bagSceneItemSectionDom){
 
 function printBagScene(){
   document.querySelector('#overlapping').style.opacity = 0
-  document.querySelector('#bagScene').replaceChildren()
 
   // misc + team
   const bagSceneMiscContainerDom = document.createElement('div')
@@ -442,7 +437,7 @@ function printBagScene(){
 
   //rest of the interface
   const bagSceneItemContainerDom = document.createElement('div')
-  bagSceneItemContainerDom.classList.add('bagSceneContainer')
+  bagSceneItemContainerDom.classList.add('bagSceneItemsMenu')
 
   const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'bi', 'vals', 'key', 'sort']
 
@@ -544,10 +539,15 @@ function printBagScene(){
     bagSceneItemContainerDom.appendChild(bagSceneItemSectionDom)
   }
 
+  const bagSceneContainerDom = document.createElement('div')
+  bagSceneContainerDom.id = 'bagSceneContainer'
+  bagSceneContainerDom.appendChild(bagSceneMiscContainerDom)
+  bagSceneContainerDom.appendChild(bagSceneItemContainerDom)
+  bagSceneContainerDom.addEventListener('click', e => cancelEventOnDocumentClick(e))
+
   const bagSceneDom = document.querySelector('#bagScene')
-  bagSceneDom.style.display = 'grid'
-  bagSceneDom.appendChild(bagSceneMiscContainerDom)
-  bagSceneDom.appendChild(bagSceneItemContainerDom)
+  bagSceneContainerDom.style.display = 'grid'
+  bagSceneDom.appendChild(bagSceneContainerDom)
 }
 
 let bagSceneAnimationId
@@ -585,15 +585,21 @@ function bagSceneAnimation(){
 }
 
 function initBagScene(prevScene){
+  player.team.forEach(pogemon =>{
+    pogemon.animate = false
+  })
   returnPrevScene(prevScene)
   scenes.set('bag', {initiated: true})
   bagSceneAnimation()
   printBagScene()
+  document.querySelector('#bagScene').style.pointerEvents = 'all'
 }
 
 function clearBagScene(prevScene){
   scenes.set('bag', {initiated: false})
-  document.querySelector('#bagScene').style.display = 'none'
+  document.querySelector('#bagSceneContainer').style.display = 'none'
+  document.querySelector('#bagScene').style.pointerEvents = 'none'
+  document.querySelector('#bagScene').replaceChildren()
   window.cancelAnimationFrame(bagSceneAnimationId)
   if(prevScene == 'battle') {
     returnPrevScene('bag')

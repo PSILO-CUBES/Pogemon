@@ -1,7 +1,21 @@
 #teamScene{
+  display: none;
+  
   position: absolute;
   top: 0;
 
+  height: 100%;
+  width: 100%;
+}
+
+#teamSceneContainer{
+  display: grid;
+
+  height: 100%;
+  width: 100%;
+}
+
+#teamMenuContainer{
   height: 100%;
   width: 100%;
 
@@ -13,6 +27,8 @@
 }
 
 .teamMenuSection{
+  position: relative;
+
   display: grid;
   grid-template-columns: 250px auto;
 
@@ -22,6 +38,8 @@
   border: 5px solid rgb(75, 75, 75);
 
   color: white;
+} .teamMenuSection > *{
+  pointer-events: none;
 }
 
 .teamMenuInfoContainer{
@@ -97,4 +115,33 @@
 
   height: 100%;
   width: 100%;
+}
+
+#teamInterfaceContainer{
+  position: absolute;
+
+  align-self: center;
+  justify-self: center;
+
+  background: rgba(75, 75, 75, 0.75);
+
+  display: none;
+  grid-template-rows: repeat(3, 33.33%);
+
+  z-index: 9;
+}
+
+.inferfaceOption{
+  height: 100%;
+  width: 100%;
+
+  font-size: 0px;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}.inferfaceOption:hover{
+  background: rgba(175, 175, 175, 0.75);
 }

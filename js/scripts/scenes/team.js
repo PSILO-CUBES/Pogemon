@@ -4,7 +4,8 @@ import { Sprite } from "../../classes.js"
 
 import { scenes } from "../canvas.js"
 import { player } from "../player.js"
-import { returnPrevScene } from "./overworld.js"
+import { disableOWMenu, prevScene, returnPrevScene } from "./overworld.js"
+import { manageBattleState } from "./battle.js"
 
 let teamAnimationId
 
@@ -13,7 +14,7 @@ function initTeamScene(prevScene){
 
   scenes.set('team', {initiated: true})
 
-  document.querySelector('#teamScene').style.display = 'grid'
+  document.querySelector('#teamScene').style.display = 'block'
   document.querySelector('#overworldScene').style.display = 'none'
 
   document.querySelector('#overlapping').style.opacity = "0"
@@ -43,28 +44,302 @@ const backgroundSprite = new Sprite({
 
 let pogemonSpriteArr = []
 
-function teamMenuSectionEvent(i, teamSceneDom, state){
+let pogemonSelected = false
+
+let switchEvent = false
+
+let switchProcess = {active: false, target: {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }}
+
+export let teamEvent = {switch: false, previousScene: null}
+
+function teamMenuSectionHoverEvent(i, teamMenuContainerDom, state){
   if(i >= player.team.length) return
+  if(pogemonSelected) return
 
   if(state){
-    teamSceneDom.children[i].style.border = '5px solid rgb(100,100,100)'
-    teamSceneDom.children[i].style.cursor = 'pointer'
-    teamSceneDom.children[i].children[1].style.backgroundColor = 'rgb(100,100,100)'
+    teamMenuContainerDom.children[i].style.border = '5px solid rgb(100,100,100)'
+    teamMenuContainerDom.children[i].style.cursor = 'pointer'
+    teamMenuContainerDom.children[i].children[1].style.backgroundColor = 'rgb(100,100,100)'
   } else if(!state) {
-    teamSceneDom.children[i].style.border = '5px solid rgb(75,75,75)'
-    teamSceneDom.children[i].style.cursor = 'auto'
-    teamSceneDom.children[i].children[1].style.backgroundColor = 'rgb(75,75,75)'
+    teamMenuContainerDom.children[i].style.border = '5px solid rgb(75,75,75)'
+    teamMenuContainerDom.children[i].style.cursor = 'auto'
+    teamMenuContainerDom.children[i].children[1].style.backgroundColor = 'rgb(75,75,75)'
   }
 }
 
-function printTeamInfo(i, teamSceneDom){
+function switchProcessEvent(first, second){
+  if(second.pogemon == undefined) return
+
+  disableOWMenu.active = true
+
+  switchEvent = true
+
+  let duration = 0.5
+
+  gsap.to(`.teamMenuSection${first.i}`,{
+    opacity: 0,
+    duration
+  })
+  gsap.to(first.pogemon,{
+    opacity: 0,
+    duration
+  })
+  gsap.to(`.teamMenuSection${second.i}`,{
+    opacity: 0,
+    duration
+  })
+  gsap.to(second.pogemon,{
+    opacity: 0,
+    duration
+  })
+
+  let placeHolder
+
+  placeHolder = player.team[first.i]
+  player.team[first.i] = player.team[second.i]
+  player.team[second.i] = placeHolder
+
+  let pogemonTeamDomArr = document.querySelectorAll('.teamMenuSection')
+
+  setTimeout(() =>{
+    for (let i = 0; i < player.team.length; i++) {
+      pogemonTeamDomArr[i].childNodes[1].childNodes[0].childNodes[0].textContent = player.team[i].name
+      pogemonTeamDomArr[i].childNodes[1].childNodes[0].childNodes[1].src = `../../../img/${player.team[i].gender}_icon.png`
+      pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
+      pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes[0].width = `${first.pogemon.convertToPercentage(player.team[i].hp, player.team[i].stats.baseHp)}%`
+      pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[1].textContent = `Lv ${player.team[i].lvl}`
+      
+      let xOffset = 72.5
+      let yOffset = 30.15
+    
+      if(i % 2 != 0) xOffset = 1032
+    
+      if(i > 1 && i < 4) yOffset = 364.5
+      if(i > 3) yOffset = 697.5
+    
+      player.team[i].position = {
+        x: xOffset,
+        y: yOffset
+      }
+    }
+    
+    document.querySelector(`.teamMenuSection${first.i}`).childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes[0].childNodes[0].style.width = `${player.team[first.i].convertToPercentage(player.team[first.i].hp, player.team[first.i].stats.baseHp)}%`
+    document.querySelector(`.teamMenuSection${second.i}`).childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes[0].childNodes[0].style.width = `${player.team[second.i].convertToPercentage(player.team[second.i].hp, player.team[second.i].stats.baseHp)}%`
+
+    gsap.to(`.teamMenuSection${first.i}`,{
+      opacity: 1,
+      duration
+    })
+    gsap.to(first.pogemon,{
+      opacity: 1,
+      duration
+    })
+    gsap.to(`.teamMenuSection${second.i}`,{
+      opacity: 1,
+      duration
+    })
+    gsap.to(second.pogemon,{
+      opacity: 1,
+      duration,
+      onComplete: () => {
+        pogemonSelected = false
+        switchEvent = false
+        teamEvent.switch = true
+        disableOWMenu.active = false
+
+        if(prevScene == 'battle') {
+          gsap.to('#overlapping', {
+            opacity: 1,
+            onComplete: () =>{
+              manageTeamState(false, prevScene)
+              manageBattleState(true)
+              gsap.to('#overlapping', {opacity: 0})
+            }
+          })
+
+        }
+      }
+    })
+  }, 500)
+}
+
+function teamMenuSectionClickEvent(e, i){
+  if(switchEvent == true) return
+
+  pogemonSpriteArr.forEach(sprite =>{
+    sprite.animate = false
+    sprite.frames.val = 0
+  })
+
+  let teamSectionArr = document.querySelectorAll('.teamMenuSection')
+
+  teamSectionArr.forEach(node =>{
+    node.id = ''
+    node.style.border = '5px solid rgb(75,75,75)'
+    node.style.cursor = 'auto'
+    node.children[1].style.backgroundColor = 'rgb(75,75,75)'
+  })
+
+  if(switchProcess.active) {
+    if(switchProcess.target.first.pogemon.id === player.team[i].id) {
+      pogemonSelected = false
+      switchProcess.active = false
+      switchProcess.target = {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }
+      return
+    }
+
+    switchProcess.target.second.i = i
+    switchProcess.target.second.pogemon = player.team[i]
+    switchProcessEvent(switchProcess.target.first, switchProcess.target.second)
+
+    let placeHolder
+    placeHolder = pogemonSpriteArr[switchProcess.target.first.i]
+    pogemonSpriteArr[switchProcess.target.first.i] = pogemonSpriteArr[switchProcess.target.second.i]
+    pogemonSpriteArr[switchProcess.target.second.i] = placeHolder
+
+    switchProcess.active = false
+    switchProcess.target = {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }
+    return
+  }
+
+  pogemonSelected = true
+  pogemonSpriteArr[i].animate = true
+  switchProcess.target.first.i = i
+  switchProcess.target.first.pogemon = player.team[i]
+
+  let teamInterfaceContainerDom = document.querySelector('#teamInterfaceContainer')
+  teamInterfaceContainerDom.style.display = 'grid'
+  
+  document.querySelectorAll('.inferfaceOption').forEach(node =>{
+    gsap.to(node, {
+      fontSize: 24 + 'px',
+      duration: 0.15
+    })
+  })
+
+  gsap.to(teamInterfaceContainerDom, {
+    height: 75 + '%',
+    width: 35 + '%',
+    duration: 0.15,
+  })
+  // teamInterfaceContainerDom.style.position
+
+  e.target.id = 'selected'
+  e.target.style.border = '5px solid rgb(100,100,100)'
+  e.target.style.cursor = 'pointer'
+  e.target.children[1].style.backgroundColor = 'rgb(100,100,100)'
+
+  teamSectionArr.forEach(node =>{
+    if(i >= player.team.length) return
+    node.style.cursor = 'pointer'
+  })
+}
+
+function teamnInterfaceOptionClickEvent(e){
+  switch(e.target.textContent){
+    case 'stats':
+      break
+    case 'switch':
+      document.querySelectorAll('.inferfaceOption').forEach(node =>{
+        gsap.to(node, {
+          fontSize: 0 + 'px',
+          duration: 0.15
+        })
+      })
+
+      gsap.to(document.querySelector('#teamInterfaceContainer'), {
+        height: 0 + '%',
+        width: 0 + '%',
+        duration: 0.15,
+        onComplete: () => {
+          document.querySelector('#teamInterfaceContainer').style.display ='none'
+          if(switchProcess.target.first.pogemon.fainted){
+            pogemonSpriteArr.forEach(sprite =>{
+              sprite.frames.val = 0
+              sprite.animate = false
+            })
+          
+            let teamMenuSectionDom = document.querySelector(`.teamMenuSection${switchProcess.target.first.i}`)
+            teamMenuSectionDom.style.border = '5px solid rgb(75,75,75)'
+            teamMenuSectionDom.style.cursor = 'auto'
+            teamMenuSectionDom.children[1].style.backgroundColor = 'rgb(75,75,75)'
+            pogemonSelected = false
+          
+            switchProcess.active = false
+            switchProcess.target = {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }
+            return
+          }
+          switchProcess.active = true
+        }
+      })
+      break
+    case 'cancel':
+      document.querySelectorAll('.inferfaceOption').forEach(node =>{
+        gsap.to(node, {
+          fontSize: 0 + 'px',
+          duration: 0.15
+        })
+      })
+
+      gsap.to(document.querySelector('#teamInterfaceContainer'), {
+        height: 0 + '%',
+        width: 0 + '%',
+        duration: 0.15,
+        onComplete: () => {
+          document.querySelector('#teamInterfaceContainer').style.display ='none'
+        }
+      })
+      break
+  }
+}
+
+function teamMenuSectionCancelEvent(e){
+  if(switchEvent) return
+  if(e.target.classList[0] == 'teamMenuSection') {
+    if(player.team[`${e.target.classList[1].slice(-1)}`] != undefined) return
+  }
+  if(e.target.classList[0] == 'inferfaceOption') return
+
+  document.querySelectorAll('.inferfaceOption').forEach(node =>{
+    gsap.to(node, {
+      fontSize: 0 + 'px',
+      duration: 0.15
+    })
+  })
+  
+  gsap.to(document.querySelector('#teamInterfaceContainer'), {
+    height: 0 + '%',
+    width: 0 + '%',
+    duration: 0.15,
+    onComplete: () => {
+      document.querySelector('#teamInterfaceContainer').style.display ='none'
+    }
+  })
+
+  pogemonSpriteArr.forEach(sprite =>{
+    sprite.frames.val = 0
+    sprite.animate = false
+  })
+
+  let teamMenuSectionDom = document.querySelector('.teamMenuSection')
+  teamMenuSectionDom.style.border = '5px solid rgb(75,75,75)'
+  teamMenuSectionDom.style.cursor = 'auto'
+  teamMenuSectionDom.children[1].style.backgroundColor = 'rgb(75,75,75)'
+  pogemonSelected = false
+
+  switchProcess.active = false
+  switchProcess.target = {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }
+}
+
+function printTeamInfo(i, teamMenuContainerDom){
+  if(teamMenuContainerDom.children[i] == 'teamInterfaceContainer') return
   if(i >= player.team.length) {
-    teamSceneDom.children[i].children[1].style.display = 'none'
+    teamMenuContainerDom.children[i].children[1].style.display = 'none'
     return
   }
 
   let xOffset = 72.5
-  let yOffset = 30.5
+  let yOffset = 30.15
 
   if(i % 2 != 0) xOffset = 1032
 
@@ -81,7 +356,7 @@ function printTeamInfo(i, teamSceneDom){
 
   pogemonSpriteArr.push(player.team[i])
 
-  const section = teamSceneDom.children[i].children[1]
+  const section = teamMenuContainerDom.children[i].children[1]
   const infoSection = section.children[0]
   const healthbarSection = section.children[1]
 
@@ -94,6 +369,32 @@ function printTeamInfo(i, teamSceneDom){
 }
 
 function createSceneLayout(){
+  const teamSceneContainerDom = document.createElement('div')
+  teamSceneContainerDom.id = 'teamSceneContainer'
+
+  const teamInterfaceContainerDom = document.createElement('div')
+  teamInterfaceContainerDom.id = `teamInterfaceContainer`
+
+  let interfaceOptions = ['stats', 'switch', 'cancel']
+  interfaceOptions.forEach(option =>{
+    const inferfaceOptionDom = document.createElement('div')
+    inferfaceOptionDom.setAttribute('class', 'inferfaceOption')
+    inferfaceOptionDom.innerText = option
+
+    inferfaceOptionDom.addEventListener('click', e => teamnInterfaceOptionClickEvent(e))
+    teamInterfaceContainerDom.appendChild(inferfaceOptionDom)
+  })
+
+  const teamMenuContainerDom = document.createElement('div')
+  teamMenuContainerDom.id = 'teamMenuContainer'
+  teamMenuContainerDom.style.display = 'grid'
+
+  teamSceneContainerDom.appendChild(teamInterfaceContainerDom)
+  teamSceneContainerDom.appendChild(teamMenuContainerDom)
+  teamSceneDom.appendChild(teamSceneContainerDom)
+
+  teamSceneContainerDom.addEventListener('click', e => teamMenuSectionCancelEvent(e))
+
   for(let i = 0; i < 6; i++){
     const spriteContainerDom = document.createElement('div')
     spriteContainerDom.classList.add('teamMenuSpriteContainer')
@@ -146,18 +447,22 @@ function createSceneLayout(){
     infoContainerDom.appendChild(infoHealthBarSectionDom)
     
     const teamSectionDom = document.createElement('div')
-    teamSectionDom.classList.add('teamMenuSection')
+    teamSectionDom.classList.add(`teamMenuSection`, `teamMenuSection${i}`)
     teamSectionDom.appendChild(spriteContainerDom)
     teamSectionDom.appendChild(infoContainerDom)
 
-    teamSectionDom.addEventListener('mouseover', () => teamMenuSectionEvent(i, teamSceneDom, true))
-    teamSectionDom.addEventListener('mouseout', () => teamMenuSectionEvent(i, teamSceneDom, false))
+    teamSectionDom.addEventListener('mouseover', () => teamMenuSectionHoverEvent(i, teamMenuContainerDom, true))
+    teamSectionDom.addEventListener('mouseout', () => teamMenuSectionHoverEvent(i, teamMenuContainerDom, false))
+    teamSectionDom.addEventListener('click', e => teamMenuSectionClickEvent(e, i))
 
-    teamSceneDom.appendChild(teamSectionDom)
+    teamMenuContainerDom.appendChild(teamSectionDom)
 
-    printTeamInfo(i, teamSceneDom)
-    teamMenuSectionEvent(i, teamSceneDom)
+    printTeamInfo(i, teamMenuContainerDom)
   }
+
+  pogemonSpriteArr.forEach(sprite =>{
+    sprite.animate = false
+  })
 }
 
 function cleanTeamScene(){
@@ -182,6 +487,7 @@ function teamAnimation() {
 }
 
 export function manageTeamState(state, prevScene){
+  teamEvent.previousScene = prevScene
   if(state) initTeamScene(prevScene)
   else cleanTeamScene()
 }

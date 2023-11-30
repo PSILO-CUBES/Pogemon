@@ -52,10 +52,10 @@ function pogemonTransition(target){
   target.stats = target.generateStats()
 
   for(let i = 0; i < player.team.length; i++){
-    if (!target.id === player.team[i].id) return
+    if(target.id != player.team[i].id) return
     teamSlot = i
-
     player.team[i] = target
+    break
   }
 }
 

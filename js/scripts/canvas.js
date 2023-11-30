@@ -22,6 +22,8 @@ generateCanvas()
 
 const player = generatePlayer(canvas)
 player.catch(pogemonsObj['jlissue'], true)
+player.catch(pogemonsObj['disso'], true)
+player.catch(pogemonsObj['disso'], true)
 
 
 const itemArr = [

@@ -20,7 +20,7 @@ export const pogemonsObj = {
       def: 48,
       spatk: 48,
       spdef: 48,
-      spd: 499
+      spd: 48
     },
     evo: {name: 'evo1', lvl: 20},
     abilities: {
