@@ -4,11 +4,11 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player } from '../player.js'
 import { generateMapData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { manageBattleState, moveLearning } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 
-const frameRate = 144
+const frameRate = 61
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
@@ -174,6 +174,7 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('battle').initiated){
+      if(moveProcess) return
       encounterInterfaceDom.style.display = 'grid'
       movesInterfaceDom.style.display = 'none'
     } else if (moveLearning.initiated) {
@@ -184,6 +185,7 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('team').initiated){
+      if(faintedTriggered) return
       manageTeamState(false, prevScene)
       transitionScenes(prevScene)
     }

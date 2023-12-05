@@ -193,6 +193,10 @@ function useItemOnClickEvent(e){
       case 'med':
         switch(currItem.effect){
           case 'heal':
+            if(targetPogemon.fainted){
+              dialogueInterfaceDom.textContent = `${targetPogemon.name} has fainted and cannot recover HP`
+              return
+            }
             if(targetPogemon.hp < targetPogemon.stats.baseHp){
               let prevHp = targetPogemon.hp
               targetPogemon.heal(e.target.classList[1], currItem)
@@ -207,12 +211,16 @@ function useItemOnClickEvent(e){
 
               dialogueInterfaceDom.textContent = `${targetPogemon.name} doesnt need to be healed.`
               dialogueInterfaceDom.style.display = 'block'
-              console.log(dialogueInterfaceDom.textContent)
             }
             break
           case 'revive':
-            if(targetPogemon.hp <= 0){
+            if(targetPogemon.fainted){
               dialogueInterfaceDom.innerText = `${targetPogemon.name} has been revived.`
+              targetPogemon.fainted = false
+
+              targetPogemon.hp = Math.floor(targetPogemon.stats.baseHp * currItem.pow)
+              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${player.team[0].convertToPercentage(targetPogemon.hp, targetPogemon.stats.baseHp)}%`
+              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent = `${targetPogemon.hp}/${targetPogemon.stats.baseHp}`
             } else {
               dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be revived.`
             }

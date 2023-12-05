@@ -17,7 +17,7 @@ export const movesObj = {
     name: 'quickattack',
     type: 'physical',
     element: 'normal',
-    pow: 100,
+    pow: 1,
     acc: 100,
     pp: 50,
     effects: null,

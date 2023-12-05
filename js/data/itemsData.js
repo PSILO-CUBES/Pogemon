@@ -27,7 +27,7 @@ export const itemsObj = {
     name: 'resurrect',
     type: 'med',
     effect: 'revive',
-    pow: '25',
+    pow: '0.25',
     img: 'img/item_scene/items/med/resurrect.png',
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
   },

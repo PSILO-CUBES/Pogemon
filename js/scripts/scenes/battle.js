@@ -107,7 +107,7 @@ function changeHPColor(DOM, target){
   }
 }
 
-export function initBattle(){
+export function initBattle(faintedTriggered){
   scenes.set('battle', {initiated : {initiated : true}})
   document.querySelector('#overworldScene').style.display = 'none'
 
@@ -132,24 +132,24 @@ export function initBattle(){
     changeHPColor(document.querySelector('#foeHealthBar'), foe)
     changeHPColor(document.querySelector('#allyHealthBar'), ally)
 
-    if(itemUsed.used == true){
-      if(itemUsed.item.type == 'ball'){
-        queueEnabled = false
-        function backToOverWorld(){
-          queue.push(() => manageBattleState(false, 'overworld'))
-        }
-        let pogemonInUse = ally
-        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
-        itemUsed.item = null
-        itemUsed.used = false
-
-        return
+    if(itemUsed.item.type == 'ball'){
+      queueEnabled = false
+      function backToOverWorld(){
+        //might throw error
+        queue.push(() => manageBattleState(false))
       }
+      let pogemonInUse = ally
+      player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
       itemUsed.item = null
       itemUsed.used = false
+      return
     }
 
+    itemUsed.item = null
+    itemUsed.used = false
+
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+    moveProcess = true
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
 
     if(ally.hp <= 0){
@@ -172,7 +172,6 @@ export function initBattle(){
     y: 15
   }
 
-  console.log(prevScene)
   if(prevScene == 'overworld') initWildEncouter()
   
   changeHPColor(document.querySelector('#foeHealthBar'), foe)
@@ -188,7 +187,18 @@ export function initBattle(){
   battleAnimation()
 
   if(teamEvent.switch && teamEvent.previousScene == 'battle'){
+    teamEvent.switch = false
+    teamEvent.previousScene = null
+
+    // console.log(faintedTriggered)
+
+    if(faintedTriggered) {
+      faintedTriggered = !faintedTriggered
+      return
+    }
+
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+    moveProcess = true
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
 
     if(ally.hp <= 0){
@@ -199,13 +209,9 @@ export function initBattle(){
         ally.faint(scenes)
       })
     }
-
-    teamEvent.switch = false
-    teamEvent.previousScene = null
+    
     document.querySelector('#encounterInterface').style.display = 'none'
   }
-
-  console.log(teamEvent)
 }
 
 function clearBattleScene(nextScene){
@@ -308,7 +314,8 @@ function optionButtonInteraction(e) {
         audioObj.flee.play()
         // need to put rng check based on speed stat
         queue.push(() =>{
-          manageBattleState(false, 'overworld')
+          //might throw err
+          manageBattleState(false)
           gsap.to('#overlapping', {
             opacity: 1,
             yoyo: true,
@@ -678,45 +685,45 @@ function manageFaintingEvent(target){
 
     if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
     else queue.push(() => manageBattleState(false, 'evo'))
-  } else queue.push(() => manageBattleState(false, 'overworld'))
+  //might throw err
+  } else queue.push(() => manageBattleState(false))
 }
 
 function checkIfTeamWipedOut(){
   let wiped = true
   player.team.forEach(pogemon =>{
-    console.log(pogemon.fainted)
     if(!pogemon.fainted) wiped = false
   })
   return wiped
 }
 
+export let faintedTriggered = false
+
 function faintEvent(target){
   target.dialogue('battle', `${target.name} fainted!`)
   target.faint()
 
-  if(target.isEnemy){
-    queue.push(() => {
-      manageFaintingEvent(target)
-    })
-  } else if(checkIfTeamWipedOut()){
-      queue.push(() => {
-      // manageBattleState(false, 'overworld')
-      document.querySelector('#overlapping').textContent = 'Git Gud'
-      gsap.to('#overlapping', {
-        opacity: 1,
+  queue.push(() => {
+    if(target.isEnemy){
+        manageFaintingEvent(target)
+
+    } else if(checkIfTeamWipedOut()){
+        document.querySelector('#overlapping').textContent = 'Git Gud'
+        gsap.to('#overlapping', {
+          opacity: 1,
+        })
+        //here
+        document.querySelector('#overlapping').addEventListener('click', spendQueue)
+        document.querySelector('#overlapping').style.cursor = 'pointer'
+        document.querySelector('#overlapping').style.pointerEvents = 'auto'
+        queue.push(() =>{
+          location.reload()
       })
-      //here
-      document.querySelector('#overlapping').addEventListener('click', spendQueue)
-      document.querySelector('#overlapping').style.cursor = 'pointer'
-      document.querySelector('#overlapping').style.pointerEvents = 'auto'
-      queue.push(() =>{
-        location.reload()
-      })
-    })
-  } else {
-    manageBattleState(false, 'team')
-    // manageTeamState(true, 'battle')
-  }
+    } else {
+      faintedTriggered = true
+      manageBattleState(false, 'team', faintedTriggered)
+    }
+  })
 }
 
 function attackMove(e) {
@@ -747,7 +754,7 @@ function attackMove(e) {
   lvlBeforeExpGained = ally.lvl
   
   if(attackLanded(fasterMove, true)) {
-    console.log('here')
+    moveProcess = true
     faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded})
   } else faster.miss()
 
@@ -764,8 +771,8 @@ function attackMove(e) {
   
   queue.push(() =>{
     if(attackLanded(slowerMove, true)) {
-      console.log('here')
-      slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded})
+    moveProcess = true
+    slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded})
     } else slower.miss()
 
     if(faster.hp <= 0){
@@ -784,6 +791,8 @@ export function manageBattleQueue(state){
   queueEnabled = state
 }
 
+export let moveProcess = false
+
 function spendQueue(){
   if(!queueEnabled) return
   if(queue.length > 0){
@@ -793,6 +802,7 @@ function spendQueue(){
   } else {
     dialogueInterfaceDom.style.display = 'none'
     if(scenes.get('battle').initiated) encounterInterfaceDom.style.display = 'grid'
+    moveProcess = false
   }
 }
 
@@ -814,7 +824,8 @@ function setBattleScene(){
   dialogueInterfaceDom.textContent = ''  
 }
 
-export function manageBattleState(state, nextScene) {
-  if(state) initBattle()
+export function manageBattleState(state, nextScene, faintedTriggered) {
+  console.log(faintedTriggered)
+  if(state) initBattle(faintedTriggered)
   else clearBattleScene(nextScene)
 }

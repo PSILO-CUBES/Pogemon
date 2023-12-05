@@ -6,6 +6,7 @@ import { scenes } from "../canvas.js"
 import { player } from "../player.js"
 import { disableOWMenu, prevScene, returnPrevScene } from "./overworld.js"
 import { manageBattleState } from "./battle.js"
+import { manageStatsState } from "./stats.js"
 
 let teamAnimationId
 
@@ -148,11 +149,12 @@ function switchProcessEvent(first, second){
         disableOWMenu.active = false
 
         if(prevScene == 'battle') {
+          if(player.team[0].fainted == true) return
           gsap.to('#overlapping', {
             opacity: 1,
             onComplete: () =>{
               manageTeamState(false, prevScene)
-              manageBattleState(true)
+              manageBattleState(true, 'team', true)
               gsap.to('#overlapping', {opacity: 0})
             }
           })
@@ -238,6 +240,10 @@ function teamMenuSectionClickEvent(e, i){
 function teamnInterfaceOptionClickEvent(e){
   switch(e.target.textContent){
     case 'stats':
+      console.log('omegalul')
+      manageStatsState(true, switchProcess.target.first.pogemon)
+      manageTeamState(false)
+      switchProcess = {active: false, target: {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }}
       break
     case 'switch':
       document.querySelectorAll('.inferfaceOption').forEach(node =>{
