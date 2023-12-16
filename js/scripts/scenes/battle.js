@@ -176,7 +176,7 @@ export function initBattle(faintedTriggered){
     moveProcess = true
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
 
-    manageStatusEvent(faster, slower)
+    manageStatusEvent(foe, ally)
     return
   }
 
