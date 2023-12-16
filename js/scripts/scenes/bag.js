@@ -608,10 +608,13 @@ function initBagScene(prevScene){
 function clearBagScene(prevScene){
   scenes.set('bag', {initiated: false})
   // itemUsed = {item: null, used : false}
-  document.querySelector('#bagSceneContainer').style.display = 'none'
-  document.querySelector('#bagScene').style.pointerEvents = 'none'
-  document.querySelector('#bagScene').style.display = 'none'
-  document.querySelector('#bagScene').replaceChildren()
+  if(document.querySelector('#bagSceneContainer') == null || document.querySelector('#bagScene') == null){
+    document.querySelector('#bagSceneContainer').style.display = 'none'
+    document.querySelector('#bagScene').style.pointerEvents = 'none'
+    document.querySelector('#bagScene').style.display = 'none'
+    document.querySelector('#bagScene').replaceChildren()
+  }
+  
   window.cancelAnimationFrame(bagSceneAnimationId)
   if(prevScene == 'battle') {
     returnPrevScene('bag')
