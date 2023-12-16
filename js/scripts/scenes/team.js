@@ -4,16 +4,18 @@ import { Sprite } from "../../classes.js"
 
 import { scenes } from "../canvas.js"
 import { player } from "../player.js"
-import { disableOWMenu, prevScene, returnPrevScene } from "./overworld.js"
-import { manageBattleState } from "./battle.js"
+import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
+import { manageBattleState, faintedTriggered } from "./battle.js"
 import { manageStatsState } from "./stats.js"
 
 let teamAnimationId
 
-function initTeamScene(prevScene){
-  returnPrevScene(prevScene)
+let teamPrevScene
 
+function initTeamScene(prevScene){
   scenes.set('team', {initiated: true})
+
+  returnPrevScene(prevScene)
 
   document.querySelector('#teamScene').style.display = 'block'
   document.querySelector('#overworldScene').style.display = 'none'
@@ -23,6 +25,8 @@ function initTeamScene(prevScene){
   createSceneLayout()
 
   teamAnimation()
+
+  teamPrevScene = prevScene
 }
 
 const teamSceneDom = document.querySelector('#teamScene')
@@ -154,7 +158,9 @@ function switchProcessEvent(first, second){
             opacity: 1,
             onComplete: () =>{
               manageTeamState(false, prevScene)
-              manageBattleState(true, 'team', true)
+              console.log(faintedTriggered)
+              manageBattleState(true, 'team', faintedTriggered)
+              faintedTriggered.active = false
               gsap.to('#overlapping', {opacity: 0})
             }
           })
@@ -183,7 +189,7 @@ function teamMenuSectionClickEvent(e, i){
   })
 
   if(switchProcess.active) {
-    if(switchProcess.target.first.pogemon.id === player.team[i].id) {
+    if(switchProcess.target.first.pogemon.id === player.team[i].id){
       pogemonSelected = false
       switchProcess.active = false
       switchProcess.target = {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }
@@ -205,7 +211,7 @@ function teamMenuSectionClickEvent(e, i){
   }
 
   pogemonSelected = true
-  pogemonSpriteArr[i].animate = true
+  if(!pogemonSelected.fainted) pogemonSpriteArr[i].animate = true
   switchProcess.target.first.i = i
   switchProcess.target.first.pogemon = player.team[i]
 
@@ -240,10 +246,19 @@ function teamMenuSectionClickEvent(e, i){
 function teamnInterfaceOptionClickEvent(e){
   switch(e.target.textContent){
     case 'stats':
-      console.log('omegalul')
-      manageStatsState(true, switchProcess.target.first.pogemon)
-      manageTeamState(false)
-      switchProcess = {active: false, target: {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }}
+      if(escapeEvent.active) return
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageStatsState(true, switchProcess.target.first.pogemon, teamPrevScene)
+          manageTeamState(false)
+
+          switchProcess = {active: false, target: {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }}
+          gsap.to('#overlapping', {
+            opacity: 0
+          })
+        }
+      })
       break
     case 'switch':
       document.querySelectorAll('.inferfaceOption').forEach(node =>{
@@ -374,7 +389,7 @@ function printTeamInfo(i, teamMenuContainerDom){
   healthbarSection.children[0].children[1].children[0].children[0].style.width = `${player.team[i].convertToPercentage(player.team[i].hp,player.team[i].stats.baseHp)}%`
 }
 
-function createSceneLayout(){
+function printInitMenu(){
   const teamSceneContainerDom = document.createElement('div')
   teamSceneContainerDom.id = 'teamSceneContainer'
 
@@ -391,15 +406,25 @@ function createSceneLayout(){
     teamInterfaceContainerDom.appendChild(inferfaceOptionDom)
   })
 
+  const teamMenuGridContainer = document.createElement('div')
+  teamMenuGridContainer.id = 'teamMenuGridContainer'
+
+  teamSceneContainerDom.appendChild(teamInterfaceContainerDom)
+  teamSceneContainerDom.appendChild(teamMenuGridContainer)
+  teamSceneDom.appendChild(teamSceneContainerDom)
+
+  teamSceneContainerDom.addEventListener('click', e => teamMenuSectionCancelEvent(e))
+}
+
+printInitMenu()
+
+function createSceneLayout(){
   const teamMenuContainerDom = document.createElement('div')
   teamMenuContainerDom.id = 'teamMenuContainer'
   teamMenuContainerDom.style.display = 'grid'
 
-  teamSceneContainerDom.appendChild(teamInterfaceContainerDom)
-  teamSceneContainerDom.appendChild(teamMenuContainerDom)
-  teamSceneDom.appendChild(teamSceneContainerDom)
-
-  teamSceneContainerDom.addEventListener('click', e => teamMenuSectionCancelEvent(e))
+  const teamMenuGridContainer = document.querySelector('#teamMenuGridContainer')
+  teamMenuGridContainer.appendChild(teamMenuContainerDom)
 
   for(let i = 0; i < 6; i++){
     const spriteContainerDom = document.createElement('div')
@@ -457,6 +482,8 @@ function createSceneLayout(){
     teamSectionDom.appendChild(spriteContainerDom)
     teamSectionDom.appendChild(infoContainerDom)
 
+    const teamMenuContainerDom = document.querySelector('#teamMenuContainer')
+
     teamSectionDom.addEventListener('mouseover', () => teamMenuSectionHoverEvent(i, teamMenuContainerDom, true))
     teamSectionDom.addEventListener('mouseout', () => teamMenuSectionHoverEvent(i, teamMenuContainerDom, false))
     teamSectionDom.addEventListener('click', e => teamMenuSectionClickEvent(e, i))
@@ -473,9 +500,16 @@ function createSceneLayout(){
 
 function cleanTeamScene(){
   scenes.set('team', {initiated: false})
-
-  teamSceneDom.replaceChildren()
-  teamSceneDom.style.display = 'none'
+  document.querySelector('#teamScene').style.display = 'none'
+  gsap.to(document.querySelector('#teamInterfaceContainer'), {
+    height: 0 + '%',
+    width: 0 + '%',
+    duration: 0.15,
+    onComplete: () => {
+      document.querySelector('#teamInterfaceContainer').style.display ='none'
+      document.querySelector('#teamMenuGridContainer').replaceChildren()
+    }
+  })
 
   pogemonSpriteArr = []
 

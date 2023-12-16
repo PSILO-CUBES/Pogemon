@@ -121,6 +121,7 @@ function bagSceneSectionOnClickEvent(e, state){
 
   if(returnToBattle) return
   
+  console.log(itemChosen)
   if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
 
   if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
@@ -596,6 +597,7 @@ function initBagScene(prevScene){
   player.team.forEach(pogemon =>{
     pogemon.animate = false
   })
+  document.querySelector('#bagScene').style.display = 'block'
   returnPrevScene(prevScene)
   scenes.set('bag', {initiated: true})
   bagSceneAnimation()
@@ -605,8 +607,10 @@ function initBagScene(prevScene){
 
 function clearBagScene(prevScene){
   scenes.set('bag', {initiated: false})
+  // itemUsed = {item: null, used : false}
   document.querySelector('#bagSceneContainer').style.display = 'none'
   document.querySelector('#bagScene').style.pointerEvents = 'none'
+  document.querySelector('#bagScene').style.display = 'none'
   document.querySelector('#bagScene').replaceChildren()
   window.cancelAnimationFrame(bagSceneAnimationId)
   if(prevScene == 'battle') {

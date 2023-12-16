@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="css/team.css">
 <link rel="stylesheet" href="css/bag.css">
 <link rel="stylesheet" href="css/stats.css">
+<link rel="stylesheet" href="css/pogedex.css">
+<link rel="stylesheet" href="css/trainer.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -25,6 +27,7 @@
         <div id="foeHealthBarContainer">
           <div class="infoContainer">
             <div id="foeName" class="battleName"></div>
+            <div id="foeStatus" class="status"></div>
             <div id="foeGenderIconContainer" class="genderImgContainer">
               <img id="foeGenderImg" class="genderImg">
             </div>
@@ -48,6 +51,10 @@
             <div class="lvlUpStats lvlUpDisplay"></div>
           </div>
           <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Spd : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
             <div class="lvlUpStatsName lvlUpDisplay">Atk : </div>
             <div class="lvlUpStats lvlUpDisplay"></div>
           </div>
@@ -63,15 +70,12 @@
             <div class="lvlUpStatsName lvlUpDisplay">SpDef : </div>
             <div class="lvlUpStats lvlUpDisplay"></div>
           </div>
-          <div class="lvlUpStatsContainer">
-            <div class="lvlUpStatsName lvlUpDisplay">Spd : </div>
-            <div class="lvlUpStats lvlUpDisplay"></div>
-          </div>
         </div>
     
         <div id="allyHealthBarContainer">
           <div class="infoContainer">
             <div id="allyName" class="battleName"></div>
+            <div id="allyStatus" class="status"></div>
             <div id="allyGenderIconContainer" class="genderImgContainer">
               <img id="allyGenderImg" class="genderImg">
             </div>
@@ -161,6 +165,8 @@
       </div>
     </div>
   </div>
+
+  <div id="pogedexScene"></div>
 
   <div id="teamScene"></div>
 

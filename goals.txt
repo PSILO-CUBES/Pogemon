@@ -10,16 +10,10 @@ bag scene x
 item menu x
 pogeballs x
 
-team management
+team management x
 
-save state
-
-held items
-evolution items
-
-attack effects
-
-super effective
+attack effects x
+super effective x
 
 pogedex scene
 
@@ -27,7 +21,12 @@ change maps
 
 pc
 
+held items
+evolution items
+
 options
+
+save state
 
 trainer card scene
 

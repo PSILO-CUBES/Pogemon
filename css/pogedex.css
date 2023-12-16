@@ -1,0 +1,64 @@
+#pogedexScene{
+   position: absolute;
+   top: 0;
+
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneContainer{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneGrid{
+   display: grid;
+   grid-template-columns: 55% 45%;
+
+   height: 100%;
+   width: 100%;
+}
+
+.pogedexSceneSection{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneScroll{
+   position: absolute;
+
+   overflow-y: scroll;
+
+   height: 100%;
+   width: 45%;
+}
+
+.pogedexSceneScrollContent{
+   display: grid;
+   grid-template-columns: 160px repeat(2, auto);
+
+   margin-top: 10px;
+
+   height: 150px;
+   width: 97.25%;
+   background-color: rgba(75, 75, 75, 1);
+   border: 5px solid;
+}.pogedexSceneScrollContent:hover{
+   background-color: rgba(150, 150, 150, 1);
+   cursor: pointer;
+}
+
+.pogedexSceneScrollPogemonImg{
+   position: relative;
+
+   height: 100%;
+   max-height: 155px;
+   width: 160px;
+}
+
+.pogedexPogemonInfo{
+   display: flex;
+
+   align-items: center;
+   justify-content: center;
+}

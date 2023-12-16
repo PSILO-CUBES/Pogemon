@@ -7,6 +7,9 @@ import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
+import { manageStatsState } from './stats.js'
+import { managePogedexState } from './pogedex.js'
+import { manageTrainerState } from './trainer.js'
 
 const frameRate = 61
 const frameRateInMilliseconds = 1000 / frameRate
@@ -34,7 +37,10 @@ function initOverworldMenu(){
   }
 }
 
+export let escapeEvent = {active : false}
+
 function overworldMenuClickEvent(e){
+  escapeEvent.active = true
   switch(e.target.textContent){
     case 'team':
       if(player.team < 1) return
@@ -48,7 +54,6 @@ function overworldMenuClickEvent(e){
           })
         }
       })
-
       break
     case 'bag':
       if(player.team < 1) return
@@ -63,7 +68,34 @@ function overworldMenuClickEvent(e){
         }
       })
       break
+    case 'pogedex':
+      manageOverWorldState(false)
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          managePogedexState(true)
+          gsap.to('#overlapping', {
+            opacity: 0,
+          })
+        }
+      })
+      break
+    case 'trainer':
+      manageOverWorldState(false)
+      gsap.to('#overlapping', {
+        opacity: 1,
+        onComplete: () =>{
+          manageTrainerState(true)
+          gsap.to('#overlapping', {
+            opacity: 0,
+          })
+        }
+      })
+      break
   }
+  setTimeout(() =>{
+    escapeEvent.active = false
+  }, 500)
 }
 
 function manageMenuSections(state){
@@ -150,7 +182,6 @@ function transitionScenes(prevScene){
       })
       break
     case 'battle':
-      // bit wrong, dont want to start a new battle, but resume the one currntly in progress
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
@@ -170,6 +201,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
 
     if(scenes.get('overworld').initiated){
+      if(scenes.get('stats').initiated) return
       manageMenuState(menu.initiated)
     }
 
@@ -185,7 +217,7 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('team').initiated){
-      if(faintedTriggered) return
+      if(faintedTriggered.active) return
       manageTeamState(false, prevScene)
       transitionScenes(prevScene)
     }
@@ -195,15 +227,33 @@ function escapeKeyEventOptions(e) {
       manageBagState(false)
       transitionScenes(prevScene)
     }
+
+    if(scenes.get('stats').initiated){
+      if(scenes.get('overworld').initiated) return
+      manageStatsState(false, null, prevScene)
+    }
+
+    if(scenes.get('pogedex').initiated){
+      managePogedexState(false)
+      transitionScenes('overworld')
+    }
+
+    if(scenes.get('trainer').initiated){
+      manageTrainerState(false)
+      transitionScenes('overworld')
+    }
   } else if(e.key == '`'){
     console.log(player)
   }
 }
 
-window.addEventListener('keydown', (e) => _preventActionSpam(escapeKeyEventOptions, e, 300), true)
+window.addEventListener('keydown', (e) => _preventActionSpam(escapeKeyEventOptions, e, 500), true)
+
+let OWAnimationRuning = false
 
 const overWorldAnimation = timeSpent =>{
   animationId = requestAnimationFrame(overWorldAnimation)
+  OWAnimationRuning = true
 
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
   lastFrameSpent = timeSpent
@@ -214,6 +264,7 @@ const overWorldAnimation = timeSpent =>{
 
 export function manageOverWorldState(state){
   if(state) {
+    if(OWAnimationRuning) return
     overWorldAnimation()
     scenes.set('overworld', {initiated : true})
     player.disabled = false
@@ -222,6 +273,7 @@ export function manageOverWorldState(state){
   }
   else {
     cancelAnimationFrame(animationId)
+    OWAnimationRuning = false
     document.querySelector('#overworldScene').style.display = 'none'
     scenes.set('overworld', {initiated : false})
   }

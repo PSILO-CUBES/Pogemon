@@ -1,12 +1,296 @@
+:root{
+  --default-font-size: 18px
+}
+
 #statsScene{
-    position: absolute;
-    top: 0;
-    left: 0;
+  display: none;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: 999;
+}
+
+#statsSceneContainer{
+  width: 100%;
+}
+
+#statsSceneMovesInterface{
+  display: none;
+  grid-template-rows: auto 190px;
+
+  position: absolute;
   
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 33.33%;
+
+  background-color: black;
+}
+
+#statsSceneMovesInterfaceSwitchButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}#statsSceneMovesInterfaceSwitchButton:hover{
+  background-color: rgba(128, 128, 128, 0.50);
+  cursor: pointer;
+}
+
+#statsSceneMovesInterfaceDescContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  justify-items: center;
+  align-items: center;
+
+  height: 100%;
+}
+
+.statsSceneMovesInterfaceMoveDescContent{
+  font-size: 16;
+}
+
+#statsSceneGridContainer{
+  display: grid;
+  grid-template-columns: repeat(3, 33.33%);
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: -10px;
+}
+
+/* info section */
+
+.statsSceneGridSectionInfo{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionInfoContainer{
+  display: grid;
+  grid-template-rows: 50% 40% 10%;
+
+  height: 100%;
+  width: 100%
+}
+
+#statsSceneGridSectionInfoCatch{
+  margin: 50px;
+  padding-top: 42px;
+  line-height: 2;
+}
+
+.statsSceneGridSectionInfoAbility{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionInfoAbilityContainer{
+  display: grid;
+  grid-template-rows: 20% 80%;
+
+  height: 100%;
+  width: 100%;
+
+  margin-left: 50px
+}
+
+#statsSceneGridSectionInfoAbilityDesc{
+  line-height: 2;
+
+  width: 80%;
+}
+
+#statsSceneGridSectionInfoFriendship{
+  margin-left: 50px;
+}
+
+/* pogemon section */
+
+#statsSceneGridSectionPogemonContainer{
+  display: grid;
+  grid-template-rows: 20% 40% 40%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionPogemonData{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionPogemonDataContainer{
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: 100px;
+}
+
+#statsSceneGridSectionPogemonDataName{
+  justify-self: center;
+}
+
+#statsSceneGridSectionPogemonDataGender{
+  justify-self: end;
+}
+
+#statsSceneGridSectionPogemonHP, #statsSceneGridSectionPogemonExp{
+  display: flex;
+
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+ 
+#statsSceneGridSectionPogemonHPContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+  width: 100%;
   
-    z-index: 999;
+  margin-top: 10px;
+}
+
+#statsSceneGridSectionPogemonSectionHpContainer, #statsSceneGridSectionPogemonSectionExpContainer{
+  align-self: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionHpBarContainer, #statsSceneGridSectionPogemonSectionExpBarContainer{
+  display: grid;
+
+  align-items: center;
+
+  grid-template-columns: 30% 70%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionHpBarAmount, #statsSceneGridSectionPogemonSectionExpBarAmount{
+  justify-self: start;
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionPogemonSectionHpBarContentContainer, #statsSceneGridSectionPogemonSectionExpBarContentContainer{
+  justify-self: end;
+  font-size: var(--default-font-size);
+
+  width: 100%;
+
+  position: relative;
+}
+
+.statsSceneHealthBars, .statsSceneExperienceBars{
+  position: absolute;
   
-    pointer-events: none;
-  }
+  height: 15%;
+  width: 100%;
+
+  clip-path: polygon(100% 100%, 0% 100%, 35px 0%, 100% 0%);
+}
+
+#statsSceneGridSectionPogemonSectionHpGreenBar{
+  height: 100%;
+
+  background-color: green;
+
+  z-index: 2;
+
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionHpGreyBar{
+  position: relative;
+  top: -50%;
+
+  background-color: grey;
+
+  z-index: 1;
+}
+
+#statsSceneGridSectionPogemonSectionExpTopBar{
+  height: 100%;
+
+  background-color: cyan;
+
+  z-index: 2;
+
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionExpBottomBar{
+  position: relative;
+  top: -50%;
+
+  background-color: aquamarine;
+
+  z-index: 1;
+}
+
+#statsSceneGenderImg{
+  height: 18px;
+}
+
+/* data section */
+
+#statsSceneGridSectionDataContainer{
+  display: grid;
+  grid-template-rows: 60% 40%;
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: 100px;
+}
+
+#statsSceneGridSectionDataStatsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionDataStats{
+  display: flex;
+
+  justify-content: center;
+
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionDataMovesContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  align-items: center;
+  position: relative;
+  top: -22.5%;
+}
+
+.statsSceneGridSectionDataMoves{
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: var(--default-font-size);
+
+  height: 50%;
+}.statsSceneGridSectionDataMoves:hover{
+  background-color: rgba(75, 75, 75, 0.5) !important; 
+  cursor: pointer;
+}

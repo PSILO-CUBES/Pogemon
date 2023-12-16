@@ -2,6 +2,7 @@ import { movesObj } from "../../data/movesData.js"
 import { mapsObj } from "../../data/mapsData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
 import { audioObj } from "../../data/audioData.js"
+import { itemsObj } from "../../data/itemsData.js"
 
 import { Sprite, Pogemon } from "../../classes.js"
 
@@ -12,7 +13,6 @@ import { player } from "../player.js"
 import { scenes } from "../canvas.js"
 import { teamEvent, manageTeamState } from "./team.js"
 import { itemUsed, manageBagState } from "./bag.js"
-import { itemsObj } from "../../data/itemsData.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
@@ -20,7 +20,6 @@ let queueEnabled = true
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = '../../img/battleBackground/battleBackground.png'
-
 const battleBackground = new Sprite({
   type: 'battleBackground',
   frames: {
@@ -81,7 +80,6 @@ function initWildEncouter() {
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
 
-
 function critLanded(pogemon){
   let critHit = false
   const critRNG = Math.floor(Math.random() * 100)
@@ -107,13 +105,36 @@ function changeHPColor(DOM, target){
   }
 }
 
+function chooseStatusColor(target, status, statusDom){
+  console.log(status)
+  
+
+  if(target.status.name == null) statusDom.style.background = 'transparent'
+
+  switch(status){
+    case 'burn':
+      statusDom.style.background = 'red'
+      break
+  }
+
+  // removes status color
+}
+
+let allyId
 export function initBattle(faintedTriggered){
-  scenes.set('battle', {initiated : {initiated : true}})
+  console.log(faintedTriggered)
+  scenes.set('battle', {initiated : true})
   document.querySelector('#overworldScene').style.display = 'none'
+  player.team[0].animate = true
 
   if(itemUsed.used){
     ally.position = {
       x: 300,
+      y: 15
+    }
+  
+    foe.position = {
+      x: 1415,
       y: 15
     }
 
@@ -136,7 +157,10 @@ export function initBattle(faintedTriggered){
       queueEnabled = false
       function backToOverWorld(){
         //might throw error
-        queue.push(() => manageBattleState(false))
+
+        queue.push(() => {
+          manageBattleState(false)
+        })
       }
       let pogemonInUse = ally
       player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
@@ -150,35 +174,41 @@ export function initBattle(faintedTriggered){
 
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     moveProcess = true
-    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
+    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
 
-    if(ally.hp <= 0){
-      audioObj.battle.stop()
-      audioObj.victory.play()
-      queue.push(() =>{
-        faintEvent(ally)
-        ally.faint(scenes)
-      })
-    }
+    manageStatusEvent(faster, slower)
     return
   }
 
-  loadAlly(pogemonsObj.jlissue)
+  loadAlly(player.team[0])
+
+  if(allyId == undefined) allyId = ally.id
 
   ally.animate = true
   ally.hold = 100
+
   ally.position = {
     x: 300,
     y: 15
   }
 
   if(prevScene == 'overworld') initWildEncouter()
-  
+
+  foe.position = {
+    x: 1415,
+    y: 15
+  }
+
   changeHPColor(document.querySelector('#foeHealthBar'), foe)
   changeHPColor(document.querySelector('#allyHealthBar'), ally)
-  
-  // let allyExp = ally.convertToPercentage(ally.exp, Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3))
+
+  chooseStatusColor(foe, foe.status.name, document.querySelector('#foeStatus'))
+  chooseStatusColor(ally, ally.status.name, document.querySelector('#allyStatus'))
+
+  let allyExp = ally.convertToPercentage(ally.exp - Math.pow(ally.lvl, 3), Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3))
   if(ally.exp === 0) allyExp = 0
+
+  document.querySelector('#expBar').style.width = `${allyExp}%`
 
   setBattleScene()
 
@@ -190,31 +220,45 @@ export function initBattle(faintedTriggered){
     teamEvent.switch = false
     teamEvent.previousScene = null
 
-    // console.log(faintedTriggered)
+    console.log(faintedTriggered)
+    if(faintedTriggered.active) {
+      faintedTriggered.active = false
 
-    if(faintedTriggered) {
-      faintedTriggered = !faintedTriggered
+      
+      foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
+      foe.dialogue('battle', `You sent out ${ally.name}`)
+
+      document.querySelector('#dialogueInterface').style.display = 'block'
+      document.querySelector('#encounterInterface').style.display = 'none'
       return
     }
 
+    if(allyId !== player.team[0].id){
+      allyId = player.team[0].id
+      document.querySelector('#encounterInterface').style.display = 'none'
+      let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+      moveProcess = true
+      foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
+      //team switch option
+      manageStatusEvent(foe, ally)
+      return
+    }
+
+    console.log('wtf is this?')
+
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     moveProcess = true
-    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded})
+    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
 
-    if(ally.hp <= 0){
-      audioObj.battle.stop()
-      audioObj.victory.play()
-      queue.push(() =>{
-        faintEvent(ally)
-        ally.faint(scenes)
-      })
-    }
+    manageStatusEvent(faster, slower)
     
     document.querySelector('#encounterInterface').style.display = 'none'
   }
 }
 
 function clearBattleScene(nextScene){
+  scenes.set('battle', {initiated : false})
+  document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
   gsap.to('#overlapping', {
     opacity: 1,
     onComplete: () =>{
@@ -228,12 +272,12 @@ function clearBattleScene(nextScene){
       audioObj.victory.stop()
       audioObj.map.play()
 
-      scenes.set('battle', {initiated : false})
-
       if(nextScene == 'team') manageTeamState(true, 'battle')
       else if (nextScene == 'bag') manageBagState(true, 'battle')
+      else if (nextScene == 'evo') return
       else manageOverWorldState(true)
-      
+
+      console.log('omegalul')
       gsap.to('#overlapping', {opacity: 0})
     }
   })
@@ -269,6 +313,8 @@ export let moveLearning = {
 }
 
 const battleSceneDom = document.querySelector('#battleScene')
+
+let C = 0
 
 function optionButtonInteraction(e) {
   if(scenes.get('battle').initiated){
@@ -307,6 +353,29 @@ function optionButtonInteraction(e) {
         })
         break
       case 'Run':
+        C + 1
+
+        function chanceToEscape(A, B){
+          return (((A * 32) / (B / 4)) + 30 * C)
+        }
+        
+        if(chanceToEscape(player.team[0].stats.spd, foe.stats.spd) < 100) {
+          encounterInterfaceDom.style.display = 'none'
+          movesInterfaceDom.style.display = 'none'
+          dialogueInterfaceDom.style.display = 'block'
+          dialogueInterfaceDom.textContent = 'You failed to run away..'
+
+          let rng = Math.floor(Math.random() * foe.move.length)
+          let foeRng = foe.moves[rng]
+
+          queue.push(() => {
+            foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue})
+            //flee missed option
+            manageStatusEvent(foe, ally)
+          })
+          return
+        }
+
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'none'
         dialogueInterfaceDom.style.display = 'block'
@@ -503,8 +572,6 @@ function checkSpeed(e) {
     foe: foeRNGMove.priority
   }
 
-  console.log(priority)
-
   if(priority.ally > priority.foe){
     faster = ally
     slower = foe
@@ -665,8 +732,10 @@ export function passPuff(func){
 function manageEvolution(f){
   //stops battle and initiates the evolution scene instead of the normal way
   queue.push(() => {
-    cancelAnimationFrame(battleAnimationId)
-    f(true, ally)
+    manageBattleState(false, 'evo', false)
+    setTimeout(() =>{
+      f(true, ally)
+    }, 410)
   })
 }
 
@@ -683,8 +752,12 @@ function manageFaintingEvent(target){
     manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
     manageLearnedMoves(ally, queue, 'battle')
 
+    if(ally.pogemon.evo == null) {
+      queue.push(() => manageBattleState(false))
+      return
+    }
     if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
-    else queue.push(() => manageBattleState(false, 'evo'))
+    else queue.push(() => manageBattleState(false))
   //might throw err
   } else queue.push(() => manageBattleState(false))
 }
@@ -697,33 +770,65 @@ function checkIfTeamWipedOut(){
   return wiped
 }
 
-export let faintedTriggered = false
+export let faintedTriggered = {active: false}
 
 function faintEvent(target){
-  target.dialogue('battle', `${target.name} fainted!`)
-  target.faint()
+  queue.push(() =>{
+    target.dialogue('battle', `${target.name} fainted!`)
+    target.faint()
 
-  queue.push(() => {
-    if(target.isEnemy){
-        manageFaintingEvent(target)
-
-    } else if(checkIfTeamWipedOut()){
-        document.querySelector('#overlapping').textContent = 'Git Gud'
-        gsap.to('#overlapping', {
-          opacity: 1,
+    queue.push(() => {
+      if(target.isEnemy){
+          manageFaintingEvent(target)
+      } else if(checkIfTeamWipedOut()){
+          document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
+          document.querySelector('#overlapping').textContent = 'Git Gud'
+          gsap.to('#overlapping', {
+            opacity: 1,
+          })
+          //here
+          document.querySelector('#overlapping').addEventListener('click', spendQueue)
+          document.querySelector('#overlapping').style.cursor = 'pointer'
+          document.querySelector('#overlapping').style.pointerEvents = 'auto'
+          queue.push(() =>{
+            location.reload()
         })
-        //here
-        document.querySelector('#overlapping').addEventListener('click', spendQueue)
-        document.querySelector('#overlapping').style.cursor = 'pointer'
-        document.querySelector('#overlapping').style.pointerEvents = 'auto'
-        queue.push(() =>{
-          location.reload()
-      })
-    } else {
-      faintedTriggered = true
-      manageBattleState(false, 'team', faintedTriggered)
-    }
+      } else {
+        faintedTriggered.active = true
+        manageBattleState(false, 'team', {active : true})
+      }
+    })
   })
+}
+
+// pogemon status turn event
+function manageStatusEvent(faster, slower){
+  // if foe is faster, check for it's status before ally's
+  if(faster.isEnemy){
+    console.log('foe')
+    faster.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, slower, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
+    return
+  }
+  
+  console.log('ally')
+  // if ally is faster, check for it's status before foe's
+  faster.checkStatus('#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent, slower, ['#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent])
+}
+
+function checkIfFainted(target){
+  if(target.hp <= 0){
+    queue.push(() =>{
+      audioObj.battle.stop()
+      audioObj.faint.play()
+      target.faint()
+      faintEvent(target)
+      let placeHolder = queue[1]
+      queue[1] = queue[2]
+      queue[2] = placeHolder
+      console.log(queue)
+      queue.pop()
+    })
+  }
 }
 
 function attackMove(e) {
@@ -741,50 +846,37 @@ function attackMove(e) {
   }
 
   if(currMove.pp > 0){
-// gonna need to reorganize if i put double battles at some point
-  // should maybe put all the battle management in class with attack method
-  const [faster, slower, fasterMove, slowerMove] = checkSpeed(e)
+    // gonna need to reorganize if i put double battles at some point
+    // should maybe put all the battle management in class with move method
+    const [faster, slower, fasterMove, slowerMove] = checkSpeed(e)
 
-  function attackLanded(move, reload){
-    let accRNG
-    if(reload) accRNG = Math.floor(Math.random() * 100)
-    if(accRNG < move.acc) return true
-  }
-
-  lvlBeforeExpGained = ally.lvl
-  
-  if(attackLanded(fasterMove, true)) {
-    moveProcess = true
-    faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded})
-  } else faster.miss()
-
-  if(slower.hp <= 0){
-    audioObj.battle.stop()
-    audioObj.victory.play()
-    queue.push(() =>{
-      faintEvent(slower)
-      slower.faint(scenes)
-    })
-
-    return
-  }
-  
-  queue.push(() =>{
-    if(attackLanded(slowerMove, true)) {
-    moveProcess = true
-    slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded})
-    } else slower.miss()
-
-    if(faster.hp <= 0){
-      audioObj.battle.stop()
-      audioObj.victory.play()
-      queue.push(() =>{
-        faintEvent(faster)
-        faster.faint(scenes)
-      })
-      return
+    function attackLanded(move, reload){
+      let accRNG
+      if(reload) accRNG = Math.floor(Math.random() * 100)
+      if(accRNG < move.acc) return true
     }
-  })}
+
+    lvlBeforeExpGained = ally.lvl
+
+    if(attackLanded(fasterMove, true)) {
+      moveProcess = true
+      faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded, queue})
+    } else faster.miss()
+
+    checkIfFainted(faster)
+    checkIfFainted(slower)
+
+    queue.push(() =>{
+      if(attackLanded(slowerMove, true)) {
+        moveProcess = true
+        slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded, queue})
+      } else slower.miss()
+
+      //normal attack option
+      manageStatusEvent(faster, slower)
+      return
+    })
+  }
 }
 
 export function manageBattleQueue(state){
@@ -825,7 +917,6 @@ function setBattleScene(){
 }
 
 export function manageBattleState(state, nextScene, faintedTriggered) {
-  console.log(faintedTriggered)
   if(state) initBattle(faintedTriggered)
   else clearBattleScene(nextScene)
 }

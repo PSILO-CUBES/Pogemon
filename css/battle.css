@@ -21,7 +21,18 @@
 
 .infoContainer{
   display: grid;
-  grid-template-columns: 80% auto auto;
+  grid-template-columns: 70% 10% auto auto;
+}
+
+.status{
+  position: relative;
+  left: -7.5px;
+  top: 62.5%;
+
+  height: 100%;
+  width: 75%;
+
+  z-index: 999;
 }
 
 .battleName{
@@ -191,7 +202,7 @@
 
   z-index: 2;
 
-  transition: ease-out 1s;
+  transition: ease-out 0.5s;
 }
 
 .expBarBackground{

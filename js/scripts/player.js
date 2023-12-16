@@ -226,7 +226,6 @@ function engageBattle(animationId, battleZones) {
             opacity: 0,
             duration: 0.4
           })
-          scenes.set('battle', {initiated : true})
           audioObj.battle.play()
           manageBattleState(animationId)
         }

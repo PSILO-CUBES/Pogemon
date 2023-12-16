@@ -148,7 +148,9 @@ function clearEvolutionScene(target){
       sprites = []
       document.querySelector('#evolutionScene').style.display = 'none'
 
-      player.team[teamSlot].img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
+      if(target.pogemon.pogedex >= 100) target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
+      else if(target.pogemon.pogedex >= 10) target.img.src = `img/pogemon/0${target.name}/${target.name}_Back_Animation.png`
+      else if(target.pogemon.pogedex < 10) target.img.src = `img/pogemon/00${target.name}/${target.name}_Back_Animation.png`
 
       cancelAnimationFrame(evolutionAnimationId)
       // dont forget to put the audio

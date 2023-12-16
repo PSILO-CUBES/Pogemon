@@ -22,8 +22,9 @@ generateCanvas()
 
 const player = generatePlayer(canvas)
 player.catch(pogemonsObj['jlissue'], true)
-player.catch(pogemonsObj['disso'], true)
-player.catch(pogemonsObj['disso'], true)
+player.catch(pogemonsObj['loko'], true)
+player.catch(pogemonsObj['steeli'], true)
+player.catch(pogemonsObj['maaph'], true)
 
 
 const itemArr = [
@@ -42,7 +43,9 @@ scenes.set('battle', {initiated: false})
 scenes.set('evolution', {initiated: false})
 scenes.set('team', {initiated: false})
 scenes.set('bag', {initiated: false})
+scenes.set('stats', {initiated: false})
 scenes.set('pogedex', {initiated: false})
+scenes.set('trainer', {initiated: false})
 
 export function printImages(background, FG, map, boundaries, battleZones){
   background.draw()

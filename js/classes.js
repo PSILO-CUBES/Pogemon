@@ -2,6 +2,7 @@ import { audioObj } from "./data/audioData.js"
 import { movesObj } from "./data/movesData.js"
 import { natureObj } from "./data/natureData.js"
 import { pogemonsObj } from "./data/pogemonData.js"
+import { typesObj } from "./data/typesData.js"
 
 import { c, scenes } from "./scripts/canvas.js"
 
@@ -152,10 +153,13 @@ export class Pogemon extends Sprite{
     this.ivs = this.generateIVs()
     this.stats = this.generateStats()
     this.hp = this.stats.baseHp
+    this.status = {name: null, turns: 0}
     this.fainted = false
     this.evo = this.pogemon.evo
     this.ability = this.generateAbility()
     this.moves = this.generateMoves(true, 'battle')
+    this.friendliness = 0
+    this.catchInfo = this.generateCatchInfo(new Date())
     this.animationProperties = pogemon.animationProperties
   }
 
@@ -206,11 +210,11 @@ export class Pogemon extends Sprite{
   generateStats(){
     const statObj = {
       baseHp: 0,
+      spd: 0,
       atk: 0,
       def: 0,
       spatk: 0,
       spdef: 0,
-      spd: 0,
     }
 
     Object.keys(statObj).forEach(stat =>{
@@ -268,6 +272,15 @@ export class Pogemon extends Sprite{
     return Math.floor(Math.cbrt(this.exp))
   }
 
+  generateCatchInfo(date){
+    const catchInfo = {
+      lvl: this.lvl,
+      date
+    }
+    
+    return catchInfo
+  }
+
   convertToPercentage(numerator , denominator){
     let percentage = 100 * numerator / denominator 
 
@@ -283,7 +296,7 @@ export class Pogemon extends Sprite{
         let movesInterface = document.querySelector('#movesInterface')
     
         dialogueInterfaceDom.style.display = 'block'
-        dialogueInterfaceDom.textContent = text
+        dialogueInterfaceDom.innerText = text
     
         movesInterface.style.display = 'none'
         break
@@ -340,12 +353,14 @@ export class Pogemon extends Sprite{
     }
   }
 
-  move({move, recipient, renderedSprites, critHit}){
+  //doesnt make anything move, its the method to use moves during combat
+  move({move, recipient, renderedSprites, critHit, queue}){
     this.managePP(move, false)
 
     if(move.pp == 0) move = movesObj['struggle']
 
     let recipientHealthBar = '#foeHealthBar'
+    let recipientStatus = document.querySelector('#foeStatus')
     let hpDom = document.querySelector('#foeHp')
     let movementDistance = 20
     let rotation = 1
@@ -353,16 +368,14 @@ export class Pogemon extends Sprite{
 
     if(this.isEnemy){
       recipientHealthBar = '#allyHealthBar'
+      recipientStatus = document.querySelector('#allyStatus')
       hpDom = document.querySelector('#allyHp')
       movementDistance = -20
       rotation = -2
       attackPos = this.pogemon.animationPositions.receive
     }
 
-    this.dialogue('battle', `${this.name} used ${move.name}`)
-
     let damageCalculation = () => {
-
       const rollRatio = {
         max: 110,
         min: 90
@@ -375,10 +388,53 @@ export class Pogemon extends Sprite{
       let crit = 1
       if(critHit(this)) crit = 1.5
 
+      let typeEffectivness = 1
+      
+      for(let i = 0; i < 2; i++){
+        if(Object.values(recipient.element)[i] == null) break
+        
+        let factor
+
+        if(typeEffectivness >= 1) {
+          factor = 0.5
+        } else {
+          factor = 0.25
+        }
+
+        if(Object.values(typesObj[`${move.element}`])[0].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = typeEffectivness + factor
+        if(Object.values(typesObj[`${move.element}`])[1].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = typeEffectivness - factor
+        if(Object.values(typesObj[`${move.element}`])[2].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = 0
+      }
+
+      switch(typeEffectivness){
+        case 0:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}! \n\n\n It didint affect ${recipient.name} whatsoever...`)
+          break
+        case 0.25:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}! \n\n\n It was not effective at all...`)
+          break
+        case 0.5:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}! \n\n\n It was not very effective...`)
+          break
+        case 1:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}!`)
+          break
+        case 1.5:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}! \n\n\n It was very effective!`)
+          break
+        case 2:
+          this.dialogue('battle', `${this.name} used ${move.name} on ${recipient.name}! \n\n\n It was super effective!!`)
+          break
+      }
+
       if(move.type === 'physical'){
-        recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.atk / recipient.stats.def / 50 + 2) * roll * stab * crit)
+        if(typeEffectivness !== 0){
+          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.atk / recipient.stats.def / 50 + 2) * roll * typeEffectivness * stab * crit)
+        }
       } else if(move.type === 'special'){
-        recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.spatk / recipient.stats.spdef / 50 + 2) * roll * stab * crit)
+        if(typeEffectivness !== 0){
+          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.spatk / recipient.stats.spdef / 50 + 2) * roll * typeEffectivness * stab * crit)
+        }
       } else if(move.type === 'status'){
 
       }
@@ -387,6 +443,27 @@ export class Pogemon extends Sprite{
     }
 
     damageCalculation()
+
+    let statusRNG = () =>{
+      if(recipient.status.name != null) return
+      if(recipient.hp <= 0) return
+      let rng = Math.floor(Math.random() * 100)
+      if(move.effects != null){
+        switch(Object.keys(move.effects)[0]){
+          case 'burn':{
+            if(rng <= Object.values(move.effects)[0]){
+              recipient.status.name = 'burn'
+              queue.push(() =>{
+                this.dialogue('battle', `${recipient.name} was burnt!`)
+                recipientStatus.style.background = 'red'
+              })
+            }
+          }
+        }
+      }
+    }
+
+    statusRNG()
 
     let hitAnimation = (type) => {
       if(type){
@@ -516,6 +593,62 @@ export class Pogemon extends Sprite{
     }
   }
 
+  checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, info){
+    let thisFaints = () => {
+      console.log(this)
+      if(this.hp <= 0){
+        audioObj.battle.stop()
+        audioObj.victory.play()
+        this.hpManagement(this, healthBar, healthAmount)
+        faintEvent(this)
+        //
+        return
+      }
+    }
+
+    if(this.status.name == null && slower.status.name == null){
+      thisFaints()
+      return
+    }
+
+    if(this.status.name == null && slower.status.name != null){
+      thisFaints()
+      slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
+      return
+    }
+
+    queue.push(() =>{
+      thisFaints()
+
+      switch(this.status.name){
+        case 'burn':
+          let chip = this.stats.baseHp / 16
+          this.hp = Math.floor(this.hp - chip)
+          if(this.hp < 1) this.hp = 0
+
+          console.log('wtf')
+          console.log(healthBar)
+          document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
+          healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
+          this.dialogue('battle', `${this.name} felt the burn.`)
+
+          if(this.hp <= 0){
+            audioObj.battle.stop()
+            audioObj.victory.play()
+            this.hpManagement(this, healthBar, healthAmount)
+            faintEvent(this, slower, info)
+            return
+          }
+
+          if(slower.status.name != null) slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
+          
+          this.hpManagement(this, healthBar, healthAmount)
+          // add sprite effect after
+      }
+      return
+    })
+  }
+
   //should change for disrupt and pass it 'miss' and 'flinched' arguments
   miss(){
     this.dialogue('battle', `${this.name} missed!`)
@@ -560,7 +693,6 @@ export class Pogemon extends Sprite{
   }
 
   expGain(yeilder, battleType){
-
     let a = 1
     if(battleType = 'trainer') a = 1.5
 
@@ -587,15 +719,28 @@ export class Pogemon extends Sprite{
   }
 
   expBarProgress(){
-    let currExpToNextLvl = this.exp - Math.pow(this.lvl, 3)
-    let expRequieredToLvlUp = Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)
+    let percentage = this.convertToPercentage(Math.floor(this.exp), Math.floor(Math.pow(this.lvl, 3)))
 
-    let percentage = Math.floor(this.convertToPercentage(currExpToNextLvl, expRequieredToLvlUp))
-
-    document.querySelector('#expBar').style.width = `${percentage}%`
+    if(percentage >= 100){
+      gsap.to('#expBar',{
+        width:`${percentage}%`,
+        duration: 0.1
+      })
+    } else {
+      gsap.to('#expBar',{
+        width:`${percentage}%`,
+        duration: 0.5,
+      })
+    }
   }
 
   onLvlUp(){
+    let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
+    
+    console.log('now')
+    document.querySelector('#expBar').style.width = '0%'
+    setTimeout(() => document.querySelector('#expBar').style.width = `${percentage}%`, 1000)
+    
     const allyLvlDom = document.querySelector('#allyLvl')
     const allyHpDom = document.querySelector('#allyHp')
 
@@ -611,7 +756,7 @@ export class Pogemon extends Sprite{
     let hpPercentage = Math.floor(this.convertToPercentage(this.hp, this.stats.baseHp))
     document.querySelector('#allyHealthBar').style.width = `${hpPercentage}%`
 
-    this.expBarProgress()
+    console.log(this.lvl)
   }
 
   showStatWindow(oldStats, prevLvl){
@@ -786,9 +931,8 @@ export class Trainer extends Sprite{
                                           opacity: 1,
                                           onComplete: () =>{
                                             let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
-                                            pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded})
+                                            pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue})
                                             pogemonInUse.faint(scenes)
-                                            console.log(pogemonInUse.fainted)
                                             //put this in a queue
                                             if(pogemonInUse.fainted) {
                                               gsap.to('#overlapping', {
