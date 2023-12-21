@@ -6,6 +6,7 @@ import { scenes } from "../canvas.js"
 import { manageOverWorldState } from "./overworld.js"
 import { manageLearnedMoves, learnMoveMenu, passPuff } from "./battle.js"
 import { player } from "../player.js"
+import { mapsObj } from "../../data/mapsData.js"
 
 const backgroundImage = new Image()
 const backgroundSprite = new Sprite({
@@ -87,7 +88,7 @@ function initEvo(target){
 
   sprites = [backgroundSprite, target]
 
-  backgroundImage.src = `../../img/background.png`
+  backgroundImage.src = mapsObj['background']
 
   setEvoScene()
 

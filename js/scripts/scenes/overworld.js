@@ -10,13 +10,16 @@ import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { manageTrainerState } from './trainer.js'
+import { mapsObj } from '../../data/mapsData.js'
+
+//
 
 const frameRate = 61
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
-const {background, map, boundaries, battleZones, FG} = generateMapData()
-const movables = [map, ...boundaries, ...battleZones]
+let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = generateMapData()
+let movables = [map, ...boundaries, ...battleZones, ...changeMap,  ...eventZones, ...trainerSpritesArr]
 
 let animationId
 
@@ -25,6 +28,19 @@ const menu = {
 }
 
 const overworldMenuDom = document.querySelector('#overworldMenu')
+
+export function switchMap(nextMapInfo){
+  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = generateMapData(nextMapInfo)
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
+
+  gsap.to('#overlapping', {
+    opacity: 0,
+    duration: 0.4,
+    onComplete(){
+      player.disabled = false
+    }
+  })
+}
 
 function initOverworldMenu(){
   let options = ['pogedex', 'team', 'bag', 'trainer', 'save', 'options']
@@ -109,6 +125,7 @@ function manageMenuSections(state){
 function manageMenuState(state){
   const overworldSceneDom = document.querySelector('#overworldScene').style
   const menuDom = document.querySelector('#overworldMenu').style
+  document.querySelector('#overworldSceneContainer').style.display = 'flex'
   const menuSectionDomArr = document.querySelectorAll('.overworldMenuSections')
 
   player.disabled = !state
@@ -120,7 +137,7 @@ function manageMenuState(state){
     menuDom.height = '0%'
     menuDom.width = '0%'
 
-    overworldSceneDom.display = 'flex'
+    document.querySelector('#overworldMenu').style.display = 'grid'
 
     gsap.to('#overlapping', {
       opacity: 0.85,
@@ -158,7 +175,8 @@ function manageMenuState(state){
       opacity: 0,
       duration: 0.3,
       onComplete(){
-        overworldSceneDom.display = 'none'
+        //PROBLEM HERE
+        document.querySelector('#overworldMenu').style.display = 'none'
         manageMenuSections(menu.initiated)
       }
     })
@@ -199,7 +217,6 @@ function escapeKeyEventOptions(e) {
   const encounterInterfaceDom = document.querySelector('#encounterInterface')
   if(disableOWMenu.active) return
   if(e.key === 'Escape'){
-
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
       manageMenuState(menu.initiated)
@@ -242,6 +259,7 @@ function escapeKeyEventOptions(e) {
       manageTrainerState(false)
       transitionScenes('overworld')
     }
+    
   } else if(e.key == '`'){
     console.log(player)
   }
@@ -258,13 +276,15 @@ const overWorldAnimation = timeSpent =>{
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
   lastFrameSpent = timeSpent
 
-  printImages(background, FG, map, boundaries, battleZones)
-  playerMovement(animationId, movables, boundaries, battleZones)
+  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr)
+  playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr)
 }
 
 export function manageOverWorldState(state){
   if(state) {
     if(OWAnimationRuning) return
+    document.querySelector('#overworldDialogueContainer').style.display = 'none'
+    document.querySelector('#overworldScene').style.display = 'block'
     overWorldAnimation()
     scenes.set('overworld', {initiated : true})
     player.disabled = false

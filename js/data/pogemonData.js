@@ -405,7 +405,7 @@ export const pogemonsObj = {
     pogedex: 143,
     name: 'disso',
     element:{
-      1: 'grass',
+      1: 'normal',
       2: null
     },
     stats: {
@@ -442,7 +442,7 @@ export const pogemonsObj = {
       }
     },
     yeild: 5000,
-    catchRate: 75
+    catchRate: 200
   },
 
   // #145 - #148 dragon line x

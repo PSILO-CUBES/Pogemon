@@ -5,7 +5,6 @@ import { itemsObj } from '../data/itemsData.js'
 import { Pogemon } from '../classes.js'
 
 import { generatePlayer } from './player.js'
-import { generateMapData } from './maps.js'
 
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
@@ -30,7 +29,8 @@ player.catch(pogemonsObj['maaph'], true)
 const itemArr = [
   {name: 'potion', quantity: 999}, 
   {name: 'resurrect', quantity: 999},
-  {name: 'pogeball', quantity: 999}
+  {name: 'pogeball', quantity: 999},
+  {name: 'megaball', quantity: 999},
 ]
 
 for(let i = 0; i < itemArr.length; i++){
@@ -47,7 +47,7 @@ scenes.set('stats', {initiated: false})
 scenes.set('pogedex', {initiated: false})
 scenes.set('trainer', {initiated: false})
 
-export function printImages(background, FG, map, boundaries, battleZones){
+export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr){
   background.draw()
   map.draw()
   player.draw()
@@ -57,5 +57,14 @@ export function printImages(background, FG, map, boundaries, battleZones){
   }
   for(let i = 0; i < battleZones.length; i++){
     battleZones[i].draw()
+  }
+  for(let i = 0; i < changeMap.length; i++){
+    changeMap[i].draw()
+  }
+  for(let i = 0; i < eventZones.length; i++){
+    eventZones[i].draw()
+  }
+  for(let i = 0; i < trainerSpritesArr.length; i++){
+    trainerSpritesArr[i].draw()
   }
 }

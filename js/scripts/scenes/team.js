@@ -7,6 +7,7 @@ import { player } from "../player.js"
 import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
 import { manageBattleState, faintedTriggered } from "./battle.js"
 import { manageStatsState } from "./stats.js"
+import { mapsObj } from "../../data/mapsData.js"
 
 let teamAnimationId
 
@@ -32,7 +33,7 @@ function initTeamScene(prevScene){
 const teamSceneDom = document.querySelector('#teamScene')
 
 const backgroundImg = new Image()
-backgroundImg.src = `../../../img/background.png`
+backgroundImg.src = mapsObj['background']
 
 const backgroundSprite = new Sprite({
   type: 'teamSprite',
@@ -158,7 +159,6 @@ function switchProcessEvent(first, second){
             opacity: 1,
             onComplete: () =>{
               manageTeamState(false, prevScene)
-              console.log(faintedTriggered)
               manageBattleState(true, 'team', faintedTriggered)
               faintedTriggered.active = false
               gsap.to('#overlapping', {opacity: 0})

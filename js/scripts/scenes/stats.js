@@ -1,5 +1,7 @@
 import { Sprite } from "../../classes.js"
+import { mapsObj } from "../../data/mapsData.js"
 import { movesObj } from "../../data/movesData.js"
+import { typesObj } from "../../data/typesData.js"
 import { scenes } from "../canvas.js"
 import { disableOWMenu } from "./overworld.js"
 import { manageTeamState } from "./team.js"
@@ -24,7 +26,7 @@ const pogemonSprite = new Sprite({
 })
 
 const backgroundImg = new Image()
-backgroundImg.src = '../../../img/background.png'
+backgroundImg.src = mapsObj['background']
 const backgroundSprite = new Sprite({
   type: 'background',
   position:{
@@ -204,7 +206,7 @@ function createMenu(){
 		case 0:
 			//info container
 			statsSceneGridSection.setAttribute('id', 'statsSceneGridSectionInfoContainer')
-			for(let i = 0; i < 3; i++){
+			for(let i = 0; i < 4; i++){
 				const statsSceneGridSectionInfo = document.createElement('div')
 				statsSceneGridSectionInfo.setAttribute('class', 'statsSceneGridSectionInfo')
 
@@ -212,7 +214,7 @@ function createMenu(){
 					case 0:
 						//catch info
 						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoCatch')
-						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on starting map at lvl ${selectedPogemon.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n\n\n\n It has a ${selectedPogemon.nature.name} nature.`
+						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on starting map at lvl ${selectedPogemon.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 						break
 					case 1:
 						// ability info
@@ -238,6 +240,40 @@ function createMenu(){
 							}
 						break
 					case 2:
+						// info type
+						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoTypeContainer')
+						for(let i = 0; i < 2; i++){
+							const statsSceneGridSectionInfoTypeSection = document.createElement('div')
+							statsSceneGridSectionInfoTypeSection.setAttribute('class', 'statsSceneGridSectionInfoTypeSection')
+							
+							const statsSceneGridSectionInfoTypeSectionContent = document.createElement('div')
+
+							switch(i){
+								case 0:
+									statsSceneGridSectionInfoTypeSectionContent.setAttribute('id', 'statsSceneGridSectionInfoTypeSectionType')
+									statsSceneGridSectionInfoTypeSectionContent.innerText = 'Elements : '
+									statsSceneGridSectionInfoTypeSection.appendChild(statsSceneGridSectionInfoTypeSectionContent)
+									break
+								case 1:
+									statsSceneGridSectionInfoTypeSectionContent.setAttribute('id', 'statsSceneGridSectionInfoTypeSectionElementsContainer')
+									statsSceneGridSectionInfoTypeSection.appendChild(statsSceneGridSectionInfoTypeSectionContent)
+									for(let i = 1; i < 3; i++){
+										if(selectedPogemon.element[i] == null) break
+										const statsSceneGridSectionInfoTypeSectionElements = document.createElement('div')
+										statsSceneGridSectionInfoTypeSectionElements.setAttribute('class', 'statsSceneGridSectionInfoTypeSectionElements')
+
+										statsSceneGridSectionInfoTypeSectionElements.innerText = selectedPogemon.element[i]
+										statsSceneGridSectionInfoTypeSectionElements.style.backgroundColor = `#${typesObj[`${selectedPogemon.element[i]}`].color}`
+
+										statsSceneGridSectionInfoTypeSectionContent.appendChild(statsSceneGridSectionInfoTypeSectionElements)
+									}
+									break
+							}
+
+							statsSceneGridSectionInfo.appendChild(statsSceneGridSectionInfoTypeSection)
+						}
+						break
+					case 3:
 						// info friendship
 						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoFriendship')
 						statsSceneGridSectionInfo.innerText = `Friendliness : ${selectedPogemon.friendliness}`

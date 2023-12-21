@@ -63,6 +63,7 @@ export class Sprite {
 
     if(this.frames.max > 1) this.frames.elapsed++
 
+
     if (this.frames.elapsed % this.frames.hold === 0){
       if(this.frames.val < this.frames.max - 1) this.frames.val++
       else this.frames.val = 0
@@ -80,23 +81,32 @@ export class Boundary {
   static height = tileSize
   constructor({
     position, 
-    type
+    type,
+    info
   }){
     this.position = position
     this.type = type
     this.width = tileSize
     this.height = tileSize
     this.color
+    if(info != undefined) this.info = info
     this.generateInfo()
   }
 
   generateInfo(){
+    const brightness = 0
     switch(this.type){
       case 1:
-        this.color = 'rgba(255,0,0,0)'
+        this.color = `rgba(255,0,0,${brightness})`
         break
       case 2:
-        this.color = 'rgba(100,0,0,0)'
+        this.color = `rgba(100,0,0,${brightness})`
+        break
+      case 3:
+        this.color = `rgba(255,255,255,${brightness})`
+        break
+      case 4:
+        this.color = `rgba(150,150,150,${brightness})`
         break
     }
   }
@@ -594,8 +604,8 @@ export class Pogemon extends Sprite{
   }
 
   checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, info){
+    console.log(this)
     let thisFaints = () => {
-      console.log(this)
       if(this.hp <= 0){
         audioObj.battle.stop()
         audioObj.victory.play()
@@ -606,8 +616,15 @@ export class Pogemon extends Sprite{
       }
     }
 
+    if(slower.name == undefined){
+      console.log('here')
+      thisFaints()
+      return
+    }
+
     if(this.status.name == null && slower.status.name == null){
       thisFaints()
+      slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
       return
     }
 
@@ -626,8 +643,6 @@ export class Pogemon extends Sprite{
           this.hp = Math.floor(this.hp - chip)
           if(this.hp < 1) this.hp = 0
 
-          console.log('wtf')
-          console.log(healthBar)
           document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
           healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
           this.dialogue('battle', `${this.name} felt the burn.`)
@@ -636,7 +651,8 @@ export class Pogemon extends Sprite{
             audioObj.battle.stop()
             audioObj.victory.play()
             this.hpManagement(this, healthBar, healthAmount)
-            faintEvent(this, slower, info)
+            console.log('here')
+            faintEvent(this)
             return
           }
 
@@ -737,7 +753,6 @@ export class Pogemon extends Sprite{
   onLvlUp(){
     let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
     
-    console.log('now')
     document.querySelector('#expBar').style.width = '0%'
     setTimeout(() => document.querySelector('#expBar').style.width = `${percentage}%`, 1000)
     
@@ -755,8 +770,6 @@ export class Pogemon extends Sprite{
 
     let hpPercentage = Math.floor(this.convertToPercentage(this.hp, this.stats.baseHp))
     document.querySelector('#allyHealthBar').style.width = `${hpPercentage}%`
-
-    console.log(this.lvl)
   }
 
   showStatWindow(oldStats, prevLvl){
@@ -832,13 +845,15 @@ export class Trainer extends Sprite{
       rotation
     })
     this.team = team
-    this.bag = bag
-    this.money = money
+    if(bag != undefined) this.bag = bag
+    if(money != undefined) this.money = money
+    console.log(type)
+    if(type == 'enemyTrainer') this.beaten = false
     this.running = false
     this.disabled = false
   }
 
-  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse){
+  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent){
     let newPogemon
 
     const catchCalc = ball => {
@@ -913,9 +928,9 @@ export class Trainer extends Sprite{
                                 rotation: '0',
                                 onComplete: () =>{
                                   let {rng, rate} = catchCalc(ball)
-                                  console.log({rng, rate})
                                   if(rng <= rate){
                                     renderedSprites.splice(1,1)
+                                    newPogemon.isEnemy = false
                                     if(this.team.length < 6) this.team.push(newPogemon)
                                     document.querySelector('#dialogueInterface').textContent = `${pogemon.name} was caught`
                                     backToOverWorld()
@@ -932,15 +947,20 @@ export class Trainer extends Sprite{
                                           onComplete: () =>{
                                             let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
                                             pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue})
-                                            pogemonInUse.faint(scenes)
-                                            //put this in a queue
-                                            if(pogemonInUse.fainted) {
-                                              gsap.to('#overlapping', {
-                                                opacity: 1,
-                                                textContent: 'Git Gud'
-                                              })
+
+                                            if(pogemonInUse.hp <= 0){
+                                              pogemonInUse.faint(scenes)
+                                              faintEvent(pogemonInUse)
+                                              // put this in a queue
+                                              // check if they all fainted
+                                              // if(pogemonInUse.fainted) {
+                                              //   gsap.to('#overlapping', {
+                                              //     opacity: 1,
+                                              //     textContent: 'Git Gud'
+                                              //   })
+                                              // }
+                                              manageQueue(true)
                                             }
-                                            manageQueue(true)
                                           }
                                         })
                                       }

@@ -7,6 +7,8 @@ import { manageBattleState, battleAnimation } from "./scenes/battle.js"
 import { pogemonsObj } from "../data/pogemonData.js"
 import { manageOverWorldState, prevScene, returnPrevScene } from "./scenes/overworld.js"
 import { scenes } from "./canvas.js"
+import { changeMapInfo, currMap } from "./maps.js"
+import { mapsObj } from "../data/mapsData.js"
 
 export const keys = {
   w: {
@@ -35,16 +37,16 @@ let playerHeight = 132
 let playerWidth  = 84
 
 const playerUpImg = new Image()
-playerUpImg.src = './img/protagSprites/brendan/up.png'
+playerUpImg.src = './img/charSprites/brendan/up.png'
 
 const playerRightImg = new Image()
-playerRightImg.src = './img/protagSprites/brendan/right.png'
+playerRightImg.src = './img/charSprites/brendan/right.png'
 
 const playerDownImg = new Image()
-playerDownImg.src = './img/protagSprites/brendan/down.png'
+playerDownImg.src = './img/charSprites/brendan/down.png'
 
 const playerLeftImg = new Image()
-playerLeftImg.src = './img/protagSprites/brendan/left.png'
+playerLeftImg.src = './img/charSprites/brendan/left.png'
 
 export function generatePlayer(canvas){
   player = new Trainer([], new Map(), 500, new Sprite({
@@ -71,7 +73,8 @@ export function generatePlayer(canvas){
 
 function playerMovementEvent() {
   window.addEventListener('keydown', e =>{
-    if(player.disabled) return
+    if(moveDisabled) return
+    console.log('here')
     switch(e.key){
       case 'w':
       case 'W':
@@ -138,20 +141,29 @@ function playerMovementEvent() {
 
 let playerCenterOffset = 14
 
-function rectangularColission({ rectangle1, rectangle2 }){
-  return (
-    rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width
-    && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x
-    && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height
-    && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y
-    )
+function rectangularColission({ rectangle1, rectangle2 }, type){
+  if(type == undefined){
+    return (
+      rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width
+      && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x
+      && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height
+      && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y
+      )
+  } else if(type == 'event') {
+    return (
+      rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width + rectangle2.info.direction.reach.neg.x - rectangle2.info.direction.looking.neg.x
+      && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x - rectangle2.info.direction.reach.pos.x + rectangle2.info.direction.looking.neg.x
+      && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height + rectangle2.info.direction.reach.neg.y - rectangle2.info.direction.looking.neg.y
+      && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y - rectangle2.info.direction.reach.pos.y + rectangle2.info.direction.looking.neg.y
+      )
+  }
 }
 
 function stopMotionWhenColliding(boundaries, direction){
   for(let i = 0; i < boundaries.length; i++){
     const boundary = boundaries[i]
 
-    player.animate = true
+    if(!moveDisabled) player.animate = true
 
     let type = boundary.type
 
@@ -237,6 +249,8 @@ function engageBattle(animationId, battleZones) {
 
 let lastDirection = 'Down'
 
+let moveDisabled = false
+
 function move(direction, movables, moveSpeed){
   switch(direction){
     case 'Up':
@@ -262,14 +276,138 @@ function move(direction, movables, moveSpeed){
   }
 }
 
-//player gets stuck to walls when changing direcitons for some reason1
+//player gets stuck to walls when changing direcitons for some reason
 
-function playerInputEvent(animationId, direction, movables, boundaries, battleZones){
+// maybe should put this in map
+
+let changeMapFlag = false
+
+function changeMapEvent(changeMap){
+  for(let i = 0; i < changeMap.length; i++){
+    const changeMapIndex = changeMap[i]
+    if(
+      rectangularColission({
+        rectangle1: player,
+        rectangle2: changeMapIndex
+      })
+    ){
+      if(changeMapFlag) return
+      changeMapFlag = true
+      player.disabled = true
+
+      gsap.to('#overlapping', {
+        opacity: 1,
+        duration: 0.4,
+        onComplete(){
+          changeMapInfo(changeMapIndex.info)
+        }
+      })
+      break
+    } else if(!rectangularColission({
+      rectangle1: player,
+      rectangle2: changeMapIndex
+    })){
+      changeMapFlag = false
+    }
+  }
+}
+
+let eventZonesFlag = false
+
+function eventZoneManagement(eventZones){
+  for(let i = 0; i < eventZones.length; i++){
+    const eventZonesIndex = eventZones[i]
+    if(
+      rectangularColission({
+        rectangle1: player,
+        rectangle2: eventZonesIndex
+      }, 'event')
+    ){
+      if(eventZonesIndex.info.createdTrainer.beaten) return
+
+
+
+      console.log(eventZonesIndex.info.createdTrainer.position.x)
+      console.log(player.position.y)
+      
+      moveDisabled = true
+      eventZonesIndex.info.createdTrainer.animate = true
+      console.log(eventZonesIndex)
+      gsap.to(eventZonesIndex.info.createdTrainer.position,{
+        //gonna have to make directions
+        x: eventZonesIndex.position.x,
+        y: player.position.y - player.width,
+        duration: 1,
+        onComplete: () =>{
+          const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
+          OWDialogueBoxContainer.style.display = 'grid'
+
+          const OWDialogueBox = document.querySelector('#overworldDialogue')
+          OWDialogueBox.style.display = 'block'
+          OWDialogueBox.innerText = 'HAHAHAHAHAHHAHAHAHAHA'
+
+          eventZonesIndex.info.createdTrainer.animate = false
+
+          queue.push(() =>{
+            manageOverWorldState(false)
+
+            gsap.to('#overlapping', {
+              opacity: 1,
+              duration: 0.4,
+              onComplete(){
+                manageBattleState(true, null, null, eventZonesIndex.info)
+                moveDisabled = false
+                gsap.to('#overlapping', {
+                  opacity: 0,
+                  duration: 0.4
+                })
+              }
+            })
+          })
+        }
+      })
+
+      break
+    } else if(!rectangularColission({
+      rectangle1: player,
+      rectangle2: eventZonesIndex
+    })){
+      eventZonesFlag = false
+    }
+  }
+}
+
+let queue = []
+let queueEnabled = true
+
+document.querySelector('#overworldDialogue').addEventListener('click', (e) => {
+  console.log(e)
+  spendQueue()
+})
+
+function spendQueue(){
+  if(!queueEnabled) return
+  if(queue.length > 0){
+    queue[0]()
+    queue.shift()
+    return
+  } else {
+    if(!scenes.get('overworld').initiated){
+      document.querySelector('#overworldScene').style.display = 'none'
+      document.querySelector('#overworldDialogue').style.display = 'none'
+    }
+  }
+}
+
+function playerInputEvent(animationId, direction, movables, boundaries, battleZones, changeMap, eventZones){
+  if(moveDisabled) return
   stopMotionWhenColliding(boundaries, lastDirection)
   player.img = eval(`player${direction}Img`)
   if(player.animate) {
     returnPrevScene('overworld')
     engageBattle(animationId, battleZones)
+    changeMapEvent(changeMap)
+    eventZoneManagement(eventZones)
     lastDirection = direction
     move(direction, movables, moveSpeed)
     if(player.running){
@@ -280,19 +418,19 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
   }
 }
 
-export function playerMovement(animationId, movables, boundaries, battleZones) {
+export function playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones) {
   if(keys.w.pressed && lastKey === 'w'){
     lastDirection = 'Up'
-    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones, changeMap, eventZones)
   } else if(keys.d.pressed && lastKey === 'd'){
     lastDirection = 'Right'
-    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones, changeMap, eventZones)
   } else if(keys.s.pressed && lastKey === 's'){
     lastDirection = 'Down'
-    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones, changeMap, eventZones)
   } else if(keys.a.pressed && lastKey === 'a'){
     lastDirection = 'Left'
-    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones)
+    playerInputEvent(animationId, lastDirection, movables, boundaries, battleZones, changeMap, eventZones)
   }
 }
 

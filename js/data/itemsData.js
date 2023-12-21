@@ -40,6 +40,14 @@ export const itemsObj = {
     animation: 'img/item_scene/items/ball/pogeball_Animation.png',
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
   },
+  megaball: {
+    name: 'megaball',
+    type: 'ball',
+    pow: '999999999999',
+    img: 'img/item_scene/items/ball/pogeball.png',
+    animation: 'img/item_scene/items/ball/pogeball_Animation.png',
+    desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+  },
   // berry
   ordiBerry: {
     name: 'ordiBerry',

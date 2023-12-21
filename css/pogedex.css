@@ -25,6 +25,43 @@
    width: 100%;
 }
 
+#pogedexSceneDetail{
+   display: grid;
+   grid-template-rows: 17.5% 65% 17.5%;
+}
+
+#pogedexSceneTargetSectionDetailsContainer{
+   display: grid;
+   grid-template-columns: 50% 50%;
+}
+
+.pogedexSceneTargetSectionDetail{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.pogedexSceneTargetSectionDetails{
+   height: 100%;
+   width: 100%;
+}
+
+.pogedexSceneTargetSectionDetail{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneTargetMoreInfoButton{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.infoHover:hover{
+   background-color: rgba(211, 211, 211, 0.25);
+   cursor: pointer;
+}
+
 #pogedexSceneScroll{
    position: absolute;
 

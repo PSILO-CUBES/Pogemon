@@ -5,6 +5,7 @@ import { scenes } from "../canvas.js"
 import { prevScene, returnPrevScene } from "./overworld.js"
 import { itemsObj } from "../../data/itemsData.js"
 import { manageBattleState } from "./battle.js"
+import { mapsObj } from "../../data/mapsData.js"
 
 const bagMenuButtonOption = ['use', 'give', 'discard']
 let nodeArr = ['bagSceneItem','bagSceneMenuButton']
@@ -96,8 +97,6 @@ function bagSceneMenuButtonOnClick(e){
         itemUsed.item = currItem
         itemUsed.used = true
 
-        console.log(itemUsed.used)
-
         manageBagState(false, 'battle')
         return
       }
@@ -120,8 +119,7 @@ function bagSceneSectionOnClickEvent(e, state){
   choosePogemon = false
 
   if(returnToBattle) return
-  
-  console.log(itemChosen)
+
   if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
 
   if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
@@ -153,7 +151,6 @@ function bagSceneItemTypeOnClick(e){
 
   e.target.parentNode.parentNode.childNodes.forEach(node =>{
     node.childNodes[0].id = ''
-    console.log(node)
   })
 
   e.target.id = 'selected'
@@ -212,9 +209,12 @@ function useItemOnClickEvent(e){
 
               dialogueInterfaceDom.textContent = `${targetPogemon.name} doesnt need to be healed.`
               dialogueInterfaceDom.style.display = 'block'
+              return
             }
             break
           case 'revive':
+            // breaks the game
+            // returns to battle even if doesnt work
             if(targetPogemon.fainted){
               dialogueInterfaceDom.innerText = `${targetPogemon.name} has been revived.`
               targetPogemon.fainted = false
@@ -222,8 +222,12 @@ function useItemOnClickEvent(e){
               targetPogemon.hp = Math.floor(targetPogemon.stats.baseHp * currItem.pow)
               e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${player.team[0].convertToPercentage(targetPogemon.hp, targetPogemon.stats.baseHp)}%`
               e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent = `${targetPogemon.hp}/${targetPogemon.stats.baseHp}`
+
+              itemUsed.item = currItem
+              itemUsed.used = true
             } else {
               dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be revived.`
+              return
             }
             break
         }
@@ -562,7 +566,7 @@ function printBagScene(){
 let bagSceneAnimationId
 
 const backgroundImg = new Image()
-backgroundImg.src = `../../../img/background.png`
+backgroundImg.src = mapsObj['background']
 
 const backgroundSprite = new Sprite({
   type: 'teamSprite',

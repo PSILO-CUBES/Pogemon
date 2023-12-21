@@ -4,7 +4,7 @@ import { pogemonsObj } from "../../data/pogemonData.js"
 import { audioObj } from "../../data/audioData.js"
 import { itemsObj } from "../../data/itemsData.js"
 
-import { Sprite, Pogemon } from "../../classes.js"
+import { Sprite, Pogemon, Trainer } from "../../classes.js"
 
 import { manageOverWorldState, prevScene } from "./overworld.js"
 import { currMap } from "../maps.js"
@@ -33,21 +33,6 @@ const battleBackground = new Sprite({
   img: battleBackgroundImage
 })
 
-const foeImage = new Image()
-const foeSprite = new Sprite({
-  type: 'pogemon',
-  position:{
-    x:1415,
-    y:15
-  },
-  frames: {
-    max: 4,
-    hold: 25
-  },
-  img: foeImage,
-  animate: true
-})
-
 let foe
 let ally
 
@@ -67,15 +52,48 @@ function foeRNGEncounter(){
 
 let battleType
 
-function initWildEncouter() {
+function initWildEncouter(){
   battleType = 'wild'
 
   let foeObj = foeRNGEncounter().pogemon
 
   const rngLvl = Math.floor(Math.random() * (foeRNGEncounter().lvls[1] - foeRNGEncounter().lvls[0]) + foeRNGEncounter().lvls[0] + 1)
 
+  const foeImage = new Image()
+  const foeSprite = new Sprite({
+    type: 'pogemon',
+    position:{
+      x:1415,
+      y:15
+    },
+    frames: {
+      max: 4,
+      hold: 25
+    },
+    img: foeImage,
+    animate: true
+  })
+
   foeImage.src = foeObj.sprites.frontSprite
   foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, foeSprite)
+
+  document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
+}
+
+let enemyTrainer
+
+function initTrainerEncounter(info){
+  battleType = 'trainer'
+
+  enemyTrainer = info.createdTrainer
+  // HERE
+  console.log(enemyTrainer)
+
+  foe = enemyTrainer.team[0]
+  foe.position = {
+    x: 0,
+    y: 0
+  }
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -106,9 +124,6 @@ function changeHPColor(DOM, target){
 }
 
 function chooseStatusColor(target, status, statusDom){
-  console.log(status)
-  
-
   if(target.status.name == null) statusDom.style.background = 'transparent'
 
   switch(status){
@@ -121,69 +136,19 @@ function chooseStatusColor(target, status, statusDom){
 }
 
 let allyId
-export function initBattle(faintedTriggered){
-  console.log(faintedTriggered)
+let enemyTrainerInfo
+
+export function initBattle(faintedTriggered, info){
+  enemyTrainerInfo = info
   scenes.set('battle', {initiated : true})
   document.querySelector('#overworldScene').style.display = 'none'
   player.team[0].animate = true
-
-  if(itemUsed.used){
-    ally.position = {
-      x: 300,
-      y: 15
-    }
-  
-    foe.position = {
-      x: 1415,
-      y: 15
-    }
-
-    ally.img.src = ally.pogemon.sprites.backSprite
-
-    document.querySelector('#allyHealthBar').style.width = `${ally.convertToPercentage(ally.hp, ally.stats.baseHp)}%`
-
-    setBattleScene()
-
-    battleAnimation()
-
-    document.querySelector('#encounterInterface').style.display = 'none'
-    document.querySelector('#movesInterface').style.display = 'none'
-    document.querySelector('#dialogueInterface').style.display = 'block'
-
-    changeHPColor(document.querySelector('#foeHealthBar'), foe)
-    changeHPColor(document.querySelector('#allyHealthBar'), ally)
-
-    if(itemUsed.item.type == 'ball'){
-      queueEnabled = false
-      function backToOverWorld(){
-        //might throw error
-
-        queue.push(() => {
-          manageBattleState(false)
-        })
-      }
-      let pogemonInUse = ally
-      player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse)
-      itemUsed.item = null
-      itemUsed.used = false
-      return
-    }
-
-    itemUsed.item = null
-    itemUsed.used = false
-
-    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
-    moveProcess = true
-    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
-
-    manageStatusEvent(foe, ally)
-    return
-  }
 
   loadAlly(player.team[0])
 
   if(allyId == undefined) allyId = ally.id
 
+  ally.img.src = ally.pogemon.sprites.backSprite
   ally.animate = true
   ally.hold = 100
 
@@ -192,12 +157,19 @@ export function initBattle(faintedTriggered){
     y: 15
   }
 
-  if(prevScene == 'overworld') initWildEncouter()
+  if(prevScene == 'overworld') {
+    if(info == undefined) initWildEncouter()
+    else initTrainerEncounter(info)
+  }
 
   foe.position = {
     x: 1415,
     y: 15
   }
+
+  renderedSprites = [foe, ally]
+
+  setBattleScene()
 
   changeHPColor(document.querySelector('#foeHealthBar'), foe)
   changeHPColor(document.querySelector('#allyHealthBar'), ally)
@@ -205,26 +177,70 @@ export function initBattle(faintedTriggered){
   chooseStatusColor(foe, foe.status.name, document.querySelector('#foeStatus'))
   chooseStatusColor(ally, ally.status.name, document.querySelector('#allyStatus'))
 
+  battleAnimation()
+
   let allyExp = ally.convertToPercentage(ally.exp - Math.pow(ally.lvl, 3), Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3))
   if(ally.exp === 0) allyExp = 0
 
   document.querySelector('#expBar').style.width = `${allyExp}%`
 
-  setBattleScene()
+  const textBox = document.querySelector('#textBox')
+  textBox.innerText = `You sent out ${ally.name}!`
+  setInterval(() =>{
+    textBox.innerText = `What will ${ally.name} do?`
+  }, 1500)
 
-  renderedSprites = [foe, ally]
+  if(itemUsed.used){
+    document.querySelector('#encounterInterface').style.display = 'none'
+    document.querySelector('#movesInterface').style.display = 'none'
+    document.querySelector('#dialogueInterface').style.display = 'block'
+    
+    if(itemUsed.item.type == 'ball'){
+      if(enemyTrainer == undefined){
+        queueEnabled = false
+        function backToOverWorld(){
+          //might throw error
+  
+          queue.push(() => {
+            manageBattleState(false)
+          })
+        }
+        let pogemonInUse = ally
+        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent)
 
-  battleAnimation()
+        itemUsed.item = null
+        itemUsed.used = false
+        
+        let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+        moveProcess = true
+        
+        foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
+        
+        
+        manageStatusEvent(foe, ally)
+        return
+      } else {
+        player.team[0].dialogue("battle", "Can't catch another trainer's pogemon!")
+
+        itemUsed.item = null
+        itemUsed.used = false
+      }
+    }
+
+    return
+  }
 
   if(teamEvent.switch && teamEvent.previousScene == 'battle'){
     teamEvent.switch = false
     teamEvent.previousScene = null
 
-    console.log(faintedTriggered)
     if(faintedTriggered.active) {
       faintedTriggered.active = false
 
-      
+      console.log('here')
+      console.log(foe)
+      console.log(ally)
+      // here that is fucked
       foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
       foe.dialogue('battle', `You sent out ${ally.name}`)
 
@@ -244,8 +260,6 @@ export function initBattle(faintedTriggered){
       return
     }
 
-    console.log('wtf is this?')
-
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     moveProcess = true
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
@@ -257,6 +271,7 @@ export function initBattle(faintedTriggered){
 }
 
 function clearBattleScene(nextScene){
+  if(enemyTrainer != undefined) enemyTrainer.beaten = true
   scenes.set('battle', {initiated : false})
   document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
   gsap.to('#overlapping', {
@@ -277,7 +292,6 @@ function clearBattleScene(nextScene){
       else if (nextScene == 'evo') return
       else manageOverWorldState(true)
 
-      console.log('omegalul')
       gsap.to('#overlapping', {opacity: 0})
     }
   })
@@ -289,6 +303,8 @@ export function battleAnimation(){
   battleAnimationId = window.requestAnimationFrame(battleAnimation)
   battleBackground.draw()
 
+  // console.log(renderedSprites[0].frames)
+  // console.log(renderedSprites[0].animate)
   renderedSprites.forEach(sprite =>{
     sprite.draw()
   })
@@ -338,7 +354,6 @@ function optionButtonInteraction(e) {
           })
         break
       case 'Item':
-        textBox.textContent = e.target.textContent
         manageBattleState(false, 'bag')
         gsap.to('#overlapping', {
           opacity: 1,
@@ -353,51 +368,55 @@ function optionButtonInteraction(e) {
         })
         break
       case 'Run':
-        C + 1
+        if(enemyTrainer == undefined){
+          C + 1
 
-        function chanceToEscape(A, B){
-          return (((A * 32) / (B / 4)) + 30 * C)
-        }
-        
-        if(chanceToEscape(player.team[0].stats.spd, foe.stats.spd) < 100) {
+          function chanceToEscape(A, B){
+            return (((A * 32) / (B / 4)) + 30 * C)
+          }
+          
+          if(chanceToEscape(player.team[0].stats.spd, foe.stats.spd) < 100) {
+            encounterInterfaceDom.style.display = 'none'
+            movesInterfaceDom.style.display = 'none'
+            dialogueInterfaceDom.style.display = 'block'
+            dialogueInterfaceDom.textContent = 'You failed to run away..'
+  
+            let rng = Math.floor(Math.random() * foe.move.length)
+            let foeRng = foe.moves[rng]
+  
+            queue.push(() => {
+              foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue})
+              manageStatusEvent(foe, ally)
+            })
+            return
+          }
+  
           encounterInterfaceDom.style.display = 'none'
           movesInterfaceDom.style.display = 'none'
           dialogueInterfaceDom.style.display = 'block'
-          dialogueInterfaceDom.textContent = 'You failed to run away..'
-
-          let rng = Math.floor(Math.random() * foe.move.length)
-          let foeRng = foe.moves[rng]
-
-          queue.push(() => {
-            foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue})
-            //flee missed option
-            manageStatusEvent(foe, ally)
+          dialogueInterfaceDom.textContent = 'You fleed'
+          audioObj.flee.play()
+          // need to put rng check based on speed stat
+          queue.push(() =>{
+            //might throw err
+            manageBattleState(false)
+            gsap.to('#overlapping', {
+              opacity: 1,
+              yoyo: true,
+              duration: 1,
+              onComplete(){
+                audioObj.flee.stop()
+                gsap.to('#overlapping', {
+                  opacity: 0,
+                  duration: 0.4
+                })
+              }
+            })
           })
-          return
+        } else {
+          document.querySelector('#textBox').innerText = "Can't switch out during trainer battle!"
+          console.log('cant escape')
         }
-
-        encounterInterfaceDom.style.display = 'none'
-        movesInterfaceDom.style.display = 'none'
-        dialogueInterfaceDom.style.display = 'block'
-        dialogueInterfaceDom.textContent = 'You fleed'
-        audioObj.flee.play()
-        // need to put rng check based on speed stat
-        queue.push(() =>{
-          //might throw err
-          manageBattleState(false)
-          gsap.to('#overlapping', {
-            opacity: 1,
-            yoyo: true,
-            duration: 1,
-            onComplete(){
-              audioObj.flee.stop()
-              gsap.to('#overlapping', {
-                opacity: 0,
-                duration: 0.4
-              })
-            }
-          })
-        })
         break
     }
   }
@@ -741,25 +760,79 @@ function manageEvolution(f){
 
 let lvlBeforeExpGained
 
+function enemyTeamWiped(enemyTrainerInfo){
+  let teamFainted = true
+
+  for(let i = 0; i < enemyTrainerInfo.team.length; i++){
+    console.log(enemyTrainerInfo.team[i][0])
+    if(enemyTrainerInfo.team[i][0].fainted == false) teamFainted = false
+  }
+
+  console.log(teamFainted)
+
+  return teamFainted
+}
+
+function switchEnemyAfterFaint(){
+  let nextPogemon
+  
+  
+  // maybe ask if want to switch before next pogemon comes out?
+}
+
+//manage enemy faint
 function manageFaintingEvent(target){
   const oldStats = ally.stats
   const prevLvl = ally.lvl
 
   ally.expGain(target, battleType)
 
+  if(enemyTrainerInfo == undefined){
+    if(lvlBeforeExpGained < ally.lvl) {
+      //all queue events happen here
+      manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
+      manageLearnedMoves(ally, queue, 'battle')
+  
+      if(ally.pogemon.evo == null) {
+        queue.push(() => manageBattleState(false))
+        return
+      }
+      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
+      else queue.push(() => manageBattleState(false))
+    } else queue.push(() => manageBattleState(false))
+    return
+  }
+
   if(lvlBeforeExpGained < ally.lvl) {
     //all queue events happen here
     manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
     manageLearnedMoves(ally, queue, 'battle')
 
-    if(ally.pogemon.evo == null) {
-      queue.push(() => manageBattleState(false))
+    if(enemyTeamWiped(enemyTrainerInfo)){
+      if(ally.pogemon.evo == null) {
+        queue.push(() => manageBattleState(false))
+        return
+      }
+      console.log(ally.pogemon.evo.lvl)
+      if(ally.pogemon.evo.lvl <= ally.lvl) {
+        manageEvolution(f)
+      }
+      else {
+        queue.push(() => manageBattleState(false))
+      }
       return
     }
-    if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
-    else queue.push(() => manageBattleState(false))
-  //might throw err
-  } else queue.push(() => manageBattleState(false))
+    //if enemy team isint wiped, switch for next 'mon in for.team arr
+    switchEnemyAfterFaint()
+    return
+  }
+  
+  if(enemyTeamWiped(enemyTrainerInfo)){
+    queue.push(() => manageBattleState(false))
+  }
+
+  //if enemy team isint wiped, switch for next 'mon in for.team arr
+  switchEnemyAfterFaint()
 }
 
 function checkIfTeamWipedOut(){
@@ -778,6 +851,7 @@ function faintEvent(target){
     target.faint()
 
     queue.push(() => {
+      console.log(target)
       if(target.isEnemy){
           manageFaintingEvent(target)
       } else if(checkIfTeamWipedOut()){
@@ -805,12 +879,10 @@ function faintEvent(target){
 function manageStatusEvent(faster, slower){
   // if foe is faster, check for it's status before ally's
   if(faster.isEnemy){
-    console.log('foe')
     faster.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, slower, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
     return
   }
   
-  console.log('ally')
   // if ally is faster, check for it's status before foe's
   faster.checkStatus('#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent, slower, ['#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent])
 }
@@ -825,7 +897,6 @@ function checkIfFainted(target){
       let placeHolder = queue[1]
       queue[1] = queue[2]
       queue[2] = placeHolder
-      console.log(queue)
       queue.pop()
     })
   }
@@ -916,7 +987,7 @@ function setBattleScene(){
   dialogueInterfaceDom.textContent = ''  
 }
 
-export function manageBattleState(state, nextScene, faintedTriggered) {
-  if(state) initBattle(faintedTriggered)
+export function manageBattleState(state, nextScene, faintedTriggered, info) {
+  if(state) initBattle(faintedTriggered, info)
   else clearBattleScene(nextScene)
 }

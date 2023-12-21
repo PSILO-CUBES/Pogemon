@@ -74,7 +74,7 @@
 
 #statsSceneGridSectionInfoContainer{
   display: grid;
-  grid-template-rows: 50% 40% 10%;
+  grid-template-rows: 40% 30% 20% 10%;
 
   height: 100%;
   width: 100%
@@ -104,6 +104,39 @@
   line-height: 2;
 
   width: 80%;
+}
+
+#statsSceneGridSectionInfoTypeContainer{
+  display: grid;
+  grid-template-columns: 40% 60%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#statsSceneGridSectionInfoTypeSectionType{
+  font-size: var(--default-font-size);
+  padding-left: 50px;
+}
+
+#statsSceneGridSectionInfoTypeSectionElementsContainer{
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionInfoTypeSectionElements{
+  display: flex;
+  justify-content: center;
+
+  font-size: var(--default-font-size);
+
+  height: 18px;
+  width: 75%;
+
+  margin-left: 15%;
 }
 
 #statsSceneGridSectionInfoFriendship{

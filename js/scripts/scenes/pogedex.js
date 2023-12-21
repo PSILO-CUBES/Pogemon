@@ -1,12 +1,14 @@
-import { Sprite } from "../../classes.js"
+import { mapsObj } from "../../data/mapsData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
+
+import { Sprite } from "../../classes.js"
 
 import { scenes } from "../canvas.js"
 
 let pogedexAnimationId
 
 const backgroundImg = new Image()
-backgroundImg.src = '../../../img/background.png'
+backgroundImg.src = mapsObj['background']
 const backgroundSprite = new Sprite({
     type: 'background',
     position:{
@@ -16,19 +18,45 @@ const backgroundSprite = new Sprite({
     img: backgroundImg,
 })
 
+const pogedexTargetImg = new Image()
+const pogedexTargetSprite = new Sprite({
+    type: 'pogedexTarget',
+    position:{
+        x: 375,
+        y: 250
+    },
+    img: pogedexTargetImg,
+    frames: {
+        max: 4,
+        hold: 50
+    },
+    animate: true,
+})
+
 function pogedexAnimation(timeSpent){
     pogedexAnimationId = window.requestAnimationFrame(pogedexAnimation)
 
     backgroundSprite.draw()
+    pogedexTargetSprite.draw()
+}
+
+function changeTargetPogemonInfo(target){
+    document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = `${target.pogedex}`
+    document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = `${target.name}`
+    document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = 'INFO+'
+    document.querySelector('#pogedexSceneTargetMoreInfoButton').classList.add('infoHover')
+
+    pogedexTargetImg.src = `${target.sprites.frontSprite}`
 }
 
 function pogedexSectionClickEvent(e){
-    console.log(e.target.parentNode.classList[0])
     document.querySelectorAll(`.${e.target.parentNode.classList[0]}`).forEach(node =>{
         node.style.background = 'rgb(75,75,75)'
     })
 
     e.target.parentNode.style.background = 'rgb(150,150,150)'
+
+    changeTargetPogemonInfo(pogemonsObj[`${e.target.parentNode.childNodes[2].innerText.toLowerCase()}`])
 }
 
 function pogedexCancelClickEvent(e){
@@ -36,6 +64,14 @@ function pogedexCancelClickEvent(e){
     document.querySelectorAll(`.pogedexSceneScrollContent`).forEach(node =>{
         node.style.background = 'rgb(75,75,75)'
     })
+
+    document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = ``
+    document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = ``
+    document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = ``
+    document.querySelector('#pogedexSceneTargetMoreInfoButton').className = ``
+
+
+    pogedexTargetImg.src = ''
 }
 
 function createPogedexMenu(){
@@ -55,8 +91,42 @@ function createPogedexMenu(){
     for(let i = 0; i < 2; i++){
         const pogedexSceneGridSection = document.createElement('div')
         pogedexSceneGridSection.setAttribute('class', 'pogedexSceneSection')
-        if(i == 0) pogedexSceneGridSection.id = 'pogedexSceneDetail'
-        else pogedexSceneGridSection.id = 'pogedexSceneScrollContainer'
+        if(i == 0) {
+            pogedexSceneGridSection.id = 'pogedexSceneDetail'
+            for(let i = 0; i < 3; i++){
+                const pogedexSceneTargetSectionDetails = document.createElement('div')
+                pogedexSceneTargetSectionDetails.setAttribute('class', 'pogedexSceneTargetSectionDetails')
+
+                switch(i){
+                    case 0:
+                        pogedexSceneTargetSectionDetails.setAttribute('id', 'pogedexSceneTargetSectionDetailsContainer')
+                        for(let i = 0; i < 2; i++){
+                            const pogedexSceneTargetSectionDetail = document.createElement('div')
+                            pogedexSceneTargetSectionDetail.setAttribute('class', 'pogedexSceneTargetSectionDetail')
+
+                            switch(i){
+                                case 0:
+                                    pogedexSceneTargetSectionDetail.setAttribute('id', 'pogedexSceneTargetSectionDetailNumber')
+                                    break
+                                case 1:
+                                    pogedexSceneTargetSectionDetail.setAttribute('id', 'pogedexSceneTargetSectionDetailName')
+                                    break
+                            }
+
+                            pogedexSceneTargetSectionDetails.appendChild(pogedexSceneTargetSectionDetail)
+                        }
+                        break
+                    case 1:
+                        pogedexSceneTargetSectionDetails.setAttribute('id', 'pogedexSceneTargetSectionSpriteContainer')
+                        break
+                    case 2:
+                        pogedexSceneTargetSectionDetails.setAttribute('id', 'pogedexSceneTargetMoreInfoButton')
+                        break
+                }
+
+                pogedexSceneGridSection.appendChild(pogedexSceneTargetSectionDetails)
+            }
+        } else pogedexSceneGridSection.id = 'pogedexSceneScrollContainer'
 
         pogedexSceneGrid.appendChild(pogedexSceneGridSection)
     }
@@ -109,6 +179,8 @@ function clearPogedexScene(){
     window.cancelAnimationFrame(pogedexAnimationId)
     document.querySelector('#pogedexScene').style.display = 'none'
     document.querySelector('#pogedexScene').replaceChildren()
+
+    pogedexTargetImg.src = ''
 }
 
 export function managePogedexState(state){
