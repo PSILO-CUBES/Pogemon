@@ -4,7 +4,7 @@ import { Sprite, Pogemon } from "../../classes.js"
 
 import { scenes } from "../canvas.js"
 import { manageOverWorldState } from "./overworld.js"
-import { manageLearnedMoves, learnMoveMenu, passPuff } from "./battle.js"
+import { manageLearnedMoves, learnMoveMenu } from "./battle.js"
 import { player } from "../player.js"
 import { mapsObj } from "../../data/mapsData.js"
 
@@ -168,7 +168,5 @@ export function manageEvolutionState(state, target){
   if(state) initEvo(target)
   else clearEvolutionScene(target)
 }
-
-passPuff(manageEvolutionState)
 
 // manageEvolutionState(true)

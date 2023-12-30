@@ -1,0 +1,21 @@
+#bootScene{
+    position: absolute;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+
+    background-color: black;
+}
+
+#startButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+}#startButton:hover{
+    background: radial-gradient(lightgrey, 0.1%, black);
+    cursor: pointer;
+}

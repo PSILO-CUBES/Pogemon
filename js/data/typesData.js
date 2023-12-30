@@ -1,110 +1,110 @@
 export const typesObj = {
     normal:{
-        color: '999999',
         veryEffective: '',
         notEffective: 'rock steel',
-        immuned: 'ghost'
+        immuned: 'ghost',
+        color: '999999',
     },
     fire:{
-        color: 'FF0000',
         veryEffective: 'grass ice bug steel',
         notEffective: 'fire water rock dragon',
-        immuned: ''
+        immuned: '',
+        color: 'FF0000',
     },
     water:{
-        color: '0000FF',
         veryEffective: 'fire ground rock',
         notEffective: 'water grass dragon',
-        immuned: ''
+        immuned: '',
+        color: '0000FF',
     },
     grass:{
-        color: '38761D',
         veryEffective: 'water ground rock',
         notEffective: 'fire grass poison flying bug dragon steel',
-        immuned: ''
+        immuned: '',
+        color: '38761D',
     },
     electric:{
-        color: 'FFFF00',
         veryEffective: 'water flying',
         notEffective: 'grass electric dragon',
-        immuned: 'ground'
+        immuned: 'ground',
+        color: 'FFFF00',
     },
     ice:{
-        color: '00FFFF',
         veryEffective: 'grass ground flying dragon',
         notEffective: 'fire water ice steel',
-        immuned: ''
+        immuned: '',
+        color: '00FFFF',
     },
     fighting:{
-        color: 'DD7E6B',
         veryEffective: 'normal ice rock dark steel',
         notEffective: 'poison flying psychic bug fairy',
-        immuned: 'ghost'
+        immuned: 'ghost',
+        color: 'DD7E6B',
     },
     poison:{
-        color: '9900FF',
         veryEffective: 'grass fairy',
         notEffective: 'poison ground rock ghost',
-        immuned: 'steel'
+        immuned: 'steel',
+        color: '9900FF',
     },
     ground:{
-        color: 'BF9000',
         veryEffective: 'fire electric poison rock steel',
         notEffective: 'grass bug',
-        immuned: 'flying'
+        immuned: 'flying',
+        color: 'BF9000',
     },
     flying:{
-        color: '4A86E8',
         veryEffective: 'grass fighting bug',
         notEffective: 'electric rock steel',
-        immuned: ''
+        immuned: '',
+        color: '4A86E8',
     },
     psychic:{
-        color: 'FF00FF',
         veryEffective: 'fighting poison',
         notEffective: 'psychic steel',
-        immuned: 'dark'
+        immuned: 'dark',
+        color: 'FF00FF',
     },
     bug:{
-        color: '93C47D',
         veryEffective: 'grass psychic dark',
         notEffective: 'fire fighting poison flying rock steel fairy',
-        immuned: ''
+        immuned: '',
+        color: '93C47D',
     },
     rock:{
-        color: '7F6000',
         veryEffective: 'fire ice flying bug',
         notEffective: 'fighting ground',
-        immuned: ''
+        immuned: '',
+        color: '7F6000',
     },
     ghost:{
-        color: '674EA7',
         veryEffective: 'psychic ghost',
         notEffective: 'dark',
-        immuned: 'normal'
+        immuned: 'normal',
+        color: '674EA7',
     },
     dragon:{
-        color: '1C4587',
         veryEffective: 'dragon',
         notEffective: 'steel',
-        immuned: 'fairy'
+        immuned: 'fairy',
+        color: '1C4587',
     },
     dark:{
-        color: '434343',
         veryEffective: 'psychic ghost',
         notEffective: 'dark fairy',
-        immuned: ''
+        immuned: '',
+        color: '434343',
     },
     steel:{
-        color: '808080',
         veryEffective: 'ice rock fairy',
         notEffective: 'fire water electric steel',
-        immuned: ''
+        immuned: '',
+        color: '808080',
     },
     fairy:{
-        color: 'C27BA0',
         veryEffective: 'fighting dragon dark',
         notEffective: 'fire poison steel',
-        immuned: ''
+        immuned: '',
+        color: 'C27BA0',
     }
 }

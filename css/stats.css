@@ -327,3 +327,13 @@
   background-color: rgba(75, 75, 75, 0.5) !important; 
   cursor: pointer;
 }
+
+#statsSceneGridSectionPogemonImg{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.statsHeldItemImg{
+  width: 75px;
+}

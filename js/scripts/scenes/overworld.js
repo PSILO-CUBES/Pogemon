@@ -1,7 +1,7 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player } from '../player.js'
+import { playerMovement, player, pcOpen } from '../player.js'
 import { generateMapData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
@@ -10,7 +10,7 @@ import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { manageTrainerState } from './trainer.js'
-import { mapsObj } from '../../data/mapsData.js'
+import { mapsObj, setBoundries } from '../../data/mapsData.js'
 
 //
 
@@ -18,8 +18,15 @@ const frameRate = 61
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
-let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = generateMapData()
-let movables = [map, ...boundaries, ...battleZones, ...changeMap,  ...eventZones, ...trainerSpritesArr]
+let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7]
+let movables
+
+async function setMapData(){
+  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData()
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
+}
+
+setMapData()
 
 let animationId
 
@@ -29,8 +36,14 @@ const menu = {
 
 const overworldMenuDom = document.querySelector('#overworldMenu')
 
-export function switchMap(nextMapInfo){
-  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = generateMapData(nextMapInfo)
+export async function switchMap(nextMapInfo){
+  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(nextMapInfo)
+  // console.log(boundaries)
+  // console.log(changeMap)
+  // console.log(eventZones)
+
+  // console.log(mapsObj[`${nextMapInfo.name}`].eventZones)
+
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
 
   gsap.to('#overlapping', {
@@ -219,7 +232,10 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
-      manageMenuState(menu.initiated)
+      if(pcOpen) {
+        document.querySelector('#pcMenu').style.display = 'none'
+        player.animate = true
+      } else manageMenuState(menu.initiated)
     }
 
     if(scenes.get('battle').initiated){
@@ -283,8 +299,13 @@ const overWorldAnimation = timeSpent =>{
 export function manageOverWorldState(state){
   if(state) {
     if(OWAnimationRuning) return
+    eventZones.forEach(zone =>{
+      zone.info.createdTrainer.position.x = zone.position.x
+      zone.info.createdTrainer.position.y = zone.position.y
+    })
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     document.querySelector('#overworldScene').style.display = 'block'
+    document.querySelector('#overworldMenu').style.display = 'none'
     overWorldAnimation()
     scenes.set('overworld', {initiated : true})
     player.disabled = false

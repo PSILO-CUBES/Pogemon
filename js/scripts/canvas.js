@@ -50,6 +50,9 @@ scenes.set('trainer', {initiated: false})
 export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr){
   background.draw()
   map.draw()
+  for(let i = 0; i < trainerSpritesArr.length; i++){
+    trainerSpritesArr[i].draw()
+  }
   player.draw()
   FG.draw()
   for(let i = 0; i < boundaries.length; i++){
@@ -63,8 +66,5 @@ export function printImages(background, FG, map, boundaries, battleZones, change
   }
   for(let i = 0; i < eventZones.length; i++){
     eventZones[i].draw()
-  }
-  for(let i = 0; i < trainerSpritesArr.length; i++){
-    trainerSpritesArr[i].draw()
   }
 }

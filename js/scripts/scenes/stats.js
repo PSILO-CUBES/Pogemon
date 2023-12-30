@@ -325,6 +325,14 @@ function createMenu(){
 						break
 					case 1:
 						statsSceneGridSectionPogemon.setAttribute('id', 'statsSceneGridSectionPogemonImg')
+
+						const heldItemImg = new Image()
+						console.log(selectedPogemon.heldItem)
+						if(selectedPogemon.heldItem == null) heldItemImg.src = `img/item_scene/items/blank.png`
+						else heldItemImg.src = `img/item_scene/items/${selectedPogemon.heldItem.type}/${selectedPogemon.heldItem.name}.png`
+						heldItemImg.setAttribute('class', 'statsHeldItemImg')
+
+						statsSceneGridSectionPogemon.appendChild(heldItemImg)
 						break
 					case 2:
 						statsSceneGridSectionPogemon.setAttribute('id', 'statsSceneGridSectionPogemonHPContainer')

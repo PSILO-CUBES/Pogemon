@@ -22,7 +22,7 @@ export const keys = {
   },
   a: {
     pressed: false
-  }
+  },
 }
 
 let lastKey = ''
@@ -36,36 +36,21 @@ export let player
 let playerHeight = 132
 let playerWidth  = 84
 
-const playerUpImg = new Image()
-playerUpImg.src = './img/charSprites/brendan/up.png'
-
-const playerRightImg = new Image()
-playerRightImg.src = './img/charSprites/brendan/right.png'
-
-const playerDownImg = new Image()
-playerDownImg.src = './img/charSprites/brendan/down.png'
-
-const playerLeftImg = new Image()
-playerLeftImg.src = './img/charSprites/brendan/left.png'
+const playerImg = new Image()
+playerImg.src = './img/charSprites/dino.png'
 
 export function generatePlayer(canvas){
-  player = new Trainer([], new Map(), 500, new Sprite({
+  player = new Trainer([], new Map(), 500, 'Down', 'player', new Sprite({
     type: 'player',
     position:{
       x: canvas.width / 2 - playerWidth / 2,
       y: Math.floor(canvas.height / 2 -  playerHeight / 2)
     },
-    img: playerDownImg,
+    img: playerImg,
     frames: {
       max: 4,
       hold: 10
-    },
-    sprites : {
-      up: playerUpImg,
-      right: playerRightImg,
-      down: playerDownImg,
-      left: playerLeftImg,
-    },
+    }
   }))
 
   return player
@@ -73,8 +58,7 @@ export function generatePlayer(canvas){
 
 function playerMovementEvent() {
   window.addEventListener('keydown', e =>{
-    if(moveDisabled) return
-    console.log('here')
+    if(player.disabled) return
     switch(e.key){
       case 'w':
       case 'W':
@@ -137,11 +121,25 @@ function playerMovementEvent() {
   })
 }
 
+export let pcOpen = false
+
+function playerInteraction(e) {
+  if(e.key == ' '){
+    if(pcEvent){
+      pcOpen = true
+      player.disabled = true
+      document.querySelector('#pcMenu').style.display = 'block'
+    }
+  }
+}
+
+window.addEventListener('keydown', e => playerInteraction(e))
+
 // collissions
 
 let playerCenterOffset = 14
 
-function rectangularColission({ rectangle1, rectangle2 }, type){
+function rectangularCollision({ rectangle1, rectangle2 }, type){
   if(type == undefined){
     return (
       rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width
@@ -151,10 +149,10 @@ function rectangularColission({ rectangle1, rectangle2 }, type){
       )
   } else if(type == 'event') {
     return (
-      rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width + rectangle2.info.direction.reach.neg.x - rectangle2.info.direction.looking.neg.x
-      && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x - rectangle2.info.direction.reach.pos.x + rectangle2.info.direction.looking.neg.x
-      && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height + rectangle2.info.direction.reach.neg.y - rectangle2.info.direction.looking.neg.y
-      && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y - rectangle2.info.direction.reach.pos.y + rectangle2.info.direction.looking.neg.y
+      rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width + rectangle2.info.direction.reach.neg.x - rectangle2.info.direction.sight.neg.x
+      && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x - rectangle2.info.direction.reach.pos.x + rectangle2.info.direction.sight.neg.x
+      && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height + rectangle2.info.direction.reach.neg.y - rectangle2.info.direction.sight.neg.y
+      && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y - rectangle2.info.direction.reach.pos.y + rectangle2.info.direction.sight.neg.y
       )
   }
 }
@@ -163,7 +161,7 @@ function stopMotionWhenColliding(boundaries, direction){
   for(let i = 0; i < boundaries.length; i++){
     const boundary = boundaries[i]
 
-    if(!moveDisabled) player.animate = true
+    if(!player.disabled) player.animate = true
 
     let type = boundary.type
 
@@ -196,7 +194,7 @@ function stopMotionWhenColliding(boundaries, direction){
     }
 
     if(
-      rectangularColission({
+      rectangularCollision({
         rectangle1: player,
         rectangle2: {...boundary, position: {
           x: boundary.position.x + xOffset,
@@ -218,7 +216,7 @@ function engageBattle(animationId, battleZones) {
     * Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height)
     - Math.max(player.position.y, battleZone.position.y)
     if(
-      rectangularColission({
+      rectangularCollision({
         rectangle1: player,
         rectangle2: battleZone
       }) &&
@@ -248,8 +246,6 @@ function engageBattle(animationId, battleZones) {
 }
 
 let lastDirection = 'Down'
-
-let moveDisabled = false
 
 function move(direction, movables, moveSpeed){
   switch(direction){
@@ -286,7 +282,7 @@ function changeMapEvent(changeMap){
   for(let i = 0; i < changeMap.length; i++){
     const changeMapIndex = changeMap[i]
     if(
-      rectangularColission({
+      rectangularCollision({
         rectangle1: player,
         rectangle2: changeMapIndex
       })
@@ -303,7 +299,7 @@ function changeMapEvent(changeMap){
         }
       })
       break
-    } else if(!rectangularColission({
+    } else if(!rectangularCollision({
       rectangle1: player,
       rectangle2: changeMapIndex
     })){
@@ -313,66 +309,109 @@ function changeMapEvent(changeMap){
 }
 
 let eventZonesFlag = false
+let pcEvent = false
+
+const exclamation = new Image()
+exclamation.src = 'img/charSprites/exclamation.png'
+exclamation.setAttribute('class', 'exclamation')
+document.querySelector('#overworldSceneContainer').appendChild(exclamation)
 
 function eventZoneManagement(eventZones){
   for(let i = 0; i < eventZones.length; i++){
     const eventZonesIndex = eventZones[i]
     if(
-      rectangularColission({
+      rectangularCollision({
         rectangle1: player,
         rectangle2: eventZonesIndex
       }, 'event')
     ){
-      if(eventZonesIndex.info.createdTrainer.beaten) return
-
-
-
-      console.log(eventZonesIndex.info.createdTrainer.position.x)
-      console.log(player.position.y)
-      
-      moveDisabled = true
-      eventZonesIndex.info.createdTrainer.animate = true
-      console.log(eventZonesIndex)
-      gsap.to(eventZonesIndex.info.createdTrainer.position,{
-        //gonna have to make directions
-        x: eventZonesIndex.position.x,
-        y: player.position.y - player.width,
-        duration: 1,
-        onComplete: () =>{
-          const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
-          OWDialogueBoxContainer.style.display = 'grid'
-
-          const OWDialogueBox = document.querySelector('#overworldDialogue')
-          OWDialogueBox.style.display = 'block'
-          OWDialogueBox.innerText = 'HAHAHAHAHAHHAHAHAHAHA'
-
-          eventZonesIndex.info.createdTrainer.animate = false
-
-          queue.push(() =>{
-            manageOverWorldState(false)
-
-            gsap.to('#overlapping', {
-              opacity: 1,
-              duration: 0.4,
-              onComplete(){
-                manageBattleState(true, null, null, eventZonesIndex.info)
-                moveDisabled = false
-                gsap.to('#overlapping', {
-                  opacity: 0,
-                  duration: 0.4
+      if(eventZonesIndex.info.createdTrainer != undefined){
+        if(eventZonesIndex.info.beaten) return
+        if(eventZonesIndex.info.createdTrainer.beaten) return
+        
+        player.disabled = true
+  
+        exclamation.style.left = eventZonesIndex.position.x + 6
+        exclamation.style.top = eventZonesIndex.position.y - 46
+  
+        gsap.to(exclamation, {
+          opacity: 1,
+          duration: 1,
+          onComplete: () =>{
+            gsap.to(exclamation, {
+              opacity: 0,
+              duration: 0.5,
+              onComplete: () =>{
+                eventZonesIndex.info.createdTrainer.animate = true
+  
+                let eventPos = {x:0, y:0}
+        
+                switch(eventZonesIndex.info.direction.looking){
+                  case 'Up':
+                    eventPos.x = eventZonesIndex.position.x
+                    eventPos.y = player.position.y + player.height
+                    break
+                  case 'Right':
+                    eventPos.x = player.position.x - player.width
+                    eventPos.y = eventZonesIndex.position.y
+                    break
+                  case 'Down':
+                    eventPos.x = eventZonesIndex.position.x
+                    eventPos.y = player.position.y - player.height
+                    break
+                  case 'Left':
+                    eventPos.x = player.position.x + player.width
+                    eventPos.y = eventZonesIndex.position.y
+                    break
+                }
+          
+                gsap.to(eventZonesIndex.info.createdTrainer.position,{
+                  //gonna have to make directions
+                  x: eventPos.x,
+                  y: eventPos.y,
+                  onComplete: () =>{
+                    const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
+                    OWDialogueBoxContainer.style.display = 'grid'
+          
+                    const OWDialogueBox = document.querySelector('#overworldDialogue')
+                    OWDialogueBox.style.display = 'block'
+                    OWDialogueBox.innerText = eventZonesIndex.info.dialogue
+          
+                    eventZonesIndex.info.createdTrainer.animate = false
+          
+                    queue.push(() =>{
+                      manageOverWorldState(false)
+          
+                      gsap.to('#overlapping', {
+                        opacity: 1,
+                        duration: 0.4,
+                        onComplete(){
+                          manageBattleState(true, null, null, eventZonesIndex.info)
+                          player.disabled = false
+                          gsap.to('#overlapping', {
+                            opacity: 0,
+                            duration: 0.4
+                          })
+                        }
+                      })
+                    })
+                  }
                 })
               }
             })
-          })
-        }
-      })
-
+          }
+        })
+      }
+      if(eventZonesIndex.type == 'pc'){
+        pcEvent = true
+      }
       break
-    } else if(!rectangularColission({
+    } else if(!rectangularCollision({
       rectangle1: player,
       rectangle2: eventZonesIndex
     })){
       eventZonesFlag = false
+      pcEvent = false
     }
   }
 }
@@ -381,7 +420,6 @@ let queue = []
 let queueEnabled = true
 
 document.querySelector('#overworldDialogue').addEventListener('click', (e) => {
-  console.log(e)
   spendQueue()
 })
 
@@ -400,9 +438,9 @@ function spendQueue(){
 }
 
 function playerInputEvent(animationId, direction, movables, boundaries, battleZones, changeMap, eventZones){
-  if(moveDisabled) return
+  player.assingDirection(direction)
+  if(player.disabled) return
   stopMotionWhenColliding(boundaries, lastDirection)
-  player.img = eval(`player${direction}Img`)
   if(player.animate) {
     returnPrevScene('overworld')
     engageBattle(animationId, battleZones)

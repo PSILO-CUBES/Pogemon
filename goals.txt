@@ -15,13 +15,14 @@ team management x
 attack effects x
 super effective x
 
-pogedex scene
+pogedex scene x
 
-change maps
+change maps x
+
+held items x
 
 pc
 
-held items
 evolution items
 
 options
@@ -47,3 +48,7 @@ fishing?
 breeding??
 
 multiplayer?????
+
+grass/psy mushroom
+fire/bug ant
+water/poison toad

@@ -1,19 +1,16 @@
 // data pertaining to the map
 
-import { mapsObj } from "../data/mapsData.js"
+import { mapsObj, setBoundries } from "../data/mapsData.js"
 import { audioObj } from "../data/audioData.js"
 
 import { Sprite, Boundary, Trainer, Pogemon } from "../classes.js"
 import { switchMap } from "./scenes/overworld.js"
-import { player } from "./player.js"
 
-let startMap = mapsObj.geneTown
-export let currMap = startMap
+export let currMap
 
 const mapImg = new Image()
 const map = new Sprite({
   type: 'map',
-  position: currMap.spawnPosition,
   img: mapImg,
   frames: {max: 1}
 })
@@ -21,7 +18,6 @@ const map = new Sprite({
 const FGImg = new Image()
 const FG = new Sprite({
   type: 'FG',
-  position: currMap.spawnPosition,
   img: FGImg,
   frames: {max: 1}
 })
@@ -42,7 +38,11 @@ audioObj.map.play()
 
 const trainerSpritesArr = []
 
-function generateBoundaries(nextMapInfo){
+async function generateBoundaries(nextMapInfo){
+  await setBoundries()
+  if(currMap == undefined) currMap = mapsObj.geneTown
+  map.position = currMap.spawnPosition
+  FG.position = currMap.spawnPosition
   // uses the Boundary class
   trainerSpritesArr.length = 0
   const boundaries = []
@@ -130,11 +130,10 @@ function generateBoundaries(nextMapInfo){
         row.forEach((type, j) =>{
           if(type === 0) return
           let trainerInfo = mapsObj[`${currMap.name}`].trainers[z]
-        
+          let trainerTeam = []
+
           if(z == 0) z = z + 1
           else z++
-
-          let trainerTeam = []
 
           for(let i = 0; i < trainerInfo.team.length; i++){
             const foeImg = new Image()
@@ -154,7 +153,7 @@ function generateBoundaries(nextMapInfo){
               animate: true
             })
             
-            trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, foeSprite))
+            trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, foeSprite))
           }
 
           const trainerImg = new Image()
@@ -174,7 +173,7 @@ function generateBoundaries(nextMapInfo){
             animate: false
           })
 
-          let createdTrainer = new Trainer(trainerTeam, null, null, trainerSprite)
+          let createdTrainer = new Trainer(trainerTeam, null, null, trainerInfo.direction.looking, trainerInfo.name, trainerSprite)
 
           if(type == 4) trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
 
@@ -273,70 +272,88 @@ function generateBoundaries(nextMapInfo){
         eventZonesMap.push(nextMapInfoObj.eventZones.slice(i, nextMapInfoObj.width + i))
       }
       let z = 0
+
       eventZonesMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type === 0) return
-          let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
+          if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
+            let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
         
-          if(z == 0) z = z + 1
-          else z++
-
-          let trainerTeam = []
-
-          for(let i = 0; i < trainerInfo.team.length; i++){
-            const foeImg = new Image()
-            foeImg.src = trainerInfo.team[i][0].sprites.frontSprite
-            
-            const foeSprite = new Sprite({
-              type: 'trainerPogemon',
-              position: {
-                x: 0,
-                y: 0
-              },
-              img: foeImg,
-              frames: {
-                max: 4,
-                hold: 25,
-              },
-              animate: true
-            })
-            
-            trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, foeSprite))
-          }
-
-          const trainerImg = new Image()
-          trainerImg.src = trainerInfo.sprite
-
-          const trainerSprite = new Sprite({
-            type:'trainer',
-            position:{
-              x: j * Boundary.width + nextMapInfo.spawnPosition.x,
-              y: i * Boundary.height + nextMapInfo.spawnPosition.y
-            },
-            img: trainerImg,
-            frames: {
-              max: 4,
-              hold: 25
-            },
-            animate: false
-          })
-
-          let createdTrainer = new Trainer(trainerTeam, null, null, trainerSprite)
-
-          if(type == 4) trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
-
-          trainerSpritesArr.push(createdTrainer)
-        
-          eventZones.push(
-            new Boundary({
+            if(z == 0) z = z + 1
+            else z++
+  
+            let trainerTeam = []
+  
+            for(let i = 0; i < trainerInfo.team.length; i++){
+              const foeImg = new Image()
+              foeImg.src = trainerInfo.team[i][0].sprites.frontSprite
+              
+              const foeSprite = new Sprite({
+                type: 'trainerPogemon',
+                position: {
+                  x: 0,
+                  y: 0
+                },
+                img: foeImg,
+                frames: {
+                  max: 4,
+                  hold: 25,
+                },
+                animate: true
+              })
+              
+              trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, foeSprite))
+            }
+  
+            const trainerImg = new Image()
+            trainerImg.src = trainerInfo.sprite
+  
+            const trainerSprite = new Sprite({
+              type:'trainer',
               position:{
                 x: j * Boundary.width + nextMapInfo.spawnPosition.x,
                 y: i * Boundary.height + nextMapInfo.spawnPosition.y
               },
-              type: type,
-              info: trainerInfo
+              img: trainerImg,
+              frames: {
+                max: 4,
+                hold: 25
+              },
+              animate: false,
             })
-          )
+  
+            let createdTrainer = new Trainer(trainerTeam, null, null,trainerInfo.direction.looking, trainerInfo.name, trainerSprite)
+  
+            trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
+  
+            trainerSpritesArr.push(createdTrainer)
+
+            eventZones.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + nextMapInfo.spawnPosition.x,
+                  y: i * Boundary.height + nextMapInfo.spawnPosition.y
+                },
+                type: type,
+                info: trainerInfo
+              })
+            )
+
+            return
+          }
+          if(type === 5){
+            eventZones.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + nextMapInfo.spawnPosition.x,
+                  y: i * Boundary.height + nextMapInfo.spawnPosition.y
+                },
+                type: 'pc',
+                info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}, looking: 'Down'}}
+              })
+            )
+            console.log(eventZones)
+          }
         })
       })
     }
@@ -357,10 +374,8 @@ export function changeMapInfo(nextMapInfo){
   switchMap(nextMapInfo)
 }
 
-export function generateMapData(nextMapInfo) {
-  const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr] = generateBoundaries(nextMapInfo)
-
-
+export async function generateMapData(nextMapInfo) {
+  const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr] = await generateBoundaries(nextMapInfo)
 
   mapImg.src = currMap.mapImg
   FGImg.src = currMap.FGImg

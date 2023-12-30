@@ -1,6 +1,4 @@
-import { manageOverWorldState } from './scripts/scenes/overworld.js'
-import { battleAnimation } from './scripts/scenes/battle.js'
-import { evolutionAnimation } from './scripts/scenes/evolution.js';
+import { manageBootState } from './scripts/scenes/boot.js';
 
 let timerId;
 export let _preventActionSpam = (callback, e, duration) =>{
@@ -50,6 +48,10 @@ document.addEventListener("keydown", e => {
 
 preventScrolling()
 
-manageOverWorldState(true)
+function startApp(){
+  manageBootState(true)
+}
+
+startApp()
 // battleAnimation()
 // evolutionAnimation()

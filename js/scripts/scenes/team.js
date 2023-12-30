@@ -430,6 +430,17 @@ function createSceneLayout(){
     const spriteContainerDom = document.createElement('div')
     spriteContainerDom.classList.add('teamMenuSpriteContainer')
 
+    const pogemonHelpItem = new Image()
+    
+    if(player.team[i] != undefined){
+      if(player.team[i].heldItem == null) pogemonHelpItem.src = `img/item_scene/items/blank.png`
+      else pogemonHelpItem.src = `img/item_scene/items/${player.team[i].heldItem.type}/${player.team[i].heldItem.name}.png`
+    }
+
+    pogemonHelpItem.setAttribute('class', 'pogemonTeamMenuItem')
+
+    spriteContainerDom.appendChild(pogemonHelpItem)
+
     const infoText = document.createElement('span')
     infoText.classList.add('teamMenuInfoText')
 

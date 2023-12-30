@@ -145,3 +145,13 @@
 }.inferfaceOption:hover{
   background: rgba(175, 175, 175, 0.75);
 }
+
+.teamMenuSpriteContainer{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.pogemonTeamMenuItem{
+  width: 50px;
+}

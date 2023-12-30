@@ -95,6 +95,12 @@
   justify-content: space-between;
 }
 
+.bagSceneTeamSectionImgContainer{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
 .bagSceneTeamSectionLvl{
   position: relative;
   left: -125px;
@@ -103,6 +109,12 @@
   word-break: keep-all;
 
   font-size: medium;
+}
+
+.bagSceneTeamSectionItem{
+  position: relative;
+
+  height: 35px;
 }
 
 .bagSceneTeamSectionHP{

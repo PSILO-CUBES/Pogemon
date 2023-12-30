@@ -13,6 +13,7 @@ import { player } from "../player.js"
 import { scenes } from "../canvas.js"
 import { teamEvent, manageTeamState } from "./team.js"
 import { itemUsed, manageBagState } from "./bag.js"
+import { manageEvolutionState } from "./evolution.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
@@ -53,6 +54,8 @@ function foeRNGEncounter(){
 let battleType
 
 function initWildEncouter(){
+  enemyTrainer = undefined
+
   battleType = 'wild'
 
   let foeObj = foeRNGEncounter().pogemon
@@ -86,14 +89,8 @@ function initTrainerEncounter(info){
   battleType = 'trainer'
 
   enemyTrainer = info.createdTrainer
-  // HERE
-  console.log(enemyTrainer)
 
   foe = enemyTrainer.team[0]
-  foe.position = {
-    x: 0,
-    y: 0
-  }
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -237,9 +234,6 @@ export function initBattle(faintedTriggered, info){
     if(faintedTriggered.active) {
       faintedTriggered.active = false
 
-      console.log('here')
-      console.log(foe)
-      console.log(ally)
       // here that is fucked
       foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
       foe.dialogue('battle', `You sent out ${ally.name}`)
@@ -272,6 +266,11 @@ export function initBattle(faintedTriggered, info){
 
 function clearBattleScene(nextScene){
   if(enemyTrainer != undefined) enemyTrainer.beaten = true
+  mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
+    if(trainer.name != enemyTrainer.name) return
+
+    trainer.beaten = enemyTrainer.beaten
+  })
   scenes.set('battle', {initiated : false})
   document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
   gsap.to('#overlapping', {
@@ -303,8 +302,6 @@ export function battleAnimation(){
   battleAnimationId = window.requestAnimationFrame(battleAnimation)
   battleBackground.draw()
 
-  // console.log(renderedSprites[0].frames)
-  // console.log(renderedSprites[0].animate)
   renderedSprites.forEach(sprite =>{
     sprite.draw()
   })
@@ -741,19 +738,12 @@ export function manageLearnedMoves(ally, queue, type){
   }
 }
 
-let f
-
-export function passPuff(func){
-  // fires in evolutions.js so i can grab the evo function after it's been set instead of when the file loads
-  f = func
-}
-
 function manageEvolution(f){
   //stops battle and initiates the evolution scene instead of the normal way
   queue.push(() => {
     manageBattleState(false, 'evo', false)
     setTimeout(() =>{
-      f(true, ally)
+      manageEvolutionState(true, ally)
     }, 410)
   })
 }
@@ -764,18 +754,44 @@ function enemyTeamWiped(enemyTrainerInfo){
   let teamFainted = true
 
   for(let i = 0; i < enemyTrainerInfo.team.length; i++){
-    console.log(enemyTrainerInfo.team[i][0])
-    if(enemyTrainerInfo.team[i][0].fainted == false) teamFainted = false
+    if(enemyTrainerInfo.createdTrainer.team[i].fainted == false) teamFainted = false
   }
-
-  console.log(teamFainted)
-
   return teamFainted
 }
 
 function switchEnemyAfterFaint(){
-  let nextPogemon
-  
+  for(let i = 0; i < enemyTrainerInfo.team.length; i++){
+    if(enemyTrainerInfo.createdTrainer.team[i].fainted === false){
+      foe = enemyTrainerInfo.createdTrainer.team[i]
+      break
+    }
+  }
+
+  document.querySelector('#movesBox').replaceChildren()
+
+  for(let i = 0; i < ally.moves.length; i++){
+    const newAttackBox = document.createElement('div')
+    newAttackBox.setAttribute('class', 'movesButton')
+    newAttackBox.innerText = `${ally.moves[i].name}`
+
+    newAttackBox.addEventListener('mouseover', e => movesHoverEvent(e))
+    newAttackBox.addEventListener('mouseout', e => movesAwayEvent())
+
+    newAttackBox.addEventListener('click', e => attackMove(e))
+
+    document.querySelector('#movesBox').appendChild(newAttackBox)
+  }
+
+  enemyTrainerInfo.createdTrainer.team[0].dialogue('battle', `${enemyTrainerInfo.name} is about to send ${foe.name}`)
+  enemyTrainerInfo.createdTrainer.team[0].hpManagement(foe, '#foeHealthBar', document.querySelector('#foeHp'))
+  foe.opacity = 1
+  foe.position = {
+    x: 1415,
+    y: 15
+  }
+  setBattlersInfo()
+
+  renderedSprites.splice(0, 1, foe)
   
   // maybe ask if want to switch before next pogemon comes out?
 }
@@ -797,7 +813,7 @@ function manageFaintingEvent(target){
         queue.push(() => manageBattleState(false))
         return
       }
-      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution(f)
+      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
       else queue.push(() => manageBattleState(false))
     } else queue.push(() => manageBattleState(false))
     return
@@ -810,20 +826,20 @@ function manageFaintingEvent(target){
 
     if(enemyTeamWiped(enemyTrainerInfo)){
       if(ally.pogemon.evo == null) {
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
         queue.push(() => manageBattleState(false))
         return
       }
-      console.log(ally.pogemon.evo.lvl)
-      if(ally.pogemon.evo.lvl <= ally.lvl) {
-        manageEvolution(f)
-      }
+
+      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
       else {
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
         queue.push(() => manageBattleState(false))
       }
       return
     }
     //if enemy team isint wiped, switch for next 'mon in for.team arr
-    switchEnemyAfterFaint()
+    queue.push(() => switchEnemyAfterFaint())
     return
   }
   
@@ -832,7 +848,7 @@ function manageFaintingEvent(target){
   }
 
   //if enemy team isint wiped, switch for next 'mon in for.team arr
-  switchEnemyAfterFaint()
+  queue.push(() => switchEnemyAfterFaint())
 }
 
 function checkIfTeamWipedOut(){
@@ -851,7 +867,6 @@ function faintEvent(target){
     target.faint()
 
     queue.push(() => {
-      console.log(target)
       if(target.isEnemy){
           manageFaintingEvent(target)
       } else if(checkIfTeamWipedOut()){

@@ -22,7 +22,7 @@ export class Sprite {
     this.frames = {...frames, val: 0, elapsed: 0}
     this.img.onload = () =>{
       this.width = this.img.width / this.frames.max
-      this.height = this.img.height
+      this.height = this.img.height / this.frames.max
     }
     this.animate = animate
     this.sprites = sprites
@@ -68,7 +68,6 @@ export class Sprite {
       if(this.frames.val < this.frames.max - 1) this.frames.val++
       else this.frames.val = 0
     }
-
   }
 }
 
@@ -171,6 +170,7 @@ export class Pogemon extends Sprite{
     this.friendliness = 0
     this.catchInfo = this.generateCatchInfo(new Date())
     this.animationProperties = pogemon.animationProperties
+    this.heldItem = null
   }
 
   generateId(){
@@ -604,7 +604,6 @@ export class Pogemon extends Sprite{
   }
 
   checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, info){
-    console.log(this)
     let thisFaints = () => {
       if(this.hp <= 0){
         audioObj.battle.stop()
@@ -617,7 +616,6 @@ export class Pogemon extends Sprite{
     }
 
     if(slower.name == undefined){
-      console.log('here')
       thisFaints()
       return
     }
@@ -651,7 +649,6 @@ export class Pogemon extends Sprite{
             audioObj.battle.stop()
             audioObj.victory.play()
             this.hpManagement(this, healthBar, healthAmount)
-            console.log('here')
             faintEvent(this)
             return
           }
@@ -825,6 +822,8 @@ export class Trainer extends Sprite{
     team,
     bag,
     money,
+    direction,
+    trainerName,
     {
       type, 
       position, 
@@ -847,10 +846,74 @@ export class Trainer extends Sprite{
     this.team = team
     if(bag != undefined) this.bag = bag
     if(money != undefined) this.money = money
-    console.log(type)
     if(type == 'enemyTrainer') this.beaten = false
     this.running = false
     this.disabled = false
+    this.assingDirection(direction)
+    if(trainerName != undefined) this.name = trainerName
+  }
+
+  assingDirection(direction){
+    if(direction == undefined) this.direction = 1
+    switch(direction){
+      case 'Up':
+        this.direction = 1
+        this.spriteHeightFrame = 3
+        break
+      case 'Right':
+        this.direction = 2
+        this.spriteHeightFrame = 2
+        break
+      case 'Down':
+        this.direction = 3
+        this.spriteHeightFrame = 0
+        break
+      case 'Left':
+        this.direction = 4
+        this.spriteHeightFrame = 1
+        break
+    }
+  }
+
+  draw(){
+    c.save()
+    c.translate(
+      this.position.x + this.width / 2, 
+      this.position.y + this.height / 2
+    )
+    c.rotate(this.rotation)
+    c.translate(
+      -this.position.x - this.width / 2, 
+      -this.position.y - this.height / 2
+    )
+    c.globalAlpha = this.opacity
+    c.drawImage(
+      this.img,
+      this.frames.val * this.width,
+      this.spriteHeightFrame * this.height,
+      this.img.width / this.frames.max,
+      this.img.height / this.frames.max,
+      this.position.x,
+      this.position.y,
+      this.img.width / this.frames.max,
+      this.img.height / this.frames.max
+    )
+    c.restore()
+
+
+    if(!this.animate) {
+      this.frames.val = 0 
+      return
+    }
+
+    if(this.frames.max > 1) this.frames.elapsed++
+
+
+    if (this.frames.elapsed % this.frames.hold === 0){
+      if(this.frames.val < this.frames.max - 1) this.frames.val++
+      else this.frames.val = 0
+    }
+
   }
 
   catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent){
