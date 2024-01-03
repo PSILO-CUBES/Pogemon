@@ -14,6 +14,7 @@ import { scenes } from "../canvas.js"
 import { teamEvent, manageTeamState } from "./team.js"
 import { itemUsed, manageBagState } from "./bag.js"
 import { manageEvolutionState } from "./evolution.js"
+import { pc } from "./pc.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
@@ -42,6 +43,8 @@ let renderedSprites
 function loadAlly(){
   ally = player.team[0]
   ally.img.src = pogemonsObj[`${ally.name}`].sprites.backSprite
+  ally.width = 646
+  console.log(ally.width)
   document.querySelector("#allyGenderImg").src = `../../../img/${ally.gender}_icon.png`
 }
 
@@ -203,16 +206,12 @@ export function initBattle(faintedTriggered, info){
           })
         }
         let pogemonInUse = ally
-        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent)
+        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc)
 
         itemUsed.item = null
         itemUsed.used = false
         
-        let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
         moveProcess = true
-        
-        foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
-        
         
         manageStatusEvent(foe, ally)
         return
@@ -265,12 +264,14 @@ export function initBattle(faintedTriggered, info){
 }
 
 function clearBattleScene(nextScene){
-  if(enemyTrainer != undefined) enemyTrainer.beaten = true
-  mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
-    if(trainer.name != enemyTrainer.name) return
+  if(enemyTrainer != undefined) {
+    enemyTrainer.beaten = true
+    mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
+      if(trainer.name != enemyTrainer.name) return
 
-    trainer.beaten = enemyTrainer.beaten
-  })
+      trainer.beaten = enemyTrainer.beaten
+    })
+  }
   scenes.set('battle', {initiated : false})
   document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
   gsap.to('#overlapping', {
@@ -895,11 +896,13 @@ function manageStatusEvent(faster, slower){
   // if foe is faster, check for it's status before ally's
   if(faster.isEnemy){
     faster.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent, slower, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent])
+    moveProcess = false
     return
   }
   
   // if ally is faster, check for it's status before foe's
   faster.checkStatus('#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, faintEvent, slower, ['#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, faintEvent])
+  moveProcess = false
 }
 
 function checkIfFainted(target){

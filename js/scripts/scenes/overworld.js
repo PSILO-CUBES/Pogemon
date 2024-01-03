@@ -1,7 +1,7 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player, pcOpen } from '../player.js'
+import { playerMovement, player } from '../player.js'
 import { generateMapData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
@@ -11,6 +11,7 @@ import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { manageTrainerState } from './trainer.js'
 import { mapsObj, setBoundries } from '../../data/mapsData.js'
+import { managePcState } from './pc.js'
 
 //
 
@@ -208,7 +209,12 @@ function transitionScenes(prevScene){
         opacity: 1,
         onComplete: () =>{
           manageOverWorldState(true)
-          gsap.to('#overlapping', {opacity: 0})
+          gsap.to('#overlapping', {
+            opacity: 0,
+            onComplete: () =>{
+              player.disabled = false
+            }
+          })
         }
       })
       break
@@ -232,10 +238,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
-      if(pcOpen) {
-        document.querySelector('#pcMenu').style.display = 'none'
-        player.animate = true
-      } else manageMenuState(menu.initiated)
+      manageMenuState(menu.initiated)
     }
 
     if(scenes.get('battle').initiated){
@@ -263,6 +266,7 @@ function escapeKeyEventOptions(e) {
 
     if(scenes.get('stats').initiated){
       if(scenes.get('overworld').initiated) return
+      console.log(prevScene)
       manageStatsState(false, null, prevScene)
     }
 
@@ -275,7 +279,19 @@ function escapeKeyEventOptions(e) {
       manageTrainerState(false)
       transitionScenes('overworld')
     }
-    
+
+    if(scenes.get('pc').initiated){
+      gsap.to('#overlapping',{
+        opacity: 1,
+        onComplete: () =>{
+          managePcState(false)
+          transitionScenes('overworld')
+          gsap.to('#overlapping',{
+            opacity: 0,
+          })
+        }
+      })
+    }
   } else if(e.key == '`'){
     console.log(player)
   }
@@ -300,8 +316,10 @@ export function manageOverWorldState(state){
   if(state) {
     if(OWAnimationRuning) return
     eventZones.forEach(zone =>{
-      zone.info.createdTrainer.position.x = zone.position.x
-      zone.info.createdTrainer.position.y = zone.position.y
+      if(zone.info.createdTrainer != undefined){
+        zone.info.createdTrainer.position.x = zone.position.x
+        zone.info.createdTrainer.position.y = zone.position.y
+      }
     })
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     document.querySelector('#overworldScene').style.display = 'block'
@@ -313,6 +331,7 @@ export function manageOverWorldState(state){
     overworldMenuDom.replaceChildren()
   }
   else {
+    console.log(animationId)
     cancelAnimationFrame(animationId)
     OWAnimationRuning = false
     document.querySelector('#overworldScene').style.display = 'none'

@@ -270,6 +270,7 @@ export class Pogemon extends Sprite{
           if(this.learntMoves.includes(movepool[key].move.name)) return
 
           this.learntMoves.push(movepool[key].move.name)
+          if(moves.length == 4) moves.splice(0, 1)
           moves.push(movepool[key].move)
         }
       }
@@ -706,6 +707,7 @@ export class Pogemon extends Sprite{
   }
 
   expGain(yeilder, battleType){
+    if(this.lvl >= 100) return
     let a = 1
     if(battleType = 'trainer') a = 1.5
 
@@ -916,7 +918,7 @@ export class Trainer extends Sprite{
 
   }
 
-  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent){
+  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc){
     let newPogemon
 
     const catchCalc = ball => {
@@ -924,6 +926,100 @@ export class Trainer extends Sprite{
       const rng = Math.floor(Math.random() * 100)
       const rate = Math.floor(((3 * pogemon.stats.baseHp - 2 * pogemon.hp) * pogemon.pogemon.catchRate * ball.pow / (3 * pogemon.stats.baseHp) * statusBonus))
       return {rng, rate} 
+    }
+
+    const catchEvent = ballSprite => {
+      let {rng, rate} = catchCalc(ball)
+      if(rng <= rate){
+        renderedSprites.splice(1,1)
+        newPogemon.isEnemy = false
+        if(this.team.length < 6) this.team.push(newPogemon)
+        else {
+          for(let i = 0; i < pc.length; i++){
+            for(let j = 0; j < pc[i].length; j++){
+              if(pc[i][j] == null) pc[i][j] = newPogemon
+              break
+            }
+          }
+        }
+        document.querySelector('#dialogueInterface').textContent = `${pogemon.name} was caught`
+        manageQueue(true)
+        backToOverWorld()
+      } else {
+        ballSprite.animate = true
+        gsap.to(ballSprite, {
+          opacity: 0,
+          duration: 1,
+          onComplete: () =>{
+            ballSprite.animate = false
+            gsap.to(pogemon, {
+              opacity: 1,
+              onComplete: () =>{
+                let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
+                pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue})
+
+
+                manageQueue(true)
+                if(pogemonInUse.hp <= 0){
+                  pogemonInUse.faint(scenes)
+                  faintEvent(pogemonInUse)
+                  // put this in a queue
+                  // check if they all fainted
+                  // if(pogemonInUse.fainted) {
+                  //   gsap.to('#overlapping', {
+                  //     opacity: 1,
+                  //     textContent: 'Git Gud'
+                  //   })
+                  // }
+                }
+              }
+            })
+          }
+        })
+      }
+    }
+
+    function ballAnimation(ballSprite){
+      renderedSprites.splice(1, 0, ballSprite)
+  
+      gsap.to(ballSprite.position, {
+        x: pogemon.position.x + pogemon.width / 3,
+        y: pogemon.position.y + pogemon.height / 2,
+        onComplete: () =>{
+          ballSprite.animate = false
+          gsap.to(pogemon, {
+            opacity: 0,
+            onComplete: () =>{
+              gsap.to(ballSprite.position, {
+                y: pogemon.position.y + 250,
+                onComplete: () => {
+                  gsap.to(ballSprite, {
+                    rotation: '-0.5',
+                    onComplete: () => {
+                      gsap.to(ballSprite, {
+                        rotation: '0.5',
+                        onComplete: () => {
+                          gsap.to(ballSprite, {
+                            rotation: '-0.5',
+                            onComplete: () => {
+                              gsap.to(ballSprite, {
+                                rotation: '0',
+                                onComplete: () =>{
+                                  catchEvent(ballSprite)
+                                }
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
     }
 
     if(starter){
@@ -962,87 +1058,8 @@ export class Trainer extends Sprite{
         },
         animate: true,
       })
-  
-      renderedSprites.splice(1, 0, ballSprite)
-  
-      gsap.to(ballSprite.position, {
-        x: pogemon.position.x + pogemon.width / 3,
-        y: pogemon.position.y + pogemon.height / 2,
-        duration: 1,
-        onComplete: () =>{
-          ballSprite.animate = false
-          gsap.to(pogemon, {
-            opacity: 0,
-            duration: 0.5,
-            onComplete: () =>{
-              gsap.to(ballSprite.position, {
-                y: pogemon.position.y + 250,
-                onComplete: () => {
-                  gsap.to(ballSprite, {
-                    rotation: '-0.5',
-                    onComplete: () => {
-                      gsap.to(ballSprite, {
-                        rotation: '0.5',
-                        onComplete: () => {
-                          gsap.to(ballSprite, {
-                            rotation: '-0.5',
-                            onComplete: () => {
-                              gsap.to(ballSprite, {
-                                rotation: '0',
-                                onComplete: () =>{
-                                  let {rng, rate} = catchCalc(ball)
-                                  if(rng <= rate){
-                                    renderedSprites.splice(1,1)
-                                    newPogemon.isEnemy = false
-                                    if(this.team.length < 6) this.team.push(newPogemon)
-                                    document.querySelector('#dialogueInterface').textContent = `${pogemon.name} was caught`
-                                    backToOverWorld()
-                                    manageQueue(true)
-                                  } else {
-                                    ballSprite.animate = true
-                                    gsap.to(ballSprite, {
-                                      opacity: 0,
-                                      duration: 1,
-                                      onComplete: () =>{
-                                        ballSprite.animate = false
-                                        gsap.to(pogemon, {
-                                          opacity: 1,
-                                          onComplete: () =>{
-                                            let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
-                                            pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue})
 
-                                            if(pogemonInUse.hp <= 0){
-                                              pogemonInUse.faint(scenes)
-                                              faintEvent(pogemonInUse)
-                                              // put this in a queue
-                                              // check if they all fainted
-                                              // if(pogemonInUse.fainted) {
-                                              //   gsap.to('#overlapping', {
-                                              //     opacity: 1,
-                                              //     textContent: 'Git Gud'
-                                              //   })
-                                              // }
-                                              manageQueue(true)
-                                            }
-                                          }
-                                        })
-                                      }
-                                    })
-                                  }
-                                }
-                              })
-                            }
-                          })
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-      })
+      ballAnimation(ballSprite)
     }
   }
 }

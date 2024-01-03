@@ -1,10 +1,12 @@
-import { Sprite } from "../../classes.js"
-import { mapsObj } from "../../data/mapsData.js"
 import { movesObj } from "../../data/movesData.js"
 import { typesObj } from "../../data/typesData.js"
-import { scenes } from "../canvas.js"
-import { disableOWMenu } from "./overworld.js"
+
+import { Sprite } from "../../classes.js"
+
+import { scenes, backgroundSprite } from "../canvas.js"
+import { disableOWMenu, returnPrevScene } from "./overworld.js"
 import { manageTeamState } from "./team.js"
+import { managePcState } from "./pc.js"
 
 let statsAnimationFrame
 
@@ -23,17 +25,6 @@ const pogemonSprite = new Sprite({
     hold: 50
   },
   animate: true
-})
-
-const backgroundImg = new Image()
-backgroundImg.src = mapsObj['background']
-const backgroundSprite = new Sprite({
-  type: 'background',
-  position:{
-    x:0,
-    y:0
-  },
-  img: backgroundImg
 })
 
 pogemonImg.src = '../../../img/female_icon.png'
@@ -495,7 +486,10 @@ function clearStatsMenu(prevScene){
       document.querySelector('#statsScene').replaceChildren()
       scenes.set('stats', {initiated: false})
       window.cancelAnimationFrame(statsAnimationFrame)
-      manageTeamState(true, prevScene)
+
+	  if(prevScene == 'overworld') manageTeamState(true, prevScene)
+      else if(prevScene == 'pc') managePcState(true, prevScene)
+	
       gsap.to('#overlapping', {
         opacity: 0,
         onComplete: () =>{
@@ -507,7 +501,8 @@ function clearStatsMenu(prevScene){
 }
 
 export function manageStatsState(state, target, prevScene){
-  selectedPogemon = target
-  if(state) initStatsMenu()
-  else clearStatsMenu(prevScene)
+	returnPrevScene(prevScene)
+  	selectedPogemon = target
+  	if(state) initStatsMenu()
+  	else clearStatsMenu(prevScene)
 }

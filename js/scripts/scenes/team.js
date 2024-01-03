@@ -1,13 +1,12 @@
-import { pogemonsObj } from "../../data/pogemonData.js"
+import { mapsObj } from "../../data/mapsData.js"
 
 import { Sprite } from "../../classes.js"
 
-import { scenes } from "../canvas.js"
+import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
 import { manageBattleState, faintedTriggered } from "./battle.js"
 import { manageStatsState } from "./stats.js"
-import { mapsObj } from "../../data/mapsData.js"
 
 let teamAnimationId
 
@@ -31,22 +30,6 @@ function initTeamScene(prevScene){
 }
 
 const teamSceneDom = document.querySelector('#teamScene')
-
-const backgroundImg = new Image()
-backgroundImg.src = mapsObj['background']
-
-const backgroundSprite = new Sprite({
-  type: 'teamSprite',
-  position:{
-    x: 0,
-    y: 0
-  },
-  frames: {
-    max: 1
-  },
-  img: backgroundImg,
-  animate: true
-})
 
 let pogemonSpriteArr = []
 
@@ -243,7 +226,7 @@ function teamMenuSectionClickEvent(e, i){
   })
 }
 
-function teamnInterfaceOptionClickEvent(e){
+function teamInterfaceOptionClickEvent(e){
   switch(e.target.textContent){
     case 'stats':
       if(escapeEvent.active) return
@@ -354,11 +337,27 @@ function teamMenuSectionCancelEvent(e){
 
 function printTeamInfo(i, teamMenuContainerDom){
   if(teamMenuContainerDom.children[i] == 'teamInterfaceContainer') return
+
   if(i >= player.team.length) {
     teamMenuContainerDom.children[i].children[1].style.display = 'none'
     return
   }
 
+  definePogemonSprites(i)
+
+  const section = teamMenuContainerDom.children[i].children[1]
+  const infoSection = section.children[0]
+  const healthbarSection = section.children[1]
+
+  infoSection.children[0].textContent = player.team[i].name
+  infoSection.children[1].src = `../../../img/${player.team[i].gender}_icon.png`
+
+  healthbarSection.children[1].textContent = `Lv ${player.team[i].lvl}`
+  healthbarSection.children[0].children[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
+  healthbarSection.children[0].children[1].children[0].children[0].style.width = `${player.team[i].convertToPercentage(player.team[i].hp,player.team[i].stats.baseHp)}%`
+}
+
+function definePogemonSprites(i){
   let xOffset = 72.5
   let yOffset = 30.15
 
@@ -372,21 +371,12 @@ function printTeamInfo(i, teamMenuContainerDom){
     y: yOffset
   }
 
-  player.team[i].img.src = player.team[i].pogemon.sprites.teamSprite
-  player.team[i].opacity = 1
+  player.team[i].width = 250
 
   pogemonSpriteArr.push(player.team[i])
 
-  const section = teamMenuContainerDom.children[i].children[1]
-  const infoSection = section.children[0]
-  const healthbarSection = section.children[1]
-
-  infoSection.children[0].textContent = player.team[i].name
-  infoSection.children[1].src = `../../../img/${player.team[i].gender}_icon.png`
-
-  healthbarSection.children[1].textContent = `Lv ${player.team[i].lvl}`
-  healthbarSection.children[0].children[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
-  healthbarSection.children[0].children[1].children[0].children[0].style.width = `${player.team[i].convertToPercentage(player.team[i].hp,player.team[i].stats.baseHp)}%`
+  pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.teamSprite
+  pogemonSpriteArr[i].opacity = 1
 }
 
 function printInitMenu(){
@@ -402,7 +392,7 @@ function printInitMenu(){
     inferfaceOptionDom.setAttribute('class', 'inferfaceOption')
     inferfaceOptionDom.innerText = option
 
-    inferfaceOptionDom.addEventListener('click', e => teamnInterfaceOptionClickEvent(e))
+    inferfaceOptionDom.addEventListener('click', e => teamInterfaceOptionClickEvent(e))
     teamInterfaceContainerDom.appendChild(inferfaceOptionDom)
   })
 
@@ -430,16 +420,16 @@ function createSceneLayout(){
     const spriteContainerDom = document.createElement('div')
     spriteContainerDom.classList.add('teamMenuSpriteContainer')
 
-    const pogemonHelpItem = new Image()
+    const pogemonHeldItem = new Image()
     
     if(player.team[i] != undefined){
-      if(player.team[i].heldItem == null) pogemonHelpItem.src = `img/item_scene/items/blank.png`
-      else pogemonHelpItem.src = `img/item_scene/items/${player.team[i].heldItem.type}/${player.team[i].heldItem.name}.png`
+      if(player.team[i].heldItem == null) pogemonHeldItem.src = `img/item_scene/items/blank.png`
+      else pogemonHeldItem.src = `img/item_scene/items/${player.team[i].heldItem.type}/${player.team[i].heldItem.name}.png`
     }
 
-    pogemonHelpItem.setAttribute('class', 'pogemonTeamMenuItem')
+    pogemonHeldItem.setAttribute('class', 'pogemonTeamMenuItem')
 
-    spriteContainerDom.appendChild(pogemonHelpItem)
+    spriteContainerDom.appendChild(pogemonHeldItem)
 
     const infoText = document.createElement('span')
     infoText.classList.add('teamMenuInfoText')
@@ -527,12 +517,15 @@ function cleanTeamScene(){
   window.cancelAnimationFrame(teamAnimationId)
 }
 
+
+
 function teamAnimation() {
   teamAnimationId = window.requestAnimationFrame(teamAnimation)
 
   backgroundSprite.draw()
 
-  pogemonSpriteArr.forEach(sprite =>{
+  pogemonSpriteArr.forEach((sprite,i) =>{
+    console.log(pogemonSpriteArr[i].img.src)
     sprite.draw()
   })
 }

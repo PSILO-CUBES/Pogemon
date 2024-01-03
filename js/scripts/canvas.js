@@ -1,8 +1,9 @@
 // printing map data onto canvas
 import { pogemonsObj } from '../data/pogemonData.js'
 import { itemsObj } from '../data/itemsData.js'
+import { mapsObj } from '../data/mapsData.js'
 
-import { Pogemon } from '../classes.js'
+import { Sprite } from '../classes.js'
 
 import { generatePlayer } from './player.js'
 
@@ -21,10 +22,6 @@ generateCanvas()
 
 const player = generatePlayer(canvas)
 player.catch(pogemonsObj['jlissue'], true)
-player.catch(pogemonsObj['loko'], true)
-player.catch(pogemonsObj['steeli'], true)
-player.catch(pogemonsObj['maaph'], true)
-
 
 const itemArr = [
   {name: 'potion', quantity: 999}, 
@@ -45,6 +42,7 @@ scenes.set('team', {initiated: false})
 scenes.set('bag', {initiated: false})
 scenes.set('stats', {initiated: false})
 scenes.set('pogedex', {initiated: false})
+scenes.set('pc', {initiated: false})
 scenes.set('trainer', {initiated: false})
 
 export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr){
@@ -68,3 +66,19 @@ export function printImages(background, FG, map, boundaries, battleZones, change
     eventZones[i].draw()
   }
 }
+
+const backgroundImg = new Image()
+backgroundImg.src = mapsObj['background']
+
+export const backgroundSprite = new Sprite({
+  type: 'teamSprite',
+  position:{
+    x: 0,
+    y: 0
+  },
+  frames: {
+    max: 1
+  },
+  img: backgroundImg,
+  animate: false
+})

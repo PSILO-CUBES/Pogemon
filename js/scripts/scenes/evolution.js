@@ -1,22 +1,10 @@
 import { pogemonsObj } from "../../data/pogemonData.js"
 
-import { Sprite, Pogemon } from "../../classes.js"
-
-import { scenes } from "../canvas.js"
+import { scenes, backgroundSprite } from "../canvas.js"
 import { manageOverWorldState } from "./overworld.js"
 import { manageLearnedMoves, learnMoveMenu } from "./battle.js"
 import { player } from "../player.js"
 import { mapsObj } from "../../data/mapsData.js"
-
-const backgroundImage = new Image()
-const backgroundSprite = new Sprite({
-  type:'evolution',
-  position:{
-    x:0,
-    y:0
-  },
-  img: backgroundImage
-})
 
 const queue = []
 let queueEnabled = true

@@ -35,7 +35,7 @@ export let mapsObj = {
       {
         name: 'Gab', 
         team: [[pogemonsObj['maaph'], 10]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:200}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
         sprite: '../../img/charSprites/ethan.png',
         dialogue: 'Git Gut\n\n\nSkill issue',
         beaten: false

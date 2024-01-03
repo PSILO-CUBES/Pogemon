@@ -1,22 +1,10 @@
-import { mapsObj } from "../../data/mapsData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
 
 import { Sprite } from "../../classes.js"
 
-import { scenes } from "../canvas.js"
+import { scenes, backgroundSprite } from "../canvas.js"
 
 let pogedexAnimationId
-
-const backgroundImg = new Image()
-backgroundImg.src = mapsObj['background']
-const backgroundSprite = new Sprite({
-    type: 'background',
-    position:{
-        x: 0,
-        y: 0
-    },
-    img: backgroundImg,
-})
 
 const pogedexTargetImg = new Image()
 const pogedexTargetSprite = new Sprite({

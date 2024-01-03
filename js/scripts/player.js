@@ -9,6 +9,7 @@ import { manageOverWorldState, prevScene, returnPrevScene } from "./scenes/overw
 import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap } from "./maps.js"
 import { mapsObj } from "../data/mapsData.js"
+import { managePcState } from "./scenes/pc.js"
 
 export const keys = {
   w: {
@@ -121,14 +122,23 @@ function playerMovementEvent() {
   })
 }
 
-export let pcOpen = false
-
 function playerInteraction(e) {
-  if(e.key == ' '){
-    if(pcEvent){
-      pcOpen = true
-      player.disabled = true
-      document.querySelector('#pcMenu').style.display = 'block'
+  if(scenes.get('overworld').initiated){
+    if(e.key == ' '){
+      if(pcEvent){
+        if(scenes.get('pc').initiated) return
+        player.disabled = true
+        gsap.to('#overlapping', {
+          opacity: 1,
+          onComplete: () =>{
+            managePcState(true)
+            manageOverWorldState(false)
+            gsap.to('#overlapping', {
+              opacity: 0
+            })
+          }
+        })
+      }
     }
   }
 }
@@ -369,6 +379,7 @@ function eventZoneManagement(eventZones){
                   //gonna have to make directions
                   x: eventPos.x,
                   y: eventPos.y,
+                  duration: 1,
                   onComplete: () =>{
                     const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
                     OWDialogueBoxContainer.style.display = 'grid'
@@ -406,7 +417,17 @@ function eventZoneManagement(eventZones){
         pcEvent = true
       }
       break
-    } else if(!rectangularCollision({
+    }
+
+    if(rectangularCollision({
+      rectangle1: player,
+      rectangle2: eventZonesIndex
+    })){
+      console.log('wtf')
+      player.animate = false
+    }
+    
+    if(!rectangularCollision({
       rectangle1: player,
       rectangle2: eventZonesIndex
     })){
