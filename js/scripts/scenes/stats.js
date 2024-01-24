@@ -205,7 +205,7 @@ function createMenu(){
 					case 0:
 						//catch info
 						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoCatch')
-						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on starting map at lvl ${selectedPogemon.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
+						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on ${currMap.name} at lvl ${selectedPogemon.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 						break
 					case 1:
 						// ability info
@@ -318,7 +318,6 @@ function createMenu(){
 						statsSceneGridSectionPogemon.setAttribute('id', 'statsSceneGridSectionPogemonImg')
 
 						const heldItemImg = new Image()
-						console.log(selectedPogemon.heldItem)
 						if(selectedPogemon.heldItem == null) heldItemImg.src = `img/item_scene/items/blank.png`
 						else heldItemImg.src = `img/item_scene/items/${selectedPogemon.heldItem.type}/${selectedPogemon.heldItem.name}.png`
 						heldItemImg.setAttribute('class', 'statsHeldItemImg')
@@ -447,6 +446,7 @@ function createMenu(){
 						for(let i = 0; i < selectedPogemon.moves.length; i++){
 							const statsSceneGridSectionDataMoves = document.createElement('div')
 							statsSceneGridSectionDataMoves.setAttribute('class', 'statsSceneGridSectionDataMoves')
+							console.log(selectedPogemon.moves)
 							statsSceneGridSectionDataMoves.innerText = `${selectedPogemon.moves[i].name}`
 							statsSceneGridSectionDataMoves.addEventListener('click', e => statsSceneMovesInteraction(e, true))
 
@@ -487,8 +487,8 @@ function clearStatsMenu(prevScene){
       scenes.set('stats', {initiated: false})
       window.cancelAnimationFrame(statsAnimationFrame)
 
-	  if(prevScene == 'overworld') manageTeamState(true, prevScene)
-      else if(prevScene == 'pc') managePcState(true, prevScene)
+	  	if(prevScene == 'overworld' || prevScene == 'battle') manageTeamState(true, prevScene)
+	  	else if(prevScene == 'pc') managePcState(true, prevScene)
 	
       gsap.to('#overlapping', {
         opacity: 0,

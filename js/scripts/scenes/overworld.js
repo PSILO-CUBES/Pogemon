@@ -1,8 +1,8 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player } from '../player.js'
-import { generateMapData } from '../maps.js'
+import { playerMovement, player, interaction, lastDirection } from '../player.js'
+import { generateMapData, currMap, pogecenterReturnInfo } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
 import { manageTeamState } from './team.js'
@@ -10,8 +10,10 @@ import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { manageTrainerState } from './trainer.js'
-import { mapsObj, setBoundries } from '../../data/mapsData.js'
+import { mapsObj } from '../../data/mapsData.js'
 import { managePcState } from './pc.js'
+import { loadData, setSaveData } from '../../save.js'
+import { audioObj, volumeValues } from '../../data/audioData.js'
 
 //
 
@@ -24,10 +26,11 @@ let movables
 
 async function setMapData(){
   [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData()
+  console.log(eventZones)
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
 }
 
-setMapData()
+await setMapData()
 
 let animationId
 
@@ -37,13 +40,50 @@ const menu = {
 
 const overworldMenuDom = document.querySelector('#overworldMenu')
 
-export async function switchMap(nextMapInfo){
-  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(nextMapInfo)
-  // console.log(boundaries)
-  // console.log(changeMap)
-  // console.log(eventZones)
+let nextMapSaveInfo
+let prevMap
+let firstLoad = true
 
-  // console.log(mapsObj[`${nextMapInfo.name}`].eventZones)
+export async function switchMap(nextMapInfo, preMapInfo){
+  if(nextMapInfo != undefined) {
+    if(nextMapInfo.name != 'undefined'){
+      [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(nextMapInfo)
+      prevMap = preMapInfo
+    }
+  }
+
+  console.log(mapsObj[`${nextMapInfo.name}`])
+
+  // work HEREERERER
+  if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
+    if(true){
+      const data = await loadData()
+
+
+      if(data != null){
+        if(firstLoad){
+          firstLoad = false
+          if(data.nextMapInfo.name != null){
+            pogecenterReturnInfo.name = data.nextMapInfo.name
+            pogecenterReturnInfo.spawnPosition = data.nextMapInfo.spawnPosition
+          }
+        } else {
+          pogecenterReturnInfo.name = prevMap.name
+          pogecenterReturnInfo.spawnPosition = prevMap.position
+          prevMap = undefined
+        }
+      }
+
+      pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
+    }
+
+    [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
+    console.log(pogecenterReturnInfo)
+
+    pogecenterReturnInfo.name = null
+    pogecenterReturnInfo.spawnPosition.x = null
+    pogecenterReturnInfo.spawnPosition.y = null
+  }
 
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
 
@@ -52,6 +92,12 @@ export async function switchMap(nextMapInfo){
     duration: 0.4,
     onComplete(){
       player.disabled = false
+      nextMapSaveInfo = nextMapInfo
+      if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
+        pogecenterReturnInfo.name = preMapInfo.name
+        pogecenterReturnInfo.spawnPosition.x = preMapInfo.position.x
+        pogecenterReturnInfo.spawnPosition.y = preMapInfo.position.y
+      }
     }
   })
 }
@@ -64,6 +110,67 @@ function initOverworldMenu(){
     sectionDom.addEventListener('click', e => overworldMenuClickEvent(e))
     sectionDom.textContent = options[i]
     overworldMenuDom.appendChild(sectionDom)
+  }
+}
+
+let optionMenuState = false
+
+const data = await loadData()
+
+if(data!= null){
+  volumeValues.music = data.volumeValues.music
+  volumeValues.SFX = data.volumeValues.SFX
+}
+  
+document.querySelectorAll('.volumeRange').forEach(node =>{
+  node.addEventListener("change", e => {
+    volumeValues[`${node.id.slice(0, -6)}`] = parseInt(node.value)
+    Object.values(audioObj.music).forEach(song =>{
+      song.volume(volumeValues.music / 1000)
+    })
+    Object.values(audioObj.SFX).forEach(song =>{
+      song.volume(volumeValues.SFX / 1000)
+    })
+    console.log(node.id.slice(0, -6) + ' ' + volumeValues[`${node.id.slice(0, -6)}`])
+  })
+})
+
+document.querySelector('#optionsMenuDelete').addEventListener('click', e =>{
+  alert('Save File Deleted!')
+  localStorage.clear()
+})
+
+function manageOptionMenuState(state){
+  const optionsMenuContainer = document.querySelector("#optionsMenuContainer").style
+
+  if(menu.initiated != true) return
+
+  optionMenuState = state
+
+  if(state){
+    gsap.to('#overlapping', {
+      opacity: 1,
+      onComplete: () =>{
+        console.log('here')
+        optionsMenuContainer.display = 'flex'
+        document.querySelectorAll('.volumeRange').forEach((node, i) =>{
+          node.value = Object.values(volumeValues)[i] 
+        })
+        gsap.to('#overlapping', {
+          opacity: 0,
+        })
+      }
+    })
+  } else {
+    gsap.to('#overlapping', {
+      opacity: 1,
+      onComplete: () =>{
+        optionsMenuContainer.display = 'none'
+        gsap.to('#overlapping', {
+          opacity: 0
+        })
+      }
+    })
   }
 }
 
@@ -122,6 +229,61 @@ function overworldMenuClickEvent(e){
         }
       })
       break
+    case 'save':
+      alert('Saved Succesfully')
+      let teamMovesInfo = []
+      let teamLearntMovesInfo = []
+      player.team.forEach(pogemon =>{
+        let pogemonLearntMoves = []
+        pogemon.learntMoves.forEach(learntMove =>{
+          pogemonLearntMoves.push(learntMove)
+        })
+        teamLearntMovesInfo.push(pogemonLearntMoves)
+
+        let pogemonMovesInfo = []
+        pogemon.moves.forEach(move =>{
+          pogemonMovesInfo.push([move.name, move.pp])
+        })
+        teamMovesInfo.push(pogemonMovesInfo)
+      })
+
+      let nextMapInfo = {
+        name: null,
+        spawnPosition: {
+          x: null,
+          y: null
+        }
+      }
+
+      if(nextMapInfo.name != null){
+        nextMapInfo.name = nextMapSaveInfo.name
+        nextMapInfo.spawnPosition.x = nextMapSaveInfo.spawnPosition.x
+        nextMapInfo.spawnPosition.y = nextMapSaveInfo.spawnPosition.y
+      }
+
+      console.log(pogecenterReturnInfo)
+      console.log(nextMapInfo)
+
+      if(pogecenterReturnInfo.name != null) nextMapInfo = pogecenterReturnInfo
+      console.log(nextMapInfo)
+
+      setSaveData({
+        playerInfo: {
+          player,
+          teamMovesInfo,
+          teamLearntMovesInfo
+        },
+        currMapName: currMap.name,
+        spawnPosition: {x: map.position.x, y: map.position.y},
+        mapsObjState: mapsObj,
+        nextMapInfo,
+        interactionFlags: interaction.flags,
+        volumeValues
+      })
+      break
+    case 'options':
+      manageOptionMenuState(true)
+      break
   }
   setTimeout(() =>{
     escapeEvent.active = false
@@ -137,10 +299,13 @@ function manageMenuSections(state){
 }
 
 function manageMenuState(state){
+  if(optionMenuState) return
+
   const overworldSceneDom = document.querySelector('#overworldScene').style
   const menuDom = document.querySelector('#overworldMenu').style
   document.querySelector('#overworldSceneContainer').style.display = 'flex'
   const menuSectionDomArr = document.querySelectorAll('.overworldMenuSections')
+  const OWSceneContainer = document.querySelector('#overworldSceneContainer')
 
   player.disabled = !state
   menu.initiated = !state
@@ -150,11 +315,10 @@ function manageMenuState(state){
 
     menuDom.height = '0%'
     menuDom.width = '0%'
+    menuDom.display = 'grid'
 
-    document.querySelector('#overworldMenu').style.display = 'grid'
-
-    gsap.to('#overlapping', {
-      opacity: 0.85,
+    gsap.to(OWSceneContainer, {
+      backgroundColor: 'rgba(0,0,0,0.85)',
       duration: 0.25,
     })
 
@@ -162,6 +326,7 @@ function manageMenuState(state){
       gsap.to(menuSection,{
         fontSize: 24 + 'px',
         duration: 0.25,
+        backgroundColor: 'rgba(0,0,0,0.85)',
       })
     })
     gsap.to(menuDom, {
@@ -174,26 +339,35 @@ function manageMenuState(state){
     })
   }
   else if (!menu.initiated) {
+
     gsap.to(menuDom, {
       height: 0 + '%',
       width: 0 + '%',
       duration: 0.25,
+      backgroundColor: 'rgba(0,0,0,0)',
     })
+
     menuSectionDomArr.forEach(menuSection =>{
       gsap.to(menuSection,{
         fontSize: 0 + 'px',
         duration: 0.25,
       })
     })
+
+    gsap.to(OWSceneContainer, {
+      backgroundColor: 'rgba(0,0,0,0)',
+      duration: 0.25,
+    })
+
     gsap.to('#overlapping', {
-      opacity: 0,
       duration: 0.3,
       onComplete(){
-        //PROBLEM HERE
+        // PROBLEM HERE // what problem?? lmao //
         document.querySelector('#overworldMenu').style.display = 'none'
         manageMenuSections(menu.initiated)
       }
     })
+
   }
 }
 
@@ -238,6 +412,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
+      if(optionMenuState == true) manageOptionMenuState(false)
       manageMenuState(menu.initiated)
     }
 

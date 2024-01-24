@@ -1,5 +1,13 @@
 export const itemsObj = {
   // misc
+  leafStone:{
+    name:'leafStone',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/leafStone.png',
+    desc: "Can trigger certain pogemon's evolution."
+  },
   // med
   potion: {
     name: 'potion',

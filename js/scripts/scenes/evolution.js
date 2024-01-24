@@ -63,6 +63,7 @@ function setEvoScene(){
 }
 
 function initEvo(target){
+  console.log(target)
   scenes.set('evolution', {initiated : true})
 
   targetEvo = pogemonsObj[target.evo.name]
@@ -75,8 +76,6 @@ function initEvo(target){
   }
 
   sprites = [backgroundSprite, target]
-
-  backgroundImage.src = mapsObj['background']
 
   setEvoScene()
 
@@ -156,5 +155,3 @@ export function manageEvolutionState(state, target){
   if(state) initEvo(target)
   else clearEvolutionScene(target)
 }
-
-// manageEvolutionState(true)

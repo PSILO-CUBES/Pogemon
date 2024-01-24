@@ -25,6 +25,13 @@
         <div id="openWindow"></div>
         <div id="overworldDialogue"></div>
       </div>
+      <div id="optionsMenuContainer">
+        <div id="optionsMenu">
+          <div id="optionsMenuMusicVolume" class="optionsMenuButtons"><span class="volumeTag">Music Volume : </span><input type="range" id="musicVolume" class="volumeRange"></div>
+          <div id="optionsMenuSFXVolume" class="optionsMenuButtons"><span class="volumeTag">SFX Volume : </span><input type="range" id="SFXVolume" class="volumeRange"></div>
+          <div id="optionsMenuDelete" class="optionsMenuButtons">DELETE SAVE FILE</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -185,6 +192,44 @@
   <div id="bootScene"></div>
 
   <div id="pcScene"></div>
+
+  <div id="trainerScene">
+    <div id="trainerCardContainer">
+      <div id="trainerCard">
+        <div id="trainerCardHeader">
+          <div id="trainerCardHeaderContent">
+            <hr>
+            <span id="trainerCardHeaderText">Trainer Card</span>
+            <hr>
+          </div>
+        </div>
+        <div id="trainerCardBody">
+          <div id="trainerCardBodyInfoSection">
+            <div id="trainerCardBodyInfoNameContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoNameContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Name :</div>
+              <div id="trainerCardBodyInfoNameContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoMoneyContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoMoneyContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Money :</div>
+              <div id="trainerCardBodyInfoMoneyContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoPogedexContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoPogedexContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Pogedex :</div>
+              <div id="trainerCardBodyInfoPogedexContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoTimeContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoTimeContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Time :</div>
+              <div id="trainerCardBodyInfoTimeContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+          </div>
+          <div id="trainerCardBodyTrainerSection">
+            <img id="trainerCardTrainerImg">
+          </div>
+        </div>
+        <div id="trainerCardFooter"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <input type="checkbox" style="display: none;" id="scroll-check" checked>

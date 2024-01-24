@@ -40,7 +40,7 @@ body{
 
   pointer-events: none;
 
-  z-index: 10;
+  z-index: 13;
 }
 
 #overworldContainer{
@@ -110,7 +110,7 @@ body{
 }
 
 #overworldDialogue{
-  height: 100%;
+  height: 76.5%;
   width: 100%;
 
   background-color: black;
@@ -122,4 +122,90 @@ body{
 .exclamation{
   position: absolute;
   opacity: 0;
+}
+
+#openWindow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#overworldStarterImg{
+  display: flex;
+  height: 500px;
+}
+
+.chooseStarterButtonsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  height: 100% !important;
+}
+
+.chooseStarterButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}.chooseStarterButton:hover{
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+#optionsMenuContainer{
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: 12;
+
+  background-color: black;
+}
+
+#optionsMenu{
+  display: grid;
+  grid-template-rows: repeat(33.33%, 3);
+
+  height: 75%;
+  width: 50%;
+
+  background-color: rgba(15, 15, 15, 0.5);
+}
+
+.optionsMenuButtons{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.volumeTag{
+  width: 50%;
+
+  text-align: center;
+}
+
+.volumeRange{
+  height: 5%;
+  width: 50%;
+
+  margin-right: 25px;
+}
+
+#optionsMenuDelete{
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  
+  background-color: rgba(255, 0, 0, 0.05);
+}#optionsMenuDelete:hover{
+  background-color: rgba(255, 0, 0, 0.15);
+  cursor: pointer;
 }

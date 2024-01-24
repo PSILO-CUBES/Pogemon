@@ -128,6 +128,7 @@ export class Pogemon extends Sprite{
     pogemon,
     exp,
     isEnemy,
+    preBuilt,
     {
       type, 
       position, 
@@ -151,26 +152,50 @@ export class Pogemon extends Sprite{
     this.pogemon = pogemon
     this.name = this.pogemon.name
     this.isEnemy = isEnemy
+    this.preBuilt = preBuilt
     this.element = {
       1: this.pogemon.element[1],
       2: this.pogemon.element[2]
     }
-    this.exp = exp
-    this.lvl = this.generateLevel()
-    this.nature = this.generateNature()
-    this.gender = this.generateGender()
-    this.ivs = this.generateIVs()
-    this.stats = this.generateStats()
-    this.hp = this.stats.baseHp
-    this.status = {name: null, turns: 0}
-    this.fainted = false
-    this.evo = this.pogemon.evo
-    this.ability = this.generateAbility()
-    this.moves = this.generateMoves(true, 'battle')
-    this.friendliness = 0
-    this.catchInfo = this.generateCatchInfo(new Date())
-    this.animationProperties = pogemon.animationProperties
-    this.heldItem = null
+    if(preBuilt == null){
+      this.exp = exp
+      this.lvl = this.generateLevel()
+      this.nature = this.generateNature()
+      this.gender = this.generateGender()
+      this.ivs = this.generateIVs()
+      this.stats = this.generateStats()
+      this.hp = this.stats.baseHp
+      this.status = {name: null, turns: 0}
+      this.fainted = false
+      this.evo = this.pogemon.evo
+      this.ability = this.generateAbility()
+      this.moves = this.generateMoves(true, 'battle')
+      this.friendliness = 0
+      this.catchInfo = this.generateCatchInfo(new Date())
+      this.animationProperties = pogemon.animationProperties
+      this.heldItem = null
+    } else {
+      this.exp = preBuilt.exp
+      this.lvl = preBuilt.lvl
+      this.nature = preBuilt.nature
+      this.gender = preBuilt.gender
+      this.ivs = preBuilt.ivs
+      this.stats = preBuilt.stats
+      this.hp = preBuilt.hp
+      this.status = preBuilt.status
+      this.fainted = preBuilt.fainted
+      this.evo = this.pogemon.evo
+      this.ability = preBuilt.ability
+      this.moves = preBuilt.moves
+      this.friendliness = preBuilt.friendliness
+      this.catchInfo = {
+        date: new Date(preBuilt.catchInfo.date),
+        lvl: preBuilt.catchInfo.lvl
+      }
+      this.animationProperties = preBuilt.animationProperties
+      this.heldItem = preBuilt.heldItem
+      this.preBuilt = null
+    }
   }
 
   generateId(){
@@ -302,6 +327,10 @@ export class Pogemon extends Sprite{
 
   dialogue(type, text){
     switch(type){
+      case 'overworld':
+        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+        document.querySelector('#overworldDialogue').innerText = text
+        break
       case 'battle':
         let dialogueInterfaceDom = document.querySelector('#dialogueInterface')
         let movesInterface = document.querySelector('#movesInterface')
@@ -375,7 +404,8 @@ export class Pogemon extends Sprite{
     let hpDom = document.querySelector('#foeHp')
     let movementDistance = 20
     let rotation = 1
-    let attackPos = this.pogemon.animationPositions.launch
+    let launcPos = this.pogemon.animationPositions.ally.launch
+    let receivePos = recipient.pogemon.animationPositions.foe.receive
 
     if(this.isEnemy){
       recipientHealthBar = '#allyHealthBar'
@@ -383,7 +413,8 @@ export class Pogemon extends Sprite{
       hpDom = document.querySelector('#allyHp')
       movementDistance = -20
       rotation = -2
-      attackPos = this.pogemon.animationPositions.receive
+      launcPos = this.pogemon.animationPositions.foe.launch
+      receivePos = recipient.pogemon.animationPositions.ally.receive
     }
 
     let damageCalculation = () => {
@@ -508,7 +539,7 @@ export class Pogemon extends Sprite{
         duration: 0.1,
         onComplete: () =>{
 
-          audioObj.tackleHit.play()
+          audioObj.SFX.tackleHit.play()
 
           this.hpManagement(recipient, recipientHealthBar, hpDom)
   
@@ -540,8 +571,8 @@ export class Pogemon extends Sprite{
       const projectileSprite = new Sprite({
         type: 'attack',
         position: {
-          x: this.position.x + attackPos.init.x,
-          y: this.position.y + attackPos.init.y
+          x: this.position.x + launcPos.x,
+          y: this.position.y + launcPos.y
         },
         img: projectileImg,
         frames: {
@@ -557,8 +588,8 @@ export class Pogemon extends Sprite{
       move.initAudio.play()
 
       gsap.to(projectileSprite.position, {
-        x: recipient.position.x - attackPos.hit.x,
-        y: recipient.position.y - attackPos.hit.y,
+        x: recipient.position.x - receivePos.x,
+        y: recipient.position.y - receivePos.y,
         onComplete: () =>{
 
           renderedSprites.splice(1,1)
@@ -607,8 +638,8 @@ export class Pogemon extends Sprite{
   checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, info){
     let thisFaints = () => {
       if(this.hp <= 0){
-        audioObj.battle.stop()
-        audioObj.victory.play()
+        audioObj.music.battle.stop()
+        audioObj.music.victory.play()
         this.hpManagement(this, healthBar, healthAmount)
         faintEvent(this)
         //
@@ -616,26 +647,24 @@ export class Pogemon extends Sprite{
       }
     }
 
-    if(slower.name == undefined){
-      thisFaints()
-      return
-    }
+    if(slower.name != undefined){
+      if(this.status.name == null && slower.status.name == null){
+        thisFaints()
+        //have to do that to check if slower is fainted
+        slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}}) 
+        return
+      }
 
-    if(this.status.name == null && slower.status.name == null){
-      thisFaints()
-      slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
-      return
-    }
-
-    if(this.status.name == null && slower.status.name != null){
-      thisFaints()
-      slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
-      return
+      if(this.status.name == null && slower.status.name != null){
+        thisFaints()
+        slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
+        return
+      }
     }
 
     queue.push(() =>{
       thisFaints()
-
+ 
       switch(this.status.name){
         case 'burn':
           let chip = this.stats.baseHp / 16
@@ -647,8 +676,8 @@ export class Pogemon extends Sprite{
           this.dialogue('battle', `${this.name} felt the burn.`)
 
           if(this.hp <= 0){
-            audioObj.battle.stop()
-            audioObj.victory.play()
+            audioObj.music.battle.stop()
+            audioObj.music.victory.play()
             this.hpManagement(this, healthBar, healthAmount)
             faintEvent(this)
             return
@@ -679,7 +708,7 @@ export class Pogemon extends Sprite{
     if(this.hp > 0) return
 
     this.fainted = true
-    audioObj.faint.play()
+    audioObj.SFX.faint.play()
     gsap.to(this.position, {
       y: this.position.y + 20,
       onComplete: () =>{
@@ -819,7 +848,7 @@ export class Pogemon extends Sprite{
   }
 }
 
-export class Trainer extends Sprite{
+export class NPC extends Sprite{
   constructor(
     team,
     bag,
@@ -848,11 +877,23 @@ export class Trainer extends Sprite{
     this.team = team
     if(bag != undefined) this.bag = bag
     if(money != undefined) this.money = money
-    if(type == 'enemyTrainer') this.beaten = false
     this.running = false
     this.disabled = false
     this.assingDirection(direction)
     if(trainerName != undefined) this.name = trainerName
+    if(type == 'player') {
+      this.startTime = new Date()
+      this.badges = {
+        0: false,
+        1: false,
+        2: false,
+        3: false,
+        4: false,
+        5: false,
+        6: false,
+        7: false
+      }
+    }
   }
 
   assingDirection(direction){
@@ -1034,7 +1075,7 @@ export class Trainer extends Sprite{
         animate: true
       })
 
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, null, pogemonSprite)
 
       this.team.push(newPogemon)
     } else {

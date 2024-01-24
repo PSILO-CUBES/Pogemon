@@ -21,23 +21,33 @@ change maps x
 
 held items x
 
-pc
+make trainers x
 
-evolution items
+pc x
+
+evolution items x
+
+talkable NPC's x
+
+trainer card scene x
+
+save state x
+
+split exp when multiple pogemons were in battle
 
 options
 
-save state
+pogemart
 
-trainer card scene
+pogecenter
 
 EV
+
+stats menu stats name with colors to know nature's effect and number tags to see how much EVS have been collected
 
 make more pogemon
 
 make more items
-
-make trainers
 
 make gyms
 
@@ -48,7 +58,3 @@ fishing?
 breeding??
 
 multiplayer?????
-
-grass/psy mushroom
-fire/bug ant
-water/poison toad

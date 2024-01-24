@@ -17,7 +17,7 @@ export const movesObj = {
     name: 'quickattack',
     type: 'physical',
     element: 'normal',
-    pow: 1,
+    pow: 999,
     acc: 100,
     pp: 50,
     effects: null,
@@ -66,8 +66,8 @@ export const movesObj = {
     effects: {burn: 100},
     priority: 0,
     sprite: '../../img/moves/fireball.png',
-    initAudio: audioObj.initFireBall,
-    hitAudio: audioObj.hitFireBall
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
   },
   //ghost
   shadowball:{
@@ -80,7 +80,7 @@ export const movesObj = {
     effects: {spdef: -1},
     priority: 0,
     sprite: '../../img/moves/fireball.png',
-    initAudio: audioObj.initFireBall,
-    hitAudio: audioObj.hitFireBall
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
   }
 }

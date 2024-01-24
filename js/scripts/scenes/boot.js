@@ -1,4 +1,8 @@
+import { loadData } from "../../save.js"
 import { manageOverWorldState } from "./overworld.js"
+
+// export let loadedData = await loadData()
+// console.log(loadedData)
 
 let bootSceneAnimationId
 
@@ -19,6 +23,7 @@ function printBootMenu(){
 }
 
 function initBootMenuInteractionEvent(e){
+    // load data here ???
     manageOverWorldState(true)
     gsap.to('#overlapping', {
         opacity: 1,
@@ -31,7 +36,7 @@ function initBootMenuInteractionEvent(e){
     })
 }
 
-setTimeout(() => initBootMenuInteractionEvent(),250)
+setTimeout(() => initBootMenuInteractionEvent(), 250)
 
 function initBootScene(){
     printBootMenu()

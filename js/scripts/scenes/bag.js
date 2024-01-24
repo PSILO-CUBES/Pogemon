@@ -6,11 +6,12 @@ import { prevScene, returnPrevScene } from "./overworld.js"
 import { itemsObj } from "../../data/itemsData.js"
 import { manageBattleState } from "./battle.js"
 import { mapsObj } from "../../data/mapsData.js"
+import { manageEvolutionState } from "./evolution.js"
 
 const bagMenuButtonOption = ['use', 'give', 'discard']
 let nodeArr = ['bagSceneItem','bagSceneMenuButton']
 
-const defaultType = 'med'
+const defaultType = 'misc'
 let currType = defaultType
 
 let queue = []
@@ -204,6 +205,26 @@ function useItemOnClickEvent(e){
   switch(selectedMenuOption){
     case 'use':
       switch(currItem.type){
+        case 'misc':
+          switch(currItem.effect){
+            case 'evo':
+              if(targetPogemon.evo.item == currItem.name){
+                manageBagState(false, prevScene)
+                manageEvolutionState(true, targetPogemon)
+                gsap.to('#overlapping', {
+                  opacity: 1,
+                  onComplete: () =>{
+                    gsap.to('#overlapping', {
+                      opacity: 0
+                    })
+                  }
+                })
+              } else {
+                targetPogemon.dialogue('bag', "This item can't be used on this pogemon.")
+              }
+              break
+          }
+          break
         case 'med':
           switch(currItem.effect){
             case 'heal':

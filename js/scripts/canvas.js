@@ -10,24 +10,20 @@ import { generatePlayer } from './player.js'
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
 
-export function generateCanvas(){
-  canvas.width = 1920
-  canvas.height = 979
+canvas.width = 1920
+canvas.height = 979
 
-  c.fillStyle = 'white'
-  c.fillRect(0, 0, canvas.width, canvas.height)
-}
+c.fillStyle = 'white'
+c.fillRect(0, 0, canvas.width, canvas.height)
 
-generateCanvas()
-
-const player = generatePlayer(canvas)
-player.catch(pogemonsObj['jlissue'], true)
+const player = await generatePlayer(canvas)
 
 const itemArr = [
   {name: 'potion', quantity: 999}, 
   {name: 'resurrect', quantity: 999},
   {name: 'pogeball', quantity: 999},
   {name: 'megaball', quantity: 999},
+  {name: 'leafStone', quantity: 999},
 ]
 
 for(let i = 0; i < itemArr.length; i++){

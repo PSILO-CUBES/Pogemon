@@ -4,7 +4,7 @@ import { pogemonsObj } from "../../data/pogemonData.js"
 import { audioObj } from "../../data/audioData.js"
 import { itemsObj } from "../../data/itemsData.js"
 
-import { Sprite, Pogemon, Trainer } from "../../classes.js"
+import { Sprite, Pogemon } from "../../classes.js"
 
 import { manageOverWorldState, prevScene } from "./overworld.js"
 import { currMap } from "../maps.js"
@@ -81,7 +81,7 @@ function initWildEncouter(){
   })
 
   foeImage.src = foeObj.sprites.frontSprite
-  foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, foeSprite)
+  foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, null, foeSprite)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -257,6 +257,7 @@ export function initBattle(faintedTriggered, info){
     moveProcess = true
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
 
+    console.log(faster)
     manageStatusEvent(faster, slower)
     
     document.querySelector('#encounterInterface').style.display = 'none'
@@ -265,13 +266,13 @@ export function initBattle(faintedTriggered, info){
 
 function clearBattleScene(nextScene){
   if(enemyTrainer != undefined) {
-    enemyTrainer.beaten = true
     mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
       if(trainer.name != enemyTrainer.name) return
 
-      trainer.beaten = enemyTrainer.beaten
+      trainer.beaten = true
     })
   }
+
   scenes.set('battle', {initiated : false})
   document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
   gsap.to('#overlapping', {
@@ -284,8 +285,8 @@ function clearBattleScene(nextScene){
       battleSceneDom.style.display = 'none'
       optionBox.replaceChildren()
 
-      audioObj.victory.stop()
-      audioObj.map.play()
+      audioObj.music.victory.stop()
+      audioObj.music.map.play()
 
       if(nextScene == 'team') manageTeamState(true, 'battle')
       else if (nextScene == 'bag') manageBagState(true, 'battle')
@@ -337,7 +338,7 @@ function optionButtonInteraction(e) {
         encounterInterfaceDom.style.display = 'none'
         movesInterfaceDom.style.display = 'grid'
         break
-      case 'pkmn':
+      case 'pgmn':
           manageBattleState(false, 'team')
           gsap.to('#overlapping', {
             opacity: 1,
@@ -393,7 +394,7 @@ function optionButtonInteraction(e) {
           movesInterfaceDom.style.display = 'none'
           dialogueInterfaceDom.style.display = 'block'
           dialogueInterfaceDom.textContent = 'You fleed'
-          audioObj.flee.play()
+          audioObj.SFX.flee.play()
           // need to put rng check based on speed stat
           queue.push(() =>{
             //might throw err
@@ -403,7 +404,7 @@ function optionButtonInteraction(e) {
               yoyo: true,
               duration: 1,
               onComplete(){
-                audioObj.flee.stop()
+                audioObj.SFX.flee.stop()
                 gsap.to('#overlapping', {
                   opacity: 0,
                   duration: 0.4
@@ -469,7 +470,7 @@ function setBattlersInfo(){
 }
 
 const optionBox = document.querySelector('#optionBox')
-const options = ['Fight', 'pkmn', 'Item', 'Run']
+const options = ['Fight', 'pgmn', 'Item', 'Run']
 
 let optionButtonsArr
 
@@ -536,6 +537,7 @@ function setUserMovesEvents(eventType, currMovesBox){
 }
 
 export function createMovesMenuButtons(state, type, event){
+  console.log(ally.moves)
   let showcasedMove = [...ally.moves].splice(0, 4)
 
   let currMovesBox
@@ -739,8 +741,7 @@ export function manageLearnedMoves(ally, queue, type){
   }
 }
 
-function manageEvolution(f){
-  //stops battle and initiates the evolution scene instead of the normal way
+function manageEvolution(){
   queue.push(() => {
     manageBattleState(false, 'evo', false)
     setTimeout(() =>{
@@ -814,7 +815,9 @@ function manageFaintingEvent(target){
         queue.push(() => manageBattleState(false))
         return
       }
-      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
+      if(ally.pogemon.evo.type == 'lvl') {
+        if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
+      }
       else queue.push(() => manageBattleState(false))
     } else queue.push(() => manageBattleState(false))
     return
@@ -828,13 +831,21 @@ function manageFaintingEvent(target){
     if(enemyTeamWiped(enemyTrainerInfo)){
       if(ally.pogemon.evo == null) {
         queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
         queue.push(() => manageBattleState(false))
         return
       }
 
-      if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
-      else {
+      if(ally.pogemon.evo.lvl <= ally.lvl) {
         queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+        manageEvolution()
+      } else {
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
         queue.push(() => manageBattleState(false))
       }
       return
@@ -908,8 +919,8 @@ function manageStatusEvent(faster, slower){
 function checkIfFainted(target){
   if(target.hp <= 0){
     queue.push(() =>{
-      audioObj.battle.stop()
-      audioObj.faint.play()
+      audioObj.music.battle.stop()
+      audioObj.SFX.faint.play()
       target.faint()
       faintEvent(target)
       let placeHolder = queue[1]

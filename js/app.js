@@ -1,5 +1,7 @@
 import { manageBootState } from './scripts/scenes/boot.js';
 
+import { loadData } from './save.js';
+
 let timerId;
 export let _preventActionSpam = (callback, e, duration) =>{
     if (!(timerId == null)) {

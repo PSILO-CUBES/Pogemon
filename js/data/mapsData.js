@@ -1,3 +1,4 @@
+import { loadData } from "../save.js"
 import { pogemonsObj } from "./pogemonData.js"
 
 export let mapsObj = {
@@ -17,6 +18,21 @@ export let mapsObj = {
       {name: 'home', spawnPosition: {x:405, y:275}}
     ]
   },
+  home:{
+    name: 'home',
+    mapImg: './img/maps/home/home.png',
+    FGImg: './img/maps/home/homeFG.png',
+    spawnPosition: {
+      x: 250,
+      y: -100
+    },
+    height: 11,
+    width: 22,
+    encounters: [],
+    changeMapLocations:[
+      {name: 'bedroom', spawnPosition: {x:787.5, y:265,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}
+    ]
+  },
   geneTown : {
     name: 'geneTown',
     mapImg: './img/maps/geneTown/geneTown.png',
@@ -27,17 +43,21 @@ export let mapsObj = {
     },
     height: 32,
     width: 32,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
     changeMapLocations:[
-      {name: 'home', spawnPosition: {x:250, y:-90,}}, {name: 'lab', spawnPosition: {x: 375, y: -425,}}
+      {name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},
+      {name: 'pogemart', spawnPosition: {x:600, y:0,}}, 
+      {name: 'pogecenter', spawnPosition: {x:407.5, y:-50,}}, 
+      {name: 'lab', spawnPosition: {x: 375, y: -425,}}
     ],
     trainers: [
       {
         name: 'Gab', 
         team: [[pogemonsObj['maaph'], 10]],
         direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/ethan.png',
+        sprite: '../../img/charSprites/dino/dino.png',
         dialogue: 'Git Gut\n\n\nSkill issue',
+        reward: 100,
         beaten: false
       },
     ],
@@ -55,22 +75,105 @@ export let mapsObj = {
     encounters:[],
     changeMapLocations:[
       {name: 'geneTown', spawnPosition: {x:342.5, y:-875,}}, {name: 'geneTown', spawnPosition: {x:342.5, y:-875,}}
+    ],
+    event: [
+      {
+        name: 'pc',
+        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}},
+      },
+      {
+        name: 'npc',
+        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Hi, how are you?', 'Please pick one of those pogemon.']},
+      },
+      {
+        name: 'starter',
+        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 0},
+      },
+      {
+        name: 'starter',
+        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 1},
+      },
+      {
+        name: 'starter',
+        info: {direction: {reach: {pos:{x:35, y:0}, neg:{x:5, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 2},
+      },
+    ],
+  },
+  pearlyPath : {
+    name: 'pearlyPath',
+    mapImg: './img/maps/pearlyPath/pearlyPath.png',
+    FGImg: './img/maps/pearlyPath/pearlyPathFG.png',
+    spawnPosition: {
+      x: 775,
+      y: -1150
+    },
+    height: 42,
+    width: 34,
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
+    changeMapLocations:[
+      {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, 
+      {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}},
+
+      {name: 'geneTown', spawnPosition: {x:-75, y: 50,}}, {name: 'geneTown', spawnPosition: {x: -75, y: 50,}}
     ]
   },
-  home:{
-    name: 'home',
-    mapImg: './img/maps/home/home.png',
-    FGImg: './img/maps/home/homeFG.png',
+  banishmentRoad : {
+    name: 'banishmentRoad',
+    mapImg: './img/maps/banishmentRoad/banishmentRoad.png',
+    FGImg: './img/maps/banishmentRoad/banishmentRoadFG.png',
+    spawnPosition: {
+      x: -75,
+      y: -750
+    },
+    height: 30,
+    width: 40,
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
+    changeMapLocations:[
+      {name: 'pearlyPath', spawnPosition: {x:775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}},
+      {name: 'pearlyPath', spawnPosition: {x:775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}
+    ]
+  },
+  pogecenter:{
+    name: 'pogecenter',
+    mapImg: './img/maps/pogecenter/pogecenter.png',
+    FGImg: './img/maps/pogecenter/pogecenterFG.png',
     spawnPosition: {
       x: 250,
       y: -100
     },
     height: 11,
-    width: 22,
+    width: 17,
     encounters: [],
-    changeMapLocations:[
-      {name: 'bedroom', spawnPosition: {x:787.5, y:265,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}
-    ]
+    event: [
+      {
+        name: 'npc',
+        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
+      },
+      {
+        name: 'pc',
+        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}},
+      },
+    ],
+    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}]
+  },
+  pogemart:{
+    name: 'pogemart',
+    mapImg: './img/maps/pogemart/pogemart.png',
+    FGImg: './img/maps/pogemart/pogemartFG.png',
+    spawnPosition: {
+      x: 0,
+      y: 0
+    },
+    height: 10,
+    width: 13,
+    encounters: [],
+    event: [
+      {
+        name: 'npc',
+        info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['What will you be buying today?'], type:'pogemart'},
+      },
+    ],
+    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}]
   },
   // paccIsle : {
   //   name: 'paccIsle',
@@ -87,26 +190,42 @@ export let mapsObj = {
   // },
 }
 
-export async function setBoundries(){
+export async function setBoundries(mapsObj){
   let mapArr = new Map()
 
-  for(let i = 1; i < Object.values(mapsObj).length; i++){
+  let loadedData = await loadData()
+
+  const mapsObjKeys = Object.keys(mapsObj)
+  const mapsObjValues = Object.values(mapsObj)
+
+  if(loadedData != null) {
+    mapsObjValues.forEach((map, i) =>{
+      if(map.trainers == undefined) return
+      map.trainers.forEach((trainer, j) =>{
+        trainer.beaten = Object.values(loadedData['mapsObjState'])[i].trainers[j].beaten
+      })
+    })
+  }
+
+  for(let i = 1; i < mapsObjValues.length; i++){
     let res
   
-    await fetch(`img/maps/${Object.keys(mapsObj)[i]}/${Object.keys(mapsObj)[i]}.json`).then((response) => response.json()).then((json) => res = Object.values(json)[3][1])
+    await fetch(`img/maps/${mapsObjKeys[i]}/${mapsObjKeys[i]}.json`).then((response) => response.json()).then((json) => res = Object.values(json)[3][1])
 
     if(res.layers[0] == undefined) {
-      mapArr.set(`${Object.keys(mapsObj)[i]}`, {...Object.values(mapsObj)[i]})
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i]})
     } else if (res.layers[1] == undefined){
-      mapArr.set(`${Object.keys(mapsObj)[i]}`, {...Object.values(mapsObj)[i], collisions: res.layers[0].data})
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data})
     } else if (res.layers[2] == undefined){
-      mapArr.set(`${Object.keys(mapsObj)[i]}`, {...Object.values(mapsObj)[i], collisions: res.layers[0].data, changeMap: res.layers[1].data})        
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data})        
     } else if (res.layers[3] == undefined){
-      mapArr.set(`${Object.keys(mapsObj)[i]}`, {...Object.values(mapsObj)[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data})
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data})
     } else {
-      mapArr.set(`${Object.keys(mapsObj)[i]}`, {...Object.values(mapsObj)[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data, battleZones: res.layers[3].data})
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data, battleZones: res.layers[3].data})
     }
 
-    mapsObj[`${Object.keys(mapsObj)[i]}`] = mapArr.get(`${Object.keys(mapsObj)[i]}`)
+    mapsObj[`${mapsObjKeys[i]}`] = mapArr.get(`${mapsObjKeys[i]}`)
+
+    // console.log(mapsObj[`${mapsObjKeys[i]}`])
   }
 }

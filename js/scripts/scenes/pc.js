@@ -108,8 +108,6 @@ function pcAnimation(){
     boxSprites.forEach(sprite =>{
         sprite.draw()
     })
-
-    console.log(disableClickEvent)
 }
 
 const pcSceneSelectedPogemonGenderImg = new Image()
@@ -221,6 +219,10 @@ function rearrangeTeam(first, second){
     first.DOM = document.querySelectorAll('.pcScenePogemonContainer')[first.i]
     second.DOM = document.querySelectorAll('.pcScenePogemonContainer')[second.i]
 
+    player.team = player.team.filter(function( element ) {
+        return element !== undefined;
+    });
+
     // if there is a pogemon after this one in player.team
     if(first.type.name == 'team' && player.team[first.i] !== undefined) {
         teamSprites.forEach((sprite, i) =>{
@@ -252,16 +254,11 @@ function rearrangeTeam(first, second){
     }
 
     // if there are no pogemon before this one in player.team
-    if(second.type.name == 'team' && player.team[second.i - 1] == undefined){
-
+    if(second.type.name == 'team' && player.team[second.i - 1] == undefined ){
         teamSprites.forEach((sprite, i) =>{
             gsap.to(sprite, {
                 opacity: 0,
-                onComplete:() =>{
-                    player.team = player.team.filter(function( element ) {
-                        return element !== undefined;
-                    });
-                    
+                onComplete:() =>{                    
                     let node = document.querySelectorAll('.pcScenePogemonContainer')[i]
 
                     if(player.team[i] == null || player.team[i] == undefined){
@@ -289,9 +286,16 @@ function rearrangeTeam(first, second){
     if(second.pogemon == undefined || second.pogemon == null){
         second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.bagSprite
         first.type.animationArr[first.i].img.src = 'img/blank.png'
+        
+        if(first.type.name == 'team'){
+            const currSwitchingPogemonNode = document.querySelectorAll('.pcScenePogemonContainer')[first.i]
+
+            currSwitchingPogemonNode.childNodes[0].childNodes[0].textContent = ``
+            currSwitchingPogemonNode.childNodes[0].childNodes[1].src = `img/blank.png`
+            currSwitchingPogemonNode.childNodes[1].textContent = ``
+        }
 
         if(second.type.name != 'team') return
-        console.log(second)
         second.DOM.childNodes[0].childNodes[0].textContent = `LV${first.pogemon.lvl}`
         second.DOM.childNodes[0].childNodes[1].src = `img/${first.pogemon.gender}_icon.png`
         second.DOM.childNodes[1].textContent = `${first.pogemon.name}`

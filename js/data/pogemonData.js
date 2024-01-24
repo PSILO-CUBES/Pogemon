@@ -24,7 +24,7 @@ export const pogemonsObj = {
       spdef: 40,
       spd: 45
     },
-    evo: {name: 'lokol', lvl: 10},
+    evo: {name: 'lokol', lvl: 10, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -40,13 +40,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/001_Loko/Loko_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -67,7 +75,7 @@ export const pogemonsObj = {
       spdef: 60,
       spd: 70
     },
-    evo: {name: 'lokump', lvl: 12},
+    evo: {name: 'lokump', lvl: 12, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -83,13 +91,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/002_Lokol/Lokol_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -126,13 +142,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/003_lokump/lokump_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -155,7 +179,7 @@ export const pogemonsObj = {
       spdef: 65,
       spd: 35
     },
-    evo: {name: 'steeler', lvl: 10},
+    evo: {name: 'steeler', lvl: 10, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -171,13 +195,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/004_Steeli/Steeli_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -198,7 +230,7 @@ export const pogemonsObj = {
       spdef: 95,
       spd: 45
     },
-    evo: {name: 'steevil', lvl: 12},
+    evo: {name: 'steevil', lvl: 12, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -214,13 +246,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/005_Steeler/Steeler_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -257,13 +297,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/006_Steevil/Steevil_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -286,7 +334,7 @@ export const pogemonsObj = {
       spdef: 70,
       spd: 60
     },
-    evo: {name: 'maaphett', lvl: 10},
+    evo: {name: 'maaphett', lvl: 10, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -301,13 +349,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/007_maaph/maaph_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -328,7 +384,7 @@ export const pogemonsObj = {
       spdef: 100,
       spd: 80
     },
-    evo: {name: 'maapheeno', lvl: 12},
+    evo: {name: 'maapheeno', lvl: 12, type: 'lvl'},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -344,13 +400,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/008_maaphett/maaphett_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
@@ -387,17 +451,129 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/009_maapheeno/maapheeno_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 1000,
     catchRate: 75
+  },
+
+  // #10 - #13 shroom line
+  piny: {
+    pogedex: 10,
+    name: 'piny',
+    element:{
+      1: 'grass',
+      2: 'psychic'
+    },
+    stats: {
+      hp: 50,
+      atk: 30,
+      def: 30,
+      spatk: 60,
+      spdef: 60,
+      spd: 30
+    },
+    evo: {name: 'fruity', type: 'item', item: 'leafStone'},
+    abilities: {
+      1: 'Tripped Out',
+      2: 'Overgrow'
+    },
+    movepool: {
+      1: {move: movesObj.fireball, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      frontSprite: 'img/pogemon/010_Piny/Piny_Animation.png',
+      backSprite: 'img/pogemon/010_Piny/Piny_Back_Animation.png',
+      teamSprite: 'img/pogemon/010_Piny/Piny_Team_Animation.png',
+      bagSprite: 'img/pogemon/010_Piny/Piny_Bag_Animation.png',
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200
+  },
+  fruity: {
+    pogedex: 11,
+    name: 'fruity',
+    element:{
+      1: 'grass',
+      2: 'psychic'
+    },
+    stats: {
+      hp: 50,
+      atk: 30,
+      def: 30,
+      spatk: 60,
+      spdef: 60,
+      spd: 30
+    },
+    evo: null,
+    abilities: {
+      1: 'Tripped_Out',
+      2: 'Overgrow'
+    },
+    movepool: {
+      1: {move: movesObj.fireball, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      frontSprite: 'img/pogemon/011_fruity/fruity_Animation.png',
+      backSprite: 'img/pogemon/011_fruity/fruity_Back_Animation.png',
+      teamSprite: 'img/pogemon/011_fruity/fruity_Team_Animation.png',
+      bagSprite: 'img/pogemon/011_fruity/fruity_Bag_Animation.png',
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200
   },
 
   // #143 - #144 disso x
@@ -432,13 +608,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/143_Disso/Disso_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 5000,
@@ -461,7 +645,7 @@ export const pogemonsObj = {
       spdef: 60,
       spd: 999,
     },
-    evo: {name: 'jleech', lvl: 11},
+    evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: {
       1: 'Transform',
       2: 'Kamiii'
@@ -480,13 +664,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/145_Jlissue/Jlissue_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 70,
@@ -526,13 +718,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/146_jleech/jleech_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 70,
@@ -573,13 +773,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/147_jlorox/jlorox_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 70,
@@ -619,13 +827,21 @@ export const pogemonsObj = {
       bagSprite: 'img/pogemon/14_jleenex/jleenex_Bag_Animation.png',
     },
     animationPositions:{
-      launch:{
-        init: {x: 150, y: 250},
-        hit: {x: 100, y: 0}
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
       },
-      receive:{
-        init: {x: 0, y: 0},
-        hit: {x: -150, y:-250}
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
       }
     },
     yeild: 70,

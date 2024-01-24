@@ -525,7 +525,6 @@ function teamAnimation() {
   backgroundSprite.draw()
 
   pogemonSpriteArr.forEach((sprite,i) =>{
-    console.log(pogemonSpriteArr[i].img.src)
     sprite.draw()
   })
 }

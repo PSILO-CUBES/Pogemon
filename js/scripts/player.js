@@ -1,15 +1,18 @@
 // all data pertaining to the player
 import { audioObj } from "../data/audioData.js"
-
-import { Boundary, Sprite, Trainer } from "../classes.js"
-
-import { manageBattleState, battleAnimation } from "./scenes/battle.js"
 import { pogemonsObj } from "../data/pogemonData.js"
-import { manageOverWorldState, prevScene, returnPrevScene } from "./scenes/overworld.js"
+
+import { Sprite, NPC, Pogemon } from "../classes.js"
+
+import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap } from "./maps.js"
-import { mapsObj } from "../data/mapsData.js"
+import { changeMapInfo, currMap, map } from "./maps.js"
+
+import { manageBattleState } from "./scenes/battle.js"
+import { manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
+import { mapsObj } from "../data/mapsData.js"
+import { movesObj } from "../data/movesData.js"
 
 export const keys = {
   w: {
@@ -38,23 +41,79 @@ let playerHeight = 132
 let playerWidth  = 84
 
 const playerImg = new Image()
-playerImg.src = './img/charSprites/dino.png'
+export const playerCharacter = 'ethan'
+playerImg.src = `./img/charSprites/${playerCharacter}/${playerCharacter}.png`
 
-export function generatePlayer(canvas){
-  player = new Trainer([], new Map(), 500, 'Down', 'player', new Sprite({
-    type: 'player',
-    position:{
-      x: canvas.width / 2 - playerWidth / 2,
-      y: Math.floor(canvas.height / 2 -  playerHeight / 2)
-    },
-    img: playerImg,
-    frames: {
-      max: 4,
-      hold: 10
+let data
+
+export async function generatePlayer(canvas){
+  // if(playerInfo == undefined){
+    await loadData().then(res => data = res)
+
+    if(data == null) {
+      player = new NPC([], new Map(), 500, 'Down', 'player', new Sprite({
+        type: 'player',
+        position:{
+          x: canvas.width / 2 - playerWidth / 2,
+          y: Math.floor(canvas.height / 2 -  playerHeight / 2)
+        },
+        img: playerImg,
+        frames: {
+          max: 4,
+          hold: 10
+        }
+      }))
+
+      player.catch(pogemonsObj['jlissue'], true)
+
+      return player
+    } else {
+      player = new NPC([], new Map(), 500, 'Down', 'player', new Sprite({
+        type: 'player',
+        position:{
+          x: canvas.width / 2 - playerWidth / 2,
+          y: Math.floor(canvas.height / 2 -  playerHeight / 2)
+        },
+        img: playerImg,
+        frames: {
+          max: 4,
+          hold: 10
+        }
+      }))
+
+      player.team.length = 0
+
+      data.playerInfo.player.team.forEach((pogemon,i) =>{
+        let pogemonImg = new Image()
+
+        let pogemonSprite = new Sprite({
+          type: 'pogemon',
+          position: pogemon.position,
+          img: pogemonImg,
+          frames: {
+            max: 4,
+            hold: 50
+          },
+          animate: true
+        })
+
+        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon, pogemonSprite)
+
+        remodeledPogemon.moves.length = 0
+
+        data.playerInfo.teamMovesInfo[0].forEach((move, i) =>{
+          let newMove = movesObj[`${data.playerInfo.teamMovesInfo[0][i][0]}`]
+          newMove.pp = data.playerInfo.teamMovesInfo[0][i][1]
+          remodeledPogemon.moves.push(newMove)
+        })
+
+        remodeledPogemon.learntMoves = data.playerInfo.teamLearntMovesInfo[i]
+
+        player.team.push(remodeledPogemon)
+      })
+      // player.team = 
+      return player
     }
-  }))
-
-  return player
 }
 
 function playerMovementEvent() {
@@ -122,12 +181,36 @@ function playerMovementEvent() {
   })
 }
 
+export const interaction = {
+  initiated: false,
+  flags: {
+    starter: false
+  }
+}
+
+async function setInteractionFlags(){
+  const data = await loadData()
+
+  if(data == null) return
+
+  interaction.flags = data.interactionFlags
+
+  console.log(interaction)
+}
+
+await setInteractionFlags()
+
 function playerInteraction(e) {
-  if(scenes.get('overworld').initiated){
-    if(e.key == ' '){
-      if(pcEvent){
+  if(scenes.get('overworld').initiated == false) return
+  if(e.key != ' ') return
+
+  console.log(player.interaction)
+
+  switch(player.interaction.type){
+    case 'pc':
         if(scenes.get('pc').initiated) return
         player.disabled = true
+
         gsap.to('#overlapping', {
           opacity: 1,
           onComplete: () =>{
@@ -138,8 +221,79 @@ function playerInteraction(e) {
             })
           }
         })
-      }
-    }
+        break
+    case 'npc':
+        if(interaction.initiated) return
+        interaction.initiated = true
+
+        document.querySelector('#openWindow').replaceChildren()
+        document.querySelector('#openWindow').style.backgroundColor = `transparent`
+
+        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+
+        for(let i = 0; i < player.interaction.info.dialogue.length; i++){
+          if(i == 0) player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
+          else queue.push(() => player.team[0].dialogue('overworld', player.interaction.info.dialogue[i]))
+        }
+        
+        if(player.interaction.info.type == undefined) return
+        console.log(player.interaction.info.type)
+        break
+    case 'starter':
+        if(interaction.flags.starter) return
+        if(interaction.initiated) return
+        interaction.initiated = true
+
+        document.querySelector('#openWindow').replaceChildren()
+
+        let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
+        let starter = starters[player.interaction.info.starter]
+
+        player.disabled = true
+
+        let openWindow = document.querySelector('#openWindow')
+        openWindow.style.backgroundColor = 'black'
+
+        let OWDialogue = document.querySelector('#overworldDialogue')
+        OWDialogue.textContent = `Do you want to pick ${starter.name} as your starter?`
+
+        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+
+        const starterImg = new Image()
+        starterImg.src = `img/pogemon/00${starter.pogedex}_${starter.name}/${starter.name}.png`
+        starterImg.id = 'overworldStarterImg'
+
+        openWindow.appendChild(starterImg)
+
+        queue.push(() =>{
+          OWDialogue.setAttribute('class', 'chooseStarterButtonsContainer')
+          OWDialogue.style.padding = 0
+          OWDialogue.innerText = ''
+
+          let choiceArr = ['yes', 'no']
+          for (let i = 0; i < choiceArr.length; i++) {
+            const chooseStarterButton = document.createElement('div')
+            chooseStarterButton.setAttribute('class', 'chooseStarterButton')
+            chooseStarterButton.innerText = choiceArr[i]
+
+            OWDialogue.appendChild(chooseStarterButton)
+
+            if(choiceArr[i] == 'no') return
+
+            chooseStarterButton.addEventListener('click', e =>{
+              queue.push(() =>{
+                OWDialogue.setAttribute('class', '')
+                OWDialogue.style.padding = '35px'
+                OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
+
+                player.catch(starter, true)
+
+                interaction.flags.starter = true
+              })
+            })
+          }
+        })
+        break
   }
 }
 
@@ -233,8 +387,8 @@ function engageBattle(animationId, battleZones) {
       overlappingArea > (player.width * player.height) / 2
       && Math.random() < 0.005
     ){
-      audioObj.map.stop()
-      audioObj.initEncounter.play()
+      audioObj.music.map.stop()
+      audioObj.SFX.initEncounter.play()
       manageOverWorldState(false)
       gsap.to('#overlapping', {
         opacity: 1,
@@ -246,7 +400,7 @@ function engageBattle(animationId, battleZones) {
             opacity: 0,
             duration: 0.4
           })
-          audioObj.battle.play()
+          audioObj.music.battle.play()
           manageBattleState(animationId)
         }
       })
@@ -255,7 +409,7 @@ function engageBattle(animationId, battleZones) {
   }
 }
 
-let lastDirection = 'Down'
+export let lastDirection = 'Down'
 
 function move(direction, movables, moveSpeed){
   switch(direction){
@@ -288,9 +442,17 @@ function move(direction, movables, moveSpeed){
 
 let changeMapFlag = false
 
-function changeMapEvent(changeMap){
+function changeMapEvent(changeMap, currPos){
   for(let i = 0; i < changeMap.length; i++){
     const changeMapIndex = changeMap[i]
+    const currMapInfo = {
+      name: currMap.name,
+      position: {
+        x: currPos.x,
+        y: currPos.y
+      }
+    }
+
     if(
       rectangularCollision({
         rectangle1: player,
@@ -305,7 +467,7 @@ function changeMapEvent(changeMap){
         opacity: 1,
         duration: 0.4,
         onComplete(){
-          changeMapInfo(changeMapIndex.info)
+          changeMapInfo(changeMapIndex, currMapInfo)
         }
       })
       break
@@ -319,7 +481,6 @@ function changeMapEvent(changeMap){
 }
 
 let eventZonesFlag = false
-let pcEvent = false
 
 const exclamation = new Image()
 exclamation.src = 'img/charSprites/exclamation.png'
@@ -335,9 +496,12 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
+      player.interaction = eventZonesIndex
       if(eventZonesIndex.info.createdTrainer != undefined){
+        for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
+          if(mapsObj[currMap.name].trainers[i].beaten == true) return
+        }
         if(eventZonesIndex.info.beaten) return
-        if(eventZonesIndex.info.createdTrainer.beaten) return
         
         player.disabled = true
   
@@ -413,18 +577,7 @@ function eventZoneManagement(eventZones){
           }
         })
       }
-      if(eventZonesIndex.type == 'pc'){
-        pcEvent = true
-      }
       break
-    }
-
-    if(rectangularCollision({
-      rectangle1: player,
-      rectangle2: eventZonesIndex
-    })){
-      console.log('wtf')
-      player.animate = false
     }
     
     if(!rectangularCollision({
@@ -432,7 +585,7 @@ function eventZoneManagement(eventZones){
       rectangle2: eventZonesIndex
     })){
       eventZonesFlag = false
-      pcEvent = false
+      player.interaction = null
     }
   }
 }
@@ -451,10 +604,11 @@ function spendQueue(){
     queue.shift()
     return
   } else {
-    if(!scenes.get('overworld').initiated){
-      document.querySelector('#overworldScene').style.display = 'none'
-      document.querySelector('#overworldDialogue').style.display = 'none'
-    }
+    document.querySelector('#overworldDialogueContainer').style.display = 'none'
+    player.disabled = false
+    interaction.initiated = false
+    document.querySelector('#overworldDialogue').setAttribute('class', '')
+    document.querySelector('#overworldDialogue').style.padding = '35px'
   }
 }
 
@@ -462,10 +616,11 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
   player.assingDirection(direction)
   if(player.disabled) return
   stopMotionWhenColliding(boundaries, lastDirection)
+  // stopMotionWhenColliding(eventZones, lastDirection)
   if(player.animate) {
     returnPrevScene('overworld')
     engageBattle(animationId, battleZones)
-    changeMapEvent(changeMap)
+    changeMapEvent(changeMap, map.position)
     eventZoneManagement(eventZones)
     lastDirection = direction
     move(direction, movables, moveSpeed)
