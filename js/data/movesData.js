@@ -1,13 +1,14 @@
 import { audioObj } from "./audioData.js"
 
 export const movesObj = {
-  // + physical
-  // - normal
+  // physical
+
+  // normal
   tackle:{
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 1,
+    pow: 25,
     acc: 95,
     pp: 50,
     effects: null,
@@ -17,7 +18,7 @@ export const movesObj = {
     name: 'quickattack',
     type: 'physical',
     element: 'normal',
-    pow: 999,
+    pow: 50,
     acc: 100,
     pp: 50,
     effects: null,
@@ -27,7 +28,7 @@ export const movesObj = {
     name: 'headbutt',
     type: 'physical',
     element: 'normal',
-    pow: 85,
+    pow: 65,
     acc: 85,
     pp: 25,
     effects: null,
@@ -54,8 +55,10 @@ export const movesObj = {
     effects: null,
     priority: 0
   },
-  //special
-  //fire
+
+  // special
+
+  // fire
   fireball:{
     name: 'fireball',
     type: 'special',
@@ -65,6 +68,8 @@ export const movesObj = {
     pp: 30,
     effects: {burn: 100},
     priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 0.5,
     sprite: '../../img/moves/fireball.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
@@ -75,12 +80,73 @@ export const movesObj = {
     type: 'special',
     element: 'ghost',
     pow: 1000,
-    acc: 90,
+    acc: 80,
     pp: 30,
     effects: {spdef: -1},
     priority: 0,
-    sprite: '../../img/moves/fireball.png',
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/shadowball.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  // status
+
+  // heal
+  rest:{
+    name: 'rest',
+    type: 'status',
+    element: 'psychic',
+    pow: 100,
+    acc: 100,
+    pp: 30,
+    effects: 'heal',
+    priority: 0,
+    sprite: '../../img/moves/heal.png',
+  },
+
+  // buff
+  sharpen:{
+    name: 'sharpen',
+    type: 'status',
+    element: 'steel',
+    pow: 1,
+    acc: 100,
+    pp: 30,
+    effects: {name: 'buff', target:'atk'},
+    priority: 0,
+  },
+  swift:{
+    name: 'swift',
+    type: 'status',
+    element: 'flying',
+    pow: 1,
+    acc: 100,
+    pp: 30,
+    effects: {name: 'buff', target:'spd'},
+    priority: 0,
+  },
+
+  // debuff
+  growl:{
+    name: 'growl',
+    type: 'status',
+    element: 'dark',
+    pow: 1,
+    acc: 100,
+    pp: 30,
+    effects: {name: 'debuff', target:'atk'},
+    priority: 0,
+  },
+  stare:{
+    name: 'stare',
+    type: 'status',
+    element: 'dark',
+    pow: 1,
+    acc: 100,
+    pp: 30,
+    effects: {name: 'debuff', target:'def'},
+    priority: 0,
   }
 }

@@ -9,27 +9,29 @@ export const itemsObj = {
     desc: "Can trigger certain pogemon's evolution."
   },
   // med
-  potion: {
-    name: 'potion',
+  heal: {
+    name: 'heal',
     type: 'med',
     effect: 'heal',
     pow: '20',
-    img: 'img/item_scene/items/med/potion.png',
-    desc: 'Standard Potion',
+    img: 'img/item_scene/items/med/heal.png',
+    desc: 'Standard Heal',
   },
-  superPotion: {
-    name: 'superPotion',
+  goodHeal: {
+    name: 'goodHeal',
     type: 'med',
     effect: 'heal',
     pow: '50',
-    desc: 'Super Potion'
+    img: 'img/item_scene/items/med/heal.png',
+    desc: 'Good Heal'
   },
-  hyperPotion: {
-    name: 'crazyPotion',
+  megaHeal: {
+    name: 'megaHeal',
     type: 'med',
     effect: 'heal',
     pow: '200',
-    desc: 'Crazy Potion'
+    img: 'img/item_scene/items/med/heal.png',
+    desc: 'Crazy Heal'
   },
   resurrect: {
     name: 'resurrect',
@@ -46,7 +48,7 @@ export const itemsObj = {
     pow: '1',
     img: 'img/item_scene/items/ball/pogeball.png',
     animation: 'img/item_scene/items/ball/pogeball_Animation.png',
-    desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+    desc: "Catches pogemons",
   },
   megaball: {
     name: 'megaball',
@@ -57,12 +59,13 @@ export const itemsObj = {
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
   },
   // berry
-  ordiBerry: {
-    name: 'ordiBerry',
+  banana: {
+    name: 'banana',
     type: 'berry',
     effect: 'heal',
     pow: '10',
-    desc: 'A very ordinary berry'
+    img: 'img/item_scene/items/berry/banana.png',
+    desc: 'A very ordinary banana'
   },
   // tm
   // batItm

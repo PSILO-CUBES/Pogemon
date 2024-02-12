@@ -15,8 +15,6 @@ function trainerAnimation(timeSpent){
 function printTrainerCard(){
     let sectionArr = document.querySelectorAll('.trainerCardBodyInfoSectionContainerContent')
 
-    console.log(sectionArr)
-
     let h = 0
     let m = 0
     

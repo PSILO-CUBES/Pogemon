@@ -1,5 +1,6 @@
 import { Pogemon, Sprite } from "../../classes.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
+import { loadData } from "../../save.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { manageOverWorldState } from "./overworld.js"
@@ -9,27 +10,8 @@ let pcAnimationId
 
 const testImg = new Image()
 testImg.src = 'img/pogemon/001_loko/loko.animation.png'
-const testSprite = new Sprite({
-    type: 'pc',
-    position: {
-        x: 150,
-        y: 150
-    },
-    img: testImg,
-    frames: {
-        max: 4,
-        hold: 25
-    },
-    animate: false
-})
 
 export let pc = [
-    // new Pogemon(pogemonsObj['loko'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['lokol'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['lokump'], Math.pow(100, 3), false, testSprite), null, null, null,
-    // new Pogemon(pogemonsObj['steeli'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['steeler'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['steevil'], Math.pow(100, 3), false, testSprite), null, null, null,
-    // new Pogemon(pogemonsObj['maaph'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['maaphett'], Math.pow(100, 3), false, testSprite), new Pogemon(pogemonsObj['maapheeno'], Math.pow(100, 3), false, testSprite), null, null, null,
-    // null, null, null, null, null, null,
-    // null, null, null, null, null, null,
-    // null, null, null, null, null, null,
     [
         null, null, null, null, null, null,
         null, null, null, null, null, null,
@@ -73,6 +55,33 @@ export let pc = [
         null, null, null, null, null, null,
     ]
 ]
+
+const data = await loadData()
+
+if(data != null){
+    data.pc.forEach((box, i) =>{
+        box.forEach((pogemon, j) =>{
+            if(pogemon == null) return
+
+            let pogemonImg = new Image()
+            let pogemonSprite = new Sprite({
+                type: 'pogemon',
+                position: pogemon.position,
+                img: pogemonImg,
+                frames: {
+                  max: 4,
+                  hold: 50
+                },
+                animate: true
+            })
+
+            // need to implement for more than 1 box at a time
+            box[j] = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon, pogemonSprite)
+        })
+    })
+
+    pc = data.pc
+}
 
 let defaultBox = 0
 let currBox = defaultBox
@@ -229,15 +238,17 @@ function rearrangeTeam(first, second){
             gsap.to(sprite, {
                 opacity: 0,
                 onComplete:() =>{
-                    second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.bagSprite
+                    // second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.bagSprite
 
                     let node = document.querySelectorAll('.pcScenePogemonContainer')[i]
                     if(player.team[i] == null || player.team[i] == undefined){
-                        teamSprites[i].img.src = 'img/blank.png'
+                        console.log(teamSprites[i].img.src)
+                        teamSprites[i].img.src = ''
                         node.childNodes[0].childNodes[0].textContent = ''
-                        node.childNodes[0].childNodes[1].src = `img/blank.png`
+                        node.childNodes[0].childNodes[1].src = ``
                         node.childNodes[1].textContent = ''
                     } else {
+                        console.log(teamSprites[i].img.src)
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
                         node.childNodes[1].textContent = `${player.team[i].name}`
@@ -254,7 +265,7 @@ function rearrangeTeam(first, second){
     }
 
     // if there are no pogemon before this one in player.team
-    if(second.type.name == 'team' && player.team[second.i - 1] == undefined ){
+    if(second.type.name == 'team' && player.team[second.i] == undefined ){
         teamSprites.forEach((sprite, i) =>{
             gsap.to(sprite, {
                 opacity: 0,
@@ -286,7 +297,7 @@ function rearrangeTeam(first, second){
     if(second.pogemon == undefined || second.pogemon == null){
         second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.bagSprite
         first.type.animationArr[first.i].img.src = 'img/blank.png'
-        
+
         if(first.type.name == 'team'){
             const currSwitchingPogemonNode = document.querySelectorAll('.pcScenePogemonContainer')[first.i]
 
@@ -303,6 +314,7 @@ function rearrangeTeam(first, second){
 }
 
 function pcSwitchEvent(first, second){
+
     disableClickEvent = true
     if(player.team.length == 1){
         if(first.type.name == 'team' && second.pogemon == null) {
@@ -330,9 +342,21 @@ function pcSwitchEvent(first, second){
             
             if(first.type.name == 'team') first.type.obj.splice(first.i, 1)
             else first.type.obj[first.i] = null
-            
+
             rearrangeTeam(first, second)
             return
+        } else {
+            if(first.type.name == 'team'){
+                document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[0].childNodes[0].textContent = `Lv${second.pogemon.lvl}`
+                document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[0].childNodes[1].src = `img/${second.pogemon.gender}_icon.png`
+                document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[1].childNodes[0].textContent = second.pogemon.name
+            }
+
+            if(second.type.name == 'team'){
+                document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[0].textContent = `Lv${first.pogemon.lvl}`
+                document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[1].src = `img/${first.pogemon.gender}_icon.png`
+                document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[1].childNodes[0].textContent = first.pogemon.name
+            }
         }
 
         placeHolder = first.type.obj[first.i]

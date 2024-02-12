@@ -6,6 +6,7 @@ import { mapsObj } from '../data/mapsData.js'
 import { Sprite } from '../classes.js'
 
 import { generatePlayer } from './player.js'
+import { loadData } from '../save.js'
 
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
@@ -17,18 +18,22 @@ c.fillStyle = 'white'
 c.fillRect(0, 0, canvas.width, canvas.height)
 
 const player = await generatePlayer(canvas)
+const data = await loadData()
 
-const itemArr = [
-  {name: 'potion', quantity: 999}, 
-  {name: 'resurrect', quantity: 999},
-  {name: 'pogeball', quantity: 999},
-  {name: 'megaball', quantity: 999},
-  {name: 'leafStone', quantity: 999},
-]
+if(data == null){
+  Object.values(itemsObj).forEach(item =>{
+    player.bag.set(item.name, {item: itemsObj[item.name], quantity: 0})
+  })
+} else {
 
-for(let i = 0; i < itemArr.length; i++){
-  player.bag.set(itemArr[i].name, {item: itemsObj[itemArr[i].name], quantity: itemArr[i].quantity})
+  player.bag = new Map()
+
+  data.bag.forEach(key =>{
+    player.bag.set(`${key.item.name}`, {item: key.item, quantity: key.quantity})
+  })
 }
+
+// player.bag.set('heal', {...player.bag.get('heal'), quantity: 999})
 
 export const scenes = new Map()
 scenes.set('overworld', {initiated: false})

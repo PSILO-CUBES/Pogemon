@@ -30,8 +30,24 @@ export let mapsObj = {
     width: 22,
     encounters: [],
     changeMapLocations:[
-      {name: 'bedroom', spawnPosition: {x:787.5, y:265,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}
+      {name: 'bedroom', spawnPosition: {x:787.5, y:265,}}, 
+      {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}, {name: 'geneTown', spawnPosition: {x: -555, y: -230,}}
     ]
+  },
+  geneTown_home1:{
+    name: 'geneTown_home1',
+    mapImg: './img/maps/geneTown_home1/geneTown_home1.png',
+    FGImg: './img/maps/geneTown_home1/geneTown_home1FG.png',
+    spawnPosition: {
+      x: -75,
+      y: -750
+    },
+    height: 10,
+    width: 21,
+    encounters: [],
+    changeMapLocations:[
+      {name: 'geneTown', spawnPosition: {x: 475, y: -230,}}, {name: 'geneTown', spawnPosition: {x: 475, y: -230,}}
+    ],
   },
   geneTown : {
     name: 'geneTown',
@@ -43,17 +59,17 @@ export let mapsObj = {
     },
     height: 32,
     width: 32,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}],
     changeMapLocations:[
       {name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},
-      {name: 'pogemart', spawnPosition: {x:600, y:0,}}, 
-      {name: 'pogecenter', spawnPosition: {x:407.5, y:-50,}}, 
+      {name: 'geneTown_home1', spawnPosition: {x:250, y:0,}}, 
+      {name: 'home', spawnPosition: {x:250, y:-50,}}, 
       {name: 'lab', spawnPosition: {x: 375, y: -425,}}
     ],
     trainers: [
       {
         name: 'Gab', 
-        team: [[pogemonsObj['maaph'], 10]],
+        team: [[pogemonsObj['disso'], 10], [pogemonsObj['maaph'], 10]],
         direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
         sprite: '../../img/charSprites/dino/dino.png',
         dialogue: 'Git Gut\n\n\nSkill issue',
@@ -111,8 +127,8 @@ export let mapsObj = {
     width: 34,
     encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
     changeMapLocations:[
-      {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, 
-      {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1525, y: -350,}},
+      {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, 
+      {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}},
 
       {name: 'geneTown', spawnPosition: {x:-75, y: 50,}}, {name: 'geneTown', spawnPosition: {x: -75, y: 50,}}
     ]
@@ -129,8 +145,36 @@ export let mapsObj = {
     width: 40,
     encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
     changeMapLocations:[
-      {name: 'pearlyPath', spawnPosition: {x:775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}},
-      {name: 'pearlyPath', spawnPosition: {x:775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 775, y: -1150,}}
+      {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
+      {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
+
+      {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}},
+      {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}
+    ]
+  },
+  kemeTown : {
+    name: 'kemeTown',
+    mapImg: './img/maps/kemeTown/kemeTown.png',
+    FGImg: './img/maps/kemeTown/kemeTownFG.png',
+    spawnPosition: {
+      x: -75,
+      y: -750
+    },
+    height: 31,
+    width: 32,
+    encounters: [],
+    changeMapLocations:[
+      {name: 'home', spawnPosition: {x:775, y: -1150,}}, 
+
+      {name: 'home', spawnPosition: {x:775, y: -1150,}}, 
+
+      {name: 'home', spawnPosition: {x:775, y: -1150,}}, 
+
+      {name: 'pogecenter', spawnPosition: {x:405, y: -50,}}, 
+
+      {name: 'pogemart', spawnPosition: {x:597.5, y: 0,}}, 
+
+      {name: 'banishmentRoad', spawnPosition: {x:400, y: 300,}}, {name: 'banishmentRoad', spawnPosition: {x: 400, y: 300,}}, {name: 'banishmentRoad', spawnPosition: {x: 400, y: 300,}}, {name: 'banishmentRoad', spawnPosition: {x:400, y: 300,}}, {name: 'banishmentRoad', spawnPosition: {x: 400, y: 300,}}
     ]
   },
   pogecenter:{
@@ -147,7 +191,7 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
+        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
       },
       {
         name: 'pc',
@@ -173,7 +217,17 @@ export let mapsObj = {
         info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['What will you be buying today?'], type:'pogemart'},
       },
     ],
-    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}]
+    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}],
+    productOptions: [
+      [{name:'heal', price: 1}, {name:'resurrect', price: 1}, {name:'pogeball', price: 1}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'heal', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+    ]
   },
   // paccIsle : {
   //   name: 'paccIsle',

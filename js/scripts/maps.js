@@ -46,10 +46,11 @@ async function generateBoundaries(nextMapInfo){
   await setBoundries(mapsObj)
   const data = await loadData()
 
+  console.log(data)
+
   if(data == null) {
-    if(currMap == undefined) currMap = mapsObj.pearlyPath
+    if(currMap == undefined) currMap = mapsObj.geneTown
   } else {
-    console.log('here')
     currMap = mapsObj[`${data.currMapName}`]
   }
 
@@ -132,7 +133,7 @@ async function generateBoundaries(nextMapInfo){
             new Boundary({
               position:{
                 x: j * Boundary.width + currMap.spawnPosition.x,
-                y: i * Boundary.height + currMap.spawnPosition.y + 24
+                y: i * Boundary.height + currMap.spawnPosition.y + 10
               },
               type: 3,
               info : mapInfo
@@ -178,7 +179,7 @@ async function generateBoundaries(nextMapInfo){
                     animate: true
                   })
 
-                  trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, foeSprite))
+                  trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, null, foeSprite))
                 }
 
                 const trainerImg = new Image()
@@ -237,7 +238,8 @@ async function generateBoundaries(nextMapInfo){
                     x: j * Boundary.width + currMap.spawnPosition.x,
                     y: i * Boundary.height + currMap.spawnPosition.y
                   },
-                  type: eventInfo.name,
+                  type: 5,
+                  name: eventInfo.name,
                   info: eventInfo.info
                 })
               )
@@ -271,8 +273,10 @@ async function generateBoundaries(nextMapInfo){
     map.position.y = nextMapInfo.spawnPosition.y
 
     const collisionsMap = []
-    console.log(nextMapInfo)
 
+
+    console.log(nextMapInfo)
+    console.log(data)
     if(nextMapInfoObj.collisions != undefined){
       for(let i = 0; i < nextMapInfoObj.collisions.length; i += nextMapInfoObj.width){
         collisionsMap.push(nextMapInfoObj.collisions.slice(i, nextMapInfoObj.width + i))
@@ -324,12 +328,10 @@ async function generateBoundaries(nextMapInfo){
           let mapInfo
 
           if(nextMapInfo.name != 'undefined' && nextMapInfo.name !== null){
-            console.log(nextMapInfo.name == 'undefined')
             mapInfo = mapsObj[`${nextMapInfo.name}`].changeMapLocations[z]
           }else if(pogecenterReturnInfo.name != null){
             mapInfo = pogecenterReturnInfo
           }else {
-            console.log(data.nextMapInfo)
             mapInfo = data.nextMapInfo
           }
 
@@ -340,7 +342,7 @@ async function generateBoundaries(nextMapInfo){
             new Boundary({
               position:{
                 x: j * Boundary.width + nextMapInfo.spawnPosition.x,
-                y: i * Boundary.height + nextMapInfo.spawnPosition.y + 24
+                y: i * Boundary.height + nextMapInfo.spawnPosition.y + 10
               },
               type: 3,
               info: mapInfo
@@ -363,7 +365,6 @@ async function generateBoundaries(nextMapInfo){
           switch(type){
             case 0: break
             case 4:
-              console.log(nextMapInfo)
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
               
@@ -390,7 +391,7 @@ async function generateBoundaries(nextMapInfo){
                     animate: true
                   })
 
-                  trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, null, foeSprite))
+                  trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, null, null, foeSprite))
                 }
               
                 const trainerImg = new Image()
@@ -452,7 +453,8 @@ async function generateBoundaries(nextMapInfo){
                     x: j * Boundary.width + nextMapInfo.spawnPosition.x,
                     y: i * Boundary.height + nextMapInfo.spawnPosition.y
                   },
-                  type: eventInfo.name,
+                  type: 5,
+                  name: eventInfo.name,
                   info: eventInfo.info
                 })
               )
@@ -473,8 +475,6 @@ async function generateBoundaries(nextMapInfo){
         })
       })
     }
-
-    console.log(boundaries)
 
     return [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr]
   }
@@ -514,7 +514,6 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 
 export async function generateMapData(nextMapInfo) {
   const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr] = await generateBoundaries(nextMapInfo)
-  console.log(eventZones)
 
   if(nextMapInfo == undefined){
     mapImg.src = currMap.mapImg

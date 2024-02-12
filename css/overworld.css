@@ -113,7 +113,7 @@ body{
   height: 76.5%;
   width: 100%;
 
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.75);
   padding: 37.5px;
 }#overworldDialogue:hover{
   cursor: pointer;
@@ -208,4 +208,248 @@ body{
 }#optionsMenuDelete:hover{
   background-color: rgba(255, 0, 0, 0.15);
   cursor: pointer;
+}
+
+#pogemartContainer{
+  display: none;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartMenuContainer{
+  display: grid;
+
+  grid-template-rows: 70% 30%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartMenuUpperContainer{
+  display: grid;
+
+  grid-template-columns: 52.5% 47.5%;
+  
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartMenuLowerContainer{
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#pogemartMoneyContainer{
+  display: flex;
+  justify-self: center;
+
+  height: 25%;
+  width: 50%;
+
+  margin-top: 100px;
+  margin-left: -325px;
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+#pogemartMoneyAmountContainer{
+  display: flex;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartItemsContainer{
+  display: grid;
+  justify-self: end;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.75);
+
+  overflow-y: scroll;
+  overflow-x: none;
+}
+
+.pogemartItemsContainer{
+  display: grid;
+  grid-template-columns: 150px 75% auto;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  min-height: 140px;
+  width: 100%;
+
+  cursor: pointer;
+}
+
+.pogemartItemsContainer > * {
+  position: relative;
+  right: 15px;
+
+  text-align: center;
+
+  pointer-events: none;
+}
+
+.pogemartItemsIcon{
+  height: 100px;
+  margin-left: 20%;
+}
+
+#pogemartMenuDescripion{
+  height: 100%;
+  width: 100%;
+  padding: 37.5px;
+}
+
+#pogemartBuyMenu{
+  display: none;
+  grid-template-columns: 52.5% 47.5%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartBuyMenuInteractionContainer{
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(3, 33.33%);
+}
+
+.pogemonBuyMenuInteraction{
+  height: 100%;
+  width: 100%;
+}
+
+#pogemonBuyMenuInput{
+  height: 25%;
+  width: 35%;
+
+  text-align: center;
+
+  color: black;
+}
+
+#pogemonBuyMenuArrowContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+
+.pogemonBuyMenuArrows{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.pogemonBuyMenuArrow:hover{
+  background-color: rgba(75, 75, 75, 0.5);
+  cursor: pointer;
+}
+
+#pogemonBuyMenuBuyInteraction{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}#pogemonBuyMenuBuyInteraction:hover{
+  background-color: rgba(75, 75, 75, 0.5);
+  cursor: pointer;
+}
+
+.pogemartItemsPogebuckIcon{
+  height: 22px;
+}
+
+.pogemartItemPriceContainer{
+  display: flex;
+}
+
+#pogemartBuyMenuTextContainer{
+  padding: 37.5px;
+}
+
+#pogemartMoneyPogebucksIcon{
+  height: 22px;
+  width: 22px;
+}
+
+#pogemartBuyConfirmationMenu{
+  display: grid;
+  grid-template-columns: 52.5% 47.5%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartBuyConfirmationMenuOptionContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  justify-items: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemartBuyConfirmationMenuText{
+  padding: 37.5px;
+}
+
+.pogemartBuyConfirmationOptions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 25%;
+  width: 50%;
+}.pogemartBuyConfirmationOptions:hover{
+  background-color: rgba(75,75,75,0.5);
+  cursor: pointer;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  --moz-appearance: textfield;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 15rem;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: rgba(128, 128, 128, 0.25);
+  height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -12px; /* Centers thumb on the track */
+  background: rgba(128, 128, 128, 0.75);
+  height: 1.5rem;
+  width: 1rem;    
 }

@@ -63,7 +63,6 @@ function setEvoScene(){
 }
 
 function initEvo(target){
-  console.log(target)
   scenes.set('evolution', {initiated : true})
 
   targetEvo = pogemonsObj[target.evo.name]

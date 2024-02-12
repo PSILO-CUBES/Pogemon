@@ -9,10 +9,11 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, map } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
-import { manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
+import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { mapsObj } from "../data/mapsData.js"
 import { movesObj } from "../data/movesData.js"
+import { itemsObj } from "../data/itemsData.js"
 
 export const keys = {
   w: {
@@ -37,8 +38,8 @@ let moveSpeed = walkSpeed
 
 export let player
 
-let playerHeight = 132
-let playerWidth  = 84
+let playerHeight = 128
+let playerWidth = 64
 
 const playerImg = new Image()
 export const playerCharacter = 'ethan'
@@ -55,7 +56,7 @@ export async function generatePlayer(canvas){
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
-          y: Math.floor(canvas.height / 2 -  playerHeight / 2)
+          y: canvas.height / 2 -  playerHeight / 2
         },
         img: playerImg,
         frames: {
@@ -64,7 +65,7 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj['jlissue'], true)
+      player.catch(pogemonsObj['jlissue'], true, 'geneTown')
 
       return player
     } else {
@@ -72,7 +73,7 @@ export async function generatePlayer(canvas){
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
-          y: Math.floor(canvas.height / 2 -  playerHeight / 2)
+          y: canvas.height / 2 -  playerHeight / 2
         },
         img: playerImg,
         frames: {
@@ -97,7 +98,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -111,7 +112,7 @@ export async function generatePlayer(canvas){
 
         player.team.push(remodeledPogemon)
       })
-      // player.team = 
+      player.money = data.playerInfo.player.money
       return player
     }
 }
@@ -189,24 +190,225 @@ export const interaction = {
 }
 
 async function setInteractionFlags(){
-  const data = await loadData()
-
   if(data == null) return
 
   interaction.flags = data.interactionFlags
-
-  console.log(interaction)
 }
 
 await setInteractionFlags()
+
+function hoverEvent(state, target, item){
+  if(state){
+    document.querySelector('#pogemartMenuDescripion').textContent = itemsObj[item.name].desc
+    target.style.backgroundColor = 'rgb(75, 75, 75, 0.5)'
+  } else {
+    document.querySelector('#pogemartMenuDescripion').textContent = ''
+    if(target.id == 'selected') return
+    target.style.backgroundColor = 'transparent'
+  }
+}
+
+const pogemartBuyingInteraction = {
+  initiated: false,
+  product: null
+}
+
+let inputValue
+
+document.querySelector('#pogemonBuyMenuInput').oninput = function(){
+  if(document.querySelector('#pogemonBuyMenuInput').value >= 999){
+    inputValue = 999
+    document.querySelector('#pogemonBuyMenuInput').value = inputValue
+    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+    return
+  }
+
+  if(document.querySelector('#pogemonBuyMenuInput').value <= 0 || document.querySelector('#pogemonBuyMenuInput').value == NaN || document.querySelector('#pogemonBuyMenuInput').value == '-') {
+    inputValue = 0
+    document.querySelector('#pogemonBuyMenuInput').value = inputValue
+    document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${pogemartBuyingInteraction.product.name}'s will you buy?`
+    return
+  }
+
+  inputValue = document.querySelector('#pogemonBuyMenuInput').value
+
+  if(inputValue == 0) {
+    document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${pogemartBuyingInteraction.product.name}'s will you buy?`
+    document.querySelector('#pogemonBuyMenuInput').value = 0
+  } else {
+    if([...inputValue][0].slice(0,1) == 0){
+      inputValue = inputValue.slice(1, inputValue.length)
+      document.querySelector('#pogemonBuyMenuInput').value = inputValue
+    }
+
+    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+  }
+}
+
+function onArrowClickEvent(state){
+  if(document.querySelector('#pogemonBuyMenuInput').value == NaN){
+    inputValue = 999
+    document.querySelector('#pogemonBuyMenuInput').value = inputValue
+  }
+
+  if(state == 'up'){
+    if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) >= 999) {
+      inputValue = 999
+      document.querySelector('#pogemonBuyMenuInput').value = inputValue
+      return
+    }
+
+    inputValue = parseInt(document.querySelector('#pogemonBuyMenuInput').value) + 1
+    document.querySelector('#pogemonBuyMenuInput').value = inputValue
+    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+  } else {
+    if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) <= 0 || document.querySelector('#pogemonBuyMenuInput').value == '-') {
+      inputValue = 0
+      document.querySelector('#pogemonBuyMenuInput').value = inputValue
+      return
+    }
+
+    inputValue = parseInt(document.querySelector('#pogemonBuyMenuInput').value) - 1
+    document.querySelector('#pogemonBuyMenuInput').value = inputValue
+    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+
+    if(inputValue != 0) return
+    document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${pogemartBuyingInteraction.product.name}'s will you buy?`
+  }
+}
+
+function buyItemEvent(){
+  const price = pogemartBuyingInteraction.product.price * inputValue
+  if(price > player.money){
+    document.querySelector('#pogemartMenuDescripion').textContent = "You can't afford that.."
+  } else {
+    console.log(pogemartBuyingInteraction)
+    player.money = player.money - price
+    player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: itemsObj[pogemartBuyingInteraction.product.name], quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
+    document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
+    document.querySelector('#pogemartMenuDescripion').textContent = 'Thank you for your purchase!'
+  }
+  
+  // pogemartBuyingInteraction.initiated = false
+  // pogemartBuyingInteraction.product = null
+}
+
+document.querySelectorAll('.pogemonBuyMenuArrow')[0].addEventListener('click', e => onArrowClickEvent('up'))
+document.querySelectorAll('.pogemonBuyMenuArrow')[1].addEventListener('click', e => onArrowClickEvent('down'))
+document.querySelectorAll('.pogemartBuyConfirmationOptions')[0].addEventListener('click', e => buyItemEvent())
+
+function onClickEvent(state, target, item){
+  const pogemartMenuDescripion = document.querySelector('#pogemartMenuDescripion')
+  const pogemartBuyMenu = document.querySelector('#pogemartBuyMenu')
+
+  pogemartBuyingInteraction.initiated = true
+  if(item != undefined){
+    pogemartBuyingInteraction.product = item
+  }
+
+  if(pogemartInteraction.initiated == false) return
+  if(state){
+    if(inputValue == undefined) inputValue = 0
+    if(inputValue == 0) document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${item.name}'s will you buy?`
+    else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${item.name}'s?\n\nThat will cost you ${item.price * inputValue}.`
+
+    document.querySelectorAll('.pogemartItemsContainer').forEach(node =>{
+      node.style.backgroundColor = 'transparent'
+      node.id = ''
+    })
+
+    target.id = 'selected'
+    target.style.backgroundColor = 'rgba(75,75,75,0.5)'
+
+    pogemartMenuDescripion.style.display = 'none'
+
+    pogemartBuyMenu.style.display = 'grid'
+  } else {
+    //check if target is either input, yes or no button or items button
+    if(target.classList[0] == 'pogemartItemsContainer') return
+    if(target.classList[0] == 'pogemonBuyMenuInteraction') return
+    if(target.classList[0] == 'pogemonBuyMenuArrow') return
+
+    pogemartMenuDescripion.style.display = 'block'
+    pogemartBuyMenu.style.display = 'none'
+    
+    pogemartBuyingInteraction.initiated = false
+
+    document.querySelectorAll('.pogemartItemsContainer').forEach(node =>{
+      node.id = ''
+      node.style.backgroundColor = 'transparent'
+    })
+  }
+}
+
+addEventListener('click', e => {
+  onClickEvent(false, e.target)
+})
+
+document.querySelector('#pogemonBuyMenuBuyInteraction').addEventListener('click', e =>{
+  if(inputValue <= 0) return
+
+  document.querySelector('#pogemartBuyConfirmationMenuText').innerText = `Do you really want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nIt will cost you a total of ${inputValue * pogemartBuyingInteraction.product.price}`
+
+  document.querySelector('#pogemartBuyMenu').style.display = 'none'
+  document.querySelector('#pogemartMenuDescripion').style.display = 'none'
+})
+
+function generatePogemartMenu(products){
+  pogemartInteraction.initiated = true
+  const pogemartContainer = document.querySelector('#pogemartContainer')
+  pogemartContainer.style.display = 'block'
+
+  document.querySelector('#overworldDialogueContainer').style.display = 'none'
+  document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
+
+  document.querySelector('#pogemonBuyMenuInput').value = 0
+
+  products.forEach(product =>{
+    const itemContainer = document.createElement('div')
+    itemContainer.setAttribute('class', 'pogemartItemsContainer')
+    document.querySelector('#pogemartItemsContainer').appendChild(itemContainer)
+    itemContainer.addEventListener('mouseover', e => hoverEvent(true, e.target, product))
+    itemContainer.addEventListener('mouseout', e => hoverEvent(false, e.target))
+    itemContainer.addEventListener('click', e => onClickEvent(true, e.target, product))
+
+    const itemIcon = document.createElement('img')
+    itemIcon.setAttribute('class', 'pogemartItemsIcon')
+    itemIcon.src = itemsObj[product.name].img
+    itemContainer.appendChild(itemIcon)
+
+    const itemName = document.createElement('div')
+    itemName.setAttribute('class', 'pogemartItemsName')
+    itemName.innerText = `${product.name}`
+    itemContainer.appendChild(itemName)
+
+    const itemPriceContainer = document.createElement('div')
+    itemPriceContainer.setAttribute('class', 'pogemartItemPriceContainer')
+    itemContainer.appendChild(itemPriceContainer)
+
+    const itemPogebuckIcon = document.createElement('img')
+    itemPogebuckIcon.setAttribute('class', 'pogemartItemsPogebuckIcon')
+    itemPogebuckIcon.src = 'img/item_scene/pogebuck.png'
+    itemPriceContainer.appendChild(itemPogebuckIcon)
+
+    const itemPrice = document.createElement('div')
+    itemPrice.setAttribute('class', 'pogemartItemsAmount')
+    itemPrice.innerText = `${product.price}`
+    itemPriceContainer.appendChild(itemPrice)
+  })
+}
+
+export const pogemartInteraction = {
+  initiated: false
+}
 
 function playerInteraction(e) {
   if(scenes.get('overworld').initiated == false) return
   if(e.key != ' ') return
 
-  console.log(player.interaction)
+  let openWindow = document.querySelector('#openWindow')
 
-  switch(player.interaction.type){
+  switch(player.interaction.name){
     case 'pc':
         if(scenes.get('pc').initiated) return
         player.disabled = true
@@ -223,77 +425,103 @@ function playerInteraction(e) {
         })
         break
     case 'npc':
-        if(interaction.initiated) return
-        interaction.initiated = true
+      if(interaction.initiated) return
+      disableOWMenu.active = true
 
-        document.querySelector('#openWindow').replaceChildren()
-        document.querySelector('#openWindow').style.backgroundColor = `transparent`
+      interaction.initiated = true
+      player.disabled = true
 
-        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+      document.querySelector('#overworldDialogueContainer').style.display = 'grid'
 
-        for(let i = 0; i < player.interaction.info.dialogue.length; i++){
-          if(i == 0) player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
-          else queue.push(() => player.team[0].dialogue('overworld', player.interaction.info.dialogue[i]))
-        }
-        
-        if(player.interaction.info.type == undefined) return
-        console.log(player.interaction.info.type)
-        break
-    case 'starter':
-        if(interaction.flags.starter) return
-        if(interaction.initiated) return
-        interaction.initiated = true
-
-        document.querySelector('#openWindow').replaceChildren()
-
-        let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
-        let starter = starters[player.interaction.info.starter]
-
-        player.disabled = true
-
-        let openWindow = document.querySelector('#openWindow')
-        openWindow.style.backgroundColor = 'black'
-
-        let OWDialogue = document.querySelector('#overworldDialogue')
-        OWDialogue.textContent = `Do you want to pick ${starter.name} as your starter?`
-
-        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
-
-        const starterImg = new Image()
-        starterImg.src = `img/pogemon/00${starter.pogedex}_${starter.name}/${starter.name}.png`
-        starterImg.id = 'overworldStarterImg'
-
-        openWindow.appendChild(starterImg)
-
-        queue.push(() =>{
-          OWDialogue.setAttribute('class', 'chooseStarterButtonsContainer')
-          OWDialogue.style.padding = 0
-          OWDialogue.innerText = ''
-
-          let choiceArr = ['yes', 'no']
-          for (let i = 0; i < choiceArr.length; i++) {
-            const chooseStarterButton = document.createElement('div')
-            chooseStarterButton.setAttribute('class', 'chooseStarterButton')
-            chooseStarterButton.innerText = choiceArr[i]
-
-            OWDialogue.appendChild(chooseStarterButton)
-
-            if(choiceArr[i] == 'no') return
-
-            chooseStarterButton.addEventListener('click', e =>{
-              queue.push(() =>{
-                OWDialogue.setAttribute('class', '')
-                OWDialogue.style.padding = '35px'
-                OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
-
-                player.catch(starter, true)
-
-                interaction.flags.starter = true
-              })
-            })
-          }
+      for(let i = 0; i < player.interaction.info.dialogue.length; i++){
+        if(i == 0) player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
+        else queue.push(() => {
+          player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
         })
-        break
+      }
+
+      openWindow.style.backgroundColor = 'transparent'
+      openWindow.replaceChildren()
+
+      switch(player.interaction.info.type){
+        case 'pogecenter':
+          player.team.forEach(pogemon =>{
+            pogemon.hp = pogemon.stats.baseHp
+            pogemon.fainted = false
+          })
+          queue.push(() =>{
+            player.disabled = true
+            setTimeout(() =>{
+              player.team[0].dialogue('overworld', `Your pogemons are now all healed up!`)
+            }, 1000)
+          })
+          break
+        case 'pogemart':
+          queue.push(() =>{
+            generatePogemartMenu(mapsObj[`pogemart`].productOptions[0])
+          })
+          break
+      }
+        
+      if(player.interaction.info.type == undefined) return
+      break
+    case 'starter':
+      if(interaction.flags.starter) return
+      if(interaction.initiated) return
+
+      interaction.initiated = true
+
+      let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
+      let starter = starters[player.interaction.info.starter]
+
+      player.disabled = true
+
+      openWindow.replaceChildren()
+      openWindow.style.backgroundColor = 'rgba(0,0,0,0.75)'
+
+      let OWDialogue = document.querySelector('#overworldDialogue')
+      OWDialogue.textContent = `Do you want to pick ${starter.name} as your starter?`
+
+      document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+
+      const starterImg = new Image()
+      starterImg.src = `img/pogemon/00${starter.pogedex}_${starter.name}/${starter.name}.png`
+      starterImg.id = 'overworldStarterImg'
+
+      openWindow.appendChild(starterImg)
+      
+      queue.push(() =>{
+        OWDialogue.setAttribute('class', 'chooseStarterButtonsContainer')
+        OWDialogue.style.padding = 0
+        OWDialogue.innerText = ''
+
+        let choiceArr = ['yes', 'no']
+
+        for (let i = 0; i < choiceArr.length; i++) {
+          const chooseStarterButton = document.createElement('div')
+          chooseStarterButton.setAttribute('class', 'chooseStarterButton')
+          chooseStarterButton.innerText = choiceArr[i]
+
+          OWDialogue.appendChild(chooseStarterButton)
+
+          if(choiceArr[i] == 'no') return
+          chooseStarterButton.addEventListener('click', e =>{
+            queue.push(() =>{
+              OWDialogue.setAttribute('class', '')
+              OWDialogue.style.padding = '35px'
+              OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
+
+              player.catch(starter, true, currMap)
+              interaction.flags.starter = true
+
+              console.log('wtf')
+              openWindow.style.backgroundColor = 'transparent'
+              openWindow.replaceChildren()
+            })
+          })
+        }
+      })
+      break
   }
 }
 
@@ -373,6 +601,7 @@ function stopMotionWhenColliding(boundaries, direction){
 }
 
 function engageBattle(animationId, battleZones) {
+  if(player.team.length < 1) return
   for(let i = 0; i < battleZones.length; i++){
     const battleZone = battleZones[i]
     const overlappingArea = Math.max(player.position.x, battleZone.position.x) 
@@ -496,12 +725,15 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
+      if(player.team.length < 1) return
       player.interaction = eventZonesIndex
       if(eventZonesIndex.info.createdTrainer != undefined){
         for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
           if(mapsObj[currMap.name].trainers[i].beaten == true) return
         }
         if(eventZonesIndex.info.beaten) return
+        
+        disableOWMenu.active = true
         
         player.disabled = true
   
@@ -562,6 +794,7 @@ function eventZoneManagement(eventZones){
                         duration: 0.4,
                         onComplete(){
                           manageBattleState(true, null, null, eventZonesIndex.info)
+                          disableOWMenu.active = false
                           player.disabled = false
                           gsap.to('#overlapping', {
                             opacity: 0,

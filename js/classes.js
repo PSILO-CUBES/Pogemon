@@ -81,7 +81,8 @@ export class Boundary {
   constructor({
     position, 
     type,
-    info
+    info,
+    name
   }){
     this.position = position
     this.type = type
@@ -90,22 +91,27 @@ export class Boundary {
     this.color
     if(info != undefined) this.info = info
     this.generateInfo()
+    this.name = name
   }
 
   generateInfo(){
-    const brightness = 0
+    const opacity = 0
+    const opacity2 = 0.25
     switch(this.type){
       case 1:
-        this.color = `rgba(255,0,0,${brightness})`
+        this.color = `rgba(255,0,0,${opacity})`
         break
       case 2:
-        this.color = `rgba(100,0,0,${brightness})`
+        this.color = `rgba(100,0,0,${opacity})`
         break
       case 3:
-        this.color = `rgba(255,255,255,${brightness})`
+        this.color = `rgba(255,255,255,${opacity2})`
         break
       case 4:
-        this.color = `rgba(150,150,150,${brightness})`
+        this.color = `rgba(150,150,150,${opacity2})`
+        break
+      case 5:
+        this.color = `rgba(150,150,150,${opacity2})`
         break
     }
   }
@@ -123,11 +129,51 @@ export class Boundary {
 
 export let Id = 1
 
+export const statsChangeObj = {
+  ally :{
+    nominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+    denominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+  },
+  foe:{
+    nominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+    denominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+  }
+}
+
 export class Pogemon extends Sprite{
   constructor(
     pogemon,
     exp,
     isEnemy,
+    map,
     preBuilt,
     {
       type, 
@@ -170,10 +216,11 @@ export class Pogemon extends Sprite{
       this.evo = this.pogemon.evo
       this.ability = this.generateAbility()
       this.moves = this.generateMoves(true, 'battle')
-      this.friendliness = 0
-      this.catchInfo = this.generateCatchInfo(new Date())
       this.animationProperties = pogemon.animationProperties
       this.heldItem = null
+      this.friendliness = 0
+      this.catchInfo = this.generateCatchInfo(new Date())
+      this.caughtMap = map
     } else {
       this.exp = preBuilt.exp
       this.lvl = preBuilt.lvl
@@ -187,13 +234,14 @@ export class Pogemon extends Sprite{
       this.evo = this.pogemon.evo
       this.ability = preBuilt.ability
       this.moves = preBuilt.moves
+      this.animationProperties = preBuilt.animationProperties
+      this.heldItem = preBuilt.heldItem
       this.friendliness = preBuilt.friendliness
       this.catchInfo = {
         date: new Date(preBuilt.catchInfo.date),
         lvl: preBuilt.catchInfo.lvl
       }
-      this.animationProperties = preBuilt.animationProperties
-      this.heldItem = preBuilt.heldItem
+      this.caughtMap = preBuilt.caughtMap
       this.preBuilt = null
     }
   }
@@ -270,7 +318,7 @@ export class Pogemon extends Sprite{
   }
 
   generateAbility(){
-    let rng = Math.floor(Math.random() * Math.floor(2)) + 1
+    let rng = Math.floor(Math.random() * Math.floor(Object.keys(this.pogemon.abilities).length)) + 1
     return this.pogemon.abilities[rng]
   }
 
@@ -311,7 +359,8 @@ export class Pogemon extends Sprite{
   generateCatchInfo(date){
     const catchInfo = {
       lvl: this.lvl,
-      date
+      date,
+      caughtMap: this.caughtMap
     }
     
     return catchInfo
@@ -394,30 +443,62 @@ export class Pogemon extends Sprite{
   }
 
   //doesnt make anything move, its the method to use moves during combat
-  move({move, recipient, renderedSprites, critHit, queue}){
+  move({move, recipient, renderedSprites, critHit, queue, queueProcess}){
     this.managePP(move, false)
 
     if(move.pp == 0) move = movesObj['struggle']
 
+    let userHealthBar = '#allyHealthBar'
+    let userStatus = document.querySelector('#allyStatus')
+    let userHpDom = document.querySelector('#allyHp')
+
     let recipientHealthBar = '#foeHealthBar'
     let recipientStatus = document.querySelector('#foeStatus')
     let hpDom = document.querySelector('#foeHp')
+
+    let userStatsChangeContainer = 'allyStatsChangeContainer' 
+    let recipientStatsChangeContainer = 'foeStatsChangeContainer'
+
     let movementDistance = 20
-    let rotation = 1
+
+    let rotation
+    if(movesObj[move.name].rotation != undefined) rotation = movesObj[move.name].rotation.ally
+
+    let duration
+    if(movesObj[move.name].duration != undefined) duration = movesObj[move.name].duration
+    
     let launcPos = this.pogemon.animationPositions.ally.launch
     let receivePos = recipient.pogemon.animationPositions.foe.receive
 
     if(this.isEnemy){
+      userHealthBar = '#foeHealthBar'
+      userStatus = document.querySelector('#foeStatus')
+      userHpDom = document.querySelector('#foeHp')
+
       recipientHealthBar = '#allyHealthBar'
       recipientStatus = document.querySelector('#allyStatus')
       hpDom = document.querySelector('#allyHp')
+
+      userStatsChangeContainer = 'foeStatsChangeContainer'
+      recipientStatsChangeContainer = 'allyStatsChangeContainer'
+
       movementDistance = -20
-      rotation = -2
+      
+      if(movesObj[move.name].rotation != undefined) rotation = movesObj[move.name].rotation.foe
       launcPos = this.pogemon.animationPositions.foe.launch
+
       receivePos = recipient.pogemon.animationPositions.ally.receive
     }
 
     let damageCalculation = () => {
+      let userId = 'ally'
+      let foeId = 'foe'
+
+      if(this.isEnemy) {
+        userId = 'foe'
+        foeId = 'ally'
+      }
+
       const rollRatio = {
         max: 110,
         min: 90
@@ -431,6 +512,10 @@ export class Pogemon extends Sprite{
       if(critHit(this)) crit = 1.5
 
       let typeEffectivness = 1
+
+      let allyStatChange
+
+      let foeStatChange
       
       for(let i = 0; i < 2; i++){
         if(Object.values(recipient.element)[i] == null) break
@@ -471,11 +556,20 @@ export class Pogemon extends Sprite{
 
       if(move.type === 'physical'){
         if(typeEffectivness !== 0){
-          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.atk / recipient.stats.def / 50 + 2) * roll * typeEffectivness * stab * crit)
+          allyStatChange = statsChangeObj[userId].nominator.atk / statsChangeObj[userId].denominator.atk
+          foeStatChange = statsChangeObj[foeId].nominator.def / statsChangeObj[foeId].denominator.def
+          
+          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit)
+          console.log(statsChangeObj)
+          // console.log(Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'special'){
         if(typeEffectivness !== 0){
-          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * this.stats.spatk / recipient.stats.spdef / 50 + 2) * roll * typeEffectivness * stab * crit)
+          allyStatChange = statsChangeObj[userId].nominator.spatk / statsChangeObj[userId].denominator.spatk
+          foeStatChange = statsChangeObj[foeId].nominator.spdef / statsChangeObj[foeId].denominator.spdef
+
+          recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit)
+          console.log(Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'status'){
 
@@ -484,7 +578,70 @@ export class Pogemon extends Sprite{
       if(recipient.hp < 0) recipient.hp = 0
     }
 
-    damageCalculation()
+    let statusCalculation = () =>{
+      if(move.effects.name == undefined){
+        if(move.effects == 'heal'){
+          this.hp = Math.floor(this.hp + this.stats.baseHp * ( move.pow / 100 ))
+          if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+  
+          this.hpManagement(this, userHealthBar, userHpDom)
+          this.dialogue('battle', `${this.name} used ${move.name}`)
+        }
+      } else {
+        if(move.effects.name == 'buff'){
+          if(!this.isEnemy){
+            console.log(statsChangeObj)
+            if(statsChangeObj.ally.denominator[move.effects.target] > 2) statsChangeObj.ally.denominator[move.effects.target] -= 1
+            else statsChangeObj.ally.nominator[move.effects.target] += 1
+
+            if(statsChangeObj.ally.nominator[move.effects.target] > 8) {
+              this.dialogue('battle', `${this.name}'s ${move.effects.target} won't go up any futher.`)
+              return
+            }
+
+            this.dialogue('battle', `${this.name} used ${move.name}! \n\n It increased it's ${move.effects.target} by ${move.pow} tier.`)
+          } else {
+
+            if(statsChangeObj.foe.denominator[move.effects.target] > 2) statsChangeObj.foe.denominator[move.effects.target] -= 1
+            else statsChangeObj.foe.nominator[move.effects.target] += 1
+
+            if(statsChangeObj.foe.nominator[move.effects.target] > 8) {
+              this.dialogue('battle', `${this.name}'s ${move.effects.target} won't go up any futher.`)
+              return
+            }
+
+            this.dialogue('battle', `${this.name} used ${move.name}! \n\n It increased it's ${move.effects.target} by ${move.pow} tier.`)
+          }
+
+        } else {
+          if(!this.isEnemy){
+            if(statsChangeObj.foe.nominator[move.effects.target] > 2) statsChangeObj.foe.nominator[move.effects.target] -= 1
+            else statsChangeObj.foe.denominator[move.effects.target] += 1
+
+            if(statsChangeObj.foe.denominator[move.effects.target] > 8) {
+              this.dialogue('battle', `${recipient.name}'s ${move.effects.target} won't go down any futher.`)
+              return
+            }
+
+            this.dialogue('battle', `${this.name} used ${move.name} \n\n It decreased ${recipient.name}'s ${move.effects.target} by ${move.pow} tier.`)
+          } else {
+            if(statsChangeObj.ally.nominator[move.effects.target] > 2) statsChangeObj.ally.nominator[move.effects.target] -= 1
+            else statsChangeObj.ally.denominator[move.effects.target] += 1
+            
+            if(statsChangeObj.ally.denominator[move.effects.target] > 8) {
+              this.dialogue('battle', `${recipient.name}'s ${move.effects.target} won't go down any futher.`)
+              return
+            }
+
+            console.log(statsChangeObj)
+            this.dialogue('battle', `${this.name} used ${move.name} \n\n It decreased ${recipient.name}'s ${move.effects.target} by ${move.pow} tier.`)
+          }
+        }
+      }
+    }
+    
+    if(move.type == 'status') statusCalculation()
+    else damageCalculation()
 
     let statusRNG = () =>{
       if(recipient.status.name != null) return
@@ -507,13 +664,15 @@ export class Pogemon extends Sprite{
 
     statusRNG()
 
-    let hitAnimation = (type) => {
+    if(move.name != 'fireball') rotation = 0
+
+    let hitAnimation = type => {
       if(type){
         const hitImg = new Image()
         hitImg.src = move.sprite
 
         const hitSprite = new Sprite({
-          type: 'attack',
+          type: 'move',
           position: {
             x: recipient.position.x,
             y: recipient.position.y
@@ -566,6 +725,7 @@ export class Pogemon extends Sprite{
     }
     
     let projectileAnimation = () => {
+      if(move.name != 'fireball') rotation = 0
       const projectileImg = new Image()
       projectileImg.src = move.sprite
       const projectileSprite = new Sprite({
@@ -590,6 +750,7 @@ export class Pogemon extends Sprite{
       gsap.to(projectileSprite.position, {
         x: recipient.position.x - receivePos.x,
         y: recipient.position.y - receivePos.y,
+        duration,
         onComplete: () =>{
 
           renderedSprites.splice(1,1)
@@ -615,23 +776,186 @@ export class Pogemon extends Sprite{
       })
     }
 
+    let statusAnimation = (type, stats) =>{
+      if(type == 'heal'){
+        queueProcess.disabled = true
+
+        const statusImg = new Image()
+        statusImg.src = move.sprite
+
+        const statusSprite = new Sprite({
+          type: 'attack',
+          position: {
+            x: this.position.x + launcPos.x,
+            y: this.position.y + launcPos.y
+          },
+          img: statusImg,
+          frames: {
+            max: 4,
+            hold: 10
+          },
+          animate: true,
+          rotation
+        })
+
+        // HAVE TO DISABLE QUEUE DURING ANIMATION
+
+        renderedSprites.push(statusSprite)
+
+        gsap.to(statusSprite.position, {
+          x: this.position.x + ( this.width / 4.5 ),
+          y: -10,
+          duration: 1,
+          onComplete: () =>{
+            queueProcess.disabled = false
+
+            renderedSprites.pop()
+          }
+        })
+      } else if (type == 'stats') {
+        const buffDiv = document.createElement('div')
+        document.querySelector('#scene').appendChild(buffDiv)
+        queueProcess.disabled = true
+
+        if(stats == 'buff'){
+          if(!this.isEnemy){
+            if(statsChangeObj.ally.nominator[move.effects.target] > 8) {
+              statsChangeObj.ally.nominator[move.effects.target] = 8
+              queueProcess.disabled = false
+              return
+            }
+
+            // ally buff
+            buffDiv.setAttribute('class', `${stats}Div ${userStatsChangeContainer}`)
+            buffDiv.style.top = 450
+
+            statsChangeObj.ally[move.effects]
+
+            gsap.to(buffDiv, {
+              top: 200,
+              duration: 0.5,
+              onComplete: () =>{
+                document.querySelector('#scene').removeChild(buffDiv)
+                queueProcess.disabled = false
+              }
+            }) 
+          } else {
+            if(statsChangeObj.foe.nominator[move.effects.target] > 8) {
+              statsChangeObj.foe.nominator[move.effects.target] = 8
+              queueProcess.disabled = false
+              return
+            }
+
+            // foe buff
+            buffDiv.setAttribute('class', `${stats}Div ${userStatsChangeContainer}`)
+            buffDiv.style.top = 225
+
+            gsap.to(buffDiv, {
+              top: 10,
+              duration: 0.5,
+              onComplete: () =>{
+                document.querySelector('#scene').removeChild(buffDiv)
+                queueProcess.disabled = false
+              }
+            }) 
+          }
+          return
+        }
+
+
+
+        if(!this.isEnemy){
+          if(statsChangeObj.foe.denominator[move.effects.target] > 8) {
+            statsChangeObj.foe.denominator[move.effects.target] = 8
+            queueProcess.disabled = false
+            return
+          }
+
+          // ally debuff
+          buffDiv.setAttribute('class', `${stats}Div ${recipientStatsChangeContainer}`)
+          buffDiv.style.top = -50
+
+          gsap.to(buffDiv, {
+            top: 125,
+            duration: 0.5,
+            onComplete: () =>{
+              document.querySelector('#scene').removeChild(buffDiv)
+              queueProcess.disabled = false
+            }
+          }) 
+        } else {
+          if(statsChangeObj.ally.denominator[move.effects.target] > 8) {
+            statsChangeObj.ally.denominator[move.effects.target] = 8
+            queueProcess.disabled = false
+            return
+          }
+
+          // foe debuff
+          buffDiv.setAttribute('class', `${stats}Div ${recipientStatsChangeContainer}`)
+          buffDiv.style.top = 50
+
+          gsap.to(buffDiv, {
+            top: 250,
+            duration: 0.5,
+            onComplete: () =>{
+              document.querySelector('#scene').removeChild(buffDiv)
+              queueProcess.disabled = false
+            }
+          }) 
+        }
+
+      } else if (type == 'status') {
+
+      }
+    }
+
     // should find a way to manage moves better or this will become a cluster fuck very quickly
 
     switch(move.name){
+      //physical
+
+      //normal
       case 'tackle': 
       case 'quickattack':
       case 'headbutt':
-        //should put struggle apart
       case 'struggle':
+        //should put struggle apart
         hitAnimation(false)
         break
       case 'slash':
         hitAnimation(true)
         break
+
+      // special
+
+      // fire
       case 'fireball':
+      // ghost
       case 'shadowball':
         projectileAnimation()
         break
+      
+      // status
+
+      // heal
+      case 'rest':
+        statusAnimation('heal')
+        break
+      
+      // boost
+      case 'sharpen':
+      case 'swift':
+        statusAnimation('stats', move.effects.name)
+        break
+      // debuff
+      case 'growl':
+      case 'stare':
+        statusAnimation('stats', move.effects.name)
+        break
+
+      // status effect
+      case 'heatwave':
+        break  
     }
   }
 
@@ -660,7 +984,10 @@ export class Pogemon extends Sprite{
         slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
         return
       }
+      return
     }
+
+    if(this.status.name == null) return
 
     queue.push(() =>{
       thisFaints()
@@ -763,7 +1090,9 @@ export class Pogemon extends Sprite{
   }
 
   expBarProgress(){
-    let percentage = this.convertToPercentage(Math.floor(this.exp), Math.floor(Math.pow(this.lvl, 3)))
+    let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
+    console.log('work exp here')
+    console.log(percentage)
 
     if(percentage >= 100){
       gsap.to('#expBar',{
@@ -780,6 +1109,8 @@ export class Pogemon extends Sprite{
 
   onLvlUp(){
     let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
+    console.log('work exp here')
+    console.log(percentage)
     
     document.querySelector('#expBar').style.width = '0%'
     setTimeout(() => document.querySelector('#expBar').style.width = `${percentage}%`, 1000)
@@ -944,7 +1275,7 @@ export class NPC extends Sprite{
     c.restore()
 
 
-    if(!this.animate) {
+    if(!this.animate){
       this.frames.val = 0 
       return
     }
@@ -959,7 +1290,7 @@ export class NPC extends Sprite{
 
   }
 
-  catch(pogemon, starter, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc){
+  catch(pogemon, starter, currMap, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc){
     let newPogemon
 
     const catchCalc = ball => {
@@ -1074,8 +1405,7 @@ export class NPC extends Sprite{
         },
         animate: true
       })
-
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemonSprite)
 
       this.team.push(newPogemon)
     } else {

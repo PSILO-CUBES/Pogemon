@@ -117,15 +117,34 @@
   justify-content: flex-end;
 }
 
+#moveDescElement{
+  display: flex;
+}#moveDescElement > span{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 50%;
+  height: 100%;
+
+  font-size: 16px;
+}#moveDescElement > span:nth-child(2){
+  justify-content: start;
+}
+
+.statsElementContent{
+  font-size: 16px;
+}
+
 .descContainer{
   display: flex;
   width: 100%;
-}
-
-.descContainer > div{
+} .descContainer > div{
   display: flex;
   justify-content: center;
   align-items: center;
+
+  font-size: 16px;
 
   width: 100%;
   height: auto;
@@ -301,4 +320,34 @@
   height: 25px;
   
   padding: 10;
+}
+
+.buffDiv{
+  background-color: rgba(0, 255, 0, 0.75);
+
+  clip-path: polygon(50% 0%, 95% 40%, 100% 60%, 60% 50%, 40% 50%, 0% 60%, 5% 40%);
+  /* help from https://bennettfeely.com/clippy/ */
+}
+
+.debuffDiv{
+  background-color: rgba(255, 0, 0, 0.75);
+
+  clip-path: polygon(40% 55%, 59% 55%, 95% 40%, 100% 40%, 50% 100%, 0 40%, 5% 40%);
+  /* help from https://bennettfeely.com/clippy/ */
+}
+
+.allyStatsChangeContainer{
+  position: relative;
+  left: 450px;
+
+  height: 65%;
+  width: 22.5%;
+}
+
+.foeStatsChangeContainer{
+  position: relative;
+  left: 1400px;
+
+  height: 40%;
+  width: 17.5%;
 }

@@ -4,7 +4,7 @@ import { pogemonsObj } from "../../data/pogemonData.js"
 import { audioObj } from "../../data/audioData.js"
 import { itemsObj } from "../../data/itemsData.js"
 
-import { Sprite, Pogemon } from "../../classes.js"
+import { Sprite, Pogemon, statsChangeObj } from "../../classes.js"
 
 import { manageOverWorldState, prevScene } from "./overworld.js"
 import { currMap } from "../maps.js"
@@ -15,10 +15,13 @@ import { teamEvent, manageTeamState } from "./team.js"
 import { itemUsed, manageBagState } from "./bag.js"
 import { manageEvolutionState } from "./evolution.js"
 import { pc } from "./pc.js"
+import { typesObj } from "../../data/typesData.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 const queue = []
-let queueEnabled = true
+let queueProcess = {
+  disabled: false
+}
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = '../../img/battleBackground/battleBackground.png'
@@ -44,7 +47,6 @@ function loadAlly(){
   ally = player.team[0]
   ally.img.src = pogemonsObj[`${ally.name}`].sprites.backSprite
   ally.width = 646
-  console.log(ally.width)
   document.querySelector("#allyGenderImg").src = `../../../img/${ally.gender}_icon.png`
 }
 
@@ -55,6 +57,94 @@ function foeRNGEncounter(){
 }
 
 let battleType
+
+function resetStats(type) {
+  if(type == 'ally'){
+    statsChangeObj.ally = {
+      nominator: {
+        hp: 2,
+        atk: 2,
+        def: 2,
+        spatk: 2,
+        spdef: 2,
+        spd: 2,
+      },
+      denominator: {
+        hp: 2,
+        atk: 2,
+        def: 2,
+        spatk: 2,
+        spdef: 2,
+        spd: 2,
+      },
+    }
+
+    return
+  } 
+
+
+  if(type == 'foe'){
+    statsChangeObj.foe = {
+      nominator: {
+        hp: 2,
+        atk: 2,
+        def: 2,
+        spatk: 2,
+        spdef: 2,
+        spd: 2,
+      },
+      denominator: {
+        hp: 2,
+        atk: 2,
+        def: 2,
+        spatk: 2,
+        spdef: 2,
+        spd: 2,
+      },
+    }
+
+    return
+  }
+
+  statsChangeObj.ally = {
+    nominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+    denominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+  }
+
+  statsChangeObj.foe = {
+    nominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+    denominator: {
+      hp: 2,
+      atk: 2,
+      def: 2,
+      spatk: 2,
+      spdef: 2,
+      spd: 2,
+    },
+  }
+
+}
 
 function initWildEncouter(){
   enemyTrainer = undefined
@@ -81,7 +171,7 @@ function initWildEncouter(){
   })
 
   foeImage.src = foeObj.sprites.frontSprite
-  foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, null, foeSprite)
+  foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, currMap.name, null, foeSprite)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -158,6 +248,7 @@ export function initBattle(faintedTriggered, info){
   }
 
   if(prevScene == 'overworld') {
+    resetStats()
     if(info == undefined) initWildEncouter()
     else initTrainerEncounter(info)
   }
@@ -179,7 +270,7 @@ export function initBattle(faintedTriggered, info){
 
   battleAnimation()
 
-  let allyExp = ally.convertToPercentage(ally.exp - Math.pow(ally.lvl, 3), Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3))
+  let allyExp = Math.floor(ally.convertToPercentage(ally.exp - Math.pow(ally.lvl, 3), Math.pow(ally.lvl + 1, 3) - Math.pow(ally.lvl, 3)))
   if(ally.exp === 0) allyExp = 0
 
   document.querySelector('#expBar').style.width = `${allyExp}%`
@@ -197,7 +288,7 @@ export function initBattle(faintedTriggered, info){
     
     if(itemUsed.item.type == 'ball'){
       if(enemyTrainer == undefined){
-        queueEnabled = false
+        queueProcess.disabled = true
         function backToOverWorld(){
           //might throw error
   
@@ -206,7 +297,7 @@ export function initBattle(faintedTriggered, info){
           })
         }
         let pogemonInUse = ally
-        player.catch(foe, false, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc)
+        player.catch(foe, false, currMap, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc)
 
         itemUsed.item = null
         itemUsed.used = false
@@ -243,11 +334,12 @@ export function initBattle(faintedTriggered, info){
     }
 
     if(allyId !== player.team[0].id){
+      resetStats('ally')
       allyId = player.team[0].id
       document.querySelector('#encounterInterface').style.display = 'none'
       let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
       moveProcess = true
-      foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
+      foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess})
       //team switch option
       manageStatusEvent(foe, ally)
       return
@@ -255,9 +347,8 @@ export function initBattle(faintedTriggered, info){
 
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     moveProcess = true
-    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue})
+    foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess})
 
-    console.log(faster)
     manageStatusEvent(faster, slower)
     
     document.querySelector('#encounterInterface').style.display = 'none'
@@ -384,7 +475,7 @@ function optionButtonInteraction(e) {
             let foeRng = foe.moves[rng]
   
             queue.push(() => {
-              foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue})
+              foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue, queueProcess})
               manageStatusEvent(foe, ally)
             })
             return
@@ -414,7 +505,6 @@ function optionButtonInteraction(e) {
           })
         } else {
           document.querySelector('#textBox').innerText = "Can't switch out during trainer battle!"
-          console.log('cant escape')
         }
         break
     }
@@ -439,16 +529,18 @@ function movesHoverEvent(e){
   powDom.textContent = `Pow : ${currentMove.pow}`
   accDom.textContent = `Acc : ${currentMove.acc}`
   ppDom.textContent = `PP : ${currentMove.pp}`
-  elementDom.textContent = `Element : ${currentMove.element}`
+  elementDom.childNodes[1].textContent = `${currentMove.element}`
+  elementDom.childNodes[1].style.color = typesObj[currentMove.element].color
   typeDom.textContent = `Type : ${currentMove.type}`
 }
 
 function movesAwayEvent(){
-  powDom.textContent = `Pow : --`
-  accDom.textContent = `Acc : --`
-  ppDom.textContent = `PP : --`
-  elementDom.textContent = `Element : --`
-  typeDom.textContent = `Type : --`
+  // powDom.textContent = `Pow : --`
+  // accDom.textContent = `Acc : --`
+  // ppDom.textContent = `PP : --`
+  // elementDom.textContent = `Element : --`
+  // elementDom.style.color = 'white'
+  // typeDom.textContent = `Type : --`
 }
 
 const foeNameDom = document.querySelector('#foeName')
@@ -498,8 +590,6 @@ function switchLearnedMoveForSelectedMove(e){
   movesButtonArr = document.querySelectorAll(`.${targetedClass}`)
   for(let i = 0; i < movesButtonArr.length; i++){
     if(e.target.textContent === Object.values(ally.moves)[i].name){
-
-      ally.dialogue('battle', `${ally.name} forgot ${Object.values(ally.moves)[i].name} and learnt ${learntMove.name}!`)
       // if move is already in moves array dont let it change
 
       ally.learntMoves.push(learntMove.name)
@@ -517,7 +607,7 @@ function switchLearnedMoveForSelectedMove(e){
       if(targetedInterface === 'evolutionMovesInterface'){
         document.querySelector('#evolutionInterface').style.display = 'block'
         ally.dialogue('evolution', `${ally.name} learned ${learntMove.name}!`)
-      }
+      } else ally.dialogue('battle', `${ally.name} forgot ${Object.values(ally.moves)[i].name} and learnt ${learntMove.name}!`)
     }
     moveLearning.initiated = false
   }
@@ -537,7 +627,6 @@ function setUserMovesEvents(eventType, currMovesBox){
 }
 
 export function createMovesMenuButtons(state, type, event){
-  console.log(ally.moves)
   let showcasedMove = [...ally.moves].splice(0, 4)
 
   let currMovesBox
@@ -591,19 +680,23 @@ function checkSpeed(e) {
     foe: foeRNGMove.priority
   }
 
+  let allySpeed = ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd
+
+  let foeSpeed = foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd
+
   if(priority.ally > priority.foe){
     faster = ally
     slower = foe
   } else if (priority.foe > priority.ally) {
     faster = foe
     slower = ally
-  } else if(ally.stats.spd > foe.stats.spd){
+  } else if(allySpeed > foeSpeed){
     faster = ally
     slower = foe
-  } else if (foe.stats.spd > ally.stats.spd) {
+  } else if (foeSpeed > allySpeed) {
     faster = foe
     slower = ally
-  } else if (ally.stats.spd === foe.stats.spd && priority.ally == priority.foe) {
+  } else if (allySpeed === foeSpeed && priority.ally == priority.foe) {
     faster = options[rng]
     options.splice(rng, 1)
     slower = options[0]
@@ -621,7 +714,7 @@ function checkSpeed(e) {
 }
 
 function learnMoveOptionEvent(e, move, type){
-  learnMoveMenu(false)
+  learnMoveMenu(type, false)
 
   let movesInterface
 
@@ -715,6 +808,7 @@ export function manageLearnedMoves(ally, queue, type){
       break
   }
 
+
   for(let i = 0; i < newMoves.length; i++){
 
     learntMove = newMoves[i]
@@ -727,14 +821,18 @@ export function manageLearnedMoves(ally, queue, type){
       })
     } else {
       // working here
-      //if the move the pogemon is trying to learn is already a move he learned previously, does not learn it
+      // if the move the pogemon is trying to learn is already a move he learned previously, does not learn it
       if(Object.values(ally.learntMoves).includes(newMoves[i].name)) return
       queue.push(() => ally.dialogue(type, `${ally.name} is trying to learn ${newMoves[i].name}!`))
       queue.push(() =>{
+        learntMove = newMoves[i]
         // open window that asks if the user wants to change a selected move with the new learned move
-        learnMoveMenu('battle', true)
+        learnMoveMenu(false)
+        learnMoveMenu(type, true)
         document.querySelector('#evolutionInterface').style.display = 'none'
         interfaceDom.style.display = 'grid'
+        console.log(newMoves)
+        console.log(ally.moves)
         dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${learntMove.name}?`
       })
     }
@@ -758,6 +856,8 @@ function enemyTeamWiped(enemyTrainerInfo){
   for(let i = 0; i < enemyTrainerInfo.team.length; i++){
     if(enemyTrainerInfo.createdTrainer.team[i].fainted == false) teamFainted = false
   }
+
+  console.log(teamFainted)
   return teamFainted
 }
 
@@ -784,7 +884,7 @@ function switchEnemyAfterFaint(){
     document.querySelector('#movesBox').appendChild(newAttackBox)
   }
 
-  enemyTrainerInfo.createdTrainer.team[0].dialogue('battle', `${enemyTrainerInfo.name} is about to send ${foe.name}`)
+  enemyTrainerInfo.createdTrainer.team[0].dialogue('battle', `${enemyTrainerInfo.name} is sending out ${foe.name}`)
   enemyTrainerInfo.createdTrainer.team[0].hpManagement(foe, '#foeHealthBar', document.querySelector('#foeHp'))
   foe.opacity = 1
   foe.position = {
@@ -794,6 +894,8 @@ function switchEnemyAfterFaint(){
   setBattlersInfo()
 
   renderedSprites.splice(0, 1, foe)
+
+  resetStats('foe')
   
   // maybe ask if want to switch before next pogemon comes out?
 }
@@ -815,20 +917,25 @@ function manageFaintingEvent(target){
         queue.push(() => manageBattleState(false))
         return
       }
+
       if(ally.pogemon.evo.type == 'lvl') {
         if(ally.pogemon.evo.lvl <= ally.lvl) manageEvolution()
+        else queue.push(() => manageBattleState(false))
       }
+
       else queue.push(() => manageBattleState(false))
     } else queue.push(() => manageBattleState(false))
     return
   }
 
   if(lvlBeforeExpGained < ally.lvl) {
+    console.log('here')
     //all queue events happen here
     manageLvlUpDisplay('battle', oldStats, queue, prevLvl)
-    manageLearnedMoves(ally, queue, 'battle')
 
     if(enemyTeamWiped(enemyTrainerInfo)){
+      manageLearnedMoves(ally, queue, 'battle')
+
       if(ally.pogemon.evo == null) {
         queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
         player.money = player.money + enemyTrainerInfo.reward
@@ -856,6 +963,7 @@ function manageFaintingEvent(target){
   }
   
   if(enemyTeamWiped(enemyTrainerInfo)){
+    console.log('here')
     queue.push(() => manageBattleState(false))
   }
 
@@ -877,6 +985,7 @@ function faintEvent(target){
   queue.push(() =>{
     target.dialogue('battle', `${target.name} fainted!`)
     target.faint()
+
 
     queue.push(() => {
       if(target.isEnemy){
@@ -960,7 +1069,7 @@ function attackMove(e) {
 
     if(attackLanded(fasterMove, true)) {
       moveProcess = true
-      faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded, queue})
+      faster.move({move: fasterMove, recipient: slower, renderedSprites, critHit: critLanded, queue, queueProcess})
     } else faster.miss()
 
     checkIfFainted(faster)
@@ -969,7 +1078,7 @@ function attackMove(e) {
     queue.push(() =>{
       if(attackLanded(slowerMove, true)) {
         moveProcess = true
-        slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded, queue})
+        slower.move({move: slowerMove, recipient: faster, renderedSprites, critHit: critLanded, queue, queueProcess})
       } else slower.miss()
 
       //normal attack option
@@ -980,13 +1089,13 @@ function attackMove(e) {
 }
 
 export function manageBattleQueue(state){
-  queueEnabled = state
+  queueProcess.disabled = state
 }
 
 export let moveProcess = false
 
 function spendQueue(){
-  if(!queueEnabled) return
+  if(queueProcess.disabled) return
   if(queue.length > 0){
     queue[0]()
     queue.shift()

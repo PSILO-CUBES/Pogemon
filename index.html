@@ -32,6 +32,43 @@
           <div id="optionsMenuDelete" class="optionsMenuButtons">DELETE SAVE FILE</div>
         </div>
       </div>
+      <div id="pogemartContainer">
+        <div id="pogemartMenuContainer">
+          <div id="pogemartMenuUpperContainer">
+            <div id="pogemartMoneyContainer">
+              <img id="pogemartMoneyPogebucksIcon" src="img/item_scene/pogebuck.png">
+              <div id="pogemartMoneyAmountContainer"></div>
+            </div>
+            <div id="pogemartItemsContainer">
+            </div>
+          </div>
+          <div id="pogemartMenuLowerContainer">
+            <div id="pogemartMenuDescripion"></div>
+            <div id="pogemartBuyMenu">
+              <div id="pogemartBuyMenuTextContainer" class="pogemartBuyMenuContent"></div>
+              <div id="pogemartBuyMenuInteractionContainer" class="pogemartBuyMenuContent">
+                <input class="pogemonBuyMenuInteraction" id="pogemonBuyMenuInput" type="number">
+                <div class="pogemonBuyMenuInteraction"  id="pogemonBuyMenuArrowContainer">
+                  <div class="pogemonBuyMenuArrows" id="pogemonBuyMenuUpArrow">
+                    <img class="pogemonBuyMenuArrow" src="img/item_scene/upPointingIcon.png">
+                  </div>
+                  <div class="pogemonBuyMenuArrows" id="pogemonBuyMenuDownArrow">
+                    <img class="pogemonBuyMenuArrow" src="img/item_scene/downPointingIcon.png">
+                  </div>
+                </div>
+                <div class="pogemonBuyMenuInteraction" id="pogemonBuyMenuBuyInteraction">Buy</div>
+              </div>
+            </div>
+            <div id="pogemartBuyConfirmationMenu">
+              <div class="pogemartBuyConfirmationMenuContent" id="pogemartBuyConfirmationMenuText"></div>
+              <div class="pogemartBuyConfirmationMenuContent" id="pogemartBuyConfirmationMenuOptionContainer">
+                <div class="pogemartBuyConfirmationOptions">yes</div>
+                <div class="pogemartBuyConfirmationOptions">no</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -133,7 +170,7 @@
           </div>
           <div class="movesDescContainer">
             <div class="descContainer">
-              <div id="moveDescElement">Element : --</div>
+              <div id="moveDescElement"><span id="moveElementTag">Element : </span><span id="moveElementType">--</span></div>
               <div id="moveDescType">Type : --</div>
             </div>
           </div>

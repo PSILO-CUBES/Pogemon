@@ -1,7 +1,7 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player, interaction, lastDirection } from '../player.js'
+import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
 import { generateMapData, currMap, pogecenterReturnInfo } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
@@ -11,13 +11,11 @@ import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { manageTrainerState } from './trainer.js'
 import { mapsObj } from '../../data/mapsData.js'
-import { managePcState } from './pc.js'
+import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
 
-//
-
-const frameRate = 61
+const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
@@ -26,7 +24,7 @@ let movables
 
 async function setMapData(){
   [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData()
-  console.log(eventZones)
+
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
 }
 
@@ -52,13 +50,11 @@ export async function switchMap(nextMapInfo, preMapInfo){
     }
   }
 
-  console.log(mapsObj[`${nextMapInfo.name}`])
 
   // work HEREERERER
   if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
     if(true){
       const data = await loadData()
-
 
       if(data != null){
         if(firstLoad){
@@ -78,7 +74,6 @@ export async function switchMap(nextMapInfo, preMapInfo){
     }
 
     [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
-    console.log(pogecenterReturnInfo)
 
     pogecenterReturnInfo.name = null
     pogecenterReturnInfo.spawnPosition.x = null
@@ -131,7 +126,6 @@ document.querySelectorAll('.volumeRange').forEach(node =>{
     Object.values(audioObj.SFX).forEach(song =>{
       song.volume(volumeValues.SFX / 1000)
     })
-    console.log(node.id.slice(0, -6) + ' ' + volumeValues[`${node.id.slice(0, -6)}`])
   })
 })
 
@@ -151,7 +145,6 @@ function manageOptionMenuState(state){
     gsap.to('#overlapping', {
       opacity: 1,
       onComplete: () =>{
-        console.log('here')
         optionsMenuContainer.display = 'flex'
         document.querySelectorAll('.volumeRange').forEach((node, i) =>{
           node.value = Object.values(volumeValues)[i] 
@@ -261,11 +254,19 @@ function overworldMenuClickEvent(e){
         nextMapInfo.spawnPosition.y = nextMapSaveInfo.spawnPosition.y
       }
 
-      console.log(pogecenterReturnInfo)
-      console.log(nextMapInfo)
-
       if(pogecenterReturnInfo.name != null) nextMapInfo = pogecenterReturnInfo
-      console.log(nextMapInfo)
+
+      if(nextMapInfo.name == null && data != null){
+        nextMapInfo.name = data.nextMapInfo.name
+        nextMapInfo.spawnPosition.x = data.nextMapInfo.spawnPosition.x
+        nextMapInfo.spawnPosition.y = data.nextMapInfo.spawnPosition.y
+      }
+
+      const bagSave = []
+
+      player.bag.forEach(item =>{
+        bagSave.push(item)
+      })
 
       setSaveData({
         playerInfo: {
@@ -278,7 +279,9 @@ function overworldMenuClickEvent(e){
         mapsObjState: mapsObj,
         nextMapInfo,
         interactionFlags: interaction.flags,
-        volumeValues
+        volumeValues,
+        bag: bagSave,
+        pc: pc
       })
       break
     case 'options':
@@ -303,7 +306,6 @@ function manageMenuState(state){
 
   const overworldSceneDom = document.querySelector('#overworldScene').style
   const menuDom = document.querySelector('#overworldMenu').style
-  document.querySelector('#overworldSceneContainer').style.display = 'flex'
   const menuSectionDomArr = document.querySelectorAll('.overworldMenuSections')
   const OWSceneContainer = document.querySelector('#overworldSceneContainer')
 
@@ -316,6 +318,7 @@ function manageMenuState(state){
     menuDom.height = '0%'
     menuDom.width = '0%'
     menuDom.display = 'grid'
+    OWSceneContainer.style.display = 'flex'
 
     gsap.to(OWSceneContainer, {
       backgroundColor: 'rgba(0,0,0,0.85)',
@@ -413,6 +416,20 @@ function escapeKeyEventOptions(e) {
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
       if(optionMenuState == true) manageOptionMenuState(false)
+      if(pogemartInteraction.initiated) {
+        pogemartInteraction.initiated = false
+        interaction.initiated = false
+        
+        document.querySelector('#pogemartContainer').style.display = 'none'
+        document.querySelector('#pogemartItemsContainer').replaceChildren()
+
+        player.team[0].dialogue('overworld', 'Have a good day! :D')
+
+        queue.push(() =>{
+          player.disabled = false
+        })
+        return
+      }
       manageMenuState(menu.initiated)
     }
 
@@ -441,7 +458,6 @@ function escapeKeyEventOptions(e) {
 
     if(scenes.get('stats').initiated){
       if(scenes.get('overworld').initiated) return
-      console.log(prevScene)
       manageStatsState(false, null, prevScene)
     }
 
@@ -490,6 +506,7 @@ const overWorldAnimation = timeSpent =>{
 export function manageOverWorldState(state){
   if(state) {
     if(OWAnimationRuning) return
+    document.querySelector('#overworldSceneContainer').style.backgroundColor = 'rgba(0,0,0,0)'
     eventZones.forEach(zone =>{
       if(zone.info.createdTrainer != undefined){
         zone.info.createdTrainer.position.x = zone.position.x
@@ -506,7 +523,6 @@ export function manageOverWorldState(state){
     overworldMenuDom.replaceChildren()
   }
   else {
-    console.log(animationId)
     cancelAnimationFrame(animationId)
     OWAnimationRuning = false
     document.querySelector('#overworldScene').style.display = 'none'

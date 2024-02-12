@@ -24,10 +24,9 @@ export const pogemonsObj = {
       spdef: 40,
       spd: 45
     },
-    evo: {name: 'lokol', lvl: 10, type: 'lvl'},
+    evo: {name: 'lokol', lvl: 8, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -57,7 +56,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 1000,
+    yeild: 500,
     catchRate: 75
   },
   lokol: {
@@ -77,8 +76,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'lokump', lvl: 12, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -128,8 +126,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -181,8 +178,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'steeler', lvl: 10, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -212,7 +208,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 1000,
+    yeild: 500,
     catchRate: 75
   },
   steeler: {
@@ -232,8 +228,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'steevil', lvl: 12, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -283,8 +278,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -336,8 +330,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'maaphett', lvl: 10, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.fireball, lvl: 1},
@@ -386,8 +379,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'maapheeno', lvl: 12, type: 'lvl'},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -437,8 +429,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
@@ -490,8 +481,7 @@ export const pogemonsObj = {
     },
     evo: {name: 'fruity', type: 'item', item: 'leafStone'},
     abilities: {
-      1: 'Tripped Out',
-      2: 'Overgrow'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.fireball, lvl: 1},
@@ -541,8 +531,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Tripped_Out',
-      2: 'Overgrow'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.fireball, lvl: 1},
@@ -594,12 +583,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'evo1', lvl: 20},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.swift, lvl: 1},
     },
     sprites: {
       frontSprite: 'img/pogemon/143_Disso/Disso_Animation.png',
@@ -625,7 +612,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 5000,
+    yeild: 500,
     catchRate: 200
   },
 
@@ -640,21 +627,20 @@ export const pogemonsObj = {
     stats: {
       hp: 60,
       atk: 50,
-      def: 60,
+      def: 900,
       spatk: 50,
       spdef: 60,
-      spd: 999,
+      spd: 80,
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
-      2: {move: movesObj.quickattack, lvl: 1},
+      2: {move: movesObj.sharpen, lvl: 1},
       3: {move: movesObj.fireball, lvl: 2},
-      4: {move: movesObj.tackle, lvl: 3},
-      5: {move: movesObj.shadowball, lvl: 10},
+      4: {move: movesObj.growl, lvl: 3},
+      5: {move: movesObj.rest, lvl: 3},
       6: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
@@ -701,8 +687,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.quickattack, lvl: 1},
@@ -710,6 +695,7 @@ export const pogemonsObj = {
       3: {move: movesObj.tackle, lvl: 3},
       4: {move: movesObj.shadowball, lvl: 10},
       5: {move: movesObj.slash, lvl: 10},
+      6: {move: movesObj.stare, lvl: 16},
     },
     sprites: {
       frontSprite: 'img/pogemon/146_jleech/jleech_Animation.png',
@@ -756,8 +742,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.quickattack, lvl: 1},
@@ -810,8 +795,7 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: {
-      1: 'Transform',
-      2: 'Kamiii'
+      1: 'None'
     },
     movepool: {
       1: {move: movesObj.quickattack, lvl: 1},

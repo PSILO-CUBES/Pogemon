@@ -60,7 +60,6 @@ function bagSceneHoverEvent(e, state){
       }
 
       if(e.target.classList[0] == 'bagSceneItem' && !itemChosen) {
-
         e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
         dialogueInferface.style.display = 'block'
         dialogueInferface.textContent = itemsObj[`${e.target.childNodes[1].childNodes[0].childNodes[0].textContent}`].desc
@@ -117,7 +116,8 @@ function bagSceneMenuButtonOnClick(e){
       selectedMenuOption = 'give'
       break
     case 'discard':
-      dialogueBox.textContent = `How many ${currItem.name}'s should be discarded?`
+      // dialogueBox.textContent = `How many ${currItem.name}'s should be discarded?`
+      dialogueBox.textContent = 'not implemented yey'
       selectedMenuOption = 'discard'
       break
   }
@@ -147,9 +147,6 @@ function bagSceneSectionOnClickEvent(e, state){
   e.target.id = 'selected'
   
   if(!state) return
-
-  console.log(returnToBattle)
-  console.log(state)
 
   document.querySelector('.bagSceneItemMenuContainer').style.display = 'grid'
   document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
@@ -278,11 +275,12 @@ function useItemOnClickEvent(e){
     case 'give':
       let prevItem
       if(targetPogemon.heldItem != undefined){
+        prevItem = player.bag.get(targetPogemon.heldItem.name)
+        player.bag.set(targetPogemon.heldItem.name, {item: prevItem.item , quantity: prevItem.quantity + 1})
+
         document.querySelectorAll('.bagSceneItemContainer').forEach(node =>{
           if(node.childNodes[0].childNodes[1].childNodes[0].textContent != targetPogemon.heldItem.name) return
           
-          prevItem = player.bag.get(`${targetPogemon.heldItem.name}`)
-          player.bag.set(`${targetPogemon.heldItem.name}`, {item: prevItem.item , quantity: prevItem.quantity + 1})
           node.childNodes[0].childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${targetPogemon.heldItem.name}`).quantity}`
         })
       }
@@ -292,6 +290,7 @@ function useItemOnClickEvent(e){
       let bagItem = player.bag.get(`${currItem.name}`)
       player.bag.set(`${currItem.name}`, {item: bagItem.item, quantity: bagItem.quantity - 1})
       currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(`${currItem.name}`).quantity}`
+
       break
   }
 
@@ -366,6 +365,8 @@ function printItems(bagSceneItemSectionDom){
   sortCurrItemsArr()
   for(let i = 0; i < currItemsArr.length; i++){
     const item = currItemsArr[i].item
+
+    if(player.bag.get(item.name).quantity < 1) return
     //item container
     const bagSceneItemContainerDom = document.createElement('div')
     bagSceneItemContainerDom.classList.add('bagSceneItemContainer')
