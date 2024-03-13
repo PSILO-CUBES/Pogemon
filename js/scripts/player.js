@@ -66,6 +66,10 @@ export async function generatePlayer(canvas){
       }))
 
       player.catch(pogemonsObj['jlissue'], true, 'geneTown')
+      player.catch(pogemonsObj['loko'], true, 'geneTown')
+      player.catch(pogemonsObj['steeli'], true, 'geneTown')
+      player.catch(pogemonsObj['maaph'], true, 'geneTown')
+      player.catch(pogemonsObj['piny'], true, 'geneTown')
 
       return player
     } else {
@@ -512,6 +516,7 @@ function playerInteraction(e) {
               OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
 
               player.catch(starter, true, currMap)
+
               interaction.flags.starter = true
 
               console.log('wtf')

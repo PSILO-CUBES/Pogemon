@@ -2,15 +2,17 @@ import { pogemonsObj } from "../../data/pogemonData.js"
 
 import { scenes, backgroundSprite } from "../canvas.js"
 import { manageOverWorldState } from "./overworld.js"
-import { manageLearnedMoves, learnMoveMenu } from "./battle.js"
+import { manageLearnedMoves, learnMoveMenu, manageLvlUpDisplay } from "./battle.js"
 import { player } from "../player.js"
 import { mapsObj } from "../../data/mapsData.js"
 
-const queue = []
-let queueEnabled = true
+export const queue = []
+export const queueProcess = {
+  disabled: false
+}
 
 function spendQueue(){
-  if(!queueEnabled) return
+  if(queueProcess.disabled) return
   if(queue.length > 0){
     queue[0]()
     queue.shift()
@@ -62,12 +64,13 @@ function setEvoScene(){
   })
 }
 
-function initEvo(target){
+function initEvo(target, i){
   scenes.set('evolution', {initiated : true})
 
   targetEvo = pogemonsObj[target.evo.name]
-  
-  target.img.src = target.pogemon.sprites.frontSprite
+
+  if(target.isShiny) target.img.src = target.pogemon.sprites.shiny.frontSprite
+  else target.img.src = target.pogemon.sprites.classic.frontSprite
 
   target.position = {
     x: window.innerWidth / 2.35,
@@ -76,35 +79,9 @@ function initEvo(target){
 
   sprites = [backgroundSprite, target]
 
-  setEvoScene()
+  if(i == 0) setEvoScene()
 
   target.dialogue('evolution', `${target.name} is about to evolve!`)
-
-  queue.push(() =>{
-    queueEnabled = false
-    gsap.to(target, {
-      opacity: 0,
-      repeat: 4,
-      yoyo: true,
-      duration: 0.5,
-      onComplete: () =>{
-        target.img.src = targetEvo.sprites.frontSprite
-        gsap.to(target, {
-          opacity: 1,
-          duration: 0.5,
-          onComplete: () =>{
-            target.dialogue('evolution', `Congratulations, ${target.name} evolved into ${targetEvo.name}!!`)
-            pogemonTransition(target)
-            // manageLvlUpDisplay('evo', oldStats, queue)
-            manageLearnedMoves(player.team[teamSlot], queue, 'evolution')
-            learnMoveMenu('evolution', true)
-            queue.push(() => manageEvolutionState(false, target))
-            queueEnabled = true
-          }
-        })
-      }
-    })
-  })
 
   // Object.values(targetEvo.movepool).forEach(move =>{
   //   if(target.lvl >= move.lvl && !target.learntMoves.includes(move.move.name)){
@@ -135,10 +112,19 @@ function clearEvolutionScene(target){
       sprites = []
       document.querySelector('#evolutionScene').style.display = 'none'
 
-      if(target.pogemon.pogedex >= 100) target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
-      else if(target.pogemon.pogedex >= 10) target.img.src = `img/pogemon/0${target.name}/${target.name}_Back_Animation.png`
-      else if(target.pogemon.pogedex < 10) target.img.src = `img/pogemon/00${target.name}/${target.name}_Back_Animation.png`
+      if(target.pogemon.pogedex >= 100){
+        if(target.isShiny) target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation_Shiny.png`
+        else target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
+      } else if(target.pogemon.pogedex >= 10){
+        if(target.isShiny) target.img.src = `img/pogemon/0${target.name}/${target.name}_Back_Animation_Shiny.png`
+        else target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
+      } else if(target.pogemon.pogedex < 10){
+        if(target.isShiny) target.img.src = `img/pogemon/00${target.name}/${target.name}_Back_Animation_Shiny.png`
+        else target.img.src = `img/pogemon/${target.name}/${target.name}_Back_Animation.png`
+      }
 
+
+      // trigger animation for next guy in arr
       cancelAnimationFrame(evolutionAnimationId)
       // dont forget to put the audio
       scenes.set('evolution', {initiated : false})
@@ -150,7 +136,100 @@ function clearEvolutionScene(target){
   })
 }
 
-export function manageEvolutionState(state, target){
-  if(state) initEvo(target)
-  else clearEvolutionScene(target)
+function evoProcess(target, preEvo){
+  queueProcess.disabled = true
+  gsap.to(target, {
+    opacity: 0,
+    repeat: 4,
+    yoyo: true,
+    duration: 0.5,
+    onComplete: () =>{
+      if(preEvo == null){
+        if(target.isShiny) target.img.src = pogemonsObj[target.evo.name].sprites.shiny.frontSprite
+        else target.img.src = pogemonsObj[target.evo.name].sprites.classic.frontSprite
+      } else {
+        if(target.isShiny) target.img.src = target.pogemon.sprites.shiny.frontSprite
+        else target.img.src = target.pogemon.sprites.classic.frontSprite
+      }
+
+      gsap.to(target, {
+        opacity: 1,
+        duration: 0.5,
+        onComplete: () =>{
+          if(preEvo == null){
+            target.dialogue('evolution', `Congratulations, ${target.name} evolved into ${target.evo.name}!!`)
+          } else {
+            target.dialogue('evolution', `Congratulations, ${preEvo.name} evolved into ${target.name}!!`)
+          }
+          
+          queueProcess.disabled = false
+        }
+      })
+    }
+  })
+}
+
+function manageEvolutionChain(evoArr){
+  if(evoArr.length == 1){
+
+    initEvo(evoArr[0], 0)
+    const preEvo = {...evoArr[0]}
+    queue.push(() => evoProcess(evoArr[0], preEvo))
+    pogemonTransition(evoArr[0])
+    console.log(preEvo)
+    manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[0])
+    manageLearnedMoves(evoArr[0], queue, 'evolution')
+    console.log(preEvo)
+    queue.push(() => manageEvolutionState(false, evoArr[0]))
+
+    return
+  } else {
+    for(let i = 0; i < evoArr.length; i++){
+      const preEvo = {...evoArr[i]}
+      console.log(preEvo.name)
+      if(i == evoArr.length - 1) {
+
+        queue.push(() => {
+          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
+          queue.push(() => initEvo(evoArr[i], i))
+          queue.push(() => evoProcess(evoArr[i], null))
+          queue.push(() => {
+            pogemonTransition(evoArr[i])
+          })
+          manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[i])
+          queue.push(() => {
+            manageLearnedMoves(evoArr[i], queue, 'evolution')
+            queue.push(() => manageEvolutionState(false, evoArr[i]))
+          })
+          // evoCompletion(evoArr[i], true, false)
+        })
+
+      }
+      else if(i != 0) {
+
+        queue.push(() => {
+          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
+          queue.push(() => initEvo(evoArr[i], i))
+          queue.push(() => evoProcess(evoArr[i], null))
+          queue.push(() => {
+            pogemonTransition(evoArr[i])
+          })
+          manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[i])
+          queue.push(() => manageLearnedMoves(evoArr[i], queue, 'evolution'))
+        })
+      }
+      else {
+        initEvo(evoArr[i], i)
+        queue.push(() => evoProcess(evoArr[i], preEvo))
+        pogemonTransition(evoArr[i])
+        manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[i])
+        manageLearnedMoves(evoArr[i], queue, 'evolution')
+      }
+    }
+  }
+}
+
+export function manageEvolutionState(state, evoArr){
+  if(state) manageEvolutionChain(evoArr)
+  else clearEvolutionScene(evoArr)
 }

@@ -1,4 +1,7 @@
 #bootScene{
+    display: grid;
+    grid-template-columns: 50% 50%;
+
     position: absolute;
     top: 0;
 
@@ -8,14 +11,69 @@
     background-color: black;
 }
 
-#startButton{
+#interactionContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.bootMenuButton{
     display: flex;
     justify-content: center;
     align-items: center;
 
     height: 100%;
+    width: auto;
+}.bootMenuButton:hover{
+    background-color: rgba(128, 128, 128, 0.125);
+    cursor: pointer;
+}
+
+#warningWindowContainerDom{
+    position: absolute;
     width: 100%;
-}#startButton:hover{
-    background: radial-gradient(lightgrey, 0.1%, black);
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.125);
+
+    opacity: 0;
+}
+
+#warningWindow{
+    display: grid;
+    grid-template-rows: 70% 30%;
+
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 65%;
+    width: 50%;
+
+    background-color: rgba(125, 0, 0);
+}
+
+#warningWindowDialogueHeaderDom{
+    margin-top: 5%;
+    
+    font-size: 48;
+    text-align: center;
+}
+
+#warningWindowDialogueContentDom{
+    margin-top: 15%;
+
+    text-align: center;
+}
+
+#warningWindowInteractionContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+} #warningWindowInteractionContainer > div{
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+} #warningWindowInteractionContainer > div:hover{
+    background-color: rgba(150, 0, 0);
     cursor: pointer;
 }

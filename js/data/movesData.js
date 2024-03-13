@@ -148,5 +148,23 @@ export const movesObj = {
     pp: 30,
     effects: {name: 'debuff', target:'def'},
     priority: 0,
+  },
+
+  // status
+  heatWave:{
+    name: 'heatWave',
+    type: 'status',
+    element: 'fire',
+    pow: 0,
+    acc: 100,
+    pp: 30,
+    effects: {burn: 100, name: 'status'},
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 0.5,
+    sprite: '../../img/moves/fireball.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
   }
+
 }

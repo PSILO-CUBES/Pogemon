@@ -4,16 +4,17 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
 import { generateMapData, currMap, pogecenterReturnInfo } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
-import { manageTrainerState } from './trainer.js'
+import { hr, min, manageTrainerState } from './trainer.js'
 import { mapsObj } from '../../data/mapsData.js'
 import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
+import { queue as evoQueue } from './evolution.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -281,7 +282,11 @@ function overworldMenuClickEvent(e){
         interactionFlags: interaction.flags,
         volumeValues,
         bag: bagSave,
-        pc: pc
+        pc: pc,
+        timeObj: {
+          hr: hr,
+          min: min
+        }
       })
       break
     case 'options':
@@ -484,7 +489,7 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    console.log(player)
+    console.log(evoQueue)
   }
 }
 

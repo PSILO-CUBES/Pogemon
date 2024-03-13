@@ -39,29 +39,31 @@ pogemart x
 
 pogecenter x
 
-save pc data, moves and sprites yet to show
+SHINYS x
 
-make first gym
+split exp when multiple pogemons were in battle x
 
--- demo release
-
-odds of meeting certain wild pogemon
-
-split exp when multiple pogemons were in battle
-
-EV
-
-stats menu stats name with colors to know nature's effect and number tags to see how much EVS have been collected
+Show exp split x
 
 button to see the info of the move being learned
 
-SHINYS
+odds of meeting certain wild pogemon
 
 make more pogemon
 
 make more moves
 
 make more items
+
+make first gym
+
+-- demo release
+
+make multiple boxes for pc
+
+EV
+
+stats menu stats name with colors to know nature's effect and number tags to see how much EVS have been collected
 
 Abilities
 

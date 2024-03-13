@@ -486,9 +486,9 @@ function initStatsMenu(){
   scenes.set('stats', {initiated: true})
   document.querySelector('#statsScene').style.display = 'flex'
   statsAnimation()
-  if(selectedPogemon.pogemon.pogedex >= 100) pogemonImg.src = `../../../img/pogemon/${selectedPogemon.pogemon.pogedex}_${selectedPogemon.name}/${selectedPogemon.name}_Animation.png`
-  else if(selectedPogemon.pogemon.pogedex >= 10) pogemonImg.src = `../../../img/pogemon/0${selectedPogemon.pogemon.pogedex}_${selectedPogemon.name}/${selectedPogemon.name}_Animation.png`
-  else if(selectedPogemon.pogemon.pogedex < 10) pogemonImg.src = `../../../img/pogemon/00${selectedPogemon.pogemon.pogedex}_${selectedPogemon.name}/${selectedPogemon.name}_Animation.png`
+
+	if(selectedPogemon.isShiny) pogemonImg.src = selectedPogemon.pogemon.sprites.shiny.frontSprite
+	else pogemonImg.src = selectedPogemon.pogemon.sprites.classic.frontSprite
 
   createMenu()
 }

@@ -210,6 +210,7 @@ export class Pogemon extends Sprite{
       this.gender = this.generateGender()
       this.ivs = this.generateIVs()
       this.stats = this.generateStats()
+      this.isShiny = this.generateShiny()
       this.hp = this.stats.baseHp
       this.status = {name: null, turns: 0}
       this.fainted = false
@@ -228,6 +229,7 @@ export class Pogemon extends Sprite{
       this.gender = preBuilt.gender
       this.ivs = preBuilt.ivs
       this.stats = preBuilt.stats
+      this.isShiny = preBuilt.isShiny
       this.hp = preBuilt.hp
       this.status = preBuilt.status
       this.fainted = preBuilt.fainted
@@ -364,6 +366,13 @@ export class Pogemon extends Sprite{
     }
     
     return catchInfo
+  }
+
+  generateShiny(){
+    const rng = Math.floor(Math.random() * 2)
+
+    if(rng == 0) return true
+    else return false
   }
 
   convertToPercentage(numerator , denominator){
@@ -560,7 +569,6 @@ export class Pogemon extends Sprite{
           foeStatChange = statsChangeObj[foeId].nominator.def / statsChangeObj[foeId].denominator.def
           
           recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit)
-          console.log(statsChangeObj)
           // console.log(Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'special'){
@@ -569,7 +577,7 @@ export class Pogemon extends Sprite{
           foeStatChange = statsChangeObj[foeId].nominator.spdef / statsChangeObj[foeId].denominator.spdef
 
           recipient.hp -= Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit)
-          console.log(Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit))
+          // console.log(Math.ceil(((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'status'){
 
@@ -590,7 +598,6 @@ export class Pogemon extends Sprite{
       } else {
         if(move.effects.name == 'buff'){
           if(!this.isEnemy){
-            console.log(statsChangeObj)
             if(statsChangeObj.ally.denominator[move.effects.target] > 2) statsChangeObj.ally.denominator[move.effects.target] -= 1
             else statsChangeObj.ally.nominator[move.effects.target] += 1
 
@@ -613,7 +620,7 @@ export class Pogemon extends Sprite{
             this.dialogue('battle', `${this.name} used ${move.name}! \n\n It increased it's ${move.effects.target} by ${move.pow} tier.`)
           }
 
-        } else {
+        } else if (move.effects.name == 'debuff') {
           if(!this.isEnemy){
             if(statsChangeObj.foe.nominator[move.effects.target] > 2) statsChangeObj.foe.nominator[move.effects.target] -= 1
             else statsChangeObj.foe.denominator[move.effects.target] += 1
@@ -633,9 +640,11 @@ export class Pogemon extends Sprite{
               return
             }
 
-            console.log(statsChangeObj)
             this.dialogue('battle', `${this.name} used ${move.name} \n\n It decreased ${recipient.name}'s ${move.effects.target} by ${move.pow} tier.`)
           }
+        } else {
+          document.querySelector('#movesInterface').style.display = 'none'
+          this.dialogue('battle', `${this.name} used ${move.name}!`)
         }
       }
     }
@@ -644,12 +653,18 @@ export class Pogemon extends Sprite{
     else damageCalculation()
 
     let statusRNG = () =>{
-      if(recipient.status.name != null) return
+
+      if(recipient.status.name != null) {
+        if(move.effects == undefined) return  
+        if(move.effects.name == 'status') queue.push(() => this.dialogue('battle', `${recipient.name} already has a status affliction.`))
+        return
+      }
+
       if(recipient.hp <= 0) return
       let rng = Math.floor(Math.random() * 100)
       if(move.effects != null){
         switch(Object.keys(move.effects)[0]){
-          case 'burn':{
+          case 'burn':
             if(rng <= Object.values(move.effects)[0]){
               recipient.status.name = 'burn'
               queue.push(() =>{
@@ -657,7 +672,6 @@ export class Pogemon extends Sprite{
                 recipientStatus.style.background = 'red'
               })
             }
-          }
         }
       }
     }
@@ -862,8 +876,6 @@ export class Pogemon extends Sprite{
           return
         }
 
-
-
         if(!this.isEnemy){
           if(statsChangeObj.foe.denominator[move.effects.target] > 8) {
             statsChangeObj.foe.denominator[move.effects.target] = 8
@@ -905,7 +917,7 @@ export class Pogemon extends Sprite{
         }
 
       } else if (type == 'status') {
-
+        console.log('animation')
       }
     }
 
@@ -954,12 +966,14 @@ export class Pogemon extends Sprite{
         break
 
       // status effect
-      case 'heatwave':
+      case 'heatWave':
+        projectileAnimation()
         break  
     }
   }
 
-  checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, info){
+  // should pass foe instead of slower
+  checkStatus(healthBar, healthAmount, renderedSprites, queue, faintEvent, slower, faster, info){
     let thisFaints = () => {
       if(this.hp <= 0){
         audioObj.music.battle.stop()
@@ -974,22 +988,27 @@ export class Pogemon extends Sprite{
     if(slower.name != undefined){
       if(this.status.name == null && slower.status.name == null){
         thisFaints()
-        //have to do that to check if slower is fainted
+        if(info == undefined) return
         slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}}) 
         return
       }
 
       if(this.status.name == null && slower.status.name != null){
         thisFaints()
+        if(info == undefined) return
         slower.checkStatus(info[0], info[1], info[2], info[3], info[4], {status: {name: null}})
         return
       }
-      return
+    }
+
+    if(this.hp <= 0) {
+      thisFaints()
     }
 
     if(this.status.name == null) return
 
     queue.push(() =>{
+      if(this.fainted) return
       thisFaints()
  
       switch(this.status.name){
@@ -997,6 +1016,11 @@ export class Pogemon extends Sprite{
           let chip = this.stats.baseHp / 16
           this.hp = Math.floor(this.hp - chip)
           if(this.hp < 1) this.hp = 0
+
+          if(this.isEnemy) {
+            healthBar = '#foeHealthBar'
+            healthAmount = document.querySelector('#foeHP')
+          }
 
           document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
           healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
@@ -1062,13 +1086,13 @@ export class Pogemon extends Sprite{
     hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
   }
 
-  expGain(yeilder, battleType){
+  expGain(yeilder, battleType, battlerArr, inBattle){
     if(this.lvl >= 100) return
     let a = 1
     if(battleType = 'trainer') a = 1.5
 
     // amount of allied participants to the battle
-    let s = [1]
+    let s = battlerArr.length
 
     // let t = if original trainer
     // let e = if lucky egg held
@@ -1076,84 +1100,172 @@ export class Pogemon extends Sprite{
     // let f = affection
     // let p = exp buff or debuff such as exp charm and shit
 
-    const yeild = pogemonsObj[`${yeilder.name}`].yeild
+    const yeild = pogemonsObj[`${yeilder.name}`].yeild * a
     const lvl = yeilder.lvl
-    const expGained = Math.floor((yeild * lvl / 5) * (1 / s.length) * Math.pow(((2 * lvl + 10) / (lvl + this.lvl + 10)), 2.5) + 1)
+    const expGained = Math.floor(((yeild * lvl / 5) * (1 / s) * Math.pow(((2 * lvl + 10) / (lvl + this.lvl + 10)), 2.5) + 1))
     
     this.exp += expGained
-
     this.dialogue('battle', `${this.name} gained ${expGained} exp points!`)
 
-    this.expBarProgress()
+    this.expBarProgress(inBattle)
 
     this.lvl = this.generateLevel()
   }
 
-  expBarProgress(){
-    let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
-    console.log('work exp here')
-    console.log(percentage)
+  teamExpEvent(queue, prevLvl, queueProcess){
+    queue.push(() =>{
+      if(this.isShiny) document.querySelector('.teamLvlUpImg').src = this.pogemon.sprites.shiny.sprite
+      else document.querySelector('.teamLvlUpImg').src = this.pogemon.sprites.classic.sprite
 
-    if(percentage >= 100){
-      gsap.to('#expBar',{
-        width:`${percentage}%`,
-        duration: 0.1
-      })
-    } else {
-      gsap.to('#expBar',{
-        width:`${percentage}%`,
-        duration: 0.5,
-      })
+      document.querySelector('#teamLvlUpWindow').style.display = 'grid'
+      document.querySelector('#teamLvlUpWindow').style.left = '120.5%'
+      document.querySelector('#teamLvlUpExpDetailsLvl').textContent = `lv ${prevLvl}`
+
+      if(this.lvl > prevLvl) {
+        queueProcess.disabled = true
+        gsap.to(document.querySelector('#teamLvlUpWindow').style, {
+          left: '82.5%',
+          onComplete: () =>{
+            setTimeout(() =>{
+              gsap.to(document.querySelector('.teamLvlUpExpBar'), {
+                width: `100%`,
+                duration: 1,
+                onComplete: () =>{
+                  document.querySelector('#teamLvlUpExpDetailsLvl').textContent = `lv ${prevLvl} >>> lv ${this.lvl}`
+                  this.dialogue('battle', `${this.name}'s lvl raised to ${this.lvl}!`)
+                  gsap.to(document.querySelector('.teamLvlUpExpBar'), {
+                    width: `0%`,
+                    onComplete: () =>{
+                      gsap.to(document.querySelector('.teamLvlUpExpBar'), {
+                        duration: 0.75,
+                        width: `${Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))}%`,
+                        onComplete: () =>{
+                          queueProcess.disabled = false
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }, 500)
+          }
+        })
+      } else {
+        gsap.to(document.querySelector('.teamLvlUpExpBar'), {
+          width: `${Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))}%`,
+        })
+      }
+    })
+
+    // queue.push(() =>{
+    //   gsap.to(document.querySelector('#teamLvlUpWindow').style, {
+    //     top: '110.5%',
+    //     // onComplete: () =>{
+    //     //   document.querySelector('#teamLvlUpWindow').style.display = 'none'
+    //     // }
+    //   })
+    // })
+  }
+
+  expBarProgress(inBattle){
+    if(inBattle){
+      let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
+
+      if(percentage >= 100){
+        gsap.to('#expBar',{
+          width:`${percentage}%`,
+          duration: 0.1
+        })
+      } else {
+        gsap.to('#expBar',{
+          width:`${percentage}%`,
+          duration: 0.5,
+        })
+      }
     }
   }
 
-  onLvlUp(){
+  onLvlUp(inBattle){
     let percentage = Math.floor(this.convertToPercentage(this.exp - Math.pow(this.lvl, 3), Math.pow(this.lvl + 1, 3) - Math.pow(this.lvl, 3)))
-    console.log('work exp here')
-    console.log(percentage)
-    
-    document.querySelector('#expBar').style.width = '0%'
-    setTimeout(() => document.querySelector('#expBar').style.width = `${percentage}%`, 1000)
-    
-    const allyLvlDom = document.querySelector('#allyLvl')
-    const allyHpDom = document.querySelector('#allyHp')
 
-    this.dialogue('battle', `${this.name} raised to lv ${this.lvl}!`)
-
+    this.dialogue('battle', `${this.name}'s stats increased!`)
     this.stats = this.generateStats()
 
-    this.hp = this.hp + (Math.round(this.stats.baseHp * 0.05) + 1)
+    if(inBattle){
+      document.querySelector('#expBar').style.width = '0%'
+      setTimeout(() => document.querySelector('#expBar').style.width = `${percentage}%`, 1000)
 
-    allyHpDom.textContent = `${this.hp}/${this.stats.baseHp}`
-    allyLvlDom.textContent = `Lv ${this.lvl}`
+      const allyLvlDom = document.querySelector('#allyLvl')
+      const allyHpDom = document.querySelector('#allyHp')
 
-    let hpPercentage = Math.floor(this.convertToPercentage(this.hp, this.stats.baseHp))
-    document.querySelector('#allyHealthBar').style.width = `${hpPercentage}%`
-  }
-
-  showStatWindow(oldStats, prevLvl){
-    const lvlUpWindowDom = document.querySelector('#lvlUpWindow')
-    const lvlUpLvlDom = document.querySelector('#lvlUpLvl')
-    const lvlUpStatsArr = document.querySelectorAll('.lvlUpStats')
-
-    lvlUpWindowDom.style.display = 'grid'
-    setTimeout(() =>{
-      lvlUpWindowDom.style.left = '1725px'
-    }, 5)
-
-    lvlUpLvlDom.textContent = `lv ${prevLvl} >>> lv ${this.lvl}` 
-
-    for(let i = 0; i < Object.keys(this.stats).length; i++){
-
-      const increase = Object.values(this.stats)[i] - Object.values(oldStats)[i]
-
-      lvlUpStatsArr[i].textContent = `${Object.values(oldStats)[i]} + ${increase}`
+      this.hp = this.hp + (Math.round(this.stats.baseHp * 0.05) + 1)
+  
+      allyHpDom.textContent = `${this.hp}/${this.stats.baseHp}`
+      allyLvlDom.textContent = `Lv ${this.lvl}`
+  
+      let hpPercentage = Math.floor(this.convertToPercentage(this.hp, this.stats.baseHp))
+      document.querySelector('#allyHealthBar').style.width = `${hpPercentage}%`
     }
   }
 
-  showStatIncrease(){
-    const lvlUpLvlDom = document.querySelector('#lvlUpLvl')
-    const lvlUpStatsArr = document.querySelectorAll('.lvlUpStats')
+  showStatWindow(type, oldStats, prevLvl, queueProcess){
+    let lvlUpWindowDom
+    let lvlUpLvlDom
+    let lvlUpStatsArr
+
+    if(type == 'battle'){
+      lvlUpWindowDom = document.querySelector('#lvlUpWindow')
+      lvlUpLvlDom = document.querySelector('#lvlUpLvl')
+      lvlUpStatsArr = document.querySelectorAll('.lvlUpStats')
+    } else {
+      lvlUpWindowDom = document.querySelector('#evoLvlUpWindow')
+      lvlUpLvlDom = document.querySelector('#evoLvlUpLvl')
+      lvlUpStatsArr = document.querySelectorAll('.evoLvlUpStats')
+    }
+
+    lvlUpWindowDom.style.display = 'grid'
+
+    queueProcess.disabled = true
+
+    lvlUpLvlDom.textContent = `lv ${this.lvl}`
+
+    for(let i = 0; i < Object.keys(this.stats).length; i++){
+      lvlUpStatsArr[i].textContent = `${Object.values(oldStats)[i]}`
+    }
+
+    gsap.to(lvlUpWindowDom.style, {
+      left: '1585px',
+      onComplete: () =>{
+        setTimeout(() =>{
+          if(type == 'battle') lvlUpLvlDom.textContent = `lv ${prevLvl} >>> lv ${this.lvl}`
+          else lvlUpLvlDom.textContent = `lv ${this.lvl}`
+      
+          for(let i = 0; i < Object.keys(this.stats).length; i++){
+      
+            const increase = Object.values(this.stats)[i] - Object.values(oldStats)[i]
+      
+            if(increase < 0) lvlUpStatsArr[i].textContent = `${increase * -1} - ${Object.values(oldStats)[i]}`
+            else lvlUpStatsArr[i].textContent = `${increase} + ${Object.values(oldStats)[i]}`
+          }
+
+          setTimeout(() => queueProcess.disabled = false, 1000)
+        }, 1000)
+      }
+    })
+  }
+
+  showStatIncrease(type){
+    let lvlUpLvlDom
+    let lvlUpStatsArr
+
+    if(type == 'battle'){
+      lvlUpLvlDom = document.querySelector('#lvlUpLvl')
+      lvlUpStatsArr = document.querySelectorAll('.lvlUpStats')
+    } else {
+      lvlUpLvlDom = document.querySelector('#evoLvlUpLvl')
+      lvlUpStatsArr = document.querySelectorAll('.evoLvlUpStats')
+    }
+
     lvlUpLvlDom.textContent = `Lv ${this.lvl}`
 
     for(let i = 0; i < lvlUpStatsArr.length; i++){
@@ -1161,8 +1273,14 @@ export class Pogemon extends Sprite{
     }
   }
 
-  hideStatIncrease(){
-    const lvlUpWindowDom = document.querySelector('#lvlUpWindow')
+  hideStatIncrease(type){
+    let lvlUpWindowDom = document.querySelector('#lvlUpWindow')
+
+    if(type == 'battle'){
+      lvlUpWindowDom = document.querySelector('#lvlUpWindow')
+    } else {
+      lvlUpWindowDom = document.querySelector('#evoLvlUpWindow')
+    }
 
     lvlUpWindowDom.style.left = '2250px'
   }

@@ -12,20 +12,30 @@ function trainerAnimation(timeSpent){
     backgroundSprite.draw()
 }
 
+export let hr
+export let min
+
 function printTrainerCard(){
     let sectionArr = document.querySelectorAll('.trainerCardBodyInfoSectionContainerContent')
 
-    let h = 0
-    let m = 0
+    hr = 0
+    min = 0
+
+    // this is kinda wacky
+    min = Math.floor((new Date().getTime() - player.startTime.getTime()) / 60000)
+
+    setTimeout(() =>{
+        if(min == 0) min = 1
+        else min += 1
+    }, 1000)
     
-    m = Math.floor((new Date().getTime() - player.startTime.getTime()) / 60000)
-    if(m <= 60) {
-        h = Math.floor(h + (m / 60))
-        m = m % 60
+    if(min <= 60) {
+        hr = Math.floor(hr + (min / 60))
+        min = min % 60
     }
     
-    if(m < 10){
-        m = `0${m}`
+    if(min < 10){
+        min = `0${min}`
     }
 
     sectionArr.forEach((node, i) =>{
@@ -41,7 +51,7 @@ function printTrainerCard(){
                 node.textContent = `0`
                 break
             case 3:
-                node.textContent = `${h}:${m}`
+                node.textContent = `${hr}:${min}`
                 break
         }
     })

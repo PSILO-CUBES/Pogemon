@@ -641,7 +641,8 @@ function bagSceneAnimation(){
       x: 43,
       y: window.innerHeight / 10 + 150 * i
     }
-    player.team[i].img.src = player.team[i].pogemon.sprites.bagSprite
+    if(player.team[i].isShiny) player.team[i].img.src = `../../../img/pogemon/${player.team[i].pogemon.pogedex}_${player.team[i].name}/${player.team[i].name}_Bag_Animation_Shiny.png`
+    else player.team[i].img.src = `../../../img/pogemon/${player.team[i].pogemon.pogedex}_${player.team[i].name}/${player.team[i].name}_Bag_Animation.png`
     // player.team[i].animate = false
     player.team[i].draw()
   }

@@ -374,8 +374,10 @@ function definePogemonSprites(i){
   player.team[i].width = 250
 
   pogemonSpriteArr.push(player.team[i])
-
-  pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.teamSprite
+  
+  if(player.team[i].isShiny) pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.shiny.teamSprite
+  else pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.classic.teamSprite
+  
   pogemonSpriteArr[i].opacity = 1
 }
 
@@ -516,8 +518,6 @@ function cleanTeamScene(){
 
   window.cancelAnimationFrame(teamAnimationId)
 }
-
-
 
 function teamAnimation() {
   teamAnimationId = window.requestAnimationFrame(teamAnimation)

@@ -25,7 +25,6 @@ if(data == null){
     player.bag.set(item.name, {item: itemsObj[item.name], quantity: 0})
   })
 } else {
-
   player.bag = new Map()
 
   data.bag.forEach(key =>{

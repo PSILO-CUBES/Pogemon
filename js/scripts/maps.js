@@ -43,8 +43,10 @@ const trainerSpritesArr = []
 
 async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
+  let data
   await setBoundries(mapsObj)
-  const data = await loadData()
+  data = await loadData()
+
 
   console.log(data)
 

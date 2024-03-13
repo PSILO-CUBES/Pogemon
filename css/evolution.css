@@ -67,3 +67,39 @@
   cursor: pointer;
 }
 
+#evoLvlUpWindow{
+  position: absolute;
+
+  height: 500;
+  width: 650;
+
+  left: 2900;
+  top: 41.25%;
+  transform: translate(-50%,-50%);
+  
+  display: none;
+  grid-template-rows: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+
+  background-color: rgba(25, 25, 25, 0.75);
+
+  transition: 1s ease-out;
+}
+
+#evoLvlUpLvl{
+  text-align: center;
+  align-self: center;
+}
+
+.evoLvlUpStatsContainer{
+  display: grid;
+  grid-template-columns: 45% 55%;
+}
+
+.evoLvlUpStatsName{
+  padding-left: 10px;
+}
+
+.evoLvlUpStats{
+  justify-self: end;
+  padding-right: 25px;
+}
