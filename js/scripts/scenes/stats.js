@@ -47,6 +47,9 @@ function statsSceneSwitchMoves(first, second){
   let secondIndex
 
   for(let i = 0; i < selectedPogemon.moves.length; i++){
+	console.log(selectedPogemon.moves[i].name)
+	console.log(first.name)
+
     if(selectedPogemon.moves[i].name == first.name){
       firstIndex = i
     } else if (selectedPogemon.moves[i].name == second.name){
@@ -93,11 +96,13 @@ function statsSceneSwitchMoves(first, second){
 function statsSceneMovesInteraction(e, state){
   if(state){
     if(switchMoveProcess.active){
+		console.log(switchMoveProcess)
         statsSceneSwitchMoves(switchMoveProcess.moves.first, movesObj[`${e.target.innerText.toLowerCase()}`])
       return
     }
 
     switchMoveProcess.moves.first = movesObj[`${e.target.innerText.toLowerCase()}`]
+	console.log(switchMoveProcess)
 
     document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
       node.style.backgroundColor = 'transparent'
@@ -341,6 +346,22 @@ function createMenu(){
 						heldItemImg.setAttribute('class', 'statsHeldItemImg')
 
 						statsSceneGridSectionPogemon.appendChild(heldItemImg)
+
+						const statusImg = new Image()
+						 
+						if(selectedPogemon.status.name == null) statusImg.src = `img/item_scene/items/blank.png`
+						else statusImg.src = `img/status/${selectedPogemon.status.name}.png`
+						statusImg.setAttribute('class', 'statusStatusImg')
+
+						statsSceneGridSectionPogemon.appendChild(statusImg)
+
+						const shinyImg = new Image()
+						 
+						if(selectedPogemon.isShiny) shinyImg.src = `img/status/shiny.png`
+						else shinyImg.src = `img/item_scene/items/blank.png`
+						shinyImg.setAttribute('class', 'statusShinyImg')
+
+						statsSceneGridSectionPogemon.appendChild(shinyImg)
 						break
 					case 2:
 						statsSceneGridSectionPogemon.setAttribute('id', 'statsSceneGridSectionPogemonHPContainer')

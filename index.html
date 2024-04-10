@@ -75,11 +75,10 @@
   <div id="battleScene">
     <div id="scene">
       <div id="sceneInterface">
-
         <div id="foeHealthBarContainer">
           <div class="infoContainer">
             <div id="foeName" class="battleName"></div>
-            <div id="foeStatus" class="status"></div>
+            <img id="foeStatus" class="status"/>
             <div id="foeGenderIconContainer" class="genderImgContainer">
               <img id="foeGenderImg" class="genderImg">
             </div>
@@ -138,7 +137,7 @@
         <div id="allyHealthBarContainer">
           <div class="infoContainer">
             <div id="allyName" class="battleName"></div>
-            <div id="allyStatus" class="status"></div>
+            <img id="allyStatus" class="status"/>
             <div id="allyGenderIconContainer" class="genderImgContainer">
               <img id="allyGenderImg" class="genderImg">
             </div>
@@ -158,6 +157,8 @@
             </div>
           </div>
         </div>
+
+        <div id="fieldEffect"></div>
       </div>
     </div>
     
@@ -181,11 +182,30 @@
           </div>
           <div class="movesDescContainer">
             <div class="descContainer">
-              <div id="moveDescElement"><span id="moveElementTag">Element : </span><span id="moveElementType">--</span></div>
-              <div id="moveDescType">Type : --</div>
+              <div id="moveDescElement">--</div>
+              <div id="moveDescType">--</div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div id="learnMoveInfo">
+        <div id="learnMovesDesc">
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="learnMoveDescPow">Pow : --</div>
+              <div id="learnMoveDescAcc">Acc : --</div>
+              <div id="learnMoveDescPP">PP : --</div>
+            </div>
+          </div>
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="learnMoveDescElement">--</div>
+              <div id="learnMoveDescType">--</div>
+            </div>
+          </div>
+        </div>
+        <div id="learnMoveName">YAYA</div>
       </div>
 
       <div id="learnMoveInterface" class="menuInterface">
@@ -197,10 +217,15 @@
   </div>
 
   <div id="evolutionScene">
+
     <div></div>
     
     <div id="evolutionInterface">
       <div id="evolutionDialogue"></div>
+      <div id="evoConfirmButtonContainer">
+        <div id="evoYes" class="evoChoice">yes</div>
+        <div id="evoNo" class="evoChoice">no</div>
+      </div>
     </div>
 
     <div id="evolutionMovesInterface" class="evoMenuInterface">
@@ -208,15 +233,15 @@
       <div id="movesDesc">
         <div class="movesDescContainer">
           <div class="descContainer">
-            <div id="moveDescPow">Pow : --</div>
-            <div id="moveDescAcc">Acc : --</div>
-            <div id="moveDescPP">PP : --</div>
+            <div id="evoMoveDescPow">Pow : --</div>
+            <div id="evoMoveDescAcc">Acc : --</div>
+            <div id="evoMoveDescPP">PP : --</div>
           </div>
         </div>
         <div class="movesDescContainer">
           <div class="descContainer">
-            <div id="moveDescElement">Element : --</div>
-            <div id="moveDescType">Type : --</div>
+            <div id="evoMoveDescElement">--</div>
+            <div id="evoMoveDescType">--</div>
           </div>
         </div>
       </div>
@@ -226,6 +251,25 @@
       <div id="evolutionLearnMoveDialogue"></div>
       <div id="evolutionLearnMoveOptionButtonContainer">
       </div>
+    </div>
+
+    <div id="evoLearnMoveInfo">
+      <div id="evoLearnMovesDesc">
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoLearnMoveDescPow">Pow : --</div>
+            <div id="evoLearnMoveDescAcc">Acc : --</div>
+            <div id="evoLearnMoveDescPP">PP : --</div>
+          </div>
+        </div>
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoLearnMoveDescElement">--</div>
+            <div id="evoLearnMoveDescType">--</div>
+          </div>
+        </div>
+      </div>
+      <div id="evoLearnMoveName">YAYA</div>
     </div>
 
     <div id="evoLvlUpWindow">

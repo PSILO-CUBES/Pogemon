@@ -82,6 +82,7 @@ function switchProcessEvent(first, second){
     duration
   })
 
+  let firstTeamPogemon = {...player.team[0]}
   let placeHolder
 
   placeHolder = player.team[first.i]
@@ -97,6 +98,15 @@ function switchProcessEvent(first, second){
       pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
       pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes[0].width = `${first.pogemon.convertToPercentage(player.team[i].hp, player.team[i].stats.baseHp)}%`
       pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[1].textContent = `Lv ${player.team[i].lvl}`
+
+      if(player.team[i].heldItem == null) pogemonTeamDomArr[i].childNodes[0].childNodes[0].src = `img/item_scene/items/blank.png`
+      else pogemonTeamDomArr[i].childNodes[0].childNodes[0].src = `img/item_scene/items/${player.team[i].heldItem.type}/${player.team[i].heldItem.name}.png`
+
+      if(player.team[i].status.name == null) pogemonTeamDomArr[i].childNodes[1].childNodes[1].children[2].style.display = 'none'
+      else {
+        pogemonTeamDomArr[i].childNodes[1].childNodes[1].children[2].style.display = 'block'
+        pogemonTeamDomArr[i].childNodes[1].childNodes[1].children[2].src = `img/status/${player.team[i].status.name}.png`
+      }
       
       let xOffset = 72.5
       let yOffset = 30.15
@@ -138,6 +148,7 @@ function switchProcessEvent(first, second){
 
         if(prevScene == 'battle') {
           if(player.team[0].fainted == true) return
+          if(firstTeamPogemon.id == player.team[0].id) return
           gsap.to('#overlapping', {
             opacity: 1,
             onComplete: () =>{
@@ -355,6 +366,11 @@ function printTeamInfo(i, teamMenuContainerDom){
   healthbarSection.children[1].textContent = `Lv ${player.team[i].lvl}`
   healthbarSection.children[0].children[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
   healthbarSection.children[0].children[1].children[0].children[0].style.width = `${player.team[i].convertToPercentage(player.team[i].hp,player.team[i].stats.baseHp)}%`
+  if(player.team[i].status.name == null) healthbarSection.children[2].style.display = 'none'
+  else {
+    healthbarSection.children[2].style.display = 'block'
+    healthbarSection.children[2].src = `img/status/${player.team[i].status.name}.png`
+  }
 }
 
 function definePogemonSprites(i){
@@ -470,10 +486,14 @@ function createSceneLayout(){
     const infoLvlDom = document.createElement('div')
     infoLvlDom.classList.add('teamMenuInfoLvl')
 
+    const infoStatusDom = document.createElement('img')
+    infoStatusDom.classList.add('teamMenuInfoStatus')
+
     const infoHealthBarSectionDom = document.createElement('div')
     infoHealthBarSectionDom.classList.add('teamMenuHealthBarSection')
     infoHealthBarSectionDom.appendChild(infoHealthBarContainerDom)
     infoHealthBarSectionDom.appendChild(infoLvlDom)
+    infoHealthBarSectionDom.appendChild(infoStatusDom)
 
     const infoContainerDom = document.createElement('div')
     infoContainerDom.classList.add('teamMenuInfoContainer')

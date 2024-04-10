@@ -49,7 +49,7 @@ export let mapsObj = {
       {name: 'geneTown', spawnPosition: {x: 475, y: -230,}}, {name: 'geneTown', spawnPosition: {x: 475, y: -230,}}
     ],
   },
-  geneTown : {
+  geneTown:{
     name: 'geneTown',
     mapImg: './img/maps/geneTown/geneTown.png',
     FGImg: './img/maps/geneTown/geneTownFG.png',
@@ -59,7 +59,8 @@ export let mapsObj = {
     },
     height: 32,
     width: 32,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:98}}, 
+    {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
     changeMapLocations:[
       {name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},
       {name: 'geneTown_home1', spawnPosition: {x:250, y:0,}}, 
@@ -69,7 +70,7 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Gab', 
-        team: [[pogemonsObj['disso'], 10], [pogemonsObj['maaph'], 10]],
+        team: [[pogemonsObj.disso, 10], [pogemonsObj.maaph, 10]],
         direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
         sprite: '../../img/charSprites/dino/dino.png',
         dialogue: 'Git Gut\n\n\nSkill issue',
@@ -78,7 +79,7 @@ export let mapsObj = {
       },
     ],
   },
-  lab : {
+  lab:{
     name: 'lab',
     mapImg: './img/maps/lab/lab.png',
     FGImg: './img/maps/lab/labFG.png',
@@ -115,7 +116,7 @@ export let mapsObj = {
       },
     ],
   },
-  pearlyPath : {
+  pearlyPath:{
     name: 'pearlyPath',
     mapImg: './img/maps/pearlyPath/pearlyPath.png',
     FGImg: './img/maps/pearlyPath/pearlyPathFG.png',
@@ -125,7 +126,7 @@ export let mapsObj = {
     },
     height: 42,
     width: 34,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: 100}],
     changeMapLocations:[
       {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, 
       {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}},
@@ -133,7 +134,7 @@ export let mapsObj = {
       {name: 'geneTown', spawnPosition: {x:-75, y: 50,}}, {name: 'geneTown', spawnPosition: {x: -75, y: 50,}}
     ]
   },
-  banishmentRoad : {
+  banishmentRoad:{
     name: 'banishmentRoad',
     mapImg: './img/maps/banishmentRoad/banishmentRoad.png',
     FGImg: './img/maps/banishmentRoad/banishmentRoadFG.png',
@@ -143,7 +144,7 @@ export let mapsObj = {
     },
     height: 30,
     width: 40,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7]}, {pogemon: pogemonsObj.loko, lvls: [4, 7]}, {pogemon: pogemonsObj.steeli, lvls: [4, 7]}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:100}}],
     changeMapLocations:[
       {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
       {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
@@ -152,16 +153,16 @@ export let mapsObj = {
       {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}
     ]
   },
-  kemeTown : {
+  kemeTown:{
     name: 'kemeTown',
     mapImg: './img/maps/kemeTown/kemeTown.png',
     FGImg: './img/maps/kemeTown/kemeTownFG.png',
     spawnPosition: {
-      x: -75,
+      x: -750,
       y: -750
     },
-    height: 31,
-    width: 32,
+    height: 46,
+    width: 56,
     encounters: [],
     changeMapLocations:[
       {name: 'home', spawnPosition: {x:775, y: -1150,}}, 
@@ -191,7 +192,7 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
+        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
       },
       {
         name: 'pc',

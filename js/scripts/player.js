@@ -69,6 +69,7 @@ export async function generatePlayer(canvas){
       player.catch(pogemonsObj['loko'], true, 'geneTown')
       player.catch(pogemonsObj['steeli'], true, 'geneTown')
       player.catch(pogemonsObj['maaph'], true, 'geneTown')
+      player.catch(pogemonsObj['tadtoxic'], true, 'geneTown')
       player.catch(pogemonsObj['piny'], true, 'geneTown')
 
       return player
@@ -106,9 +107,9 @@ export async function generatePlayer(canvas){
 
         remodeledPogemon.moves.length = 0
 
-        data.playerInfo.teamMovesInfo[0].forEach((move, i) =>{
-          let newMove = movesObj[`${data.playerInfo.teamMovesInfo[0][i][0]}`]
-          newMove.pp = data.playerInfo.teamMovesInfo[0][i][1]
+        data.playerInfo.teamMovesInfo[i].forEach((move, j) =>{
+          let newMove = movesObj[`${data.playerInfo.teamMovesInfo[i][j][0]}`]
+          newMove.pp = data.playerInfo.teamMovesInfo[i][j][1]
           remodeledPogemon.moves.push(newMove)
         })
 
@@ -406,6 +407,8 @@ export const pogemartInteraction = {
   initiated: false
 }
 
+let healProcess = false
+
 function playerInteraction(e) {
   if(scenes.get('overworld').initiated == false) return
   if(e.key != ' ') return
@@ -449,13 +452,15 @@ function playerInteraction(e) {
 
       switch(player.interaction.info.type){
         case 'pogecenter':
+          healProcess = true
           player.team.forEach(pogemon =>{
             pogemon.hp = pogemon.stats.baseHp
             pogemon.fainted = false
           })
           queue.push(() =>{
-            player.disabled = true
             setTimeout(() =>{
+              healProcess = false
+              console.log(healProcess)
               player.team[0].dialogue('overworld', `Your pogemons are now all healed up!`)
             }, 1000)
           })
@@ -463,6 +468,8 @@ function playerInteraction(e) {
         case 'pogemart':
           queue.push(() =>{
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[0])
+            disableOWMenu.active = false
+            inputValue = 0
           })
           break
       }
@@ -732,6 +739,7 @@ function eventZoneManagement(eventZones){
     ){
       if(player.team.length < 1) return
       player.interaction = eventZonesIndex
+      console.log(player.interaction)
       if(eventZonesIndex.info.createdTrainer != undefined){
         for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
           if(mapsObj[currMap.name].trainers[i].beaten == true) return
@@ -841,9 +849,10 @@ function spendQueue(){
     queue[0]()
     queue.shift()
     return
-  } else {
+  } else if(!healProcess) {
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     player.disabled = false
+    disableOWMenu.active = false
     interaction.initiated = false
     document.querySelector('#overworldDialogue').setAttribute('class', '')
     document.querySelector('#overworldDialogue').style.padding = '35px'

@@ -43,21 +43,55 @@ SHINYS x
 
 split exp when multiple pogemons were in battle x
 
+prevent pogemon from gaining exp if fainted x
+
 Show exp split x
 
-button to see the info of the move being learned
+odds of meeting certain wild pogemon x
 
-odds of meeting certain wild pogemon
+button to see the info of the move being learned x
 
-make more pogemon
+cancel evolution x
 
-make more moves
+make burn halve physical dmg x
 
-make more items
+moves can effect stats change
+
+make stats changing moves have animations
+
+more status conditions {
+    burn x
+    para x
+    psn x
+    slp x
+    frz x
+    afflictions: {
+        flinch x
+        confused x
+        leech seed x
+        trick room x
+    }
+    substitute x
+    protect x
+    swagger????
+}
+
+held items effect in battle {
+    oran berry
+    sitrus berry
+    elemental item
+    evo held items
+}
+
+set status condition icon in bag scene
+
+exp curve
+
+pick up items on the ground
 
 make first gym
 
--- demo release
+up and down option in stats scene
 
 make multiple boxes for pc
 
@@ -67,12 +101,45 @@ stats menu stats name with colors to know nature's effect and number tags to see
 
 Abilities
 
-make gyms
+make more maps to reach gyms
 
-make league
+make 2 more gyms
+
+at least 1 over world encounter?
+
+MUSIC AND MOVE SOUNDS
+
+grid walking?
+
+-- demo release
+
+held items efect in battle {
+    leftovers
+    life orb
+    elemental item
+    evo held items
+}
+
+weather
+
+spikes
+
+make more pogemon
+
+make more moves
+
+make more items
+
+make league?
+
+NPC trading?
 
 fishing?
 
 breeding??
 
 multiplayer?????
+
+online trading???
+
+online battle???

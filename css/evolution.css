@@ -103,3 +103,61 @@
   justify-self: end;
   padding-right: 25px;
 }
+
+#evoLearnMoveInfo{
+  display: grid;
+  grid-template-rows: 60% 40%;
+
+  position: absolute;
+
+  height: 400;
+  width: 650;
+
+  left: 2900;
+  top: 39.5%;
+  transform: translate(-50%,-50%);
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.5s ease-in-out;
+}
+
+#evoLearnMovesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+}
+
+#evoLearnMoveName{
+  display: grid;
+  text-align: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#evoConfirmButtonContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  height: 270;
+  width: 768;
+}
+
+.evoChoice{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 768;
+  height: 100%;
+}.evoChoice:hover{
+  background-color: rgb(25, 25, 25, 0.75);
+  cursor: pointer;
+}

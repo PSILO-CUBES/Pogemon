@@ -30,10 +30,9 @@ export const pogemonsObj = {
     },
     movepool: {
       1: {move: movesObj.fireball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 1},
-      3: {move: movesObj.swift, lvl: 10},     
-      4: {move: movesObj.slash, lvl: 12},
-      5: {move: movesObj.shadowball, lvl: 15},
+      2: {move: movesObj.headbutt, lvl: 20},
+      3: {move: movesObj.heatwave, lvl: 20},
+      4: {move: movesObj.frostwave, lvl: 20},
     },
     sprites: {
       classic:{
@@ -398,8 +397,7 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.fireball, lvl: 1},
-      2: {move: movesObj.shadowball, lvl: 10},
+      1: {move: movesObj.shadowball, lvl: 1},
     },
     sprites: {
       classic:{
@@ -681,6 +679,69 @@ export const pogemonsObj = {
     catchRate: 200
   },
 
+  // #14 - #17 toad line
+  tadtoxic: {
+    pogedex: 10,
+    name: 'tadtoxic',
+    element:{
+      1: 'water',
+      2: 'poison'
+    },
+    stats: {
+      hp: 50,
+      atk: 30,
+      def: 30,
+      spatk: 60,
+      spdef: 60,
+      spd: 30
+    },
+    evo: {name: 'venotoad', type: 'item', item: 'waterstone'},
+    abilities: {
+      1: 'None'
+    },
+    movepool: {
+      1: {move: movesObj.fireball, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/014_Tadtoxic/Tadtoxic.png',
+        frontSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Animation.png',
+        backSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Back_Animation.png',
+        teamSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Team_Animation.png',
+        bagSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Shiny.png',
+        frontSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Animation_Shiny.png',
+        backSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200
+  },
+
+
   // #143 - #144 disso x
   disso: {
     pogedex: 143,
@@ -702,8 +763,7 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.swift, lvl: 1},
-      2: {move: movesObj.heatWave, lvl: 1},
+      1: {move: movesObj.heatwave, lvl: 1},
     },
     sprites: {
       classic:{
@@ -757,18 +817,17 @@ export const pogemonsObj = {
       def: 60,
       spatk: 50,
       spdef: 60,
-      spd: 80,
+      spd: 120,
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: {
       1: 'None'
     },
     movepool: {
-      2: {move: movesObj.heatWave, lvl: 1},
-      3: {move: movesObj.fireball, lvl: 2},
-      4: {move: movesObj.growl, lvl: 3},
-      5: {move: movesObj.rest, lvl: 3},
-      6: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.headbutt, lvl: 1},
+      2: {move: movesObj.heal, lvl: 2},
+      3: {move: movesObj.superpower, lvl: 3},
+      4: {move: movesObj.substitute, lvl: 3},
     },
     sprites: {
       classic:{

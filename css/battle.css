@@ -25,14 +25,16 @@
 }
 
 .status{
-  position: relative;
-  left: -7.5px;
-  top: 62.5%;
+  position: absolute;
+  left: 480px;
+  top: 15.5%;
 
-  height: 100%;
-  width: 75%;
+  height: 24;
+  width: 75;
+}
 
-  z-index: 999;
+#allyStatus, #foeStatus {
+  display: none;
 }
 
 .battleName{
@@ -251,7 +253,7 @@
   display: none;
   grid-template-rows: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
 
-  background-color: rgba(25, 25, 25, 0.75);
+  background-color: rgba(0, 0, 0, 0.95);
 
   transition: 0.5s ease-out;
 }
@@ -269,7 +271,7 @@
   display: none;
   grid-template-columns: 115px auto;
 
-  background-color: rgba(25, 25, 25, 0.75);
+  background-color: rgba(0, 0, 0, 0.95);
 
   transition: 0.2s ease-out;
 }
@@ -404,7 +406,7 @@
   /* help from https://bennettfeely.com/clippy/ */
 }
 
-.allyStatsChangeContainer{
+.allyStatusEffectContainer{
   position: relative;
   left: 450px;
 
@@ -412,10 +414,64 @@
   width: 22.5%;
 }
 
-.foeStatsChangeContainer{
+.foeStatusEffectContainer{
   position: relative;
   left: 1400px;
 
   height: 40%;
   width: 17.5%;
+}
+
+#learnMoveInfo{
+  display: grid;
+  grid-template-rows: 60% 40%;
+
+  position: absolute;
+
+  height: 400;
+  width: 650;
+
+  left: 2900;
+  top: 39.5%;
+  transform: translate(-50%,-50%);
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.5s ease-in-out;
+}
+
+#learnMovesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+}
+
+#learnMoveName{
+  display: grid;
+  text-align: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#fieldEffect{
+  height: 100%;
+  width: 100%;
+}
+
+#trickroom{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  height: 100%;
+  width: 100%;
+}
+
+#trickroomCells{
+  border: rgba(128, 0, 128, 0.25) solid 1px;
+
+  height: 100%;
+  width: 100%;
 }

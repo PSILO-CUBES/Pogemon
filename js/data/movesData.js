@@ -28,10 +28,10 @@ export const movesObj = {
     name: 'headbutt',
     type: 'physical',
     element: 'normal',
-    pow: 65,
-    acc: 85,
+    pow: 1000,
+    acc: 90,
     pp: 25,
-    effects: null,
+    effects: [{flinched: 100}],
     priority: 0
   },
   slash:{
@@ -41,7 +41,7 @@ export const movesObj = {
     pow: 70,
     acc: 100,
     pp: 30,
-    effects: {crit: 1},
+    effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/slash.png'
   },
@@ -56,6 +56,23 @@ export const movesObj = {
     priority: 0
   },
 
+  // fighting
+  superpower: {
+    name: 'superpower',
+    type: 'physical',
+    element: 'fighting',
+    pow: 1000,
+    acc: 100,
+    pp: 30,
+    effects: [{name: 'selfDebuff', target:'atk', pow: 1}, {name: 'selfDebuff', target:'def', pow: 1}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 0.5,
+    sprite: '../../img/moves/superpower.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
   // special
 
   // fire
@@ -63,10 +80,10 @@ export const movesObj = {
     name: 'fireball',
     type: 'special',
     element: 'fire',
-    pow: 999,
+    pow: 100,
     acc: 100,
     pp: 30,
-    effects: {burn: 100},
+    effects: [{burn: 100}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 0.5,
@@ -79,10 +96,10 @@ export const movesObj = {
     name: 'shadowball',
     type: 'special',
     element: 'ghost',
-    pow: 1000,
+    pow: 25,
     acc: 80,
     pp: 30,
-    effects: {spdef: -1},
+    effects: [{name: 'selfDebuff', target:'spdef', pow: 1}],
     priority: 0,
     rotation: {ally: 0, foe: 0},
     duration: 2,
@@ -94,14 +111,14 @@ export const movesObj = {
   // status
 
   // heal
-  rest:{
-    name: 'rest',
+  heal:{
+    name: 'heal',
     type: 'status',
-    element: 'psychic',
-    pow: 100,
+    element: 'normal',
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: 'heal',
+    effects: [{heal: 100}],
     priority: 0,
     sprite: '../../img/moves/heal.png',
   },
@@ -111,20 +128,20 @@ export const movesObj = {
     name: 'sharpen',
     type: 'status',
     element: 'steel',
-    pow: 1,
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: {name: 'buff', target:'atk'},
+    effects: [{name: 'buff', target:'atk', pow: 1}],
     priority: 0,
   },
   swift:{
     name: 'swift',
     type: 'status',
     element: 'flying',
-    pow: 1,
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: {name: 'buff', target:'spd'},
+    effects: [{name: 'buff', target:'spd', pow: 1}],
     priority: 0,
   },
 
@@ -133,38 +150,191 @@ export const movesObj = {
     name: 'growl',
     type: 'status',
     element: 'dark',
-    pow: 1,
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: {name: 'debuff', target:'atk'},
+    effects: [{name: 'debuff', target:'atk', pow: 1}],
     priority: 0,
   },
   stare:{
     name: 'stare',
     type: 'status',
     element: 'dark',
-    pow: 1,
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: {name: 'debuff', target:'def'},
+    effects: [{name: 'debuff', target:'def', pow: 1}],
     priority: 0,
   },
 
   // status
-  heatWave:{
-    name: 'heatWave',
+
+  //normal
+  protect: {
+    name: 'protect',
     type: 'status',
-    element: 'fire',
-    pow: 0,
+    element: 'normal',
+    pow: '---',
     acc: 100,
     pp: 30,
-    effects: {burn: 100, name: 'status'},
-    priority: 0,
+    effects: [{protect: 100, name: 'status'}],
+    priority: 6,
     rotation: {ally: 1, foe: -2},
-    duration: 0.5,
-    sprite: '../../img/moves/fireball.png',
+    //animation set on another function so no need to set a duration here
+    duration: 0,
+    //sprite set to blank because animation is done with css so no sprite is used
+    sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
-  }
+  },
+  substitute: {
+    name: 'substitute',
+    type: 'status',
+    element: 'normal',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{substitute: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    //animation set on another function so no need to set a duration here
+    duration: 0,
+    //sprite set to blank because animation is done with css so no sprite is used
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
 
+  //fire
+  heatwave:{
+    name: 'heatwave',
+    type: 'status',
+    element: 'fire',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{burn: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    //animation set on another function so no need to set a duration here
+    duration: 0,
+    //sprite set to blank because animation is done with css so no sprite is used
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //grass
+  leechseed:{
+    name: 'leechseed',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{seeded: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    sprite: '../../img/moves/seed.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //electric
+  thunderwave:{
+    name: 'thunderwave',
+    type: 'status',
+    element: 'electric',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{para: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/thunderwave.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //poison
+  fart:{
+    name: 'fart',
+    type: 'status',
+    element: 'poison',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{psn: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/fart.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //psychic
+  hypnosis:{
+    name: 'hypnosis',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{slp: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+  confuseray:{
+    name: 'confuseray',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{confusion: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/confusion.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+  trickroom:{
+    name: 'trickroom',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 5,
+    effects: [{trickroom: 100, name: 'status'}],
+    priority: -5,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //ice
+  frostwave:{
+    name: 'frostwave',
+    type: 'status',
+    element: 'ice',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{frz: 100, name: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
 }

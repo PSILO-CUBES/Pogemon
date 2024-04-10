@@ -276,9 +276,9 @@ async function generateBoundaries(nextMapInfo){
 
     const collisionsMap = []
 
-
     console.log(nextMapInfo)
     console.log(data)
+
     if(nextMapInfoObj.collisions != undefined){
       for(let i = 0; i < nextMapInfoObj.collisions.length; i += nextMapInfoObj.width){
         collisionsMap.push(nextMapInfoObj.collisions.slice(i, nextMapInfoObj.width + i))

@@ -4,7 +4,7 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
 import { generateMapData, currMap, pogecenterReturnInfo } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
@@ -14,7 +14,7 @@ import { mapsObj } from '../../data/mapsData.js'
 import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
-import { queue as evoQueue } from './evolution.js'
+import { queue as evoQueue, queue } from './evolution.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -51,9 +51,8 @@ export async function switchMap(nextMapInfo, preMapInfo){
     }
   }
 
-
-  // work HEREERERER
   if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
+    // vvvv wtf?????? why if true? delaying something????? vvvv
     if(true){
       const data = await loadData()
 
@@ -90,6 +89,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
       player.disabled = false
       nextMapSaveInfo = nextMapInfo
       if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
+        console.log('here')
         pogecenterReturnInfo.name = preMapInfo.name
         pogecenterReturnInfo.spawnPosition.x = preMapInfo.position.x
         pogecenterReturnInfo.spawnPosition.y = preMapInfo.position.y
@@ -248,21 +248,23 @@ function overworldMenuClickEvent(e){
           y: null
         }
       }
-
-      if(nextMapInfo.name != null){
-        nextMapInfo.name = nextMapSaveInfo.name
-        nextMapInfo.spawnPosition.x = nextMapSaveInfo.spawnPosition.x
-        nextMapInfo.spawnPosition.y = nextMapSaveInfo.spawnPosition.y
+      
+      if(currMap.name == 'pogecenter' || currMap.name == 'pogemart') {
+        if(nextMapInfo.name != null){
+          nextMapInfo.name = nextMapSaveInfo.name
+          nextMapInfo.spawnPosition.x = nextMapSaveInfo.spawnPosition.x
+          nextMapInfo.spawnPosition.y = nextMapSaveInfo.spawnPosition.y
+        }
+  
+        if(pogecenterReturnInfo.name != null) nextMapInfo = pogecenterReturnInfo
+  
+        if(nextMapInfo.name == null && data != null){
+          nextMapInfo.name = data.nextMapInfo.name
+          nextMapInfo.spawnPosition.x = data.nextMapInfo.spawnPosition.x
+          nextMapInfo.spawnPosition.y = data.nextMapInfo.spawnPosition.y
+        }
       }
-
-      if(pogecenterReturnInfo.name != null) nextMapInfo = pogecenterReturnInfo
-
-      if(nextMapInfo.name == null && data != null){
-        nextMapInfo.name = data.nextMapInfo.name
-        nextMapInfo.spawnPosition.x = data.nextMapInfo.spawnPosition.x
-        nextMapInfo.spawnPosition.y = data.nextMapInfo.spawnPosition.y
-      }
-
+      
       const bagSave = []
 
       player.bag.forEach(item =>{
@@ -420,7 +422,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
-      if(optionMenuState == true) manageOptionMenuState(false)
+      if(optionMenuState) manageOptionMenuState(false)
       if(pogemartInteraction.initiated) {
         pogemartInteraction.initiated = false
         interaction.initiated = false
@@ -439,18 +441,17 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('battle').initiated){
-      if(moveProcess) return
-      encounterInterfaceDom.style.display = 'grid'
-      movesInterfaceDom.style.display = 'none'
-    } else if (moveLearning.initiated) {
-      dialogueInterfaceDom.style.display = 'block'
-      learnMoveInterfaceDom.style.display = 'none'
-      ally.moves.splice(movesButtonArr.length, 1)
-      ally.dialogue('battle', `${ally.name} gave up on learning ${learntMove.name}.`)
+      if(!moveProcess) encounterInterfaceDom.style.display = 'grid'
+      if(moveLearning.initiated) learnMoveOptionEvent(null, learningMove, learningType, learningTarget)
+    }
+
+    if(scenes.get('evolution')){
+      if(moveLearning.initiated) learnMoveOptionEvent(null, learningMove, learningType, learningTarget)
     }
 
     if(scenes.get('team').initiated){
       if(faintedTriggered.active) return
+      console.log('wtffff')
       manageTeamState(false, prevScene)
       transitionScenes(prevScene)
     }
@@ -489,7 +490,7 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    console.log(evoQueue)
+    console.log(battleQueue)
   }
 }
 

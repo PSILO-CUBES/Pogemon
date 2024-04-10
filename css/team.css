@@ -155,3 +155,13 @@
 .pogemonTeamMenuItem{
   width: 50px;
 }
+
+.teamMenuInfoStatus{
+  position: absolute;
+  top: 55%;
+  right: 0;
+
+  height: 24;
+  
+  margin-right: 10px;
+}
