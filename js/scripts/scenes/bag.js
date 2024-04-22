@@ -207,6 +207,7 @@ function useItemOnClickEvent(e){
             case 'evo':
               if(targetPogemon.evo.item == currItem.name){
                 manageBagState(false, prevScene)
+                console.log('here')
                 manageEvolutionState(true, targetPogemon)
                 gsap.to('#overlapping', {
                   opacity: 1,
@@ -284,12 +285,18 @@ function useItemOnClickEvent(e){
           node.childNodes[0].childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${targetPogemon.heldItem.name}`).quantity}`
         })
       }
+
       targetPogemon.heldItem = currItem
       targetPogemon.dialogue('bag', `You gave ${targetPogemon.name} a ${currItem.name}.`)
       e.target.childNodes[0].childNodes[0].src = `img/item_scene/items/${currItem.type}/${currItem.name}.png`
       let bagItem = player.bag.get(`${currItem.name}`)
       player.bag.set(`${currItem.name}`, {item: bagItem.item, quantity: bagItem.quantity - 1})
       currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(`${currItem.name}`).quantity}`
+
+      sortCurrItemsArr()
+
+      const bagSceneItemSectionDom = document.querySelector('.bagSceneItemListContainer')
+      printItems(bagSceneItemSectionDom)
 
       break
   }
@@ -488,6 +495,11 @@ function printBagScene(){
   
       const bagSceneTeamSectionGreyBarDom = document.createElement('div')
       bagSceneTeamSectionGreyBarDom.classList.add('bagSceneTeamSectionGreyBar')
+
+      const bagSceneTeamSectionStatusImgDom = document.createElement('img')
+      bagSceneTeamSectionStatusImgDom.classList.add('bagSceneTeamSectionStatusImg')
+      bagSceneTeamSectionStatusImgDom.src = `./img/status/${player.team[i].status.name}.png`
+      console.log(`./img/status/${player.team[i].status.name}.png`)
   
       const bagSceneTeamSectionHealthBarDom = document.createElement('div')
       bagSceneTeamSectionHealthBarDom.classList.add('bagSceneTeamSectionHealthBar')
@@ -509,6 +521,7 @@ function printBagScene(){
   
       bagSceneTeamSectionInfoBottomContainerDom.appendChild(bagSceneTeamSectionLvlDom)
       bagSceneTeamSectionInfoBottomContainerDom.appendChild(bagSceneTeamSectionHealthBarContainerDom)
+      bagSceneTeamSectionInfoBottomContainerDom.appendChild(bagSceneTeamSectionStatusImgDom)
     }
   }
 
@@ -641,8 +654,8 @@ function bagSceneAnimation(){
       x: 43,
       y: window.innerHeight / 10 + 150 * i
     }
-    if(player.team[i].isShiny) player.team[i].img.src = `../../../img/pogemon/${player.team[i].pogemon.pogedex}_${player.team[i].name}/${player.team[i].name}_Bag_Animation_Shiny.png`
-    else player.team[i].img.src = `../../../img/pogemon/${player.team[i].pogemon.pogedex}_${player.team[i].name}/${player.team[i].name}_Bag_Animation.png`
+    if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
+    else player.team[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
     // player.team[i].animate = false
     player.team[i].draw()
   }

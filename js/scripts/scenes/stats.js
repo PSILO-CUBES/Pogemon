@@ -7,10 +7,12 @@ import { scenes, backgroundSprite } from "../canvas.js"
 import { disableOWMenu, returnPrevScene } from "./overworld.js"
 import { manageTeamState } from "./team.js"
 import { managePcState } from "./pc.js"
+import { player } from "../player.js"
 
 let statsAnimationFrame
 
 let selectedPogemon
+let selectedPogemonTeamIndex
 
 const pogemonImg = new Image()
 const pogemonSprite = new Sprite({
@@ -43,13 +45,12 @@ function getOrdinalNum(n) {
 let switchMoveProcess = {active : false, moves: {first : null, second: null}}
 
 function statsSceneSwitchMoves(first, second){
+  if(first.name == second.name) return
+
   let firstIndex
   let secondIndex
 
   for(let i = 0; i < selectedPogemon.moves.length; i++){
-	console.log(selectedPogemon.moves[i].name)
-	console.log(first.name)
-
     if(selectedPogemon.moves[i].name == first.name){
       firstIndex = i
     } else if (selectedPogemon.moves[i].name == second.name){
@@ -137,8 +138,6 @@ function statsSceneMovesInteraction(e, state){
   switchMoveProcess = {active : false, moves: {first : null, second: null}}
 }
 
-//working here
-
 function printMoveDesc(selectedMove){
   if(selectedMove == undefined) return
   const statsSceneMovesInterfaceDescContainer = document.querySelector('#statsSceneMovesInterfaceDescContainer')
@@ -174,6 +173,11 @@ function printMoveDesc(selectedMove){
 }
 
 function createMenu(){
+	if(selectedPogemon.isShiny) pogemonImg.src = selectedPogemon.pogemon.sprites.shiny.frontSprite
+	else pogemonImg.src = selectedPogemon.pogemon.sprites.classic.frontSprite
+
+  switchMoveProcess = {active : false, moves: {first : null, second: null}}
+
   const statsScene = document.querySelector('#statsScene')
   statsScene.replaceChildren()
 
@@ -228,7 +232,7 @@ function createMenu(){
 						//catch info
 						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoCatch')
 						console.log(selectedPogemon)
-						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
+						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 						break
 					case 1:
 						// ability info
@@ -508,9 +512,6 @@ function initStatsMenu(){
   document.querySelector('#statsScene').style.display = 'flex'
   statsAnimation()
 
-	if(selectedPogemon.isShiny) pogemonImg.src = selectedPogemon.pogemon.sprites.shiny.frontSprite
-	else pogemonImg.src = selectedPogemon.pogemon.sprites.classic.frontSprite
-
   createMenu()
 }
 
@@ -538,9 +539,37 @@ function clearStatsMenu(prevScene){
   })
 }
 
-export function manageStatsState(state, target, prevScene){
+export function switchStatsTargetWithKeys(key){
+	if(key == 'w') {
+		if(selectedPogemonTeamIndex - 1 < 0) return
+		selectedPogemonTeamIndex = selectedPogemonTeamIndex - 1
+	}
+	
+	if(key == 's') {
+		if(selectedPogemonTeamIndex + 1 > 5) return
+		selectedPogemonTeamIndex = selectedPogemonTeamIndex + 1
+	}
+
+	gsap.to('#overlapping', {
+		opacity: 1,
+		onComplete: () =>{
+			selectedPogemon = player.team[selectedPogemonTeamIndex]
+			createMenu()
+			gsap.to('#overlapping', {
+				opacity: 0,
+			})
+		}
+	})
+
+	// console.log(key)
+	console.log(player.team[selectedPogemonTeamIndex].name)
+	// console.log(selectedPogemonTeamIndex)
+}
+
+export function manageStatsState(state, target, prevScene, i){
 	returnPrevScene(prevScene)
   	selectedPogemon = target
+	selectedPogemonTeamIndex = i
   	if(state) initStatsMenu()
   	else clearStatsMenu(prevScene)
 }

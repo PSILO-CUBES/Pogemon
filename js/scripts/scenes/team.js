@@ -244,7 +244,13 @@ function teamInterfaceOptionClickEvent(e){
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
-          manageStatsState(true, switchProcess.target.first.pogemon, teamPrevScene)
+          let index
+
+          player.team.forEach((pogemon,i) =>{
+            if(pogemon.id == switchProcess.target.first.pogemon.id) index = i
+          })
+
+          manageStatsState(true, switchProcess.target.first.pogemon, teamPrevScene, index)
           manageTeamState(false)
 
           switchProcess = {active: false, target: {first: {i: null, pogemon: null}, second: {i: null, pogemon: null} }}

@@ -45,9 +45,12 @@ scenes.set('pogedex', {initiated: false})
 scenes.set('pc', {initiated: false})
 scenes.set('trainer', {initiated: false})
 
-export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr){
+export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr){
   background.draw()
   map.draw()
+  for(let i = 0; i < itemSpritesArr.length; i++){
+    itemSpritesArr[i].draw()
+  }
   for(let i = 0; i < trainerSpritesArr.length; i++){
     trainerSpritesArr[i].draw()
   }

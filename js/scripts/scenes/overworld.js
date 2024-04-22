@@ -20,13 +20,16 @@ const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
-let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7]
+let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 let movables
 
 async function setMapData(){
-  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData()
+  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, FG] = await generateMapData()
 
-  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
+  console.log(trainerSpritesArr)
+  console.log(itemSpritesArr)
+
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...itemSpritesArr]
 }
 
 await setMapData()
@@ -46,7 +49,7 @@ let firstLoad = true
 export async function switchMap(nextMapInfo, preMapInfo){
   if(nextMapInfo != undefined) {
     if(nextMapInfo.name != 'undefined'){
-      [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(nextMapInfo)
+      [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, FG] = await generateMapData(nextMapInfo)
       prevMap = preMapInfo
     }
   }
@@ -73,14 +76,14 @@ export async function switchMap(nextMapInfo, preMapInfo){
       pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
     }
 
-    [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
+    [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
 
     pogecenterReturnInfo.name = null
     pogecenterReturnInfo.spawnPosition.x = null
     pogecenterReturnInfo.spawnPosition.y = null
   }
 
-  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr]
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...itemSpritesArr]
 
   gsap.to('#overlapping', {
     opacity: 0,
@@ -505,8 +508,8 @@ const overWorldAnimation = timeSpent =>{
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
   lastFrameSpent = timeSpent
 
-  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr)
-  playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr)
+  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr)
+  playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr)
 }
 
 export function manageOverWorldState(state){

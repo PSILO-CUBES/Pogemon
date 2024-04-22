@@ -824,10 +824,10 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.headbutt, lvl: 1},
-      2: {move: movesObj.heal, lvl: 2},
-      3: {move: movesObj.superpower, lvl: 3},
-      4: {move: movesObj.substitute, lvl: 3},
+      1: {move: movesObj.superpower, lvl: 1},
+      2: {move: movesObj.fireball, lvl: 2},
+      3: {move: movesObj.sharpen, lvl: 3},
+      4: {move: movesObj.swift, lvl: 3},
     },
     sprites: {
       classic:{

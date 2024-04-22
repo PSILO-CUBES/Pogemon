@@ -1,19 +1,20 @@
 // all data pertaining to the player
 import { audioObj } from "../data/audioData.js"
 import { pogemonsObj } from "../data/pogemonData.js"
+import { mapsObj } from "../data/mapsData.js"
+import { movesObj } from "../data/movesData.js"
+import { itemsObj } from "../data/itemsData.js"
 
 import { Sprite, NPC, Pogemon } from "../classes.js"
 
 import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap, map } from "./maps.js"
+import { changeMapInfo, currMap, itemSpritesArr, map } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
 import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
-import { mapsObj } from "../data/mapsData.js"
-import { movesObj } from "../data/movesData.js"
-import { itemsObj } from "../data/itemsData.js"
+import { switchStatsTargetWithKeys } from "./scenes/stats.js"
 
 export const keys = {
   w: {
@@ -122,12 +123,15 @@ export async function generatePlayer(canvas){
     }
 }
 
-function playerMovementEvent() {
+function keysInput() {
   window.addEventListener('keydown', e =>{
-    if(player.disabled) return
+    if(scenes.get('overworld').initiated && player.disabled) return
     switch(e.key){
       case 'w':
       case 'W':
+        if(scenes.get('stats').initiated){
+          switchStatsTargetWithKeys(e.key)
+        }
         keys.w.pressed = true
         lastKey = 'w'
         player.animate = true
@@ -140,6 +144,9 @@ function playerMovementEvent() {
         break
       case 's':
       case 'S':
+        if(scenes.get('stats').initiated){
+          switchStatsTargetWithKeys(e.key)
+        }
         keys.s.pressed = true
         lastKey = 's'
         player.animate = true
@@ -414,7 +421,8 @@ function playerInteraction(e) {
   if(e.key != ' ') return
 
   let openWindow = document.querySelector('#openWindow')
-
+  
+  if(player.interaction == undefined) return
   switch(player.interaction.name){
     case 'pc':
         if(scenes.get('pc').initiated) return
@@ -534,6 +542,43 @@ function playerInteraction(e) {
         }
       })
       break
+    case 'item':
+      if(player.interaction.info.pickedUp == true) return
+
+      let item = itemsObj[player.interaction.info.name]
+
+      Object.values(keys).forEach(value =>{
+        value.pressed = false
+      })
+
+      gsap.to(document.querySelector('#overlapping'), {
+        opacity: 0.5
+      })
+
+      player.team[0].dialogue('overworld', `You picked up a ${item.name}.`)
+
+      const itemImage = new Image()
+      itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
+      itemImage.id = 'pickedUpItem'
+
+      document.querySelector('#openWindow').appendChild(itemImage)
+      
+      player.bag.set(player.interaction.info.name, {item: itemsObj[player.interaction.info.name], quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
+
+      player.interaction.collisionInstance.boundary.collision = false
+      player.interaction.info.pickedUp = true
+
+      itemSpritesArr.forEach((sprite, i) =>{
+        console.log(sprite.type)
+        console.log(player.interaction.collisionInstance.pogeballSprite.type)
+        if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) {
+          console.log(itemSpritesArr)
+          console.log(i)
+
+          console.log(itemSpritesArr.splice(i, 1))
+        }
+      })
+      break
   }
 }
 
@@ -606,7 +651,7 @@ function stopMotionWhenColliding(boundaries, direction){
         }}
       })
     ){
-      player.animate = false
+      if(boundary.collision) player.animate = false
       break
     }
   }
@@ -700,6 +745,7 @@ function changeMapEvent(changeMap, currPos){
         rectangle2: changeMapIndex
       })
     ){
+
       if(changeMapFlag) return
       changeMapFlag = true
       player.disabled = true
@@ -737,91 +783,92 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
-      if(player.team.length < 1) return
       player.interaction = eventZonesIndex
-      console.log(player.interaction)
-      if(eventZonesIndex.info.createdTrainer != undefined){
-        for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
-          if(mapsObj[currMap.name].trainers[i].beaten == true) return
-        }
-        if(eventZonesIndex.info.beaten) return
-        
-        disableOWMenu.active = true
-        
-        player.disabled = true
-  
-        exclamation.style.left = eventZonesIndex.position.x + 6
-        exclamation.style.top = eventZonesIndex.position.y - 46
-  
-        gsap.to(exclamation, {
-          opacity: 1,
-          duration: 1,
-          onComplete: () =>{
-            gsap.to(exclamation, {
-              opacity: 0,
-              duration: 0.5,
-              onComplete: () =>{
-                eventZonesIndex.info.createdTrainer.animate = true
-  
-                let eventPos = {x:0, y:0}
-        
-                switch(eventZonesIndex.info.direction.looking){
-                  case 'Up':
-                    eventPos.x = eventZonesIndex.position.x
-                    eventPos.y = player.position.y + player.height
-                    break
-                  case 'Right':
-                    eventPos.x = player.position.x - player.width
-                    eventPos.y = eventZonesIndex.position.y
-                    break
-                  case 'Down':
-                    eventPos.x = eventZonesIndex.position.x
-                    eventPos.y = player.position.y - player.height
-                    break
-                  case 'Left':
-                    eventPos.x = player.position.x + player.width
-                    eventPos.y = eventZonesIndex.position.y
-                    break
-                }
-          
-                gsap.to(eventZonesIndex.info.createdTrainer.position,{
-                  //gonna have to make directions
-                  x: eventPos.x,
-                  y: eventPos.y,
-                  duration: 1,
-                  onComplete: () =>{
-                    const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
-                    OWDialogueBoxContainer.style.display = 'grid'
-          
-                    const OWDialogueBox = document.querySelector('#overworldDialogue')
-                    OWDialogueBox.style.display = 'block'
-                    OWDialogueBox.innerText = eventZonesIndex.info.dialogue
-          
-                    eventZonesIndex.info.createdTrainer.animate = false
-          
-                    queue.push(() =>{
-                      manageOverWorldState(false)
-          
-                      gsap.to('#overlapping', {
-                        opacity: 1,
-                        duration: 0.4,
-                        onComplete(){
-                          manageBattleState(true, null, null, eventZonesIndex.info)
-                          disableOWMenu.active = false
-                          player.disabled = false
-                          gsap.to('#overlapping', {
-                            opacity: 0,
-                            duration: 0.4
-                          })
-                        }
-                      })
-                    })
-                  }
-                })
-              }
-            })
+      if(player.team.length > 1) {
+        if(eventZonesIndex.info.createdTrainer != undefined){
+          for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
+            if(mapsObj[currMap.name].trainers[i].beaten == true) return
           }
-        })
+
+          if(eventZonesIndex.info.beaten) return
+          
+          disableOWMenu.active = true
+          
+          player.disabled = true
+    
+          exclamation.style.left = eventZonesIndex.position.x + 6
+          exclamation.style.top = eventZonesIndex.position.y - 46
+    
+          gsap.to(exclamation, {
+            opacity: 1,
+            duration: 1,
+            onComplete: () =>{
+              gsap.to(exclamation, {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: () =>{
+                  eventZonesIndex.info.createdTrainer.animate = true
+    
+                  let eventPos = {x:0, y:0}
+          
+                  switch(eventZonesIndex.info.direction.looking){
+                    case 'Up':
+                      eventPos.x = eventZonesIndex.position.x
+                      eventPos.y = player.position.y + player.height
+                      break
+                    case 'Right':
+                      eventPos.x = player.position.x - player.width
+                      eventPos.y = eventZonesIndex.position.y
+                      break
+                    case 'Down':
+                      eventPos.x = eventZonesIndex.position.x
+                      eventPos.y = player.position.y - player.height
+                      break
+                    case 'Left':
+                      eventPos.x = player.position.x + player.width
+                      eventPos.y = eventZonesIndex.position.y
+                      break
+                  }
+            
+                  gsap.to(eventZonesIndex.info.createdTrainer.position,{
+                    //gonna have to make directions
+                    x: eventPos.x,
+                    y: eventPos.y,
+                    duration: 1,
+                    onComplete: () =>{
+                      const OWDialogueBoxContainer = document.querySelector('#overworldDialogueContainer')
+                      OWDialogueBoxContainer.style.display = 'grid'
+            
+                      const OWDialogueBox = document.querySelector('#overworldDialogue')
+                      OWDialogueBox.style.display = 'block'
+                      OWDialogueBox.innerText = eventZonesIndex.info.dialogue
+            
+                      eventZonesIndex.info.createdTrainer.animate = false
+            
+                      queue.push(() =>{
+                        manageOverWorldState(false)
+            
+                        gsap.to('#overlapping', {
+                          opacity: 1,
+                          duration: 0.4,
+                          onComplete(){
+                            manageBattleState(true, null, null, eventZonesIndex.info)
+                            disableOWMenu.active = false
+                            player.disabled = false
+                            gsap.to('#overlapping', {
+                              opacity: 0,
+                              duration: 0.4
+                            })
+                          }
+                        })
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
       }
       break
     }
@@ -850,6 +897,14 @@ function spendQueue(){
     queue.shift()
     return
   } else if(!healProcess) {
+    console.log(player.interaction)
+    if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
+      opacity : 0,
+      onComplete : () =>{
+        document.querySelector('#openWindow').replaceChildren()
+      }
+    })
+
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     player.disabled = false
     disableOWMenu.active = false
@@ -895,4 +950,4 @@ export function playerMovement(animationId, movables, boundaries, battleZones, c
   }
 }
 
-playerMovementEvent()
+keysInput()

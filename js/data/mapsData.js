@@ -54,17 +54,21 @@ export let mapsObj = {
     mapImg: './img/maps/geneTown/geneTown.png',
     FGImg: './img/maps/geneTown/geneTownFG.png',
     spawnPosition: {
-      x: -75,
-      y: -750
+      x: -962.5,
+      y: -650
     },
-    height: 32,
-    width: 32,
+    height: 44,
+    width: 60,
     encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:98}}, 
     {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
     changeMapLocations:[
-      {name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-137, y:-2050,}},
+      {name: 'pearlyPath', spawnPosition: {x:-1370, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-1370, y:-2050,}},
+      {name: 'pearlyPath', spawnPosition: {x:-1370, y:-2050,}},{name: 'pearlyPath', spawnPosition: {x:-1370, y:-2050,}},
+
       {name: 'geneTown_home1', spawnPosition: {x:250, y:0,}}, 
+
       {name: 'home', spawnPosition: {x:250, y:-50,}}, 
+
       {name: 'lab', spawnPosition: {x: 375, y: -425,}}
     ],
     trainers: [
@@ -76,6 +80,14 @@ export let mapsObj = {
         dialogue: 'Git Gut\n\n\nSkill issue',
         reward: 100,
         beaten: false
+      },
+    ],
+    items: [
+      {
+        name: 'banana',
+        amount: 1,
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        pickedUp: false
       },
     ],
   },
@@ -124,14 +136,14 @@ export let mapsObj = {
       x: 775,
       y: -1150
     },
-    height: 42,
-    width: 34,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: 100}],
+    height: 56,
+    width: 64,
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:100}}],
     changeMapLocations:[
       {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, 
       {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}}, {name: 'banishmentRoad', spawnPosition: {x:-1500, y: -350,}},
 
-      {name: 'geneTown', spawnPosition: {x:-75, y: 50,}}, {name: 'geneTown', spawnPosition: {x: -75, y: 50,}}
+      {name: 'geneTown', spawnPosition: {x:-967.5, y: -100,}}, {name: 'geneTown', spawnPosition: {x: -967.5, y: -100,}}
     ]
   },
   banishmentRoad:{
@@ -146,8 +158,8 @@ export let mapsObj = {
     width: 40,
     encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:100}}],
     changeMapLocations:[
-      {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
-      {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}}, {name: 'kemeTown', spawnPosition: {x: -75, y: -1300,}},
+      {name: 'kemeTown', spawnPosition: {x: -800, y: -1700,}}, {name: 'kemeTown', spawnPosition: {x: -800, y: -1700,}}, {name: 'kemeTown', spawnPosition: {x: -800, y: -1700,}},
+      {name: 'kemeTown', spawnPosition: {x: -800, y: -1700,}}, {name: 'kemeTown', spawnPosition: {x: -800, y: -1700,}},
 
       {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}},
       {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}, {name: 'pearlyPath', spawnPosition: {x: 850, y: -1150,}}
@@ -158,7 +170,7 @@ export let mapsObj = {
     mapImg: './img/maps/kemeTown/kemeTown.png',
     FGImg: './img/maps/kemeTown/kemeTownFG.png',
     spawnPosition: {
-      x: -750,
+      x: -900,
       y: -750
     },
     height: 46,
@@ -255,11 +267,21 @@ export async function setBoundries(mapsObj){
 
   if(loadedData != null) {
     mapsObjValues.forEach((map, i) =>{
-      if(map.trainers == undefined) return
-      map.trainers.forEach((trainer, j) =>{
-        trainer.beaten = Object.values(loadedData['mapsObjState'])[i].trainers[j].beaten
-      })
+      if(map.trainers != undefined) {
+        map.trainers.forEach((trainer, j) =>{
+          trainer.beaten = Object.values(loadedData['mapsObjState'])[i].trainers[j].beaten
+        })
+      }
+
+      if(map.items != undefined) {
+        map.items.forEach((item, j) =>{
+          console.log(Object.values(loadedData['mapsObjState'])[i])
+          item.pickedUp = Object.values(loadedData['mapsObjState'])[i].items[j].pickedUp
+        })
+      }
+
     })
+
   }
 
   for(let i = 1; i < mapsObjValues.length; i++){

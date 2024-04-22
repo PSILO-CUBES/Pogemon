@@ -107,6 +107,8 @@ body{
 
   width: 100%;
   height: 100%;
+
+  z-index: 14;
 }
 
 #overworldDialogue{
@@ -452,4 +454,11 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(128, 128, 128, 0.75);
   height: 1.5rem;
   width: 1rem;    
+}
+
+#pickedUpItem{
+  position: relative;
+  top: 75px;
+
+  height: auto;
 }

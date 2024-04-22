@@ -173,7 +173,7 @@ function initWildEncouter(){
     },
     frames: {
       max: 4,
-      hold: 25
+      hold: 50
     },
     img: foeImage,
     animate: true
@@ -263,7 +263,7 @@ export function initBattle(faintedTriggered, info){
   }
 
   if(prevScene == 'overworld') {
-    battlerArr = [player.team[0], player.team[1], player.team[2], player.team[3]]
+    battlerArr = []
     evoArr = []
     lvlUpArr = []
     resetStats('both')
@@ -295,7 +295,7 @@ export function initBattle(faintedTriggered, info){
 
   const textBox = document.querySelector('#textBox')
   textBox.innerText = `You sent out ${ally.name}!`
-  setInterval(() =>{
+  setTimeout(() =>{
     textBox.innerText = `What will ${ally.name} do?`
   }, 1500)
 
@@ -325,6 +325,7 @@ export function initBattle(faintedTriggered, info){
     if(itemUsed.item.type == 'ball'){
       if(enemyTrainer == undefined){
         queueProcess.disabled = true
+        console.log('here')
         function backToOverWorld(){
           //might throw error
   
@@ -333,7 +334,7 @@ export function initBattle(faintedTriggered, info){
           })
         }
         let pogemonInUse = ally
-        player.catch(foe, false, currMap, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc)
+        player.catch(foe, false, currMap, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc, queueFaintTrigger)
 
         itemUsed.item = null
         itemUsed.used = false
@@ -409,15 +410,14 @@ export function initBattle(faintedTriggered, info){
               queue.push(() => {
                 foe.miss('confusion', renderedSprites, queueProcess)
                 if(battleType != 'trainer') if(foe.hp <= 0){
-                  console.log('here')
                   faintEvent(foe)
+                  console.log('faint event')
                   return
                 }
                 manageStatusEvent(foe, ally)
               })
             } else {
               queue.push(() =>{
-                console.log('here')
                 foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
                 moveProcess = true
                 manageStatusEvent(foe, ally)
@@ -427,7 +427,6 @@ export function initBattle(faintedTriggered, info){
           break
         } else {
           queue.push(() =>{
-            console.log('here')
             foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
             moveProcess = true
             manageStatusEvent(foe, ally)
@@ -437,7 +436,6 @@ export function initBattle(faintedTriggered, info){
 
       if(foe.affliction.length == 0){
         queue.push(() =>{
-          console.log('here')
           foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
           moveProcess = true
           manageStatusEvent(foe, ally)
@@ -454,7 +452,6 @@ export function initBattle(faintedTriggered, info){
 
     let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     moveProcess = true
-    console.log('here')
     foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
     manageStatusEvent(faster, slower)
     document.querySelector('#encounterInterface').style.display = 'none'
@@ -581,7 +578,6 @@ function optionButtonInteraction(e) {
             let foeRng = foe.moves[rng]
   
             queue.push(() => {
-              console.log('here')
               foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
               manageStatusEvent(foe, ally)
             })
@@ -595,6 +591,7 @@ function optionButtonInteraction(e) {
           audioObj.SFX.flee.play()
           // need to put rng check based on speed stat
           queue.push(() =>{
+            manageBattleState(false, 'overworld')
             //might throw err
             gsap.to('#overlapping', {
               opacity: 1,
@@ -610,7 +607,10 @@ function optionButtonInteraction(e) {
             })
           })
         } else {
-          document.querySelector('#textBox').innerText = "Can't switch out during trainer battle!"
+          document.querySelector('#textBox').innerText = "Can't run from a trainer battle!"
+          setTimeout(() =>{
+            document.querySelector('#textBox').innerText = `What will ${ally.name} do?`
+          }, 1000)
         }
         break
     }
@@ -1149,10 +1149,10 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
 }
 
 function manageEvolution(evoArr){
-  console.log(evoArr)
   queue.push(() => {
     manageBattleState(false, 'evo', false)
     setTimeout(() =>{
+      console.log(battleType)
       manageEvolutionState(true, evoArr)
     }, 410)
   })
@@ -1233,7 +1233,6 @@ function addToEvoArr(battler){
     } else {
       for(let i = 0; i < evoArr.length; i++){
         if(evoArr[i].id == battler.id) {
-          console.log(evoArr[i].id)
           pass = false
         }
       }
@@ -1250,8 +1249,8 @@ let queueBeforeLevelUp
 function manageFaintingEvent(target){
   let oldStats = ally.stats
   let prevLvl = ally.lvl
-
-  console.log(battlerArr)
+  queueFaintTrigger.initiated = false
+  
   for(let i = 0; i < battlerArr.length; i++){
     if(battlerArr[i].name == ally.name) {
       battlerArr.unshift(battlerArr.splice(i, 1)[0])
@@ -1289,6 +1288,7 @@ function manageFaintingEvent(target){
           queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
           player.money = player.money + enemyTrainerInfo.reward
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+          console.log('hahahah')
           manageEvolution(evoArr)
         } else {
           queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
@@ -1317,7 +1317,6 @@ function manageFaintingEvent(target){
 
           if(battler.lvl > prevLvl) {
             lvlUpArr.push(battler)
-            console.log(oldStats)
             manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battler)
             manageLearnedMoves(battler, queue, 'battle')
           }
@@ -1360,6 +1359,7 @@ function manageFaintingEvent(target){
               queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
               player.money = player.money + enemyTrainerInfo.reward
               queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+              console.log('hahahah')
               manageEvolution(evoArr)
             } else {
               queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
@@ -1378,20 +1378,16 @@ function manageFaintingEvent(target){
         oldStats = battler.stats
 
         if(i == 0) {
-          console.log('wtf')
           oldStats = {...battler.stats}
           battler.expGain(target, battleType, battlerArr, false)
           addToEvoArr(battler)
 
           if(battler.lvl > prevLvl) {
             lvlUpArr.push(battler)
-            console.log(oldStats)
             manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battler)
             manageLearnedMoves(battler, queue, 'battle')
           }
         } else {
-          console.log(battler.name)
-          
           queue.push(() => {
             prevLvl = battler.lvl
             oldStats = {...battler.stats}
@@ -1404,23 +1400,17 @@ function manageFaintingEvent(target){
           queue.push(() => {
             if(battler.lvl > prevLvl) {
               lvlUpArr.push(battler)
-              console.log(oldStats)
               manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battler)
               manageLearnedMoves(battler, queue, 'battle')
             }
           })
 
-          // if(i == battlerArr.length - 2) return
-          console.log('haha')
-
           queue.push(() =>{
             if(battler.lvl > prevLvl) {
               if(queue.length < 8) {
-                console.log(queue)
                 queue.push(queue.splice(1,1)[0])
               } else {
                 queue.splice(1, queueBeforeLevelUp.length - 2).forEach(func =>{
-                  console.log([...queue])
                   queue.push(func)
                 })
               }
@@ -1429,74 +1419,74 @@ function manageFaintingEvent(target){
         }
       }
     }
-  })
 
-  if(enemyTrainerInfo == undefined){
-    if(ally.name != battlerArr[battlerArr.length - 1].name) return
-    oldStats = {...battler.stats}
-
-    if(lvlBeforeExpGained < ally.lvl) {
-      if(ally.pogemon.evo == null) {
-        queue.push(() => {
-          manageBattleState(false)
-        })
-        return
-      }
-
-      if(evoArr.length > 0) {
-        queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
-        manageEvolution(evoArr)
+    if(enemyTrainerInfo == undefined){
+      if(ally.name != battlerArr[battlerArr.length - 1].name) return
+      oldStats = {...battler.stats}
+  
+      if(lvlBeforeExpGained < ally.lvl) {
+        if(ally.pogemon.evo == null) {
+          queue.push(() => {
+            manageBattleState(false)
+          })
+          return
+        }
+  
+        if(evoArr.length > 0) {
+          queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
+          console.log('hahahah')
+          manageEvolution(evoArr)
+        } else {
+          queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
+          queue.push(() => {
+            manageBattleState(false)
+          })
+        }
       } else {
-        queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
-        queue.push(() => {
-          manageBattleState(false)
-        })
-      }
-    } else {
-      if(battlerArr[battlerArr.length - 1].lvl > prevLvl) {
-        //something not right here
-        console.log(oldStats)
-        manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battlerArr[battlerArr.length - 1])
-        manageLearnedMoves(battlerArr[battlerArr.length - 1], queue, 'battle')
-      }
-    }
-    return
-  }
-
-  if(lvlBeforeExpGained < ally.lvl) {
-    oldStats = {...battler.stats}
-
-    if(enemyTeamWiped(enemyTrainerInfo)){
-      if(ally.pogemon.evo == null) {
-        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
-        player.money = player.money + enemyTrainerInfo.reward
-        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-        queue.push(() => {
-          manageBattleState(false)
-        })
-        return
-      }
-
-      if(evoArr.length > 0) {
-        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
-        player.money = player.money + enemyTrainerInfo.reward
-        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-        manageEvolution(evoArr)
-      } else {
-        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
-        player.money = player.money + enemyTrainerInfo.reward
-        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-        queue.push(() => {
-          manageBattleState(false)
-        })
+        if(battlerArr[battlerArr.length - 1].lvl > prevLvl) {
+          //something not right here
+          manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battlerArr[battlerArr.length - 1])
+          manageLearnedMoves(battlerArr[battlerArr.length - 1], queue, 'battle')
+        }
       }
       return
     }
-
-    //if enemy team isint wiped, switch for next 'mon in foe.team arr
-    return
-  }
-  //if enemy team isint wiped, switch for next 'mon in for.team arr
+  
+    if(lvlBeforeExpGained < ally.lvl) {
+      oldStats = {...battler.stats}
+  
+      if(enemyTeamWiped(enemyTrainerInfo)){
+        if(ally.pogemon.evo == null) {
+          queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+          player.money = player.money + enemyTrainerInfo.reward
+          queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+          queue.push(() => {
+            manageBattleState(false)
+          })
+          return
+        }
+  
+        if(evoArr.length > 0) {
+          queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+          player.money = player.money + enemyTrainerInfo.reward
+          queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+          console.log('hahahah')
+          manageEvolution(evoArr)
+        } else {
+          queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+          player.money = player.money + enemyTrainerInfo.reward
+          queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+          queue.push(() => {
+            manageBattleState(false)
+          })
+        }
+        return
+      }
+  
+      //if enemy team isint wiped, switch for next 'mon in foe.team arr
+      return
+    }
+  })
 }
 
 function checkIfTeamWipedOut(){
@@ -1512,10 +1502,9 @@ function checkIfTeamWipedOut(){
 export let faintedTriggered = {active: false}
 
 function faintEvent(target){
-  console.log('faint')
   queue.push(() =>{
     target.dialogue('battle', `${target.name} fainted!`)
-    target.faint()
+    target.faint(queueFaintTrigger)
 
     queue.push(() => {
       if(target.isEnemy){
@@ -1559,9 +1548,9 @@ function checkIfFainted(target){
       audioObj.music.battle.stop()
       audioObj.SFX.faint.play()
       target.dialogue('battle', `${target.name} fainted!`)
-      target.faint()
-      console.log('here')
+      target.faint(queueFaintTrigger)
       faintEvent(target)
+      console.log('faint event')
       let placeHolder = queue[1]
       queue[1] = queue[2]
       queue[2] = placeHolder
@@ -1629,7 +1618,6 @@ function attackMove(e) {
         else {
           if(attackLanded(targetMove.acc)) {
             moveProcess = true
-            console.log('here')
             target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
           } else target.miss('missed', renderedSprites, queueProcess)
         }
@@ -1644,7 +1632,6 @@ function attackMove(e) {
             if(attackLanded(targetMove.acc)) {
               moveProcess = true
               queue.push(() => {
-                console.log('here')
                 target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
               })
             } else queue.push(() => target.miss('missed', renderedSprites, queueProcess))
@@ -1657,7 +1644,6 @@ function attackMove(e) {
           if(attackLanded(targetMove.acc)) {
             moveProcess = true
             queue.push(() => {
-              console.log('here')
               target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
             })
           } else queue.push(() => target.miss('missed', renderedSprites, queueProcess))
@@ -1665,7 +1651,6 @@ function attackMove(e) {
       } else {
         if(attackLanded(targetMove.acc)) {
           moveProcess = true
-          console.log('here')
           target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
         } else target.miss('missed', renderedSprites, queueProcess)
       }
@@ -1693,8 +1678,8 @@ function attackMove(e) {
                 queue.push(() =>{
                   statusEvent(target, targetMove, recipient, statusIcon)
                   if(battleType != 'trainer') if(target.hp <= 0){
-                    console.log('here')
                     faintEvent(target)
+                    console.log('faint event')
                     return
                   }
 
@@ -1709,8 +1694,8 @@ function attackMove(e) {
               queue.push(() => {
                 target.miss('confusion', renderedSprites, queueProcess)
                 if(battleType != 'trainer') if(target.hp <= 0){
-                  console.log('here')
                   faintEvent(target)
+                  console.log('faint event')
                   return
                 }
 
@@ -1720,8 +1705,8 @@ function attackMove(e) {
               queue.push(() =>{
                 statusEvent(target, targetMove, recipient, statusIcon)
                 if(battleType != 'trainer') if(target.hp <= 0){
-                  console.log('here')
                   faintEvent(target)
+                  console.log('faint event')
                   return
                 }
 
@@ -1748,6 +1733,7 @@ function attackMove(e) {
 
     checkIfFainted(faster)
     checkIfFainted(slower)
+    console.log([...queue])
 
     queue.push(() =>{
       if(slower.fainted){
@@ -1786,40 +1772,42 @@ let queueFaintTrigger = {
 }
 
 function spendQueue(){
-  console.log(queueFaintTrigger)
+  console.log(queueProcess.disabled)
   if(queueProcess.disabled) return
   if(queue.length > 0){
     queue[0]()
     queue.shift()
     return
+  } else if(queueFaintTrigger.initiated){
+    ally.protected.active = false
+    foe.protected.active = false
+    queueFaintTrigger.initiated = false
+
+    // if(ally.fainted) manageFaintingEvent(ally)
+    // else {
+      manageFaintingEvent(foe)
+
+      if(evoArr.length > 0){
+        // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
+        queue.push(() => {
+          if(battleType == 'trainer') {if(enemyTeamWiped(enemyTrainerInfo)) manageEvolution(evoArr)}
+          else manageEvolution(evoArr)
+        })
+        return
+      } else {
+        // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
+        queue.push(() => {
+          manageBattleState(false)
+        })
+      }
   } else {
     ally.protected.active = false
     foe.protected.active = false
-    if(queueFaintTrigger.initiated){
-      if(ally.fainted) manageFaintingEvent(ally)
-      else {
-        manageFaintingEvent(foe)
+    queueFaintTrigger.initiated = false
 
-        if(evoArr.length > 0){
-          // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
-          queue.push(() => manageEvolution(evoArr))
-          return
-        } else {
-          // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
-          queue.push(() => {
-            manageBattleState(false)
-          })
-        }
-      }
-
-
-
-      queueFaintTrigger.initiated = false
-    } else {
-      dialogueInterfaceDom.style.display = 'none'
-      if(scenes.get('battle').initiated) encounterInterfaceDom.style.display = 'grid'
-      moveProcess = false
-    }
+    dialogueInterfaceDom.style.display = 'none'
+    if(scenes.get('battle').initiated) encounterInterfaceDom.style.display = 'grid'
+    moveProcess = false
   }
 }
 

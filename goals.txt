@@ -55,9 +55,9 @@ cancel evolution x
 
 make burn halve physical dmg x
 
-moves can effect stats change
+moves can effect stats change x
 
-make stats changing moves have animations
+make stats changing moves have animations x
 
 more status conditions {
     burn x
@@ -76,22 +76,18 @@ more status conditions {
     swagger????
 }
 
+set status condition icon in bag scene x
+
+pick up items on the ground x
+
+up and down option in stats scene x
+
 held items effect in battle {
     oran berry
     sitrus berry
     elemental item
     evo held items
 }
-
-set status condition icon in bag scene
-
-exp curve
-
-pick up items on the ground
-
-make first gym
-
-up and down option in stats scene
 
 make multiple boxes for pc
 
@@ -101,13 +97,17 @@ stats menu stats name with colors to know nature's effect and number tags to see
 
 Abilities
 
+make first gym
+
 make more maps to reach gyms
 
 make 2 more gyms
 
-at least 1 over world encounter?
+at least 1 overworld encounter?
 
 MUSIC AND MOVE SOUNDS
+
+make save event more clear
 
 grid walking?
 
