@@ -83,15 +83,22 @@ pick up items on the ground x
 up and down option in stats scene x
 
 held items effect in battle {
-    oran berry
-    sitrus berry
+    - before damage is taken
     elemental item
+
+    - after damage has been taken
+    focus band
+    banana x
+    sitrus berry
+
     evo held items
+    outside of battle
+
+    maybe
+    quick claw
 }
 
-make multiple boxes for pc
-
-EV
+cut HM
 
 stats menu stats name with colors to know nature's effect and number tags to see how much EVS have been collected
 
@@ -113,11 +120,13 @@ grid walking?
 
 -- demo release
 
-held items efect in battle {
+make multiple boxes for pc
+
+EV
+
+held items effect in battle {
     leftovers
     life orb
-    elemental item
-    evo held items
 }
 
 weather

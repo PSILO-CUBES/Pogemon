@@ -1,4 +1,6 @@
 export function setSaveData(saveData){
+  console.log(saveData)
+
     function stringify(obj) {
         let cache = [];
         let str = JSON.stringify(obj, function(key, value) {
@@ -16,8 +18,9 @@ export function setSaveData(saveData){
         return str;
     }
 
-    console.log(saveData)
     localStorage.setItem("saveFile", stringify(saveData))
+    
+    console.log(JSON.parse(localStorage.getItem("saveFile")))
 }
 
 export async function loadData(){

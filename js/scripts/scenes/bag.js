@@ -36,8 +36,11 @@ let choosePogemon = false
 
 async function sortCurrItemsArr(){
   currItemsArr = []
-  await player.bag.forEach(key =>{
-    if(key.item.type == currType) currItemsArr.push(key)
+  await player.bag.forEach(key =>{0
+
+    if(key.item.type == currType) {
+      currItemsArr.push(key)
+    }
   })
 }
 
@@ -135,7 +138,7 @@ function bagSceneSectionOnClickEvent(e, state){
 
   if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
 
-  currItem = itemsObj[`${e.target.childNodes[1].childNodes[0].textContent}`]
+  currItem = {...itemsObj[`${e.target.childNodes[1].childNodes[0].textContent}`]}
   currItemDom = document.querySelector(`.${e.target.classList[1]}`)
 
   document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
@@ -373,7 +376,9 @@ function printItems(bagSceneItemSectionDom){
   for(let i = 0; i < currItemsArr.length; i++){
     const item = currItemsArr[i].item
 
-    if(player.bag.get(item.name).quantity < 1) return
+    console.log(item)
+    if(player.bag.get(item.name).quantity < 1) continue
+    console.log(item)
     //item container
     const bagSceneItemContainerDom = document.createElement('div')
     bagSceneItemContainerDom.classList.add('bagSceneItemContainer')
@@ -531,7 +536,7 @@ function printBagScene(){
   const bagSceneItemContainerDom = document.createElement('div')
   bagSceneItemContainerDom.classList.add('bagSceneItemsMenu')
 
-  const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'bi', 'vals', 'key', 'sort']
+  const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key', 'sort']
 
   for(let i = 0; i < 3; i++){
     const bagSceneItemSectionDom = document.createElement('div')

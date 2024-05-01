@@ -104,7 +104,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -296,7 +296,7 @@ function buyItemEvent(){
   } else {
     console.log(pogemartBuyingInteraction)
     player.money = player.money - price
-    player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: itemsObj[pogemartBuyingInteraction.product.name], quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
+    player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: {...itemsObj[pogemartBuyingInteraction.product.name]}, quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
     document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
     document.querySelector('#pogemartMenuDescripion').textContent = 'Thank you for your purchase!'
   }
@@ -544,8 +544,11 @@ function playerInteraction(e) {
       break
     case 'item':
       if(player.interaction.info.pickedUp == true) return
+      player.disabled = true
 
-      let item = itemsObj[player.interaction.info.name]
+      scenes.set('pickingItem', {initiated: true})
+
+      let item = {...itemsObj[player.interaction.info.name]}
 
       Object.values(keys).forEach(value =>{
         value.pressed = false
@@ -563,7 +566,7 @@ function playerInteraction(e) {
 
       document.querySelector('#openWindow').appendChild(itemImage)
       
-      player.bag.set(player.interaction.info.name, {item: itemsObj[player.interaction.info.name], quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
+      player.bag.set(player.interaction.info.name, {item: {...itemsObj[player.interaction.info.name]}, quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
 
       player.interaction.collisionInstance.boundary.collision = false
       player.interaction.info.pickedUp = true
@@ -902,6 +905,8 @@ function spendQueue(){
       opacity : 0,
       onComplete : () =>{
         document.querySelector('#openWindow').replaceChildren()
+        scenes.set('pickingItem', {initiated: false})
+        player.interaction = null
       }
     })
 

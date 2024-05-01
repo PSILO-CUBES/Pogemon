@@ -763,7 +763,7 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.heatwave, lvl: 1},
+      1: {move: movesObj.tackle, lvl: 1},
     },
     sprites: {
       classic:{
@@ -817,7 +817,7 @@ export const pogemonsObj = {
       def: 60,
       spatk: 50,
       spdef: 60,
-      spd: 120,
+      spd: 20,
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: {

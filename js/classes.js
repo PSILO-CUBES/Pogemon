@@ -182,6 +182,7 @@ export class Pogemon extends Sprite{
     exp,
     isEnemy,
     map,
+    heldItem,
     preBuilt,
     {
       type, 
@@ -233,7 +234,7 @@ export class Pogemon extends Sprite{
       this.ability = this.generateAbility()
       this.moves = this.generateMoves(true, 'battle')
       this.animationProperties = pogemon.animationProperties
-      this.heldItem = null
+      this.heldItem = heldItem
       this.friendliness = 0
       this.catchInfo = this.generateCatchInfo(new Date())
       this.caughtMap = map
@@ -398,7 +399,7 @@ export class Pogemon extends Sprite{
 
     if(numerator <= 0) percentage = 0
 
-    return percentage
+    return Math.floor(percentage)
   }
 
   dialogue(type, text){
@@ -928,9 +929,6 @@ export class Pogemon extends Sprite{
         rotation
       })
 
-      // console.log(type)
-      // console.log(effect)
-
       let chooseAnimation = (type, effect, move, i) =>{
         if(type == 'heal'){
           renderedSprites.push(statusSprite)
@@ -1158,9 +1156,13 @@ export class Pogemon extends Sprite{
               }
             })
 
+            console.log([...queue])
+
             queue.splice(0,2).forEach(func =>{
               queue.push(func)
             })
+
+            //probably fucky here
             
             if(i == Object.values(move.effects).length - 1){
               if(Object.values(move.effects).length > 1) {
@@ -1476,12 +1478,130 @@ export class Pogemon extends Sprite{
       }
 
       if(type != 'array') chooseAnimation(type, effect[0], move, 0)
-      else effect.forEach((effect, i) => chooseAnimation(effect.type, effect, move, i))
+      else {
+        queueProcess.disabled = false
+        effect.forEach((effect, i) => chooseAnimation(effect.type, effect, move, i))
+      }
+    }
+
+    let hitAnimation = type => {
+      queueProcess.disabled = true
+
+      if(type){
+        const hitImg = new Image()
+        hitImg.src = move.sprite
+
+        const hitSprite = new Sprite({
+          type: 'move',
+          position: {
+            x: recipient.position.x,
+            y: recipient.position.y
+          },
+          img: hitImg,
+          frames: {
+            max: 4,
+            hold: 50
+          },
+          animate: true,
+          rotation
+        })
+
+        renderedSprites.splice(1, 0, hitSprite)
+      }
+
+      const tl = gsap.timeline()
+      tl.to(this.position, {
+        x: this.position.x - movementDistance
+      }).to(this.position, {
+        x: this.position.x + movementDistance * 2,
+        duration: 0.1,
+        onComplete: () =>{
+
+          audioObj.SFX.tackleHit.play()
+
+          this.hpManagement(recipient, recipientHealthBar, hpDom)
+  
+          gsap.to(recipient.position, {
+            x: recipient.position.x + 10,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.08
+          })
+  
+          gsap.to(recipient.sprite, {
+            opacity: 0,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.08,
+            onComplete: () =>{
+              queueProcess.disabled = false
+              if(type) renderedSprites.splice(1,1)
+            }
+          })
+        }
+      }).to(this.position, {
+        x: this.position.x
+      })
+    }
+    
+    let projectileAnimation = () => {
+      queueProcess.disabled = true
+      
+      if(move.name != 'fireball') rotation = 0
+      const projectileImg = new Image()
+      projectileImg.src = move.sprite
+      const projectileSprite = new Sprite({
+        type: 'attack',
+        position: {
+          x: this.position.x + launcPos.x,
+          y: this.position.y + launcPos.y
+        },
+        img: projectileImg,
+        frames: {
+          max: 4,
+          hold: 50
+        },
+        animate: true,
+        rotation
+      })
+
+      renderedSprites.splice(1, 0, projectileSprite)
+
+      move.initAudio.play()
+
+      gsap.to(projectileSprite.position, {
+        x: recipient.position.x - receivePos.x,
+        y: recipient.position.y - receivePos.y,
+        duration,
+        onComplete: () =>{
+
+          renderedSprites.splice(1,1)
+
+          move.hitAudio.play()
+
+          this.hpManagement(recipient, recipientHealthBar, hpDom)
+    
+          queueProcess.disabled = false
+
+          gsap.to(recipient.position, {
+            x: recipient.position.x,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.08
+          })
+    
+          gsap.to(recipient.sprite, {
+            opacity: 0,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.08
+          })
+        }
+      })
     }
 
     if(move.type == 'status') {
       // statusAnimation(move.type, move.effects)
-      // console.log('hehe')
       if(immuned) return
       statusCalculation()
     }
@@ -1653,128 +1773,10 @@ export class Pogemon extends Sprite{
     }
 
     statusRNG()
-
-    console.log('hehehehe')
     
     if(recipient.protected.active && recipient.protected.turns == 0) recipient.protected.turns = 1
 
     if(move.name != 'fireball') rotation = 0
-
-    let hitAnimation = type => {
-      queueProcess.disabled = true
-
-      if(type){
-        const hitImg = new Image()
-        hitImg.src = move.sprite
-
-        const hitSprite = new Sprite({
-          type: 'move',
-          position: {
-            x: recipient.position.x,
-            y: recipient.position.y
-          },
-          img: hitImg,
-          frames: {
-            max: 4,
-            hold: 50
-          },
-          animate: true,
-          rotation
-        })
-
-        renderedSprites.splice(1, 0, hitSprite)
-      }
-
-      const tl = gsap.timeline()
-      tl.to(this.position, {
-        x: this.position.x - movementDistance
-      }).to(this.position, {
-        x: this.position.x + movementDistance * 2,
-        duration: 0.1,
-        onComplete: () =>{
-
-          audioObj.SFX.tackleHit.play()
-
-          this.hpManagement(recipient, recipientHealthBar, hpDom)
-  
-          gsap.to(recipient.position, {
-            x: recipient.position.x + 10,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08
-          })
-  
-          gsap.to(recipient.sprite, {
-            opacity: 0,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08,
-            onComplete: () =>{
-              queueProcess.disabled = false
-              if(type) renderedSprites.splice(1,1)
-            }
-          })
-        }
-      }).to(this.position, {
-        x: this.position.x
-      })
-    }
-    
-    let projectileAnimation = () => {
-      queueProcess.disabled = true
-      
-      if(move.name != 'fireball') rotation = 0
-      const projectileImg = new Image()
-      projectileImg.src = move.sprite
-      const projectileSprite = new Sprite({
-        type: 'attack',
-        position: {
-          x: this.position.x + launcPos.x,
-          y: this.position.y + launcPos.y
-        },
-        img: projectileImg,
-        frames: {
-          max: 4,
-          hold: 50
-        },
-        animate: true,
-        rotation
-      })
-
-      renderedSprites.splice(1, 0, projectileSprite)
-
-      move.initAudio.play()
-
-      gsap.to(projectileSprite.position, {
-        x: recipient.position.x - receivePos.x,
-        y: recipient.position.y - receivePos.y,
-        duration,
-        onComplete: () =>{
-
-          renderedSprites.splice(1,1)
-
-          move.hitAudio.play()
-
-          this.hpManagement(recipient, recipientHealthBar, hpDom)
-    
-          queueProcess.disabled = false
-
-          gsap.to(recipient.position, {
-            x: recipient.position.x,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08
-          })
-    
-          gsap.to(recipient.sprite, {
-            opacity: 0,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08
-          })
-        }
-      })
-    }
 
     // should find a way to manage moves better or this will become a cluster fuck very quickly
     switch(move.name){
@@ -1849,17 +1851,18 @@ export class Pogemon extends Sprite{
         statusAnimation('status', move.effects)
         break  
     }
+
+    // stats effect after attack
     if(move.type == 'physical' || move.type == 'special') if(move.effects != null) {
       queue.push(() => {
         if(immuned) return
         statusAnimation('array', move.effects)
         statusCalculation()
       })
-      queue.pop()()
     }
   }
 
- statusEffectAnimation(type, renderedSprites, queueProcess){
+  statusEffectAnimation(type, renderedSprites, queueProcess){
     queueProcess.disabled = true
 
     let rotation = 45
@@ -2095,7 +2098,6 @@ export class Pogemon extends Sprite{
         audioObj.music.victory.play()
         this.hpManagement(this, healthBar, healthAmount)
         faintEvent(this)
-        //
         return
       }
     }
@@ -2657,6 +2659,57 @@ export class Pogemon extends Sprite{
 
     return newMoves
   }
+
+  checkBattleItemRng() {
+    let rng = Math.floor(Math.random() * 99) + 1
+
+    if(this.heldItem.odds == undefined){
+      return true
+    } else if(rng <= this.heldItem.odds){
+      return true
+    } else return false
+  }
+
+  useBattleItem(){
+    const item = this.heldItem
+
+    let recipientHealthBar = '#allyHealthBar'
+    let hpDom = document.querySelector('#allyHp')
+
+    if(this.isEnemy){
+      recipientHealthBar = '#foeHealthBar'
+      hpDom = document.querySelector('#foeHp')
+    }
+
+    console.log(item.effect)
+    switch(item.effect){
+      case 'heal':
+        console.log(this.convertToPercentage(this.hp, this.stats.baseHp))
+        console.log(item.heldThreshHold)
+
+        if(this.convertToPercentage(this.hp, this.stats.baseHp) > item.heldThreshHold) return
+        
+        let healedAmount = item.pow
+        
+        if(item.heldEffect == 'flatHealing'){
+          this.hp += item.pow
+        } else if(item.heldEffect == 'percentHealing'){
+          healedAmount = Math.floor(this.stats.baseHp * (item.pow / 100))
+          this.hp += healedAmount
+        }
+
+        if(this.hp > this.stats.baseHp) {
+          healedAmount = this.hp - this.stats.baseHp
+          this.hp = this.stats.baseHp
+        }
+
+        this.hpManagement(this, recipientHealthBar, hpDom)
+        this.dialogue('battle', `${this.name}'s ${this.heldItem.name} healed it by ${healedAmount} HP!`)
+        console.log('change dialogue')
+        this.heldItem = null
+        break
+    }
+  }
 }
 
 export class NPC extends Sprite{
@@ -2887,7 +2940,8 @@ export class NPC extends Sprite{
         },
         animate: true
       })
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemonSprite)
+
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, null, pogemonSprite)
 
       this.team.push(newPogemon)
     } else {

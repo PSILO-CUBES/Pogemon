@@ -130,8 +130,6 @@ async function generateBoundaries(nextMapInfo){
 
           if(z == 0) z = z + 1
           else z++
-
-          console.log(z)
         
           changeMap.push(
             new Boundary({
@@ -162,8 +160,6 @@ async function generateBoundaries(nextMapInfo){
             
               let trainerInfo = currMap.trainers[z]
               let trainerTeam = []
-
-              console.log(trainerInfo)
             
               if(z == 0) z = z + 1
               else z++
@@ -184,7 +180,7 @@ async function generateBoundaries(nextMapInfo){
                   },
                   animate: true
                 })
-                trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, null, foeSprite))
+                trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
               }
 
               const trainerImg = new Image()
@@ -206,7 +202,7 @@ async function generateBoundaries(nextMapInfo){
 
               let createdTrainer = new NPC(trainerTeam, null, null, trainerInfo.direction.looking, trainerInfo.name, trainerSprite)
               
-              if(type == 4) trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
+              trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
 
               trainerSpritesArr.push(createdTrainer)
             
@@ -234,8 +230,6 @@ async function generateBoundaries(nextMapInfo){
               break
             case 5:
               let eventInfo = mapsObj[`${currMap.name}`].event[z]
-
-              console.log('here')
               
               if(z == 0) z = z + 1
               else z++
@@ -267,10 +261,6 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${currMap.name}`].items[itemIndex].pickedUp) return
               
               let itemsInfo = mapsObj[`${currMap.name}`].items[itemIndex]
-
-              console.log(data)
-
-              console.log(mapsObj[`${currMap.name}`].items[itemIndex])
               
               if(itemIndex == 0) itemIndex = itemIndex + 1
               else itemIndex++
@@ -334,9 +324,6 @@ async function generateBoundaries(nextMapInfo){
     map.position.y = nextMapInfo.spawnPosition.y
 
     const collisionsMap = []
-
-    console.log(nextMapInfo)
-    console.log(data)
 
     if(nextMapInfoObj.collisions != undefined){
       for(let i = 0; i < nextMapInfoObj.collisions.length; i += nextMapInfoObj.width){
@@ -428,7 +415,6 @@ async function generateBoundaries(nextMapInfo){
           switch(type){
             case 0: break
             case 4:
-              console.log('here')
 
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
@@ -456,7 +442,7 @@ async function generateBoundaries(nextMapInfo){
                     animate: true
                   })
 
-                  trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, null, null, foeSprite))
+                  trainerTeam.push(new Pogemon(trainerInfo.team[0][0], Math.pow(trainerInfo.team[0][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
                 }
               
                 const trainerImg = new Image()
@@ -540,10 +526,9 @@ async function generateBoundaries(nextMapInfo){
             break
             case 6:
               if(mapsObj[`${currMap.name}`].items == undefined) return
+              if(mapsObj[`${currMap.name}`].items[itemIndex].pickedUp) return
               
               let itemsInfo = mapsObj[`${currMap.name}`].items[itemIndex]
-
-              console.log(mapsObj[`${currMap.name}`].items[itemIndex])
 
               if(itemIndex == 0) itemIndex = itemIndex + 1
               else itemIndex++
@@ -566,6 +551,15 @@ async function generateBoundaries(nextMapInfo){
               })
 
               itemSpritesArr.push(pogeballSprite)
+
+              let boundary = new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 1,
+                collision: true
+              })
             
               eventZones.push(
                 new Boundary({
@@ -575,19 +569,11 @@ async function generateBoundaries(nextMapInfo){
                   },
                   type: type,
                   info: itemsInfo,
-                  name: 'item'
+                  name: 'item',
+                  collisionInstance: {boundary, pogeballSprite}
                 })
               )
-              boundaries.push(
-                new Boundary({
-                  position:{
-                    x: j * Boundary.width + currMap.spawnPosition.x,
-                    y: i * Boundary.height + currMap.spawnPosition.y
-                  },
-                  type: 1,
-                  collision: true
-                })
-              )
+              boundaries.push(boundary)
               break
           }
         })

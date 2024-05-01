@@ -63,12 +63,26 @@ export const itemsObj = {
     name: 'banana',
     type: 'berry',
     effect: 'heal',
-    pow: '10',
+    pow: 10,
     img: 'img/item_scene/items/berry/banana.png',
-    desc: 'A very ordinary banana'
+    desc: 'A very ordinary banana.',
+    heldType: 'after',
+    heldEffect: 'flatHealing',
+    heldThreshHold: 100
+  },
+  yellowBerry: {
+    name: 'yellowBerry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 25,
+    img: 'img/item_scene/items/berry/yellowBerry.png',
+    desc: 'A very sour yellow berry.',
+    heldType: 'after',
+    heldEffect: 'percentHealing',
+    heldThreshHold: 100
   },
   // tm
-  // batItm
+  // battleItm
   // vals
   // key
 }

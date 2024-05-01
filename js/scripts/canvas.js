@@ -22,13 +22,14 @@ const data = await loadData()
 
 if(data == null){
   Object.values(itemsObj).forEach(item =>{
-    player.bag.set(item.name, {item: itemsObj[item.name], quantity: 0})
+    player.bag.set(item.name, {item: {...itemsObj[item.name]}, quantity: 0})
   })
 } else {
   player.bag = new Map()
 
+  console.log(data.bag)
   data.bag.forEach(key =>{
-    player.bag.set(`${key.item.name}`, {item: key.item, quantity: key.quantity})
+    player.bag.set(`${key.item.name}`, {item: {...key.item}, quantity: key.quantity})
   })
 }
 
@@ -44,6 +45,7 @@ scenes.set('stats', {initiated: false})
 scenes.set('pogedex', {initiated: false})
 scenes.set('pc', {initiated: false})
 scenes.set('trainer', {initiated: false})
+scenes.set('pickingItem', {initiated: false})
 
 export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr){
   background.draw()

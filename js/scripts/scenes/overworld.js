@@ -440,6 +440,8 @@ function escapeKeyEventOptions(e) {
         })
         return
       }
+
+      if(scenes.get('pickingItem').initiated == true) return
       manageMenuState(menu.initiated)
     }
 
