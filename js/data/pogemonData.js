@@ -69,7 +69,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 500,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   lokol: {
     pogedex: 2,
@@ -130,7 +131,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   lokump: {
     pogedex: 3,
@@ -190,7 +192,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
 
   // #4 - #6 steel starter
@@ -252,7 +255,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 500,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   steeler: {
     pogedex: 5,
@@ -313,7 +317,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   steevil: {
     pogedex: 6,
@@ -373,7 +378,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
 
   // #7 - #9 fairy starter x
@@ -434,7 +440,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   maaphett: {
     pogedex: 8,
@@ -494,7 +501,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   maapheeno: {
     pogedex: 9,
@@ -554,7 +562,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 1000,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
 
   // #10 - #13 shroom line
@@ -616,7 +625,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 5000,
-    catchRate: 200
+    catchRate: 200,
+    surfable: false
   },
   fruity: {
     pogedex: 11,
@@ -676,7 +686,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 5000,
-    catchRate: 200
+    catchRate: 200,
+    surfable: false
   },
 
   // #14 - #17 toad line
@@ -738,7 +749,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 5000,
-    catchRate: 200
+    catchRate: 200,
+    surfable: false
   },
 
 
@@ -800,7 +812,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 50000,
-    catchRate: 200
+    catchRate: 200,
+    surfable: false
   },
 
   // #145 - #148 dragon line x
@@ -824,7 +837,7 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.superpower, lvl: 1},
+      1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.fireball, lvl: 2},
       3: {move: movesObj.sharpen, lvl: 3},
       4: {move: movesObj.swift, lvl: 3},
@@ -864,7 +877,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 70,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   jleech: {
     pogedex: 146,
@@ -923,7 +937,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 70,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   //have to work on those
   jlorox: {
@@ -985,7 +1000,8 @@ export const pogemonsObj = {
       }
     },
     yeild: 70,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
   jleenex: {
     pogedex: 148,
@@ -1046,6 +1062,7 @@ export const pogemonsObj = {
       }
     },
     yeild: 70,
-    catchRate: 75
+    catchRate: 75,
+    surfable: false
   },
 }

@@ -9,7 +9,7 @@ import { Sprite, NPC, Pogemon } from "../classes.js"
 
 import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap, itemSpritesArr, map } from "./maps.js"
+import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
 import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
@@ -33,7 +33,7 @@ export const keys = {
 
 let lastKey = ''
 
-let walkSpeed = 6
+let walkSpeed = 7
 let runSpeed = walkSpeed * 1.5
 let moveSpeed = walkSpeed
 
@@ -48,9 +48,28 @@ playerImg.src = `./img/charSprites/${playerCharacter}/${playerCharacter}.png`
 
 let data
 
+export let surfPogemonSprite
+
 export async function generatePlayer(canvas){
   // if(playerInfo == undefined){
     await loadData().then(res => data = res)
+
+    const surfPogemonImage = new Image()
+    surfPogemonImage.src = 'img/charSprites/surf/blank.png'
+
+    surfPogemonSprite = new Sprite({
+      type: 'surfPogemon',
+      img: surfPogemonImage,
+      position:{
+        x: canvas.width / 2 - playerWidth,
+        y: canvas.height / 2 -  playerHeight / 2
+      },
+      frames: {
+        max: 2,
+        hold: 10
+      },
+      animate: false
+    })
 
     if(data == null) {
       player = new NPC([], new Map(), 500, 'Down', 'player', new Sprite({
@@ -158,6 +177,8 @@ function keysInput() {
         player.animate = true
         break
       case 'Shift':
+        if(player.surfing) return
+        if(collisionWhileSurfing) return
         moveSpeed = runSpeed
         player.running = true
         break
@@ -169,26 +190,41 @@ function keysInput() {
       case 'w':
       case 'W':
         keys.w.pressed = false
+        if(player.surfing) return
         player.animate = false
         break
       case 'd':
       case 'D':
         keys.d.pressed = false
+        if(player.surfing) return
         player.animate = false
         break
       case 's':
       case 'S':
         keys.s.pressed = false
+        if(player.surfing) return
         player.animate = false
         break
       case 'a':
       case 'A':
         keys.a.pressed = false
+        if(player.surfing) return
         player.animate = false
         break
       case 'Shift':
+        if(collisionWhileSurfing) return
+
+        if(player.surfing){
+          if(player.running){
+            moveSpeed = walkSpeed
+            player.running = false
+            player.img.src = `img/charSprites/${playerCharacter}/${playerCharacter}.png`
+          }
+          return
+        }
         moveSpeed = walkSpeed
         player.running = false
+        player.img.src = `img/charSprites/${playerCharacter}/${playerCharacter}.png`
         break
     }
   })
@@ -294,7 +330,6 @@ function buyItemEvent(){
   if(price > player.money){
     document.querySelector('#pogemartMenuDescripion').textContent = "You can't afford that.."
   } else {
-    console.log(pogemartBuyingInteraction)
     player.money = player.money - price
     player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: {...itemsObj[pogemartBuyingInteraction.product.name]}, quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
     document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
@@ -468,7 +503,6 @@ function playerInteraction(e) {
           queue.push(() =>{
             setTimeout(() =>{
               healProcess = false
-              console.log(healProcess)
               player.team[0].dialogue('overworld', `Your pogemons are now all healed up!`)
             }, 1000)
           })
@@ -534,7 +568,6 @@ function playerInteraction(e) {
 
               interaction.flags.starter = true
 
-              console.log('wtf')
               openWindow.style.backgroundColor = 'transparent'
               openWindow.replaceChildren()
             })
@@ -571,16 +604,21 @@ function playerInteraction(e) {
       player.interaction.collisionInstance.boundary.collision = false
       player.interaction.info.pickedUp = true
 
-      itemSpritesArr.forEach((sprite, i) =>{
-        console.log(sprite.type)
-        console.log(player.interaction.collisionInstance.pogeballSprite.type)
-        if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) {
-          console.log(itemSpritesArr)
-          console.log(i)
+      itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+      break
+    case 'tree':
+    case 'rock':
+      if(player.interaction.info.disabled) return
 
-          console.log(itemSpritesArr.splice(i, 1))
-        }
-      })
+      player.interaction.collisionInstance.obstacleSprite.animate = true
+      player.disabled = true
+      setTimeout(() =>{
+        player.interaction.collisionInstance.obstacleSprite.animate = false
+        player.interaction.collisionInstance.boundary.collision = false      
+        player.interaction.info.disabled = true
+        player.disabled = false
+        obstacleSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.obstacleSprite.type) obstacleSpritesArr.splice(i, 1)})
+      }, 1450)
       break
   }
 }
@@ -609,6 +647,10 @@ function rectangularCollision({ rectangle1, rectangle2 }, type){
   }
 }
 
+let waterCollided = false
+
+let collisionWhileSurfing = false
+
 function stopMotionWhenColliding(boundaries, direction){
   for(let i = 0; i < boundaries.length; i++){
     const boundary = boundaries[i]
@@ -624,6 +666,7 @@ function stopMotionWhenColliding(boundaries, direction){
     
     switch(type){
       case 1:
+      case 8:
         switch(direction){
           case 'Up':
             xOffset = 0
@@ -635,14 +678,14 @@ function stopMotionWhenColliding(boundaries, direction){
           break
           case 'Down':
             xOffset = 0
-            yOffset = -playerOffset
+            yOffset = playerOffset - 25
           break
           case 'Left':
             xOffset = playerOffset
             yOffset = 0
           break
         }
-      break
+        break
     }
 
     if(
@@ -655,7 +698,58 @@ function stopMotionWhenColliding(boundaries, direction){
       })
     ){
       if(boundary.collision) player.animate = false
+
+      let surfCheck = false
+
+      player.team.forEach(pogemon =>{
+        if(pogemon.pogemon.surfable){
+          surfCheck = true
+        }
+      })
+
+      if(!surfCheck) return
+
+      if(type == 8){
+        if(player.surfing) return
+
+        waterCollided = true
+
+        player.animate = true
+        player.running = false
+        moveSpeed = walkSpeed
+
+        setTimeout(() => {
+          if(player.walking) return
+          player.img.src = `img/charSprites/ethan/${playerCharacter}_surf.png`
+        }, 250)
+
+        surfPogemonSprite.img.src = `img/charSprites/surf/surf_${direction}.png`
+        surfPogemonSprite.animate = true
+        player.surfing = true
+        player.walking = false
+      }
+
+      if(type == 1){
+        if(waterCollided){
+          if(!player.surfing) return
+          surfPogemonSprite.img.src = `img/charSprites/surf/surf_${direction}.png`
+          surfPogemonSprite.animate = true
+          collisionWhileSurfing = true
+        }
+      }
       break
+    } else {
+      if(player.surfing){
+        if(!collisionWhileSurfing){
+          player.img.src = `img/charSprites/ethan/${playerCharacter}.png`
+          surfPogemonSprite.img.src = `img/charSprites/surf/blank.png`
+          surfPogemonSprite.animate = false
+        }
+        collisionWhileSurfing = false
+      }
+
+      player.surfing = false
+      player.walking = true
     }
   }
 }
@@ -701,6 +795,13 @@ function engageBattle(animationId, battleZones) {
 export let lastDirection = 'Down'
 
 function move(direction, movables, moveSpeed){
+  if(!collisionWhileSurfing){
+    player.img.src = 'img/charSprites/ethan/ethan.png'
+    if(player.running) player.img.src = 'img/charSprites/ethan/ethan_run.png'
+  }
+
+  if(player.surfing) player.img.src = 'img/charSprites/ethan/ethan_surf.png'
+  
   switch(direction){
     case 'Up':
       movables.forEach(movable =>{
@@ -900,7 +1001,6 @@ function spendQueue(){
     queue.shift()
     return
   } else if(!healProcess) {
-    console.log(player.interaction)
     if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
       opacity : 0,
       onComplete : () =>{

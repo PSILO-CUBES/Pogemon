@@ -100,7 +100,7 @@ export class Boundary {
   }
 
   generateInfo(){
-    const opacity = 0
+    const opacity = 0.1
     const opacity2 = 0.25
     switch(this.type){
       case 1:
@@ -120,6 +120,9 @@ export class Boundary {
         break
       case 6:
         this.color = `rgba(250,150,50,${opacity})`
+        break
+      case 7:
+        this.color = `rgba(0,150,50,${opacity})`
         break
     }
   }
@@ -427,7 +430,7 @@ export class Pogemon extends Sprite{
         break
       case 'bag':
         document.querySelector('.bagSceneItemDialogueContainer').style.display = 'block'
-        document.querySelector('.bagSceneItemDialogueContainer').textContent = text
+        document.querySelector('.bagSceneItemDialogueContainer').innerText = text
         break
     }
   }
@@ -540,7 +543,7 @@ export class Pogemon extends Sprite{
       const roll = Math.floor(Math.random() * (rollRatio.max - rollRatio.min) + rollRatio.min) * 0.01
 
       let stab = 1
-      if(move.element === this.element[1] || move.element === this.element[2]) stab = 1.5
+      if(move.element === this.element[1] || move.element === this.element[2]) stab += 0.5
 
       let typeEffectivness = 1
 
@@ -595,6 +598,9 @@ export class Pogemon extends Sprite{
           break
       }
 
+      let heldItemDmg = 1
+      if(this.heldItem != null) if(this.heldItem.heldType = 'elemental') if(move.element == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
+
       let damage
 
       if(move.type === 'physical'){
@@ -602,7 +608,7 @@ export class Pogemon extends Sprite{
           allyStatChange = statsChangeObj[userId].nominator.atk / statsChangeObj[userId].denominator.atk
           foeStatChange = statsChangeObj[foeId].nominator.def / statsChangeObj[foeId].denominator.def
           
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit)
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit * heldItemDmg)
           // console.log(Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'special'){
@@ -610,7 +616,7 @@ export class Pogemon extends Sprite{
           allyStatChange = statsChangeObj[userId].nominator.spatk / statsChangeObj[userId].denominator.spatk
           foeStatChange = statsChangeObj[foeId].nominator.spdef / statsChangeObj[foeId].denominator.spdef
 
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit)
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit * heldItemDmg)
           // console.log(Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit))
         }
       }
@@ -2742,6 +2748,7 @@ export class NPC extends Sprite{
     if(bag != undefined) this.bag = bag
     if(money != undefined) this.money = money
     this.running = false
+    this.surfing = false
     this.disabled = false
     this.assingDirection(direction)
     if(trainerName != undefined) this.name = trainerName

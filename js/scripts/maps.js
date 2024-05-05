@@ -41,6 +41,7 @@ audioObj.music.map.play()
 
 export const trainerSpritesArr = []
 export const itemSpritesArr = []
+export const obstacleSpritesArr = []
 
 async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
@@ -84,16 +85,30 @@ async function generateBoundaries(nextMapInfo){
       collisionsMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type === 0) return
-          boundaries.push(
-            new Boundary({
-              position:{
-                x: j * Boundary.width + currMap.spawnPosition.x,
-                y: i * Boundary.height + currMap.spawnPosition.y
-              },
-              type: 1,
-              collision: true
-            })
-          )
+          else if(type == 1){
+            boundaries.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 1,
+                collision: true
+              })
+            )
+          }
+          else if(type == 8){
+            boundaries.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 8,
+                collision: true
+              })
+            )
+          }
         })
       })
     }
@@ -311,8 +326,77 @@ async function generateBoundaries(nextMapInfo){
         })
       })
     }
+    const obstaclesMap = []
+    if(currMap.obstacles != undefined){
+      for(let i = 0; i < currMap.obstacles.length; i += currMap.width){
+        obstaclesMap.push(currMap.obstacles.slice(i, currMap.width + i))
+      }
+      let z = 0
+      // pushes new Boundries in array with the previous number map array
+      obstaclesMap.forEach((row, i) =>{
+        row.forEach((type, j) =>{
+          if(type != 7) return
+            
+          let obstacleInfo = currMap.obstaclesInfo[z]
+
+          let boundary = new Boundary({
+            position:{
+              x: j * Boundary.width + currMap.spawnPosition.x,
+              y: i * Boundary.height + currMap.spawnPosition.y
+            },
+            type: 1,
+            collision: true
+          })
+
+          boundaries.push(boundary)
+              
+          if(z == 0) z = z + 1
+          else z++
+
+          const obstacleImg = new Image()
+          switch(obstacleInfo.name){
+            case 'tree':
+              obstacleImg.src = 'img/maps/obstacles/cut.png'
+              break
+            case 'rock':
+              obstacleImg.src = 'img/maps/obstacles/rockSmash.png'
+              break
+          }
+
+          const obstacleSprite = new Sprite({
+            type: z,
+            position:{
+              x: j * Boundary.width + currMap.spawnPosition.x,
+              y: i * Boundary.height + currMap.spawnPosition.y
+            },
+            img: obstacleImg,
+            frames: {
+              max: 4,
+              hold: 20
+            },
+            animate: false
+          })
+
+          obstacleSpritesArr.push(obstacleSprite)
+
+          eventZones.push(
+            new Boundary({
+              position:{
+                x: j * Boundary.width + currMap.spawnPosition.x,
+                y: i * Boundary.height + currMap.spawnPosition.y
+              },
+              type: 7,
+              name: obstacleInfo.name,
+              collision: true,
+              info: obstacleInfo,
+              collisionInstance: {boundary, obstacleSprite}
+            })
+          )
+        })
+      })
+    }
     
-    return [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr]
+    return [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr]
   } else {
     // should mostly work here
     let nextMapInfoObj = mapsObj[`${nextMapInfo.name}`]
@@ -617,7 +701,7 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 }
 
 export async function generateMapData(nextMapInfo) {
-  const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr] = await generateBoundaries(nextMapInfo)
+  const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr] = await generateBoundaries(nextMapInfo)
 
   if(nextMapInfo == undefined){
     mapImg.src = currMap.mapImg
@@ -628,5 +712,5 @@ export async function generateMapData(nextMapInfo) {
     FGImg.src = mapsObj[`${nextMapInfo.name}`].FGImg
   }
   
-  return [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, FG]
+  return [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG]
 }

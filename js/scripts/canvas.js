@@ -5,7 +5,7 @@ import { mapsObj } from '../data/mapsData.js'
 
 import { Sprite } from '../classes.js'
 
-import { generatePlayer } from './player.js'
+import { generatePlayer, surfPogemonSprite } from './player.js'
 import { loadData } from '../save.js'
 
 export const canvas = document.querySelector('canvas')
@@ -27,7 +27,6 @@ if(data == null){
 } else {
   player.bag = new Map()
 
-  console.log(data.bag)
   data.bag.forEach(key =>{
     player.bag.set(`${key.item.name}`, {item: {...key.item}, quantity: key.quantity})
   })
@@ -47,15 +46,22 @@ scenes.set('pc', {initiated: false})
 scenes.set('trainer', {initiated: false})
 scenes.set('pickingItem', {initiated: false})
 
-export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr){
+export const overworldSpritesArr = []
+
+
+export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr){
   background.draw()
   map.draw()
+  for(let i = 0; i < obstacleSpritesArr.length; i++){
+    obstacleSpritesArr[i].draw()
+  }
   for(let i = 0; i < itemSpritesArr.length; i++){
     itemSpritesArr[i].draw()
   }
   for(let i = 0; i < trainerSpritesArr.length; i++){
     trainerSpritesArr[i].draw()
   }
+  surfPogemonSprite.draw()
   player.draw()
   FG.draw()
   for(let i = 0; i < boundaries.length; i++){

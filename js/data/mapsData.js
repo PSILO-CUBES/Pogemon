@@ -15,8 +15,7 @@ export let mapsObj = {
     },
     height: 44,
     width: 60,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:98}}, 
-    {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
+    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:98}}, {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
     changeMapLocations:[
       {name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},
       {name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},
@@ -40,12 +39,30 @@ export let mapsObj = {
     ],
     items: [
       {
-        name: 'yellowBerry',
-        amount: 1,
+        name: 'focusBand',
+        amount: 50,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         pickedUp: false
       },
     ],
+    obstaclesInfo: [
+      {
+        name: 'tree',
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+      },
+      {
+        name: 'rock',
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+      },
+      {
+        name: 'tree',
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+      },
+      {
+        name: 'tree',
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+      },
+    ]
   },
   bedroom:{
     name: 'bedroom',
@@ -268,7 +285,6 @@ export async function setBoundries(mapsObj){
 
       if(map.items != undefined) {
         map.items.forEach((item, j) =>{
-          console.log(Object.values(loadedData['mapsObjState'])[i])
           item.pickedUp = Object.values(loadedData['mapsObjState'])[i].items[j].pickedUp
         })
       }
@@ -288,12 +304,12 @@ export async function setBoundries(mapsObj){
       mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data})        
     } else if (res.layers[3] == undefined) {
       mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data})
-    } else {
+    } else if (res.layers[4] == undefined) {
       mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data, battleZones: res.layers[3].data})
+    } else {
+      mapArr.set(`${mapsObjKeys[i]}`, {...mapsObjValues[i], collisions: res.layers[0].data, changeMap: res.layers[1].data, eventZones: res.layers[2].data, battleZones: res.layers[3].data, obstacles: res.layers[4].data})
     }
 
     mapsObj[`${mapsObjKeys[i]}`] = mapArr.get(`${mapsObjKeys[i]}`)
-
-    // console.log(mapsObj[`${mapsObjKeys[i]}`])
   }
 }

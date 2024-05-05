@@ -1730,7 +1730,6 @@ function attackMove(e) {
     function pushRecipientEndOfTurnBattleItemEvent(target){
       if(target.heldItem != null) if(target.heldItem.heldType != undefined) if(target.checkBattleItemRng()) {
         itemEvent = true
-        console.log('where?')
         queue.push(() => target.useBattleItem())
       }
     }
@@ -1751,8 +1750,6 @@ function attackMove(e) {
 
     if(itemEvent) flippedQueue = queue.splice(1, queue.length)
     else flippedQueue = queue.splice(0, queue.length)
-  
-    console.log(flippedQueue)
 
     queue.push(() =>{
       if(slower.fainted){
@@ -1778,8 +1775,6 @@ function attackMove(e) {
       flippedQueue.forEach(func =>{
         queue.push(func)  
       })
-
-      console.log(queue)
     })
   }
 }
@@ -1795,7 +1790,6 @@ let queueFaintTrigger = {
 }
 
 function spendQueue(){
-  console.log(queueProcess.disabled)
   if(queueProcess.disabled) return
   if(queue.length > 0){
     queue[0]()

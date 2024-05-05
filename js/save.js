@@ -1,6 +1,4 @@
 export function setSaveData(saveData){
-  console.log(saveData)
-
     function stringify(obj) {
         let cache = [];
         let str = JSON.stringify(obj, function(key, value) {
