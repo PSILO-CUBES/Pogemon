@@ -475,3 +475,28 @@
   height: 100%;
   width: 100%;
 }
+
+#fieldEffectContainer{
+  display: none;
+  justify-content: end;
+  align-items: start;
+
+  position: absolute;
+  top: 0;
+  right: -124px;
+
+  height: 72px;
+
+  padding: 8;
+}
+
+#fieldEffectTurnIndicator{
+  align-self: center;
+  font-size: x-large;
+  padding-right: 8;
+  color: black;
+}
+
+#fieldEffectIcon{
+  height: 100%;
+}

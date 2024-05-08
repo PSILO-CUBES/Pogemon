@@ -244,6 +244,64 @@ function chooseStatusImg(target, status, statusDom){
 let allyId
 let enemyTrainerInfo
 
+function startWeather(type, info){
+  console.log(info)
+  document.querySelector('#encounterInterface').style.display = 'none'
+
+  const fieldContainer = document.querySelector('#fieldEffectContainer')
+  fieldContainer.style.display = 'flex'
+
+  const weatherTurnIndicator = document.querySelector('#fieldEffectTurnIndicator')
+  weatherTurnIndicator.textContent = info.turns
+
+  const weatherIcon = document.querySelector('#fieldEffectIcon')
+  weatherIcon.src = `img/field/${type}.png`
+
+  queueProcess.disabled = true
+
+  // maybe put this in clearWeather when i make that
+  Object.values(terrainConditions.weather).forEach(weather =>{
+    weather.active = false
+  })
+
+  info.active = true
+
+  ally.dialogue('battle', `The ${type} now affects the battlefield.`)
+
+  setTimeout(() =>{
+    gsap.to(fieldContainer, {
+      right: 0,
+      duration: 1
+    })
+
+    const tl = gsap.timeline()
+    const fieldEffect = document.querySelector('#fieldEffect')
+    tl.to(fieldEffect, {
+      backgroundColor: `#${info.color}40`,
+      duration: 1.5
+    }).to(fieldEffect, {
+      backgroundColor: `#${info.color}00`,
+      duration: 1, 
+      onComplete: () =>{
+        queueProcess.disabled = false
+      }
+    })
+  }, 625)
+}
+
+function manageWeatherState(type, info, timing){
+  console.log(type)
+  console.log(timing)
+  
+  if(timing == 'init'){
+    startWeather(type, info)
+  }
+
+  if(timing == 'endOfTurn'){
+    console.log('show weather turn count')
+  }
+}
+
 export function initBattle(faintedTriggered, info){
   if(prevScene == 'overworld') enemyTrainerInfo = info
 
@@ -272,6 +330,15 @@ export function initBattle(faintedTriggered, info){
     battlerArr = []
     evoArr = []
     lvlUpArr = []
+    Object.values(terrainConditions).forEach(category =>{
+      Object.values(category).forEach(type =>{
+        type.active = false
+        type.turns = 5
+      })
+    })
+
+    document.querySelector('#fieldEffectContainer').style.right = '-124px'
+
     resetStats('both')
     if(info == undefined) initWildEncouter()
     else initTrainerEncounter(info)
@@ -299,12 +366,6 @@ export function initBattle(faintedTriggered, info){
 
   document.querySelector('#expBar').style.width = `${allyExp}%`
 
-  const textBox = document.querySelector('#textBox')
-  textBox.innerText = `You sent out ${ally.name}!`
-  setTimeout(() =>{
-    textBox.innerText = `What will ${ally.name} do?`
-  }, 1500)
-
   function checkIfSameId(){
     let flag = true
 
@@ -322,6 +383,18 @@ export function initBattle(faintedTriggered, info){
   } else {
     battlerArr.push(ally)
   }
+
+  if(currMap.weather != undefined){
+    manageWeatherState(currMap.weather, terrainConditions.weather[currMap.weather], 'init')
+  }
+
+  console.log(terrainConditions.weather)
+
+  const textBox = document.querySelector('#textBox')
+  textBox.innerText = `You sent out ${ally.name}!`
+  setTimeout(() =>{
+    textBox.innerText = `What will ${ally.name} do?`
+  }, 1500)
 
   if(itemUsed.used){
     document.querySelector('#encounterInterface').style.display = 'none'
@@ -395,17 +468,11 @@ export function initBattle(faintedTriggered, info){
       let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
 
       moveProcess = true
-      
-      function attackLanded(odds){
-        let accRNG
-        accRNG = Math.floor(Math.random() * 100)
-        if(accRNG <= odds) return true
-      }
 
       let flag = false
 
       function proceedWithMove(foeRNGMove){
-        foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
+        foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
         moveProcess = true
         manageStatusEvent(foe, ally)
       }
@@ -421,6 +488,7 @@ export function initBattle(faintedTriggered, info){
               queue.push(() => {
                 foe.miss('confusion', renderedSprites, queueProcess)
                 if(battleType != 'trainer') if(foe.hp <= 0){
+                  console.log('haha')
                   faintEvent(foe)
                   return
                 }
@@ -486,7 +554,15 @@ function clearBattleScene(nextScene){
       if(nextScene == 'team') manageTeamState(true, 'battle')
       else if (nextScene == 'bag') manageBagState(true, 'battle')
       else if (nextScene == 'evo') return
-      else manageOverWorldState(true)
+      else {
+
+        player.team.forEach(pogemon =>{
+          pogemon.subHp = 0
+          pogemon.opacity = 1
+        })
+
+        manageOverWorldState(true)
+      }
 
       gsap.to('#overlapping', {opacity: 0})
     }
@@ -579,7 +655,7 @@ function optionButtonInteraction(e) {
             let foeRng = foe.moves[rng]
   
             queue.push(() => {
-              foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
+              foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
               manageStatusEvent(foe, ally)
             })
             return
@@ -907,7 +983,7 @@ function checkSpeed(e) {
     slowerMove = selectedMove
   }
 
-  if(terrainConditions.trickroom.active){
+  if(terrainConditions.etc.trickroom.active){
     let placeHolder
 
     placeHolder = faster
@@ -1213,6 +1289,8 @@ function switchEnemyAfterFaint(){
 
   battlerArr = [ally]
   lvlUpArr = []
+
+  foe.hpManagement()
   
   // maybe ask if want to switch before next pogemon comes out?
 }
@@ -1496,7 +1574,13 @@ function checkIfTeamWipedOut(){
 export let faintedTriggered = {active: false}
 
 function faintEvent(target){
+  target.useBattleItem(queueProcess, queue, fasterHpBeforeMove, slowerHpBeforeMove)
+  console.log(target.hp)
+  if(target.hp > 0) return
+
   queue.push(() =>{
+    if(target.fainted) return
+    console.log('hahahahah')
     target.dialogue('battle', `${target.name} fainted!`)
     target.faint(queueFaintTrigger)
 
@@ -1521,6 +1605,7 @@ function faintEvent(target){
           location.reload()
         })
       } else {
+        if(!target.fainted) return
         faintedTriggered.active = true
         manageBattleState(false, 'team', {active : true})
       }
@@ -1542,47 +1627,78 @@ function manageStatusEvent(faster, slower){
 
 function checkIfFainted(target){
   if(target.hp <= 0){
+
     queue.push(() =>{
+
+      // if(!target.hp <= 0 || !target.fainted) {
+      //   queue.splice(1, 1)
+      //   return
+      // }
+      
       audioObj.music.battle.stop()
       audioObj.SFX.faint.play()
-      target.dialogue('battle', `${target.name} fainted!`)
-      target.faint(queueFaintTrigger)
+      // target.dialogue('battle', `${target.name} fainted!`)
+      // target.faint(queueFaintTrigger)
+
+      console.log('haha')
       faintEvent(target)
-      let placeHolder = queue[1]
-      queue[1] = queue[2]
-      queue[2] = placeHolder
-      queue.pop()
+      // if(battleType != 'trainer'){
+      //   let placeHolder = queue[1]
+      //   queue[1] = queue[2]
+      //   queue[2] = placeHolder
+      //   queue.pop()
+      // }
     })
   }
 }
 
 const terrainConditions = {
-  trickroom: {
-    active: false,
-    turns: 0,
-    element: 'psychic'
+  etc: {
+    trickroom: {
+      active: false,
+      turns: 5,
+      element: 'psychic',
+      color: typesObj['psychic'].color
+    },
   },
-  sun: {
-    active: false,
-    turns: 0,
-    element: 'fire'
-  },
-  rain: {
-    active: false,
-    turns: 0,
-    element: 'water'
-  },
-  snow: {
-    active: false,
-    turns: 0,
-    element: 'ice'
-  },
-  sandstorm: {
-    active: false,
-    turns: 0,
-    element: 'rock'
-  },
+  weather: {
+    sun: {
+      active: false,
+      turns: 5,
+      element: 'fire',
+      resistance: 'water',
+      color: typesObj['fire'].color
+    },
+    rain: {
+      active: false,
+      turns: 5,
+      element: 'water',
+      resistance: 'fire',
+      color: typesObj['water'].color
+    },
+    snow: {
+      active: false,
+      turns: 5,
+      element: 'ice',
+      color: typesObj['ice'].color
+    },
+    sand: {
+      active: false,
+      turns: 5,
+      element: 'rock',
+      color: typesObj['rock'].color
+    },
+  }
 }
+
+function attackLanded(odds){
+  let accRNG
+  accRNG = Math.floor(Math.random() * 100)
+  if(accRNG <= odds) return true
+}
+
+let fasterHpBeforeMove
+let slowerHpBeforeMove
 
 function attackMove(e) {
   let currMove
@@ -1603,11 +1719,13 @@ function attackMove(e) {
     // should maybe put all the battle management in class with move method
 
     const [faster, slower, fasterMove, slowerMove] = checkSpeed(e)
+    
+    fasterHpBeforeMove = ally.convertToPercentage(ally.hp, ally.stats.baseHp)
+    slowerHpBeforeMove = foe.convertToPercentage(foe.hp, foe.stats.baseHp)
 
-    function attackLanded(odds){
-      let accRNG
-      accRNG = Math.floor(Math.random() * 100)
-      if(accRNG <= odds) return true
+    if(faster.isEnemy) {
+      fasterHpBeforeMove = foe.convertToPercentage(foe.hp, foe.stats.baseHp)
+      slowerHpBeforeMove = ally.convertToPercentage(ally.hp, ally.stats.baseHp)
     }
 
     function statusEvent(target, targetMove, recipient, statusIcon){
@@ -1616,8 +1734,11 @@ function attackMove(e) {
         else {
           if(attackLanded(targetMove.acc)) {
             moveProcess = true
-            target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
-          } else target.miss('missed', renderedSprites, queueProcess)
+            target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
+          } else {
+            if(target.hp <= 0) return
+            target.miss('missed', renderedSprites, queueProcess)
+          }
         }
       } else if(target.status.name == 'slp'){
         if(target.status.turns <= 2) {
@@ -1630,9 +1751,12 @@ function attackMove(e) {
             if(attackLanded(targetMove.acc)) {
               moveProcess = true
               queue.push(() => {
-                target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
+                target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
               })
-            } else queue.push(() => target.miss('missed', renderedSprites, queueProcess))
+            } else {
+              if(target.hp <= 0) return
+              queue.push(() => target.miss('missed', renderedSprites, queueProcess))
+            } 
           }
         } else {
           target.dialogue('battle', `${target.name} woke up!`)
@@ -1642,15 +1766,21 @@ function attackMove(e) {
           if(attackLanded(targetMove.acc)) {
             moveProcess = true
             queue.push(() => {
-              target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
+              target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
             })
-          } else queue.push(() => target.miss('missed', renderedSprites, queueProcess))
+          } else {
+            if(target.hp <= 0) return
+            queue.push(() => target.miss('missed', renderedSprites, queueProcess))
+          } 
         }
       } else {
         if(attackLanded(targetMove.acc)) {
           moveProcess = true
-          target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger})
-        } else target.miss('missed', renderedSprites, queueProcess)
+          target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
+        } else {
+          if(target.hp <= 0) return
+          target.miss('missed', renderedSprites, queueProcess)
+        }
       }
     }
 
@@ -1676,6 +1806,7 @@ function attackMove(e) {
                 queue.push(() =>{
                   statusEvent(target, targetMove, recipient, statusIcon)
                   if(battleType != 'trainer') if(target.hp <= 0){
+                    console.log('haha')
                     faintEvent(target)
                     return
                   }
@@ -1691,6 +1822,7 @@ function attackMove(e) {
               queue.push(() => {
                 target.miss('confusion', renderedSprites, queueProcess)
                 if(battleType != 'trainer') if(target.hp <= 0){
+                  console.log('haha')
                   faintEvent(target)
                   return
                 }
@@ -1701,6 +1833,7 @@ function attackMove(e) {
               queue.push(() =>{
                 statusEvent(target, targetMove, recipient, statusIcon)
                 if(battleType != 'trainer') if(target.hp <= 0){
+                  console.log('haha')
                   faintEvent(target)
                   return
                 }
@@ -1727,17 +1860,18 @@ function attackMove(e) {
 
     let itemEvent = false
 
-    function pushRecipientEndOfTurnBattleItemEvent(target){
+    // pushes to queue the check for end of turn item even such as focus sash and focus band
+    function pushRecipientEndOfTurnBattleItemEvent(target, targetHpBeforeMove, recipientHpBeforeMove){
       if(target.heldItem != null) if(target.heldItem.heldType != undefined) if(target.checkBattleItemRng()) {
         itemEvent = true
-        queue.push(() => target.useBattleItem())
+        queue.push(() => target.useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove))
       }
     }
 
     // faster attack
     if(!fasterCheck) {
       statusEvent(faster, fasterMove, slower, fasterStatusIcon)
-      pushRecipientEndOfTurnBattleItemEvent(slower)
+      pushRecipientEndOfTurnBattleItemEvent(slower, slowerHpBeforeMove, fasterHpBeforeMove)
     }
 
     // check if either 'mons died from the interaction
@@ -1756,7 +1890,7 @@ function attackMove(e) {
         afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', true, slowerStatusIcon)
         manageStatusEvent(faster, slower)
       } else {
-        pushRecipientEndOfTurnBattleItemEvent(faster)
+        pushRecipientEndOfTurnBattleItemEvent(faster, fasterHpBeforeMove, slowerHpBeforeMove)
         if(slower.flinched){
           slower.miss('flinched', renderedSprites, queueProcess)
           slower.flinched = false
@@ -1800,23 +1934,21 @@ function spendQueue(){
     foe.protected.active = false
     queueFaintTrigger.initiated = false
 
-    // if(ally.fainted) manageFaintingEvent(ally)
-    // else {
-      manageFaintingEvent(foe)
+    manageFaintingEvent(foe)
 
-      if(evoArr.length > 0){
-        // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
-        queue.push(() => {
-          if(battleType == 'trainer') {if(enemyTeamWiped(enemyTrainerInfo)) manageEvolution(evoArr)}
-          else manageEvolution(evoArr)
-        })
-        return
-      } else {
-        // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
-        queue.push(() => {
-          manageBattleState(false)
-        })
-      }
+    if(evoArr.length > 0){
+      // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
+      queue.push(() => {
+        if(battleType == 'trainer') {if(enemyTeamWiped(enemyTrainerInfo)) manageEvolution(evoArr)}
+        else manageEvolution(evoArr)
+      })
+      return
+    } else {
+      // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
+      queue.push(() => {
+        manageBattleState(false)
+      })
+    }
   } else {
     ally.protected.active = false
     foe.protected.active = false

@@ -759,7 +759,7 @@ export const pogemonsObj = {
     pogedex: 143,
     name: 'disso',
     element:{
-      1: 'normal',
+      1: 'rock',
       2: null
     },
     stats: {
@@ -775,7 +775,7 @@ export const pogemonsObj = {
       1: 'None'
     },
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
+      1: {move: movesObj.swift, lvl: 1},
     },
     sprites: {
       classic:{
@@ -839,7 +839,7 @@ export const pogemonsObj = {
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.fireball, lvl: 2},
-      3: {move: movesObj.sharpen, lvl: 3},
+      3: {move: movesObj.rainyDay, lvl: 3},
       4: {move: movesObj.swift, lvl: 3},
     },
     sprites: {

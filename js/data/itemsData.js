@@ -68,7 +68,8 @@ export const itemsObj = {
     desc: 'A very ordinary banana.',
     heldType: 'after',
     heldEffect: 'flatHealing',
-    heldThreshHold: 100
+    heldThreshHold: 100,
+    consume: true,
   },
   yellowBerry: {
     name: 'yellowBerry',
@@ -79,7 +80,8 @@ export const itemsObj = {
     desc: 'A very sour yellow berry.',
     heldType: 'after',
     heldEffect: 'percentHealing',
-    heldThreshHold: 100
+    heldThreshHold: 100,
+    consume: true,
   },
   // tm
   // battleItm
@@ -93,6 +95,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/silkScarf.png',
     desc: 'A silky scarf.\n\nWhen held, boosts normal type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   charcoal:{
     name: 'charcoal',
@@ -102,6 +105,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/charcoal.png',
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   mysticWater:{
     name: 'mysticWater',
@@ -111,6 +115,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/mysticWater.png',
     desc: 'A necklass coated with condentation.\n\nWhen held, boosts water type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   miracleSeed:{
     name: 'miracleSeed',
@@ -120,6 +125,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/miracleSeed.png',
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   magnet:{
     name: 'magnet',
@@ -129,6 +135,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/charcoal.png',
     desc: 'A strong magnet.\n\nWhen held, boosts electric type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   sharpBeak:{
     name: 'sharpBeak',
@@ -138,6 +145,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/sharpBeak.png',
     desc: 'A beak as shark as a knife.\n\nWhen held, boosts flying type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   hardStone:{
     name: 'hardStone',
@@ -147,6 +155,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/hardStone.png',
     desc: 'A very sturdy stone.\n\nWhen held, boosts stone type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   softSand:{
     name: 'softSand',
@@ -156,6 +165,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/softSand.png',
     desc: 'A bag of very fine sand.\n\nWhen held, boosts ground type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   silverPowder:{
     name: 'silverPowder',
@@ -165,6 +175,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/silverPowder.png',
     desc: 'A very sticky and reflective substence.\n\nWhen held, boosts bug type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   poisonBarb:{
     name: 'poisonBarb',
@@ -174,6 +185,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/poisonBarb.png',
     desc: 'Handle carefully. :)\n\nWhen held, boosts poison type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   blackGlasses:{
     name: 'blackGlasses',
@@ -183,6 +195,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/blackGlasses.png',
     desc: 'A strong magnet.\n\nWhen held, boosts dark type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   spellTag:{
     name: 'spellTag',
@@ -192,6 +205,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/spellTag.png',
     desc: 'A very ominous tag with strange writing on it.\n\nWhen held, boosts ghost type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   twistedSpoon:{
     name: 'twistedSpoon',
@@ -201,6 +215,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/twistedSpoon.png',
     desc: 'A twisted up spoon. How did it even get like this?..\n\nWhen held, boosts psychic type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   blackBelt:{
     name: 'blackBelt',
@@ -210,6 +225,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/blackBelt.png',
     desc: 'A worn out belt. Smells funny...\n\nWhen held, boosts fighting type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   dargonFang:{
     name: 'dargonFang',
@@ -219,6 +235,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/dargonFang.png',
     desc: 'A very ancient tooth.\n\nWhen held, boosts dragon type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   fairyFeather:{
     name: 'fairyFeather',
@@ -228,6 +245,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/fairyFeather.png',
     desc: 'Very soft to the touch.\n\nWhen held, boosts fairy type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
   metalCoat:{
     name: 'metalCoat',
@@ -237,6 +255,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/metalCoat.png',
     desc: 'A lightweight coat of a strong alloy.\n\nWhen held, boosts steel type attacks by 20%.',
     heldType: 'elemental',
+    consume: false,
   },
 
   // misc battle item
@@ -244,11 +263,24 @@ export const itemsObj = {
   focusBand:{
     name: 'focusBand',
     type: 'battle',
-    effect: 'steel',
-    pow: 20,
+    effect: 'sturdy',
+    pow: 1,
     img: 'img/item_scene/items/battle/focusBand.png',
-    desc: "A bandana that allows the wearer to focus on it's opponent.\n\nIf the wearer were to faint, has a 10% chance to remain alive with 1 hp.",
+    desc: "The bandana makes the wearer extra weary of hits.\n\nIf the wearer were to faint, has a 10% chance to remain alive with 1 hp.",
     heldType: 'after',
+    consume: false,
+    odds: 100
+  },
+  focusSash:{
+    name: 'focusSash',
+    type: 'battle',
+    effect: 'sturdy',
+    pow: 1,
+    img: 'img/item_scene/items/battle/focusSash.png',
+    desc: "The bandana makes the wearer extra weary of hits.\n\nIf the wearer's health is full, will remain alive with 1 hp.",
+    heldType: 'after',
+    consume: true,
+    odds: 100
   },
   // vals
   // key

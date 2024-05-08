@@ -29,7 +29,7 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Gab', 
-        team: [[pogemonsObj.disso, 10, itemsObj.banana], [pogemonsObj.maaph, 10, null]],
+        team: [[pogemonsObj.disso, 10, itemsObj.focusBand], [pogemonsObj.maaph, 10, null]],
         direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
         sprite: '../../img/charSprites/dino/dino.png',
         dialogue: 'Git Gut\n\n\nSkill issue',
@@ -62,7 +62,8 @@ export let mapsObj = {
         name: 'tree',
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
       },
-    ]
+    ],
+    weather: 'sand'
   },
   bedroom:{
     name: 'bedroom',

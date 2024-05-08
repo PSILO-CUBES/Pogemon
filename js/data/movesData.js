@@ -8,7 +8,7 @@ export const movesObj = {
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 1,
+    pow: 9999,
     acc: 95,
     pp: 50,
     effects: null,
@@ -235,6 +235,32 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
+  sunnyDay:{
+    name: 'sunnyDay',
+    type: 'status',
+    element: 'fire',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{sun: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //water
+  rainyDay:{
+    name: 'rainyDay',
+    type: 'status',
+    element: 'water',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{rain: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
+  },
 
   //grass
   leechseed:{
@@ -250,6 +276,19 @@ export const movesObj = {
     sprite: '../../img/moves/seed.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
+  },
+
+  //rock
+  sandStorm:{
+    name: 'sandStorm',
+    type: 'status',
+    element: 'rock',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{sand: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
   },
 
   //electric
@@ -348,5 +387,16 @@ export const movesObj = {
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
+  },
+  snowStorm:{
+    name: 'snowStorm',
+    type: 'status',
+    element: 'ice',
+    pow: '---',
+    acc: 100,
+    pp: 30,
+    effects: [{snow: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
   },
 }

@@ -88,7 +88,8 @@ held items effect in battle {
     quick claw?
 
     - after damage has been taken
-    focus band
+    focus band x
+    focus sash x
     banana x
     sitrus berry x
 
@@ -104,7 +105,23 @@ HM : {
     flash?
     cascade?
     dive?
+
+    actual moves not done
 }
+
+weather : {
+    sun x
+    rain x
+    sandstorm x
+    hail x
+
+    make move x
+    make weather affect stats x
+}
+
+prevent item giving during battle
+
+animation when entering battle
 
 stats menu stats name with colors to know nature's effect
 
@@ -135,8 +152,6 @@ make more pogemon
 make more moves
 
 make more items
-
-weather
 
 -- demo release
 

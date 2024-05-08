@@ -435,8 +435,16 @@ export class Pogemon extends Sprite{
     }
   }
 
-  hpManagement(target, recipientHealthBar, hpDom){
-    const hpToPercent = this.convertToPercentage(target.hp, target.stats.baseHp)
+  hpManagement(){
+    const hpToPercent = this.convertToPercentage(this.hp, this.stats.baseHp)
+
+    let recipientHealthBar = document.querySelector('#allyHealthBar')
+    let hpDom = document.querySelector('#allyHp')
+
+    if(this.isEnemy){
+      recipientHealthBar = document.querySelector('#foeHealthBar')
+      hpDom = document.querySelector('#foeHp')
+    }
 
     gsap.to(recipientHealthBar, {
       width: `${hpToPercent}%`
@@ -454,10 +462,10 @@ export class Pogemon extends Sprite{
       hpColor = 'black'
     } 
 
-    if(target.hp >= 0) hpDom.textContent = `${target.hp}/${target.stats.baseHp}`
-    else hpDom.textContent = `0/${target.stats.baseHp}`
+    if(this.hp >= 0) hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
+    else hpDom.textContent = `0/${this.stats.baseHp}`
 
-    document.querySelector(recipientHealthBar).style.backgroundColor = hpColor
+    recipientHealthBar.style.backgroundColor = hpColor
   }
 
   managePP(move, pressure){
@@ -474,7 +482,7 @@ export class Pogemon extends Sprite{
   }
 
   //doesnt make anything move, its the method to use moves during combat
-  move({move, recipient, renderedSprites, critHit, queue, queueProcess, terrainConditions, queueFaintTrigger}){
+  move({move, recipient, renderedSprites, critHit, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState}){
     if(this.hp <= 0) return
 
     let immuned = false
@@ -485,13 +493,7 @@ export class Pogemon extends Sprite{
 
     if(move.pp == 0) move = movesObj['struggle']
 
-    let userHealthBar = '#allyHealthBar'
-    let userStatus = document.querySelector('#allyStatus')
-    let userHpDom = document.querySelector('#allyHp')
-
-    let recipientHealthBar = '#foeHealthBar'
     let recipientStatus = document.querySelector('#foeStatus')
-    let hpDom = document.querySelector('#foeHp')
 
     let userStatsChangeContainer = 'allyStatusEffectContainer' 
     let recipientStatsChangeContainer = 'foeStatusEffectContainer'
@@ -508,13 +510,7 @@ export class Pogemon extends Sprite{
     let receivePos = recipient.pogemon.animationPositions.foe.receive
 
     if(this.isEnemy){
-      userHealthBar = '#foeHealthBar'
-      userStatus = document.querySelector('#foeStatus')
-      userHpDom = document.querySelector('#foeHp')
-
-      recipientHealthBar = '#allyHealthBar'
       recipientStatus = document.querySelector('#allyStatus')
-      hpDom = document.querySelector('#allyHp')
 
       userStatsChangeContainer = 'foeStatusEffectContainer'
       recipientStatsChangeContainer = 'allyStatusEffectContainer'
@@ -601,6 +597,33 @@ export class Pogemon extends Sprite{
       let heldItemDmg = 1
       if(this.heldItem != null) if(this.heldItem.heldType = 'elemental') if(move.element == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
 
+      let weatherDamage = 1
+
+      Object.values(terrainConditions.weather).forEach(weather =>{
+        if(move.element != 'fire' && move.element != 'water') return
+        if(!weather.active) return
+        
+        if(weather.element == move.element){
+          weatherDamage = 1.5
+        } else if(weather.resistance != null) if(weather.resistance == move.element){
+          weatherDamage = 0.5
+        }
+      })
+
+      let weatherResistance = 1
+
+      console.log(recipient.element[0] != 'rock' && recipient.element[1] != 'rock' && recipient.element[0] != 'ice' && recipient.element[1] != 'ice')
+
+      Object.values(terrainConditions.weather).forEach(weather =>{
+        if(recipient.element[0] != 'rock' && recipient.element[1] != 'rock' && recipient.element[0] != 'ice' && recipient.element[1] != 'ice') return
+        if(!weather.active) return
+        
+        if(recipient.element[0] == weather.element || recipient.element[1] == weather.element){
+          if(weather.element == 'rock' && move.type == 'special') weatherResistance = 1.5
+          if(weather.element == 'ice' && move.type == 'physical') weatherResistance = 1.5
+        }
+      })
+
       let damage
 
       if(move.type === 'physical'){
@@ -608,7 +631,7 @@ export class Pogemon extends Sprite{
           allyStatChange = statsChangeObj[userId].nominator.atk / statsChangeObj[userId].denominator.atk
           foeStatChange = statsChangeObj[foeId].nominator.def / statsChangeObj[foeId].denominator.def
           
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit * heldItemDmg)
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * weatherResistance * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage)
           // console.log(Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit))
         }
       } else if(move.type === 'special'){
@@ -616,7 +639,7 @@ export class Pogemon extends Sprite{
           allyStatChange = statsChangeObj[userId].nominator.spatk / statsChangeObj[userId].denominator.spatk
           foeStatChange = statsChangeObj[foeId].nominator.spdef / statsChangeObj[foeId].denominator.spdef
 
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit * heldItemDmg)
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * weatherResistance * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage)
           // console.log(Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit))
         }
       }
@@ -768,7 +791,7 @@ export class Pogemon extends Sprite{
               this.hp = Math.floor(this.hp + this.stats.baseHp * ( Object.values(Object.values(move.effects)[0])[0] / 100 ))
               if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
       
-              this.hpManagement(this, userHealthBar, userHpDom)
+              this.hpManagement()
               this.dialogue('battle', `${this.name} used ${move.name}.`)
             } else {
               document.querySelector('#movesInterface').style.display = 'none'
@@ -882,7 +905,7 @@ export class Pogemon extends Sprite{
                 this.hp = Math.floor(this.hp + this.stats.baseHp * ( Object.values(Object.values(move.effects)[0])[0] / 100 ))
                 if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
         
-                this.hpManagement(this, userHealthBar, userHpDom)
+                this.hpManagement()
                 this.dialogue('battle', `${this.name} used ${move.name}.`)
               } else {
                 document.querySelector('#movesInterface').style.display = 'none'
@@ -956,8 +979,13 @@ export class Pogemon extends Sprite{
           if(move.type == 'status'){
             timer = 1000
             if(move.position != undefined){
-              posX = move.position.x
-              posY = move.position.y
+              if(this.isEnemy){
+                posX = -move.position.x + 150
+                posY = -move.position.y + 150
+              } else {
+                posX = move.position.x
+                posY = move.position.y
+              }
             }
             const statsAnimationImage = new Image()
             statsAnimationImage.src = move.sprite
@@ -1162,8 +1190,6 @@ export class Pogemon extends Sprite{
               }
             })
 
-            console.log([...queue])
-
             queue.splice(0,2).forEach(func =>{
               queue.push(func)
             })
@@ -1190,7 +1216,6 @@ export class Pogemon extends Sprite{
             case 'hypnosis':
             case 'frostwave':
             case 'trickroom':
-
               const color = typesObj[move.element].color
   
               const tl1 = gsap.timeline()
@@ -1221,8 +1246,8 @@ export class Pogemon extends Sprite{
                   duration: 0.01,
                   onComplete: () =>{
                     fieldEffect.replaceChildren()
-                    terrainConditions.trickroom.active = true
-                    terrainConditions.trickroom.turns = 5
+                    terrainConditions.etc.trickroom.active = true
+                    terrainConditions.etc.trickroom.turns = 5
                     queueProcess.disabled = false
                   }
                 })
@@ -1351,9 +1376,7 @@ export class Pogemon extends Sprite{
               }
   
               this.opacity = 0.5
-  
-              let recipientHealthBar
-              let recipientHp
+
               let subType
   
               if(this.isEnemy) subType = 'foeSub' 
@@ -1386,9 +1409,6 @@ export class Pogemon extends Sprite{
                 })
   
                 substituteImg.src = 'img/moves/sub.png'
-  
-                recipientHealthBar = '#foeHealthBar'
-                recipientHp = document.querySelector('#foeHp')
               } else {
                 substituteSprite.position = {
                   x: this.position.x + 325,
@@ -1401,13 +1421,10 @@ export class Pogemon extends Sprite{
                 })
   
                 substituteImg.src = 'img/moves/sub_back.png'
-  
-                recipientHealthBar = '#allyHealthBar'
-                recipientHp = document.querySelector('#allyHp')
               }
   
               this.hp -= subHealth
-              this.hpManagement(this, recipientHealthBar, recipientHp)
+              this.hpManagement()
               this.subHp = subHealth
   
               renderedSprites.splice(1, 0, substituteSprite)
@@ -1525,7 +1542,7 @@ export class Pogemon extends Sprite{
 
           audioObj.SFX.tackleHit.play()
 
-          this.hpManagement(recipient, recipientHealthBar, hpDom)
+          recipient.hpManagement()
   
           gsap.to(recipient.position, {
             x: recipient.position.x + 10,
@@ -1585,7 +1602,7 @@ export class Pogemon extends Sprite{
 
           move.hitAudio.play()
 
-          this.hpManagement(recipient, recipientHealthBar, hpDom)
+          recipient.hpManagement()
     
           queueProcess.disabled = false
 
@@ -1773,6 +1790,38 @@ export class Pogemon extends Sprite{
                 recipientStatus.src = 'img/status/frz.png'
               })
               break
+            case 'sun':
+              if(terrainConditions.weather.sun.active){
+                this.dialogue('battle', `The sun is already active.`)
+              } else {
+                this.dialogue('battle', `${this.name} used ${move.name}. \n\n It summoned harsh sunlight.`)
+                manageWeatherState('sun', terrainConditions.weather.sun, 'init')
+              }
+              break
+            case 'rain':
+              if(terrainConditions.weather.sun.active){
+                this.dialogue('battle', `The rain is already active.`)
+              } else {
+                this.dialogue('battle', `${this.name} used ${move.name}. \n\n It summoned intense rain.`)
+                manageWeatherState('rain', terrainConditions.weather.rain, 'init')
+              }
+              break
+            case 'sand':
+              if(terrainConditions.weather.sun.active){
+                this.dialogue('battle', `The sand is already active.`)
+              } else {
+                this.dialogue('battle', `${this.name} used ${move.name}. \n\n It summoned a strong sand storm.`)
+                manageWeatherState('sand', terrainConditions.weather.sand, 'init')
+              }
+              break
+            case 'snow':
+              if(terrainConditions.weather.sun.active){
+                this.dialogue('battle', `The snow is already active.`)
+              } else {
+                this.dialogue('battle', `${this.name} used ${move.name}. \n\n It summoned a frigid snow storm.`)
+                manageWeatherState('snow', terrainConditions.weather.snow, 'init')
+              }
+              break
           }
         }
       }
@@ -1836,10 +1885,15 @@ export class Pogemon extends Sprite{
       case 'leechseed':
 
       // water
+      case 'rainyDay':
 
       // fire
       case 'heatwave':
-      
+      case 'sunnyDay':
+
+      // rock
+      case 'sandStorm':
+
       // electric
       case 'thunderwave':
       
@@ -1848,7 +1902,7 @@ export class Pogemon extends Sprite{
 
       // ice
       case 'frostwave':
-
+      case 'iceStorm':
       //psychic
       case 'hypnosis':
       case 'confuseray':
@@ -2102,7 +2156,7 @@ export class Pogemon extends Sprite{
       if(this.hp <= 0){
         audioObj.music.battle.stop()
         audioObj.music.victory.play()
-        this.hpManagement(this, healthBar, healthAmount)
+        this.hpManagement()
         faintEvent(this)
         return
       }
@@ -2114,6 +2168,7 @@ export class Pogemon extends Sprite{
           queue.push(() =>{{
             if(this.fainted) return
             if(opponent.fainted) return
+            console.log('thisFaint')
             thisFaints()
   
             let chip = Math.floor(this.stats.baseHp / 8)
@@ -2144,19 +2199,19 @@ export class Pogemon extends Sprite{
             
             this.dialogue('battle', `${this.name}'s health was sapped by the seeds.`)
             
+            console.log('thisFaint')
             thisFaints()
             
             this.statusEffectAnimation(affliction.name, renderedSprites, queueProcess)
-            this.hpManagement(this, healthBar, healthAmount)
-            opponent.hpManagement(opponent, opponentHealthBar, opponentHealthAmount)
+            this.hpManagement()
+            opponent.hpManagement()
           }})
         }
       })
     }
 
-    if(this.hp <= 0) {
-      thisFaints()
-    }
+    //checks if dead
+    thisFaints()
 
     checkForSeededEvent()
 
@@ -2183,11 +2238,12 @@ export class Pogemon extends Sprite{
       }
     }
 
-    //from here -> manages status effect
+    // from here -> manages status effect
     // if(!seedCheck) checkForSeededEvent()
     if(this.status.name != null) {
       queue.push(() =>{
         if(this.fainted) return
+        console.log('thisFaint')
         thisFaints()
         let chip
   
@@ -2210,20 +2266,15 @@ export class Pogemon extends Sprite{
             if(this.status.name == 'burn') this.dialogue('battle', `${this.name} felt the burn.`)
             else if(this.status.name == 'frz') this.dialogue('battle', `${this.name} was hurt by the frost.`)
             
-            if(this.hp <= 0){
-              audioObj.music.battle.stop()
-              audioObj.music.victory.play()
-              this.hpManagement(this, healthBar, healthAmount)
-              faintEvent(this)
-              return
-            }
+            console.log('thisFaint')
+            thisFaints()
   
             if(opponent != null && opponent.status.name != null) {
               if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions)
             }
             
             this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
-            this.hpManagement(this, healthBar, healthAmount)
+            this.hpManagement()
             break
           case 'psn':
             chip = Math.floor((this.stats.baseHp / 16) * this.status.turns + 1)
@@ -2239,20 +2290,15 @@ export class Pogemon extends Sprite{
             healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
             this.dialogue('battle', `${this.name} felt sick.`)
   
-            if(this.hp <= 0){
-              audioObj.music.battle.stop()
-              audioObj.music.victory.play()
-              this.hpManagement(this, healthBar, healthAmount)
-              faintEvent(this)
-              return
-            }
+            console.log('thisFaint')
+            thisFaints()
   
             if(opponent.status.name != null && info != null) {
               opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions)
             }
             
             this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
-            this.hpManagement(this, healthBar, healthAmount)
+            this.hpManagement()
   
             this.status.turns = this.status.turns + 1
             break
@@ -2269,12 +2315,15 @@ export class Pogemon extends Sprite{
     let checkIfTerrainConditionActive = () =>{
       let flag = false
       let terrainArr = []
-      Object.values(terrainConditions).forEach((terrain, i) =>{
-        if(terrain.active) {
-          flag = true
-          terrainArr.push({type: Object.keys(terrainConditions)[i],info: terrain})
-        }
+      Object.values(terrainConditions).forEach((types, i) =>{
+        Object.values(types).forEach((terrain, j) =>{
+          if(terrain.active) {
+            flag = true
+            terrainArr.push({type: Object.keys(terrainConditions[Object.keys(terrainConditions)[i]])[j], info: terrain})
+          }
+        })
       })
+      console.log(terrainArr)
       return [flag, terrainArr]
     }
 
@@ -2310,7 +2359,7 @@ export class Pogemon extends Sprite{
             duration: 0.01,
             onComplete: () =>{
               fieldEffect.replaceChildren()
-              terrainConditions.trickroom.active = true
+              terrainConditions.etc.trickroom.active = true
               queueProcess.disabled = false
             }
           })
@@ -2342,16 +2391,29 @@ export class Pogemon extends Sprite{
       // end of turn animation stuff
       if(terrainFlag){
         terrainArr.forEach(activeTerrain =>{
-          if(activeTerrain.info.turns == 0){
-            this.dialogue('battle', `The ${activeTerrain.type} is fading.`)
-            activeTerrain.info.active = false
+          if(activeTerrain.info.turns == 1){
+            queue.push(() =>{
+              this.dialogue('battle', `The ${activeTerrain.type} is fading.`)
+
+              activeTerrain.info.turns--
+              document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
+
+              activeTerrain.info.active = false
+
+              gsap.to(document.querySelector('#fieldEffectContainer'), {
+                right: '-124px',
+                duration: 1
+              })
+            })
             return
           }
+          console.log(activeTerrain)
           queue.push(() =>{
             terrainAnimation(activeTerrain.type, activeTerrain.info.element)
             activeTerrain.info.turns--
           })
           queue.push(() =>{
+            document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
             this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type}.`)
           })
         })
@@ -2391,11 +2453,8 @@ export class Pogemon extends Sprite{
         this.dialogue('battle', `${this.name} hit itself in confusion.`)
 
         let userId = 'ally'
-        let userHealthBar = '#allyHealthBar'
-        let userHp = document.querySelector('#allyHp')
         if(this.isEnemy) {
           userId = 'foe'
-          userHealthBar = '#foeHealthBar'
           userHp = document.querySelector('#foeHp')
         }
 
@@ -2406,7 +2465,7 @@ export class Pogemon extends Sprite{
         let allyDefChange = statsChangeObj[userId].nominator.def / statsChangeObj[userId].denominator.def
 
         this.hp -= Math.ceil((((2 * this.lvl / 5 + 2) * 40 * (this.stats.atk * allyAtkChange) / (this.stats.def * allyDefChange) / 50 + 2) * burn))
-        this.hpManagement(this, userHealthBar, userHp)
+        this.hpManagement()
 
         gsap.to(this.position, {
           x: this.position.x + 10,
@@ -2676,22 +2735,18 @@ export class Pogemon extends Sprite{
     } else return false
   }
 
-  useBattleItem(){
+  useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove){
     const item = this.heldItem
 
-    let recipientHealthBar = '#allyHealthBar'
-    let hpDom = document.querySelector('#allyHp')
+    if(item == undefined) return
 
-    if(this.isEnemy){
-      recipientHealthBar = '#foeHealthBar'
-      hpDom = document.querySelector('#foeHp')
-    }
-
-    console.log(item.effect)
     switch(item.effect){
       case 'heal':
-        console.log(this.convertToPercentage(this.hp, this.stats.baseHp))
-        console.log(item.heldThreshHold)
+        if(this.hp <= 0) {
+          console.log('haha')
+          faintEvent(this)
+          return
+        }
 
         if(this.convertToPercentage(this.hp, this.stats.baseHp) > item.heldThreshHold) return
         
@@ -2709,12 +2764,30 @@ export class Pogemon extends Sprite{
           this.hp = this.stats.baseHp
         }
 
-        this.hpManagement(this, recipientHealthBar, hpDom)
+        this.hpManagement()
         this.dialogue('battle', `${this.name}'s ${this.heldItem.name} healed it by ${healedAmount} HP!`)
-        console.log('change dialogue')
-        this.heldItem = null
+        break
+      case 'sturdy':
+        console.log(this.hp)
+        if(this.hp != 0) return
+        if(item.name == 'focusSash') if(targetHpBeforeMove !== 100)  return
+
+        const rng = Math.floor(Math.random() * 99) + 1
+        if(rng > this.heldItem.odds) return
+
+        this.hp = 1
+        this.fainted = false
+        this.hpManagement()
+        queueProcess.disabled = true
+        this.dialogue('battle', `Thanks to it's ${this.heldItem.name}, ${this.name} held on by the grit of it's teeth!`)
+
+        setTimeout(() =>{
+          queueProcess.disabled = false
+        }, 500)
         break
     }
+
+    if(item.consume) this.heldItem = null
   }
 }
 
@@ -2872,7 +2945,8 @@ export class NPC extends Sprite{
 
                 manageQueue(true)
                 if(pogemonInUse.hp <= 0){
-                  pogemonInUse.faint(queueFaintTrigger)
+                  // pogemonInUse.faint(queueFaintTrigger)
+                  console.log('haha')
                   faintEvent(pogemonInUse)
                   // put this in a queue
                   // check if they all fainted
