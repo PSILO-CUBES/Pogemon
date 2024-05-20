@@ -14,7 +14,8 @@ import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr } from 
 import { manageBattleState } from "./scenes/battle.js"
 import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
-import { switchStatsTargetWithKeys } from "./scenes/stats.js"
+import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
+import { abilitiesObj } from "../data/abilitiesData.js"
 
 export const keys = {
   w: {
@@ -33,8 +34,8 @@ export const keys = {
 
 let lastKey = ''
 
-let walkSpeed = 7
-let runSpeed = walkSpeed * 1.5
+let walkSpeed = 14
+let runSpeed = Math.floor(walkSpeed * 1.5)
 let moveSpeed = walkSpeed
 
 export let player
@@ -356,8 +357,8 @@ function onClickEvent(state, target, item){
   if(pogemartInteraction.initiated == false) return
   if(state){
     if(inputValue == undefined) inputValue = 0
-    if(inputValue == 0) document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${item.name}'s will you buy?`
-    else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${item.name}'s?\n\nThat will cost you ${item.price * inputValue}.`
+    if(inputValue == 0) document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(item.name)}'s will you buy?`
+    else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(item.name)}'s?\n\nThat will cost you ${item.price * inputValue}.`
 
     document.querySelectorAll('.pogemartItemsContainer').forEach(node =>{
       node.style.backgroundColor = 'transparent'
@@ -591,7 +592,7 @@ function playerInteraction(e) {
         opacity: 0.5
       })
 
-      player.team[0].dialogue('overworld', `You picked up a ${item.name}.`)
+      player.team[0].dialogue('overworld', `You picked up a ${switchUnderScoreForSpace(item.name)}.`)
 
       const itemImage = new Image()
       itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
@@ -678,7 +679,7 @@ function stopMotionWhenColliding(boundaries, direction){
           break
           case 'Down':
             xOffset = 0
-            yOffset = playerOffset - 25
+            yOffset = -playerOffset
           break
           case 'Left':
             xOffset = playerOffset
@@ -794,6 +795,69 @@ function engageBattle(animationId, battleZones) {
 
 export let lastDirection = 'Down'
 
+function pickUpAbility(){
+  // 19999
+  const pickUpOdds = 1999
+
+  for(let i = 0; i < player.team.length; i++){
+    if(player.team[i].abilityInfo.ability == null) continue
+    if(player.team[i].abilityInfo.ability.name != 'pick_Up' || player.team[i].heldItem != null) continue
+
+    const passRNG = Math.floor(Math.random() * pickUpOdds)
+    if(passRNG > 0) continue
+
+    const itemList = abilitiesObj.pick_Up.info.itemList[Math.floor(player.team[i].lvl / 20)]
+
+    const itemRNG = Math.floor(Math.random() * 100)
+
+    for(let j = 0; j < itemList.length; j++){
+      if(itemList[j].odds < itemRNG) continue
+
+      player.team[i].heldItem = itemList[j].item
+
+      pickUpAnimation(player.team[i], itemList[j].item)
+      break
+    }
+  }
+
+  function pickUpAnimation(pogemon, item){
+    const pickUpContainer = document.createElement('div')
+    pickUpContainer.id = 'pickUpContainer'
+    document.querySelector('#overworldSceneContainer').appendChild(pickUpContainer)
+
+    const pickUpImgPogemon = new Image()
+    if(pogemon.isShiny) pickUpImgPogemon.src = pogemon.pogemon.sprites.shiny.sprite
+    else pickUpImgPogemon.src = pogemon.pogemon.sprites.classic.sprite
+    const pickUpImgIcon = new Image()
+    pickUpImgIcon.src = 'img/pickup.png'
+    const pickUpImgItem = new Image()
+    pickUpImgItem.src = item.img
+
+    const pickUpImgArr = [pickUpImgPogemon, pickUpImgIcon, pickUpImgItem]
+
+    pickUpImgArr.forEach(img =>{
+      img.setAttribute('class', 'pickUpImage')
+      pickUpContainer.appendChild(img)
+    })
+
+    gsap.to(pickUpContainer, {
+      opacity: 1,
+      top: 10,
+      duration: 0.75,
+      onComplete: () =>{
+        setTimeout(() =>{3
+          gsap.to(pickUpContainer, {
+            opacity: 0,
+            duration: 0.5
+          })
+        }, 750)
+      }
+    })
+
+    // alert(`${pogemon.name} picked up a ${item.name}`)
+  }
+}
+
 function move(direction, movables, moveSpeed){
   if(!collisionWhileSurfing){
     player.img.src = 'img/charSprites/ethan/ethan.png'
@@ -824,6 +888,8 @@ function move(direction, movables, moveSpeed){
       })
       break
   }
+
+  pickUpAbility()
 }
 
 //player gets stuck to walls when changing direcitons for some reason

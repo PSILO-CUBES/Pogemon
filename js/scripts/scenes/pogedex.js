@@ -34,7 +34,7 @@ function changeTargetPogemonInfo(target){
     document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = 'INFO+'
     document.querySelector('#pogedexSceneTargetMoreInfoButton').classList.add('infoHover')
 
-    pogedexTargetImg.src = `${target.sprites.frontSprite}`
+    pogedexTargetImg.src = target.sprites.classic.frontSprite
 }
 
 function pogedexSectionClickEvent(e){
@@ -43,7 +43,7 @@ function pogedexSectionClickEvent(e){
     })
 
     e.target.parentNode.style.background = 'rgb(150,150,150)'
-
+    
     changeTargetPogemonInfo(pogemonsObj[`${e.target.parentNode.childNodes[2].innerText.toLowerCase()}`])
 }
 

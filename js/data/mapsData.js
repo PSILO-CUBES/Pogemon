@@ -1,6 +1,7 @@
 import { loadData } from "../save.js"
 import { itemsObj } from "./itemsData.js"
 import { pogemonsObj } from "./pogemonData.js"
+import { weatherObj } from "./weatherData.js"
 
 export let mapsObj = {
   background: './img/background.png',
@@ -15,7 +16,7 @@ export let mapsObj = {
     },
     height: 44,
     width: 60,
-    encounters: [{pogemon: pogemonsObj.disso, lvls: [4, 7], odds: {min:1,max:98}}, {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
+    encounters: [{pogemon: pogemonsObj.allingua, lvls: [4, 7], odds: {min:1,max:98}}, {pogemon: pogemonsObj.piny, lvls: [4, 7], odds: {min:98,max:99}}, {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:99,max:100}}],
     changeMapLocations:[
       {name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},
       {name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearlyPath', spawnPosition: {x:-1100, y:-2550,}},
@@ -39,7 +40,7 @@ export let mapsObj = {
     ],
     items: [
       {
-        name: 'focusBand',
+        name: 'leaf_Stone',
         amount: 50,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         pickedUp: false
@@ -63,7 +64,7 @@ export let mapsObj = {
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
       },
     ],
-    weather: 'sand'
+    weather: null
   },
   bedroom:{
     name: 'bedroom',

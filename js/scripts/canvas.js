@@ -48,8 +48,8 @@ scenes.set('pickingItem', {initiated: false})
 
 export const overworldSpritesArr = []
 
-
-export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr){
+export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles){
+  // console.log(OWWeatherParticles)
   background.draw()
   map.draw()
   for(let i = 0; i < obstacleSpritesArr.length; i++){
@@ -64,6 +64,31 @@ export function printImages(background, FG, map, boundaries, battleZones, change
   surfPogemonSprite.draw()
   player.draw()
   FG.draw()
+
+  for(let i = 0; i < OWWeatherParticles.length; i++){
+    if(OWWeatherParticles[i] == undefined) break
+
+    if(OWWeatherParticles[i].rotation != undefined){
+      c.save()
+      c.translate(OWWeatherParticles[i].position.x + OWWeatherParticles[i].size.width / 2, OWWeatherParticles[i].position.y + OWWeatherParticles[i].size.height / 2)
+      c.rotate((OWWeatherParticles[i].rotation * Math.PI) / 22.5)
+      c.translate(-(OWWeatherParticles[i].position.x + (OWWeatherParticles[i].size.width / 2)), -(OWWeatherParticles[i].position.y))
+      c.fillStyle = OWWeatherParticles[i].color
+      c.fillRect(OWWeatherParticles[i].position.x, OWWeatherParticles[i].position.y, OWWeatherParticles[i].size.width, OWWeatherParticles[i].size.height)
+      c.restore()
+
+      OWWeatherParticles[i].rotation -= 0.5
+    } else {
+      c.fillStyle = OWWeatherParticles[i].color
+      c.fillRect(OWWeatherParticles[i].position.x, OWWeatherParticles[i].position.y, OWWeatherParticles[i].size.width, OWWeatherParticles[i].size.height)
+    }
+
+    OWWeatherParticles[i].position = {
+      x: OWWeatherParticles[i].position.x += OWWeatherParticles[i].velocity.x,
+      y: OWWeatherParticles[i].position.y += OWWeatherParticles[i].velocity.y
+    }
+  }
+
   for(let i = 0; i < boundaries.length; i++){
     boundaries[i].draw()
   }

@@ -60,6 +60,7 @@ async function generateBoundaries(nextMapInfo){
   // uses the Boundary class
   trainerSpritesArr.length = 0
   itemSpritesArr.length = 0
+  obstacleSpritesArr.length = 0
   const boundaries = []
   const battleZones = []
   const changeMap = []
@@ -408,24 +409,38 @@ async function generateBoundaries(nextMapInfo){
     map.position.y = nextMapInfo.spawnPosition.y
 
     const collisionsMap = []
-
-    if(nextMapInfoObj.collisions != undefined){
-      for(let i = 0; i < nextMapInfoObj.collisions.length; i += nextMapInfoObj.width){
-        collisionsMap.push(nextMapInfoObj.collisions.slice(i, nextMapInfoObj.width + i))
+    if(currMap.collisions != undefined){
+      for(let i = 0; i < currMap.collisions.length; i += currMap.width){
+        collisionsMap.push(currMap.collisions.slice(i, currMap.width + i))
       }
+      // pushes new Boundries in array with the previous number map array
       collisionsMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type === 0) return
-          boundaries.push(
-            new Boundary({
-              position:{
-                x: j * Boundary.width + nextMapInfo.spawnPosition.x,
-                y: i * Boundary.height + nextMapInfo.spawnPosition.y
-              },
-              type: 1,
-              collision: true
-            })
-          )
+          else if(type == 1){
+            boundaries.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 1,
+                collision: true
+              })
+            )
+          }
+          else if(type == 8){
+            boundaries.push(
+              new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 8,
+                collision: true
+              })
+            )
+          }
         })
       })
     }
@@ -663,8 +678,77 @@ async function generateBoundaries(nextMapInfo){
         })
       })
     }
+    const obstaclesMap = []
+    if(currMap.obstacles != undefined){
+      for(let i = 0; i < currMap.obstacles.length; i += currMap.width){
+        obstaclesMap.push(currMap.obstacles.slice(i, currMap.width + i))
+      }
+      let z = 0
+      // pushes new Boundries in array with the previous number map array
+      obstaclesMap.forEach((row, i) =>{
+        row.forEach((type, j) =>{
+          if(type != 7) return
+            
+          let obstacleInfo = currMap.obstaclesInfo[z]
 
-    return [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr]
+          let boundary = new Boundary({
+            position:{
+              x: j * Boundary.width + currMap.spawnPosition.x,
+              y: i * Boundary.height + currMap.spawnPosition.y
+            },
+            type: 1,
+            collision: true
+          })
+
+          boundaries.push(boundary)
+              
+          if(z == 0) z = z + 1
+          else z++
+
+          const obstacleImg = new Image()
+          switch(obstacleInfo.name){
+            case 'tree':
+              obstacleImg.src = 'img/maps/obstacles/cut.png'
+              break
+            case 'rock':
+              obstacleImg.src = 'img/maps/obstacles/rockSmash.png'
+              break
+          }
+
+          const obstacleSprite = new Sprite({
+            type: z,
+            position:{
+              x: j * Boundary.width + currMap.spawnPosition.x,
+              y: i * Boundary.height + currMap.spawnPosition.y
+            },
+            img: obstacleImg,
+            frames: {
+              max: 4,
+              hold: 20
+            },
+            animate: false
+          })
+
+          obstacleSpritesArr.push(obstacleSprite)
+
+          eventZones.push(
+            new Boundary({
+              position:{
+                x: j * Boundary.width + currMap.spawnPosition.x,
+                y: i * Boundary.height + currMap.spawnPosition.y
+              },
+              type: 7,
+              name: obstacleInfo.name,
+              collision: true,
+              info: obstacleInfo,
+              collisionInstance: {boundary, obstacleSprite}
+            })
+          )
+        })
+      })
+    }
+
+    return [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr]
   }
 }
 

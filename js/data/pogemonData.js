@@ -1,3 +1,4 @@
+import { abilitiesObj } from "./abilitiesData.js"
 import { movesObj } from "./movesData.js"
 
 // exp yeild should look like
@@ -5,7 +6,6 @@ import { movesObj } from "./movesData.js"
 // second stage : 100 ~ 180
 // third stage : 180 ~ 250
 // legendary/high exp yeilders : 250 ~ 400
-
 
 export const pogemonsObj = {
   // #1 - #3 fighting starter x 
@@ -25,14 +25,14 @@ export const pogemonsObj = {
       spd: 45
     },
     evo: {name: 'lokol', lvl: 8, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.last_Ditch_Effort
+    ],
     movepool: {
-      1: {move: movesObj.fireball, lvl: 1},
+      1: {move: movesObj.fire_Ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 20},
-      3: {move: movesObj.heatwave, lvl: 20},
-      4: {move: movesObj.frostwave, lvl: 20},
+      3: {move: movesObj.heat_Wave, lvl: 20},
+      4: {move: movesObj.frost_Wave, lvl: 20},
     },
     sprites: {
       classic:{
@@ -88,9 +88,9 @@ export const pogemonsObj = {
       spd: 70
     },
     evo: {name: 'lokump', lvl: 12, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.last_Ditch_Effort
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7},
@@ -150,9 +150,9 @@ export const pogemonsObj = {
       spd: 90
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.last_Ditch_Effort
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
@@ -213,9 +213,9 @@ export const pogemonsObj = {
       spd: 35
     },
     evo: {name: 'steeler', lvl: 10, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.sharpened_Edges
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
@@ -274,9 +274,9 @@ export const pogemonsObj = {
       spd: 45
     },
     evo: {name: 'steevil', lvl: 12, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.sharpened_Edges
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7},
@@ -336,9 +336,9 @@ export const pogemonsObj = {
       spd: 60
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.sharpened_Edges
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
@@ -399,11 +399,11 @@ export const pogemonsObj = {
       spd: 60
     },
     evo: {name: 'maaphett', lvl: 10, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.fairy_Tale
+    ],
     movepool: {
-      1: {move: movesObj.shadowball, lvl: 1},
+      1: {move: movesObj.shadow_Ball, lvl: 1},
     },
     sprites: {
       classic:{
@@ -459,9 +459,9 @@ export const pogemonsObj = {
       spd: 80
     },
     evo: {name: 'maapheeno', lvl: 12, type: 'lvl'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.fairy_Tale
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
@@ -520,9 +520,9 @@ export const pogemonsObj = {
       spd: 105
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.fairy_Tale
+    ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
@@ -566,13 +566,13 @@ export const pogemonsObj = {
     surfable: false
   },
 
-  // #10 - #13 shroom line
+  // #10 - #12 shroom line
   piny: {
     pogedex: 10,
     name: 'piny',
     element:{
       1: 'grass',
-      2: 'psychic'
+      2: null
     },
     stats: {
       hp: 50,
@@ -582,12 +582,12 @@ export const pogemonsObj = {
       spdef: 60,
       spd: 30
     },
-    evo: {name: 'fruity', type: 'item', item: 'leafStone'},
-    abilities: {
-      1: 'None'
-    },
+    evo: {name: 'fruity', type: 'item', item: 'leaf_Stone'},
+    abilities: [
+      abilitiesObj.overgrow
+    ],
     movepool: {
-      1: {move: movesObj.fireball, lvl: 1},
+      1: {move: movesObj.fire_Ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
@@ -644,11 +644,11 @@ export const pogemonsObj = {
       spd: 30
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.overgrow
+    ],
     movepool: {
-      1: {move: movesObj.fireball, lvl: 1},
+      1: {move: movesObj.fire_Ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
@@ -690,9 +690,9 @@ export const pogemonsObj = {
     surfable: false
   },
 
-  // #14 - #17 toad line
+  // #13 - #15 toad line
   tadtoxic: {
-    pogedex: 10,
+    pogedex: 13,
     name: 'tadtoxic',
     element:{
       1: 'water',
@@ -707,27 +707,91 @@ export const pogemonsObj = {
       spd: 30
     },
     evo: {name: 'venotoad', type: 'item', item: 'waterstone'},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.torrent
+    ],
     movepool: {
-      1: {move: movesObj.fireball, lvl: 1},
+      1: {move: movesObj.fire_Ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
       classic:{
-        sprite: 'img/pogemon/014_Tadtoxic/Tadtoxic.png',
-        frontSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Animation.png',
-        backSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Back_Animation.png',
-        teamSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Team_Animation.png',
-        bagSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Bag_Animation.png',
+        sprite: 'img/pogemon/013_Tadtoxic/Tadtoxic.png',
+        frontSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Animation.png',
+        backSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Back_Animation.png',
+        teamSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Team_Animation.png',
+        bagSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Bag_Animation.png',
       },
       shiny: {
-        sprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Shiny.png',
-        frontSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Animation_Shiny.png',
-        backSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Back_Animation_Shiny.png',
-        teamSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Team_Animation_Shiny.png',
-        bagSprite: 'img/pogemon/014_Tadtoxic/Tadtoxic_Bag_Animation_Shiny.png',
+        sprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Shiny.png',
+        frontSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Animation_Shiny.png',
+        backSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: true
+  },
+
+  // #16 - #18 ant line
+  formal: {
+    pogedex: 16,
+    name: 'formal',
+    element:{
+      1: 'bug',
+      2: 'normal'
+    },
+    stats: {
+      hp: 40,
+      atk: 70,
+      def: 30,
+      spatk: 70,
+      spdef: 30,
+      spd: 40
+    },
+    evo: [{name: 'Antber', type: 'levelUp', lvl: 25, extra: ['male']}, {name: 'Regalicidea', type: 'special', extra: ['female', 'regalicideaEvent']}],
+    abilities: [
+      abilitiesObj.swarm,
+      abilitiesObj.blaze
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.fire_Ball, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/016_formal/formal.png',
+        frontSprite: 'img/pogemon/016_formal/formal_Animation.png',
+        backSprite: 'img/pogemon/016_formal/formal_Back_Animation.png',
+        teamSprite: 'img/pogemon/016_formal/formal_Team_Animation.png',
+        bagSprite: 'img/pogemon/016_formal/formal_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/016_formal/formal_Shiny.png',
+        frontSprite: 'img/pogemon/016_formal/formal_Animation_Shiny.png',
+        backSprite: 'img/pogemon/016_formal/formal_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/016_formal/formal_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/016_formal/formal_Bag_Animation_Shiny.png',
       }
     },
     animationPositions:{
@@ -753,13 +817,75 @@ export const pogemonsObj = {
     surfable: false
   },
 
+  // #19 - #20 ant eater line
+  allingua: {
+    pogedex: 19,
+    name: 'allingua',
+    element:{
+      1: 'normal',
+      2: 'steel'
+    },
+    stats: {
+      hp: 70,
+      atk: 60,
+      def: 40,
+      spatk: 40,
+      spdef: 40,
+      spd: 30
+    },
+    evo: null,
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/019_Allingua/Allingua.png',
+        frontSprite: 'img/pogemon/019_Allingua/Allingua_Animation.png',
+        backSprite: 'img/pogemon/019_Allingua/Allingua_Back_Animation.png',
+        teamSprite: 'img/pogemon/019_Allingua/Allingua_Team_Animation.png',
+        bagSprite: 'img/pogemon/019_Allingua/Allingua_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/019_Allingua/Allingua_Shiny.png',
+        frontSprite: 'img/pogemon/019_Allingua/Allingua_Animation_Shiny.png',
+        backSprite: 'img/pogemon/019_Allingua/Allingua_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/019_Allingua/Allingua_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/019_Allingua/Allingua_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
 
   // #143 - #144 disso x
   disso: {
     pogedex: 143,
     name: 'disso',
     element:{
-      1: 'rock',
+      1: 'normal',
       2: null
     },
     stats: {
@@ -771,11 +897,11 @@ export const pogemonsObj = {
       spd: 48
     },
     evo: {name: 'evo1', lvl: 20},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1},
+      1: {move: movesObj.tackle, lvl: 1},
     },
     sprites: {
       classic:{
@@ -830,17 +956,17 @@ export const pogemonsObj = {
       def: 60,
       spatk: 50,
       spdef: 60,
-      spd: 20,
+      spd: 45,
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fireball, lvl: 2},
-      3: {move: movesObj.rainyDay, lvl: 3},
-      4: {move: movesObj.swift, lvl: 3},
+      1: {move: movesObj.quick_Attack, lvl: 1},
+      2: {move: movesObj.fire_Ball, lvl: 2},
+      3: {move: movesObj.rainy_Day, lvl: 3},
+      4: {move: movesObj.trick_Room, lvl: 3},
     },
     sprites: {
       classic:{
@@ -896,11 +1022,11 @@ export const pogemonsObj = {
       spd: 70,
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      null
+    ],
     movepool: {
-      1: {move: movesObj.shadowball, lvl: 10},
+      1: {move: movesObj.shadow_Ball, lvl: 10},
     },
     sprites: {
       classic:{
@@ -957,14 +1083,14 @@ export const pogemonsObj = {
       spd: 130,
     },
     evo: null,
-    abilities: {
-      1: 'None'
-    },
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
     movepool: {
-      1: {move: movesObj.quickattack, lvl: 1},
-      2: {move: movesObj.fireball, lvl: 2},
+      1: {move: movesObj.quick_Attack, lvl: 1},
+      2: {move: movesObj.fire_Ball, lvl: 2},
       3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadowball, lvl: 10},
+      4: {move: movesObj.shadow_Ball, lvl: 10},
       5: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
@@ -1003,66 +1129,66 @@ export const pogemonsObj = {
     catchRate: 75,
     surfable: false
   },
-  jleenex: {
-    pogedex: 148,
-    name: 'jleenex',
-    element:{
-      1: 'dragon',
-      2: 'fairy'
-    },
-    stats: {
-      hp: 130,
-      atk: 60,
-      def: 110,
-      spatk: 80,
-      spdef: 125,
-      spd: 70,
-    },
-    evo: null,
-    abilities: {
-      1: 'None'
-    },
-    movepool: {
-      1: {move: movesObj.quickattack, lvl: 1},
-      2: {move: movesObj.fireball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadowball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
-    },
-    sprites: {
-      classic:{
-        frontSprite: 'img/pogemon/148_jleenex/jleenex_Animation.png',
-        backSprite: 'img/pogemon/148_jleenex/jleenex_Back_Animation.png',
-        teamSprite: 'img/pogemon/148_jleenex/jleenex_Team_Animation.png',
-        bagSprite: 'img/pogemon/148_jleenex/jleenex_Bag_Animation.png',
-      },
-      shiny: {
-        frontSprite: 'img/pogemon/148_jleenex/jleenex_Animation_Shiny.png',
-        backSprite: 'img/pogemon/148_jleenex/jleenex_Back_Animation_Shiny.png',
-        teamSprite: 'img/pogemon/148_jleenex/jleenex_Team_Animation_Shiny.png',
-        bagSprite: 'img/pogemon/148_jleenex/jleenex_Bag_Animation_Shiny.png',
-      }
-    },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
-    yeild: 70,
-    catchRate: 75,
-    surfable: false
-  },
+  // jleenex: {
+  //   pogedex: 148,
+  //   name: 'jleenex',
+  //   element:{
+  //     1: 'dragon',
+  //     2: 'fairy'
+  //   },
+  //   stats: {
+  //     hp: 130,
+  //     atk: 60,
+  //     def: 110,
+  //     spatk: 80,
+  //     spdef: 125,
+  //     spd: 70,
+  //   },
+  //   evo: null,
+  //   abilities: [
+  //     abilitiesObj.pick_Up
+  //   ],
+  //   movepool: {
+  //     1: {move: movesObj.quick_Attack, lvl: 1},
+  //     2: {move: movesObj.fire_Ball, lvl: 2},
+  //     3: {move: movesObj.tackle, lvl: 3},
+  //     4: {move: movesObj.shadow_Ball, lvl: 10},
+  //     5: {move: movesObj.slash, lvl: 10},
+  //   },
+  //   sprites: {
+  //     classic:{
+  //       frontSprite: 'img/pogemon/148_jleenex/jleenex_Animation.png',
+  //       backSprite: 'img/pogemon/148_jleenex/jleenex_Back_Animation.png',
+  //       teamSprite: 'img/pogemon/148_jleenex/jleenex_Team_Animation.png',
+  //       bagSprite: 'img/pogemon/148_jleenex/jleenex_Bag_Animation.png',
+  //     },
+  //     shiny: {
+  //       frontSprite: 'img/pogemon/148_jleenex/jleenex_Animation_Shiny.png',
+  //       backSprite: 'img/pogemon/148_jleenex/jleenex_Back_Animation_Shiny.png',
+  //       teamSprite: 'img/pogemon/148_jleenex/jleenex_Team_Animation_Shiny.png',
+  //       bagSprite: 'img/pogemon/148_jleenex/jleenex_Bag_Animation_Shiny.png',
+  //     }
+  //   },
+  //   animationPositions:{
+  //     ally:{
+  //       launch:{
+  //         x: 50, y: 250
+  //       },
+  //       receive:{
+  //         x: -50, y:-250
+  //       }
+  //     },
+  //     foe:{
+  //       launch:{
+  //         x: -200, y: 165
+  //       },
+  //       receive:{
+  //         x: -100, y: -50
+  //       }
+  //     }
+  //   },
+  //   yeild: 70,
+  //   catchRate: 75,
+  //   surfable: false
+  // },
 }

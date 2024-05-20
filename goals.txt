@@ -106,7 +106,15 @@ HM : {
     cascade?
     dive?
 
-    actual moves not done
+    actual moves not done : {
+        cut 
+        rock smash 
+        surf 
+        fly
+        flash?
+        cascade?
+        dive?
+    }
 }
 
 weather : {
@@ -117,21 +125,38 @@ weather : {
 
     make move x
     make weather affect stats x
+    overworld animation for weather : {
+        background-color x
+        particle effects : {
+            rain x
+            sun x
+            sand x
+            snow x
+        }
+    }
 }
 
-prevent item giving during battle
-
-animation when entering battle
-
-stats menu stats name with colors to know nature's effect
+prevent item giving during battle x
 
 Abilities : {
-    pick up
-    starter abilities,
+    pick up x
+
+    starter abilities x
+
     Hot stuff - 10% to burn
     At home - moves of the same type heals 1/16
     Tripped out - Confused target on field receive 1.25x more dmg (stacks)
+
+    will make abilities as i make new pogemons, no point in making a shit load of ability with only 16 mons to choose from
+
+    intimidate
+    flame body
+    rock head
+    arena trap
+    water compaction
 }
+
+friendship
 
 make first gym
 

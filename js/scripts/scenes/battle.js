@@ -16,6 +16,7 @@ import { itemUsed, manageBagState } from "./bag.js"
 import { manageEvolutionState, queueProcess as evoQueueProcess } from "./evolution.js"
 import { pc } from "./pc.js"
 import { typesObj } from "../../data/typesData.js"
+import { switchUnderScoreForSpace } from "./stats.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 export let queue = []
@@ -205,18 +206,20 @@ function initTrainerEncounter(info){
 function critLanded(pogemon, recipient){
   let critHit = false
   const critRNG = Math.floor(Math.random() * 100)
-  const critThreshold = 16
+  const critThreshold = 100
 
   if(critRNG <= critThreshold){
     critHit = true
     if(recipient.subHp > 0 || recipient.protected.active == true) return
     queueProcess.disabled = true
+    console.log(queueProcess.disabled)
     setTimeout(() =>{
       pogemon.dialogue('battle', `${pogemon.name} landed a critical hit!!!`)
+      queueProcess.disabled = true
       setTimeout(() =>{
         queueProcess.disabled = false
       }, 1000)
-    }, 500)
+    }, 1400)
   }
 
   return critHit
@@ -245,6 +248,8 @@ let allyId
 let enemyTrainerInfo
 
 function startWeather(type, info){
+  if(prevScene != 'overworld') return
+  
   console.log(info)
   document.querySelector('#encounterInterface').style.display = 'none'
 
@@ -258,6 +263,7 @@ function startWeather(type, info){
   weatherIcon.src = `img/field/${type}.png`
 
   queueProcess.disabled = true
+  console.log(queueProcess.disabled)
 
   // maybe put this in clearWeather when i make that
   Object.values(terrainConditions.weather).forEach(weather =>{
@@ -289,7 +295,23 @@ function startWeather(type, info){
   }, 625)
 }
 
-function manageWeatherState(type, info, timing){
+function clearWeather(activeTerrain){
+  queue.push(() =>{
+    ally.dialogue('battle', `The ${activeTerrain.type} is fading.`)
+
+    activeTerrain.info.turns--
+    document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
+
+    activeTerrain.info.active = false
+
+    gsap.to(document.querySelector('#fieldEffectContainer'), {
+      right: '-124px',
+      duration: 1
+    })
+  })
+}
+
+function manageWeatherState(type, info, timing, activeTerrain){
   console.log(type)
   console.log(timing)
   
@@ -298,6 +320,7 @@ function manageWeatherState(type, info, timing){
   }
 
   if(timing == 'endOfTurn'){
+    clearWeather(activeTerrain)
     console.log('show weather turn count')
   }
 }
@@ -333,6 +356,7 @@ export function initBattle(faintedTriggered, info){
     Object.values(terrainConditions).forEach(category =>{
       Object.values(category).forEach(type =>{
         type.active = false
+        //set turns for terrain effects
         type.turns = 5
       })
     })
@@ -385,7 +409,7 @@ export function initBattle(faintedTriggered, info){
   }
 
   if(currMap.weather != undefined){
-    manageWeatherState(currMap.weather, terrainConditions.weather[currMap.weather], 'init')
+    manageWeatherState(currMap.weather.type, terrainConditions.weather[currMap.weather.type], 'init')
   }
 
   console.log(terrainConditions.weather)
@@ -404,6 +428,7 @@ export function initBattle(faintedTriggered, info){
     if(itemUsed.item.type == 'ball'){
       if(enemyTrainer == undefined){
         queueProcess.disabled = true
+        console.log(queueProcess.disabled)
         function backToOverWorld(){
           //might throw error
   
@@ -442,7 +467,7 @@ export function initBattle(faintedTriggered, info){
       faintedTriggered.active = false
 
       // here that is fucked
-      foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions)
+      foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions, manageWeatherState)
       foe.dialogue('battle', `You sent out ${ally.name}`)
 
       document.querySelector('#dialogueInterface').style.display = 'block'
@@ -704,7 +729,7 @@ export function movesHoverEvent(e, target, type){
   let currentMove
 
   for(let i = 0; i < target.moves.length; i++){
-    if(target.moves[i].name === `${e.target.textContent}`){
+    if(target.moves[i].name === `${e.target.textContent.replace(/ /g, "_")}`){
       currentMove = target.moves[i]
     }
   }
@@ -861,9 +886,9 @@ function switchLearnedMoveForSelectedMove(e){
 
       if(targetedInterface === 'evolutionMovesInterface'){
         document.querySelector('#evolutionInterface').style.display = 'block'
-        switchMoveTarget.dialogue('evolution', `${switchMoveTarget.name} learned ${learntMove.name}!`)
+        switchMoveTarget.dialogue('evolution', `${switchMoveTarget.name} learned ${switchUnderScoreForSpace(learntMove.name)}!`)
       } else {
-        switchMoveTarget.dialogue('battle', `${switchMoveTarget.name} learned ${learntMove.name}!`)
+        switchMoveTarget.dialogue('battle', `${switchMoveTarget.name} learned ${switchUnderScoreForSpace(learntMove.name)}!`)
       }
     }
     
@@ -879,7 +904,7 @@ function setUserMovesEvents(eventType, currMovesBox, target){
     switchMoveTarget = target
     if(eventType === 'switchMove') currMovesBox.childNodes[i].addEventListener('click', e => _preventActionSpam(switchLearnedMoveForSelectedMove, e, 200))
 
-    currMovesBox.childNodes[i].textContent = target.moves[i].name
+    currMovesBox.childNodes[i].textContent = switchUnderScoreForSpace(target.moves[i].name)
   }
 }
 
@@ -905,8 +930,7 @@ export function createMovesMenuButtons(state, type, event, target){
 
       const movesButton = document.createElement('div')
       movesButton.classList.add(targetedClass)
-      movesButton.textContent = showcasedMove[i].name
-      
+      movesButton.textContent = switchUnderScoreForSpace(showcasedMove[i].name)      
       currMovesBox.appendChild(movesButton)
     }
 
@@ -929,7 +953,7 @@ export function createMovesMenuButtons(state, type, event, target){
 }
 
 function chooseMove(e) {
-  let selectedMove = movesObj[`${e.target.textContent}`]
+  let selectedMove = movesObj[`${e.target.textContent.replace(/ /g, "_")}`]
   //should change ai move depending on decided difficulty
   let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
 
@@ -1029,7 +1053,7 @@ export function learnMoveOptionEvent(e, move, type, target){
       document.querySelector('#learnMoveDescElement').textContent = move.element
       document.querySelector('#learnMoveDescElement').style.color = typesObj[move.element].color
       document.querySelector('#learnMoveDescType').textContent = `${move.type}`
-      document.querySelector('#learnMoveName').textContent = move.name
+      document.querySelector('#learnMoveName').textContent = switchUnderScoreForSpace(move.name)
 
       document.querySelector('#learnMoveInfo').style.display = 'grid'
       gsap.to(document.querySelector('#learnMoveInfo').style, {
@@ -1048,7 +1072,7 @@ export function learnMoveOptionEvent(e, move, type, target){
       document.querySelector('#evoLearnMoveDescElement').textContent = move.element
       document.querySelector('#evoLearnMoveDescElement').style.color = typesObj[move.element].color
       document.querySelector('#evoLearnMoveDescType').textContent = `${move.type}`
-      document.querySelector('#evoLearnMoveName').textContent = move.name
+      document.querySelector('#evoLearnMoveName').textContent = switchUnderScoreForSpace(move.name)
 
       document.querySelector('#evoLearnMoveInfo').style.display = 'grid'
       gsap.to(document.querySelector('#evoLearnMoveInfo').style, {
@@ -1075,7 +1099,7 @@ export function learnMoveOptionEvent(e, move, type, target){
       })
     }
     
-    target.dialogue(type, `${target.name} gave up on learning ${move.name}.`)
+    target.dialogue(type, `${target.name} gave up on learning ${switchUnderScoreForSpace(move.name)}.`)
 
     target.learntMoves.push(move.name)
 
@@ -1198,7 +1222,7 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
             learnMoveMenu(type, true, ally)
             document.querySelector('#evolutionInterface').style.display = 'none'
             interfaceDom.style.display = 'grid'
-            dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${learntMove.name}?`
+            dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${switchUnderScoreForSpace(learntMove.name)}?`
           })
         } else {
           learntMove = newMoves[i]
@@ -1206,7 +1230,7 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
           learnMoveMenu(type, true, ally)
           document.querySelector('#evolutionInterface').style.display = 'none'
           interfaceDom.style.display = 'grid'
-          dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${learntMove.name}?`
+          dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${switchUnderScoreForSpace(learntMove.name)}?`
         }
       } else {
         selectedQueue.push(() => ally.dialogue(type, `${ally.name} is trying to learn ${newMoves[i].name}!`))
@@ -1216,7 +1240,7 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
           learnMoveMenu(type, true, ally)
           document.querySelector('#evolutionInterface').style.display = 'none'
           interfaceDom.style.display = 'grid'
-          dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${learntMove.name}?`
+          dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${switchUnderScoreForSpace(learntMove.name)}?`
         })
       }
     }
@@ -1617,12 +1641,12 @@ function faintEvent(target){
 function manageStatusEvent(faster, slower){
   // if foe is faster, check for it's status before ally's
   if(faster.isEnemy){
-    faster.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent, slower, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions)
+    faster.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent, slower, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions, manageWeatherState)
     return
   }
   
   // if ally is faster, check for it's status before foe's
-  faster.checkStatus('#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent, slower, ['#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions)
+  faster.checkStatus('#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent, slower, ['#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions, manageWeatherState)
 }
 
 function checkIfFainted(target){
@@ -1656,7 +1680,6 @@ const terrainConditions = {
   etc: {
     trickroom: {
       active: false,
-      turns: 5,
       element: 'psychic',
       color: typesObj['psychic'].color
     },
@@ -1664,27 +1687,23 @@ const terrainConditions = {
   weather: {
     sun: {
       active: false,
-      turns: 5,
       element: 'fire',
       resistance: 'water',
       color: typesObj['fire'].color
     },
     rain: {
       active: false,
-      turns: 5,
       element: 'water',
       resistance: 'fire',
       color: typesObj['water'].color
     },
     snow: {
       active: false,
-      turns: 5,
       element: 'ice',
       color: typesObj['ice'].color
     },
     sand: {
       active: false,
-      turns: 5,
       element: 'rock',
       color: typesObj['rock'].color
     },
@@ -1704,7 +1723,8 @@ function attackMove(e) {
   let currMove
   
   for(let i = 0; i < ally.moves.length; i++){
-    if(ally.moves[i].name === `${e.target.textContent}`){
+    if(ally.moves[i].name === `${e.target.textContent.replace(/ /g, "_")}`){
+      console.log()
       currMove = ally.moves[i]
       break
     }

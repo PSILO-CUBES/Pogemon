@@ -31,6 +31,11 @@ const pogemonSprite = new Sprite({
 
 pogemonImg.src = '../../../img/female_icon.png'
 
+export function switchUnderScoreForSpace(text){
+	console.log(text)
+	return text.replace(/_/g, ' ')
+}
+
 function statsAnimation(){
   statsAnimationFrame = window.requestAnimationFrame(statsAnimation)
 
@@ -245,12 +250,13 @@ function createMenu(){
 								case 0:
 									// ability name
 									statsSceneGridSectionInfoAbility.setAttribute('id', 'statsSceneGridSectionInfoAbilityName')
-									statsSceneGridSectionInfoAbility.innerText = `Ability : ${selectedPogemon.ability}`
+									console.log(selectedPogemon.abilityInfo.ability)
+									statsSceneGridSectionInfoAbility.innerText = `Ability : ${switchUnderScoreForSpace(selectedPogemon.abilityInfo.ability.name)}`
 									break
 								case 1:
 									// ability desc
 									statsSceneGridSectionInfoAbility.setAttribute('id', 'statsSceneGridSectionInfoAbilityDesc')
-									statsSceneGridSectionInfoAbility.innerText = 'abilities coming soon ;)'
+									statsSceneGridSectionInfoAbility.innerText = `${selectedPogemon.abilityInfo.ability.desc}`
 									break
 							}
 						
@@ -479,7 +485,7 @@ function createMenu(){
 						for(let i = 0; i < 6; i++){
 							const statsSceneGridSectionDataStats = document.createElement('div')
 							statsSceneGridSectionDataStats.setAttribute('class', 'statsSceneGridSectionDataStats')
-							statsSceneGridSectionDataStats.innerText = `${statsArr[i]} : ${Object.values(selectedPogemon.stats)[i]}`
+							statsSceneGridSectionDataStats.innerText = `${statsArr[i]} \n\n\n ${Object.values(selectedPogemon.stats)[i]}`
 						
 							statsSceneGridSectionData.appendChild(statsSceneGridSectionDataStats)
 						}
@@ -489,7 +495,7 @@ function createMenu(){
 						for(let i = 0; i < selectedPogemon.moves.length; i++){
 							const statsSceneGridSectionDataMoves = document.createElement('div')
 							statsSceneGridSectionDataMoves.setAttribute('class', 'statsSceneGridSectionDataMoves')
-							statsSceneGridSectionDataMoves.innerText = `${selectedPogemon.moves[i].name}`
+							statsSceneGridSectionDataMoves.innerText = `${switchUnderScoreForSpace(selectedPogemon.moves[i].name)}`
 							statsSceneGridSectionDataMoves.addEventListener('click', e => statsSceneMovesInteraction(e, true))
 
 							statsSceneGridSectionData.appendChild(statsSceneGridSectionDataMoves)

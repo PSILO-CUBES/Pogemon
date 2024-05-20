@@ -15,6 +15,7 @@ import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
 import { queue as evoQueue, queue } from './evolution.js'
+import { typesObj } from '../../data/typesData.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -43,10 +44,18 @@ let nextMapSaveInfo
 let prevMap
 let firstLoad = true
 
+function startOverWorldWeather(){
+  const OWSceneContainer = document.querySelector('#weatherContainer')
+
+  if(mapsObj[currMap.name].weather == undefined) OWSceneContainer.style.backgroundColor = `transparent`
+  else OWSceneContainer.style.backgroundColor = `#${typesObj[mapsObj[currMap.name].weather.element].color}${mapsObj[currMap.name].weather.opacity}`
+}
+
 export async function switchMap(nextMapInfo, preMapInfo){
   if(nextMapInfo != undefined) {
     if(nextMapInfo.name != 'undefined'){
       [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(nextMapInfo)
+      console.log(obstacleSpritesArr)
       prevMap = preMapInfo
     }
   }
@@ -80,6 +89,8 @@ export async function switchMap(nextMapInfo, preMapInfo){
     pogecenterReturnInfo.spawnPosition.y = null
   }
 
+  // if(typeof obstacleSpritesArr != 'array') obstacleSpritesArr = []
+
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
 
   gsap.to('#overlapping', {
@@ -88,6 +99,9 @@ export async function switchMap(nextMapInfo, preMapInfo){
     onComplete(){
       player.disabled = false
       nextMapSaveInfo = nextMapInfo
+      //map changed here
+      startOverWorldWeather()
+
       if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
         pogecenterReturnInfo.name = preMapInfo.name
         pogecenterReturnInfo.spawnPosition.x = preMapInfo.position.x
@@ -490,13 +504,115 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    console.log(battleQueue)
+    console.log(player.team)
   }
 }
 
 window.addEventListener('keydown', (e) => _preventActionSpam(escapeKeyEventOptions, e, 500), true)
 
 let OWAnimationRuning = false
+
+let OWWeatherParticles = []
+
+function manageWeatherParticles(weather){
+  if(weather == undefined) {
+    OWWeatherParticles = []
+    return
+  }
+
+  let particle = {
+    position: {
+      x: 0,
+      y: 0
+    },
+    velocity:{
+      x: 0,
+      y: 0
+    },
+    size: {
+      height: 0,
+      width: 0
+    },
+    color: null,
+  }
+
+  if(OWWeatherParticles.length > weather.maxParticleCount) OWWeatherParticles.shift()
+
+  switch(weather.type){
+    case 'sun':
+      particle = {
+        position: {
+          x: 0,
+          y: -window.innerHeight
+        },
+        velocity:{
+          x: 0,
+          y: 0
+        },
+        size: {
+          height: window.innerHeight * 2,
+          width: 5
+        },
+        color: '#ffd96617',
+        rotation: 1
+      }
+      break
+    case 'rain':
+      particle = {
+        position: {
+          x: Math.floor(Math.random() * window.innerWidth),
+          y: 0
+        },
+        velocity:{
+          x: 0,
+          y: 10 + Math.floor(Math.random() * 5)
+        },
+        size: {
+          height: 7,
+          width: 3
+        },
+        color: 'blue',
+      }
+      break
+    case 'sand':
+      particle = {
+        position: {
+          x: 0,
+          y: Math.floor(Math.random() * window.innerHeight)
+        },
+        velocity:{
+          x: 5 + Math.floor(Math.random() * 3),
+          y: 0
+        },
+        size: {
+          height: 5,
+          width: 5
+        },
+        color: 'brown',
+      }
+      break
+    case 'snow':
+      particle = {
+        position: {
+          x: Math.floor(Math.random() * window.innerWidth),
+          y: 0
+        },
+        velocity:{
+          x: 1 + Math.floor(Math.random() * 2 * (Math.floor(Math.random() * -2) + 1)),
+          y: 2 + Math.floor(Math.random() * 2)
+        },
+        size: {
+          height: 2 * Math.floor(Math.random() * 4),
+          width: 2 * Math.floor(Math.random() * 4)
+        },
+        color: 'white',
+      }
+      break
+  }
+
+  OWWeatherParticles.push(particle)
+
+}
 
 const overWorldAnimation = timeSpent =>{
   animationId = requestAnimationFrame(overWorldAnimation)
@@ -505,7 +621,8 @@ const overWorldAnimation = timeSpent =>{
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
   lastFrameSpent = timeSpent
 
-  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr)
+  manageWeatherParticles(mapsObj[currMap.name].weather)
+  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)
   playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr)
 }
 
@@ -523,6 +640,7 @@ export function manageOverWorldState(state){
     document.querySelector('#overworldScene').style.display = 'block'
     document.querySelector('#overworldMenu').style.display = 'none'
     overWorldAnimation()
+    startOverWorldWeather()
     scenes.set('overworld', {initiated : true})
     player.disabled = false
     menu.initiated = false
