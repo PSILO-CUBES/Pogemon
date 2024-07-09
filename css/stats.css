@@ -305,6 +305,12 @@
   font-size: var(--default-font-size);
 
   text-align: center;
+
+  flex-direction: column;
+
+  transform: translateY(-25%)
+}.statsSceneGridSectionDataStats>*{
+  padding-top: 25;
 }
 
 #statsSceneGridSectionDataMovesContainer{

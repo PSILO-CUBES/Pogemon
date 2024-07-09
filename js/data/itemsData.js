@@ -6,7 +6,35 @@ export const itemsObj = {
     effect: 'evo',
     pow: '---',
     img: 'img/item_scene/items/misc/leaf_Stone.png',
-    desc: "Can trigger certain pogemon's evolution."
+    desc: "Can trigger certain pogemon's evolution.",
+    consume: true
+  },
+  water_Stone:{
+    name:'water_Stone',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/water_Stone.png',
+    desc: "Can trigger certain pogemon's evolution.",
+    consume: true
+  },
+  fire_Stone:{
+    name:'fire_Stone',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/fire_Stone.png',
+    desc: "Can trigger certain pogemon's evolution.",
+    consume: true
+  },
+  thunder_Stone:{
+    name:'thunder_Stone',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/thunder_Stone.png',
+    desc: "Can trigger certain pogemon's evolution.",
+    consume: true
   },
   // med
   potion: {
@@ -16,6 +44,7 @@ export const itemsObj = {
     pow: '20',
     img: 'img/item_scene/items/med/potion.png',
     desc: 'Standard Heal',
+    friendliness: 1
   },
   good_Potion: {
     name: 'good_Potion',
@@ -23,7 +52,8 @@ export const itemsObj = {
     effect: 'heal',
     pow: '50',
     img: 'img/item_scene/items/med/heal.png',
-    desc: 'Good Heal'
+    desc: 'Good Heal',
+    friendliness: 2
   },
   mega_Potion: {
     name: 'mega_Potion',
@@ -31,7 +61,8 @@ export const itemsObj = {
     effect: 'heal',
     pow: '200',
     img: 'img/item_scene/items/med/heal.png',
-    desc: 'Crazy Heal'
+    desc: 'Crazy Heal',
+    friendliness: 3
   },
   resurrect: {
     name: 'resurrect',
@@ -40,6 +71,7 @@ export const itemsObj = {
     pow: '0.25',
     img: 'img/item_scene/items/med/resurrect.png',
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+    friendliness: 4
   },
   // balls
   pogeball: {
@@ -70,6 +102,7 @@ export const itemsObj = {
     heldEffect: 'flatHealing',
     heldThreshHold: 100,
     consume: true,
+    friendliness: 1
   },
   yellow_Berry: {
     name: 'yellow_Berry',
@@ -82,6 +115,7 @@ export const itemsObj = {
     heldEffect: 'percentHealing',
     heldThreshHold: 100,
     consume: true,
+    friendliness: 1
   },
   // tm
   // battleItm
@@ -260,6 +294,16 @@ export const itemsObj = {
 
   // misc battle item
 
+  black_Sludge:{
+    name: 'black_Sludge',
+    type: 'battle',
+    effect: 'poison',
+    img: 'img/item_scene/items/battle/black_Sludge.png',
+    desc: "If held, holder will loose 1/16th or it's max HP per turn.",
+    heldType: 'after',
+    consume: false,
+  },
+
   focus_Band:{
     name: 'focus_Band',
     type: 'battle',
@@ -284,4 +328,15 @@ export const itemsObj = {
   },
   // vals
   // key
+  glowy_Halo:{
+    name: 'glowy_Halo',
+    type: 'key',
+    effect: 'evolution',
+    pow: "---",
+    img: 'img/item_scene/items/key/halo.png',
+    desc: "A strange and glowy halo, given to you by Professor Heisenberg in Sol Town.\n\nHe mentioned something about it allowing the slime to evolve somehow.",
+    heldType: '---',
+    consume: false,
+    odds: 0
+  }
 }

@@ -14,8 +14,8 @@ export const movesObj = {
     effects: null,
     priority: 0
   },
-  quick_Attack:{
-    name: 'quick_Attack',
+  quick_attack:{
+    name: 'quick_attack',
     type: 'physical',
     element: 'normal',
     pow: 50,
@@ -28,10 +28,10 @@ export const movesObj = {
     name: 'headbutt',
     type: 'physical',
     element: 'normal',
-    pow: 1000,
+    pow: 80,
     acc: 90,
     pp: 25,
-    effects: [{flinched: 100}],
+    effects: [{flinched: 30}],
     priority: 0
   },
   slash:{
@@ -57,11 +57,11 @@ export const movesObj = {
   },
 
   // fighting
-  super_Power: {
-    name: 'super_Power',
+  super_power: {
+    name: 'super_power',
     type: 'physical',
     element: 'fighting',
-    pow: 1,
+    pow: 120,
     acc: 100,
     pp: 30,
     effects: [{name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}],
@@ -76,11 +76,11 @@ export const movesObj = {
   // special
 
   // fire
-  fire_Ball:{
-    name: 'fire_Ball',
+  fire_ball:{
+    name: 'fire_ball',
     type: 'special',
     element: 'fire',
-    pow: 100,
+    pow: 999,
     acc: 100,
     pp: 30,
     effects: [{burn: 100}],
@@ -92,8 +92,8 @@ export const movesObj = {
     hitAudio: audioObj.SFX.hitFireBall
   },
   //ghost
-  shadow_Ball:{
-    name: 'shadow_Ball',
+  shadow_ball:{
+    name: 'shadow_ball',
     type: 'special',
     element: 'ghost',
     pow: 25,
@@ -218,8 +218,8 @@ export const movesObj = {
   },
 
   //fire
-  heat_Wave:{
-    name: 'heat_Wave',
+  heat_wave:{
+    name: 'heat_wave',
     type: 'status',
     element: 'fire',
     pow: '---',
@@ -235,8 +235,8 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
-  sunny_Day:{
-    name: 'sunny_Day',
+  sunny_day:{
+    name: 'sunny_day',
     type: 'status',
     element: 'fire',
     pow: '---',
@@ -250,8 +250,8 @@ export const movesObj = {
   },
 
   //water
-  rainy_Day:{
-    name: 'rainy_Day',
+  rainy_day:{
+    name: 'rainy_day',
     type: 'status',
     element: 'water',
     pow: '---',
@@ -263,8 +263,8 @@ export const movesObj = {
   },
 
   //grass
-  leech_Seed:{
-    name: 'leech_Seed',
+  leech_seed:{
+    name: 'leech_seed',
     type: 'status',
     element: 'grass',
     pow: '---',
@@ -279,8 +279,8 @@ export const movesObj = {
   },
 
   //rock
-  sand_Storm:{
-    name: 'sand_Storm',
+  sand_storm:{
+    name: 'sand_storm',
     type: 'status',
     element: 'rock',
     pow: '---',
@@ -292,8 +292,8 @@ export const movesObj = {
   },
 
   //electric
-  thunder_Wave:{
-    name: 'thunder_Wave',
+  thunder_wave:{
+    name: 'thunder_wave',
     type: 'status',
     element: 'electric',
     pow: '---',
@@ -341,8 +341,8 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
-  confuse_Ray:{
-    name: 'confuse_Ray',
+  confuse_ray:{
+    name: 'confuse_ray',
     type: 'status',
     element: 'psychic',
     pow: '---',
@@ -356,15 +356,15 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
-  trick_Room:{
-    name: 'trick_Room',
+  trick_room:{
+    name: 'trick_room',
     type: 'status',
     element: 'psychic',
     pow: '---',
     acc: 100,
     pp: 5,
-    effects: [{trickroom: 100, type: 'status'}],
-    priority: -5,
+    effects: [{trick_room: 100, type: 'status'}],
+    priority: 0, // <------ needs to be -7 
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
@@ -373,8 +373,8 @@ export const movesObj = {
   },
 
   //ice
-  frost_Wave:{
-    name: 'frost_Wave',
+  frost_wave:{
+    name: 'frost_wave',
     type: 'status',
     element: 'ice',
     pow: '---',
@@ -388,8 +388,8 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
-  snow_Storm:{
-    name: 'snow_Storm',
+  snow_storm:{
+    name: 'snow_storm',
     type: 'status',
     element: 'ice',
     pow: '---',

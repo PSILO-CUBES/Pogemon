@@ -5,17 +5,19 @@ import { mapsObj } from "../data/mapsData.js"
 import { movesObj } from "../data/movesData.js"
 import { itemsObj } from "../data/itemsData.js"
 
-import { Sprite, NPC, Pogemon } from "../classes.js"
+import { Sprite, Character, Pogemon } from "../classes.js"
 
 import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr } from "./maps.js"
+import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
 import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
+import { manageEvolutionState } from "./scenes/evolution.js"
+import { natureObj } from "../data/natureData.js"
 
 export const keys = {
   w: {
@@ -34,7 +36,7 @@ export const keys = {
 
 let lastKey = ''
 
-let walkSpeed = 14
+let walkSpeed = 10
 let runSpeed = Math.floor(walkSpeed * 1.5)
 let moveSpeed = walkSpeed
 
@@ -73,7 +75,7 @@ export async function generatePlayer(canvas){
     })
 
     if(data == null) {
-      player = new NPC([], new Map(), 500, 'Down', 'player', new Sprite({
+      player = new Character([], new Map(), 500, 'Down', 'player', 'ethan', new Sprite({
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
@@ -86,16 +88,11 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj['jlissue'], true, 'geneTown')
-      player.catch(pogemonsObj['loko'], true, 'geneTown')
-      player.catch(pogemonsObj['steeli'], true, 'geneTown')
-      player.catch(pogemonsObj['maaph'], true, 'geneTown')
-      player.catch(pogemonsObj['tadtoxic'], true, 'geneTown')
-      player.catch(pogemonsObj['piny'], true, 'geneTown')
+      player.catch(pogemonsObj.godlie, true, 'geneTown')
 
       return player
     } else {
-      player = new NPC([], new Map(), 500, 'Down', 'player', new Sprite({
+      player = new Character([], new Map(), 500, 'Down', 'player', 'ethan', new Sprite({
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
@@ -124,7 +121,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemon.pogemon, Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -137,8 +134,26 @@ export async function generatePlayer(canvas){
         remodeledPogemon.learntMoves = data.playerInfo.teamLearntMovesInfo[i]
 
         player.team.push(remodeledPogemon)
+
+        if(player.team[i].nature.values == undefined){
+          player.team[i].nature.values = natureObj[player.team[i].nature.name]
+        }
+
+        console.log(player.team[i].nature)
       })
+
       player.money = data.playerInfo.player.money
+
+      player.pogedexInfo = data.playerInfo.player.pogedexInfo
+
+      player.surfing = data.playerInfo.player.surfing
+
+      if(player.surfing){
+        player.img.src = 'img/charSprites/ethan/ethan_surf.png'
+        surfPogemonSprite.img.src = `img/charSprites/surf/surf_down.png`
+        surfPogemonSprite.animate = true
+      }
+
       return player
     }
 }
@@ -452,8 +467,11 @@ export const pogemartInteraction = {
 
 let healProcess = false
 
+let goldieEvoFlag = false
+
 function playerInteraction(e) {
   if(scenes.get('overworld').initiated == false) return
+  if(scenes.get('evolution').initiated) return
   if(e.key != ' ') return
 
   let openWindow = document.querySelector('#openWindow')
@@ -484,10 +502,79 @@ function playerInteraction(e) {
 
       document.querySelector('#overworldDialogueContainer').style.display = 'grid'
 
-      for(let i = 0; i < player.interaction.info.dialogue.length; i++){
-        if(i == 0) player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
+      let chosenDialogue = player.interaction.info.dialogue
+
+      console.log(player.interaction.info)
+
+      if(player.interaction.info.eventKey != undefined){
+        switch(player.interaction.info.eventKey){
+          case 'maatMeeting' :
+            console.log('happens')
+            worldEventData.maat.firstMeet = true
+            break
+          case 'heisenbergHouse' :
+            if(!worldEventData.heisenberg.firstTalk) {
+              worldEventData.heisenberg.firstTalk = true
+              player.bag.set('glowy_Halo', {item: {...itemsObj['glowy_Halo']}, quantity: 1})
+              player.bag.set('leaf_Stone', {item: {...itemsObj['leaf_Stone']}, quantity: 1})
+              player.bag.set('fire_Stone', {item: {...itemsObj['fire_Stone']}, quantity: 1})
+              player.bag.set('water_Stone', {item: {...itemsObj['water_Stone']}, quantity: 1})
+              player.bag.set('thunder_Stone', {item: {...itemsObj['thunder_Stone']}, quantity: 1})
+              player.bag.set('black_Sludge', {item: {...itemsObj.black_Sludge}, quantity: 1})
+            } else {
+              if(worldEventData.heisenberg.firstTalk){
+                if(!worldEventData.heisenberg.slimieEvolutionShowed){
+                  worldEventData.heisenberg.slimieEvolutionShowed = true
+                  player.team.forEach(pogemon =>{
+                    if(pogemon.name == 'slimie' || pogemon.name == 'flamie'|| pogemon.name == 'wettie'|| pogemon.name == 'grassie'|| pogemon.name == 'statikie'|| pogemon.name == 'pukie') 
+                      chosenDialogue = player.interaction.info.slimeDialogue
+                  })
+                } else {
+                  if(!worldEventData.heisenberg.allSlimesCollected){
+                    worldEventData.heisenberg.allSlimesCollected = true
+                    let slimeCheckObj = {
+                      slimie: false,
+                      flamie: false,
+                      wettie: false,
+                      grassie: false,
+                      statikie: false,
+                      pukie: false
+                    }
+  
+                    let goldieEvoPass = true
+  
+                    player.team.forEach(pogemon =>{
+                      if(pogemon.name == 'slimie' || pogemon.name == 'flamie'|| pogemon.name == 'wettie'|| pogemon.name == 'grassie'|| pogemon.name == 'statikie'|| pogemon.name == 'pukie') 
+                        slimeCheckObj[pogemon.name] = true
+                    })
+  
+                    Object.values(slimeCheckObj).forEach(value =>{
+                      if(!value) goldieEvoFlag = false
+                    })
+                    
+                    if(goldieEvoPass) {
+                      goldieEvoFlag = true
+  
+                      chosenDialogue = player.interaction.info.haloDialogue
+                    
+                      player.bag.set('glowy_Halo', {item: {...itemsObj['glowy_Halo']}, quantity: 0})
+
+                      player.team.length = 1
+                    }
+                  } else {
+                    chosenDialogue = player.interaction.info.postEvoDialogue
+                  }
+                }
+              }
+            }
+            break
+        }
+      }
+
+      for(let i = 0; i < chosenDialogue.length; i++){
+        if(i == 0) player.team[0].dialogue('overworld', chosenDialogue[i])
         else queue.push(() => {
-          player.team[0].dialogue('overworld', player.interaction.info.dialogue[i])
+          player.team[0].dialogue('overworld', chosenDialogue[i])
         })
       }
 
@@ -510,6 +597,7 @@ function playerInteraction(e) {
           break
         case 'pogemart':
           queue.push(() =>{
+            console.log(mapsObj[`pogemart`].productOptions[0])
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[0])
             disableOWMenu.active = false
             inputValue = 0
@@ -611,6 +699,8 @@ function playerInteraction(e) {
     case 'rock':
       if(player.interaction.info.disabled) return
 
+      if(player.interaction.name == 'tree') if(!worldEventData.maat.gym) return
+
       player.interaction.collisionInstance.obstacleSprite.animate = true
       player.disabled = true
       setTimeout(() =>{
@@ -628,7 +718,7 @@ window.addEventListener('keydown', e => playerInteraction(e))
 
 // collissions
 
-let playerCenterOffset = 14
+let playerCenterOffset = 17
 
 function rectangularCollision({ rectangle1, rectangle2 }, type){
   if(type == undefined){
@@ -652,6 +742,8 @@ let waterCollided = false
 
 let collisionWhileSurfing = false
 
+let waterDecollisionFlag = false
+
 function stopMotionWhenColliding(boundaries, direction){
   for(let i = 0; i < boundaries.length; i++){
     const boundary = boundaries[i]
@@ -664,10 +756,10 @@ function stopMotionWhenColliding(boundaries, direction){
     let yOffset
 
     let playerOffset = 16
+    let surfOffset = 0.25
     
     switch(type){
       case 1:
-      case 8:
         switch(direction){
           case 'Up':
             xOffset = 0
@@ -685,6 +777,47 @@ function stopMotionWhenColliding(boundaries, direction){
             xOffset = playerOffset
             yOffset = 0
           break
+        }
+        break
+      case 8:
+        if(waterCollided){
+          switch(direction){
+            case 'Up':
+              xOffset = 0
+              yOffset = playerOffset * -2
+            break
+            case 'Right':
+              xOffset = -playerOffset * 10
+              yOffset = 0
+            break
+            case 'Down':
+              xOffset = 0
+              yOffset = -playerOffset * 6
+            break
+            case 'Left':
+              xOffset = playerOffset
+              yOffset = 0
+            break
+          }
+        } else {
+          switch(direction){
+            case 'Up':
+              xOffset = 0
+              yOffset = playerOffset
+            break
+            case 'Right':
+              xOffset = -playerOffset
+              yOffset = 0
+            break
+            case 'Down':
+              xOffset = 0
+              yOffset = -playerOffset
+            break
+            case 'Left':
+              xOffset = playerOffset
+              yOffset = 0
+            break
+          }
         }
         break
     }
@@ -731,16 +864,28 @@ function stopMotionWhenColliding(boundaries, direction){
       }
 
       if(type == 1){
-        if(waterCollided){
-          if(!player.surfing) return
-          surfPogemonSprite.img.src = `img/charSprites/surf/surf_${direction}.png`
-          surfPogemonSprite.animate = true
-          collisionWhileSurfing = true
-        }
+        console.log('hahahaha')
+      //   if(waterCollided){
+      //     if(!player.surfing) return
+      //     surfPogemonSprite.img.src = `img/charSprites/surf/surf_${direction}.png`
+      //     surfPogemonSprite.animate = true
+      //     collisionWhileSurfing = true
+      //   }
       }
       break
     } else {
+      let timeoutId
+      if(!waterDecollisionFlag){
+        waterDecollisionFlag = true
+        timeoutId = setTimeout(() =>{
+          console.log('water does not collide with player anymore')
+          // waterDecollisionFlag = false
+          // waterCollided = false
+        }, 1000)
+      }
+
       if(player.surfing){
+        clearTimeout(timeoutId)
         if(!collisionWhileSurfing){
           player.img.src = `img/charSprites/ethan/${playerCharacter}.png`
           surfPogemonSprite.img.src = `img/charSprites/surf/blank.png`
@@ -785,7 +930,7 @@ function engageBattle(animationId, battleZones) {
             duration: 0.4
           })
           audioObj.music.battle.play()
-          manageBattleState(animationId)
+          manageBattleState(animationId, null, null, null, battleZone.name)
         }
       })
       break
@@ -797,7 +942,7 @@ export let lastDirection = 'Down'
 
 function pickUpAbility(){
   // 19999
-  const pickUpOdds = 1999
+  const pickUpOdds = 19999
 
   for(let i = 0; i < player.team.length; i++){
     if(player.team[i].abilityInfo.ability == null) continue
@@ -858,6 +1003,19 @@ function pickUpAbility(){
   }
 }
 
+function addFriendlinessWhenMoving(){
+  const friendshipOdds = 9999
+
+  for(let i = 0; i < player.team.length; i++){
+    const passRNG = Math.floor(Math.random() * friendshipOdds)
+    if(passRNG > 0) continue
+
+    player.team[i].manageFriendliness(1)
+    console.log(player.team[i].friendliness)
+
+  }
+}
+
 function move(direction, movables, moveSpeed){
   if(!collisionWhileSurfing){
     player.img.src = 'img/charSprites/ethan/ethan.png'
@@ -890,6 +1048,7 @@ function move(direction, movables, moveSpeed){
   }
 
   pickUpAbility()
+  addFriendlinessWhenMoving()
 }
 
 //player gets stuck to walls when changing direcitons for some reason
@@ -915,7 +1074,6 @@ function changeMapEvent(changeMap, currPos){
         rectangle2: changeMapIndex
       })
     ){
-
       if(changeMapFlag) return
       changeMapFlag = true
       player.disabled = true
@@ -954,11 +1112,28 @@ function eventZoneManagement(eventZones){
       }, 'event')
     ){
       player.interaction = eventZonesIndex
-      if(player.team.length > 1) {
+      if(player.team.length >= 1) {
         if(eventZonesIndex.info.createdTrainer != undefined){
-          for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
-            if(mapsObj[currMap.name].trainers[i].beaten == true) return
+
+          // for(let i = 0; i < mapsObj[currMap.name].trainers.length; i++){
+          //   if(mapsObj[currMap.name].trainers[i].beaten == true) return
+          // }
+
+          switch(eventZonesIndex.info.eventKey){
+            case 'maatGymTrainer':
+              document.addEventListener('keydown', (e) =>{
+                if(worldEventData.maat.firstMeet && !worldEventData.maat.gym) return
+                if(e.key == ' '){
+                  player.disabled = true
+                  player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                }
+              })
+              if(!worldEventData.maat.firstMeet) return
+              if(worldEventData.maat.gym) return
+              break
           }
+
+          console.log(eventZonesIndex)
 
           if(eventZonesIndex.info.beaten) return
           
@@ -1082,6 +1257,11 @@ function spendQueue(){
     interaction.initiated = false
     document.querySelector('#overworldDialogue').setAttribute('class', '')
     document.querySelector('#overworldDialogue').style.padding = '35px'
+
+    if(goldieEvoFlag) {
+      manageEvolutionState('true', [player.team[0]])
+      goldieEvoFlag = false
+    }
   }
 }
 

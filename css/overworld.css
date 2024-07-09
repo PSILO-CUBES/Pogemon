@@ -487,3 +487,19 @@ input[type="range"]::-webkit-slider-thumb {
 
   opacity: 0;
 }
+
+#changeMapContainer{
+  position: absolute;
+  height: 200;
+  width: 400;
+
+  transform: translateX(-50%);
+  left: 50%;
+  top: -20%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.25);
+}

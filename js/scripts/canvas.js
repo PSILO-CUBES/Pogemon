@@ -8,6 +8,8 @@ import { Sprite } from '../classes.js'
 import { generatePlayer, surfPogemonSprite } from './player.js'
 import { loadData } from '../save.js'
 
+const data = await loadData()
+
 export const canvas = document.querySelector('canvas')
 export const c = canvas.getContext('2d')
 
@@ -18,7 +20,6 @@ c.fillStyle = 'white'
 c.fillRect(0, 0, canvas.width, canvas.height)
 
 const player = await generatePlayer(canvas)
-const data = await loadData()
 
 if(data == null){
   Object.values(itemsObj).forEach(item =>{
@@ -48,7 +49,7 @@ scenes.set('pickingItem', {initiated: false})
 
 export const overworldSpritesArr = []
 
-export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles){
+export function printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles){
   // console.log(OWWeatherParticles)
   background.draw()
   map.draw()
@@ -60,6 +61,9 @@ export function printImages(background, FG, map, boundaries, battleZones, change
   }
   for(let i = 0; i < trainerSpritesArr.length; i++){
     trainerSpritesArr[i].draw()
+  }
+  for(let i = 0; i < NPCSpritesArr.length; i++){
+    NPCSpritesArr[i].draw()
   }
   surfPogemonSprite.draw()
   player.draw()

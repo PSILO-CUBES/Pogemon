@@ -102,7 +102,6 @@ function bagSceneMenuButtonOnClick(e){
   const dialogueBox = document.querySelector('.bagSceneItemDialogueContainer')
   dialogueBox.style.display = 'block'
 
-  console.log('here')
   switch(e.target.textContent){
     case 'use':
       if(prevScene == 'battle' && currItem.type == 'ball'){
@@ -199,6 +198,10 @@ function bagSceneConfimationButtonOnClick(e){
 
 export let itemUsed = {item: null, used: false}
 
+export let evoItemUsed = {
+  item: null
+}
+
 function useItemOnClickEvent(e){
   if(!choosePogemon) return
 
@@ -217,19 +220,44 @@ function useItemOnClickEvent(e){
         case 'misc':
           switch(currItem.effect){
             case 'evo':
-              if(targetPogemon.evo.item == currItem.name){
-                manageBagState(false, prevScene)
-                manageEvolutionState(true, targetPogemon)
-                gsap.to('#overlapping', {
-                  opacity: 1,
-                  onComplete: () =>{
+              console.log(targetPogemon.evo.length)
+              if(targetPogemon.evo.length == undefined){
+                if(targetPogemon.evo.item == currItem.name){
+                  if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
+  
+                  manageBagState(false, prevScene)
+                  manageEvolutionState(true, [targetPogemon])
+                  gsap.to('#overlapping', {
+                    opacity: 1,
+                    onComplete: () =>{
+                      gsap.to('#overlapping', {
+                        opacity: 0
+                      })
+                    }
+                  })
+                } else {
+                  targetPogemon.dialogue('bag', "This item can't be used on this pogemon.")
+                }
+              } else {
+                targetPogemon.evo.forEach(evoType =>{
+                  console.log(evoType)
+                  if(evoType.item == currItem.name){
+                    evoItemUsed.item = currItem.name
+
+                    if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
+    
+                    manageBagState(false, prevScene)
+                    manageEvolutionState(true, [targetPogemon])
                     gsap.to('#overlapping', {
-                      opacity: 0
+                      opacity: 1,
+                      onComplete: () =>{
+                        gsap.to('#overlapping', {
+                          opacity: 0
+                        })
+                      }
                     })
                   }
                 })
-              } else {
-                targetPogemon.dialogue('bag', "This item can't be used on this pogemon.")
               }
               break
           }
@@ -242,6 +270,8 @@ function useItemOnClickEvent(e){
                 return
               }
               if(targetPogemon.hp < targetPogemon.stats.baseHp){
+                if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
+
                 let prevHp = targetPogemon.hp
                 targetPogemon.heal(e.target.classList[1], currItem)
   
@@ -262,6 +292,8 @@ function useItemOnClickEvent(e){
               // breaks the game
               // returns to battle even if doesnt work
               if(targetPogemon.fainted){
+                if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
+                  
                 dialogueInterfaceDom.innerText = `${targetPogemon.name} has been revived.`
                 targetPogemon.fainted = false
   

@@ -1,32 +1,142 @@
 import { volumeValues } from "../../data/audioData.js"
+import { pogemonsObj } from "../../data/pogemonData.js"
 import { loadData } from "../../save.js"
 import { manageOverWorldState } from "./overworld.js"
+import { timeObj } from "./trainer.js"
 
-// export let loadedData = await loadData()
-// console.log(loadedData)
+export const data = await loadData()
 
 let bootSceneAnimationId
-
 
 function bootSceneAnimation(){
     bootSceneAnimationId = window.requestAnimationFrame(bootSceneAnimation)
 }
 
-async function printBootMenu(){
+function printSaveFileInfo(badgeContainer, trainerInfoContainer, trainerTeamContainer){
+    function printBadgeInfo(badgeContainer){
+        Object.values(data.playerInfo.player.badges).forEach((badge,i) =>{
+            const badgeImg = new Image
+            if(badge) badgeImg.src = `img/badges/${i}.png`
+            else badgeImg.src = `img/badges/${i}_blank.png`
+
+            badgeContainer.appendChild(badgeImg)
+        })
+    }
+
+    function printTrainerInfo(trainerInfoContainer){
+
+        trainerInfoContainer.classList.remove('noSaveCentering')
+        trainerInfoContainer.replaceChildren()
+
+        // make info and image containers
+        for(let i = 0; i < 2; i++){
+            const trainerInfoSubContainer = document.createElement('div')
+            if(i == 0) trainerInfoSubContainer.id = 'trainerInfoSubContainer'
+            else trainerInfoSubContainer.id = 'trainerImageContainer'
+
+            trainerInfoContainer.appendChild(trainerInfoSubContainer)
+        }
+
+        for(let i = 0; i < 3; i++){
+            const trainerInfoSubContainerContent = document.createElement('div')
+            trainerInfoSubContainerContent.setAttribute('class', 'trainerInfoSubContainerContent')
+
+            trainerInfoContainer.childNodes[0].appendChild(trainerInfoSubContainerContent)
+
+            for(let j = 0; j < 2; j++){
+                const trainerInfoSubContainerContentDisplay = document.createElement('div')
+                trainerInfoSubContainerContentDisplay.setAttribute('class', 'trainerInfoSubContainerContentDisplay')
+
+                function returnCorrectlyFormatedTime(){
+                    let txt
+
+                    if(data.timeObj.hr < 10) txt = `0${data.timeObj.hr}`
+                    else txt = `${data.timeObj.hr}`
+
+                    txt += ':'
+
+                    if(data.timeObj.min < 10) txt += `0${data.timeObj.min}`
+                    else txt += `${data.timeObj.min}`
+
+                    return txt
+                }
+
+                function returnPogedexCount(){
+                    let count = 0
+
+                    Object.values(data.playerInfo.player.pogedexInfo).forEach(pogemon =>{
+                        if(pogemon.seen) count += 1
+                    })
+
+                    return count
+                }
+
+                switch(i){
+                    case 0:
+                        if(j == 0) trainerInfoSubContainerContentDisplay.textContent = 'NAME :'
+                        else trainerInfoSubContainerContentDisplay.textContent = data.playerInfo.player.name
+                        break
+                    case 1:
+                        if(j == 0) trainerInfoSubContainerContentDisplay.textContent = 'TIME :'
+                        else trainerInfoSubContainerContentDisplay.textContent = returnCorrectlyFormatedTime()
+                        break
+                    case 2:
+                        if(j == 0) trainerInfoSubContainerContentDisplay.textContent = 'POGEDEX :'
+                        else trainerInfoSubContainerContentDisplay.textContent = returnPogedexCount()
+                        break
+                }
+    
+                trainerInfoSubContainerContent.appendChild(trainerInfoSubContainerContentDisplay)
+            }
+        }
+
+        const trainerImg = new Image()
+        trainerImg.src = `img/charSprites/${data.playerInfo.player.playerCharacter}/${data.playerInfo.player.playerCharacter}_Trainer.png`
+
+        trainerInfoContainer.childNodes[1].appendChild(trainerImg)
+    }
+
+    function printPogemonImg(trainerTeamContainer){
+        const player = data.playerInfo.player
+
+        for(let i = 0; i < player.team.length; i++){
+            const pogemonImg = new Image()
+
+            if(player.team[i].isShiny) pogemonImg.src = pogemonsObj[`${player.team[i].name}`].sprites.shiny.sprite
+            else pogemonImg.src = pogemonsObj[`${player.team[i].name}`].sprites.classic.sprite
+
+            trainerTeamContainer.appendChild(pogemonImg)
+        }
+    }
+
+    printBadgeInfo(badgeContainer)
+    printTrainerInfo(trainerInfoContainer)
+    printPogemonImg(trainerTeamContainer)
+}
+
+function printBootMenu(){
     const bootSceneDOM = document.querySelector('#bootScene')
     document.querySelector('#content').appendChild(bootSceneDOM)
 
     const interactionContainer = document.querySelector('#interactionContainer')
 
-    console.log(await loadData())
-    if(await loadData() != null){
+    const badgeContainer = document.querySelector('#badgeContainer')
+    const trainerInfoContainer = document.querySelector('#trainerInfoContainer')
+    const trainerTeamContainer = document.querySelector('#trainerTeamContainer')
+
+    trainerInfoContainer.textContent = 'no save file found'
+    trainerInfoContainer.setAttribute('class', 'noSaveCentering')
+
+    if(data != null){
         const startButtonDOM = document.createElement('div')
         startButtonDOM.id = 'startButton'
         startButtonDOM.classList.add('bootMenuButton')
-        startButtonDOM.textContent = 'Start'
+        startButtonDOM.textContent = 'Continue'
         startButtonDOM.addEventListener('click', e => initBootMenuInteractionEvent(e))
 
         interactionContainer.appendChild(startButtonDOM)
+
+        printSaveFileInfo(badgeContainer, trainerInfoContainer, trainerTeamContainer)
     }
 
     const newGameButtonDOM = document.createElement('div')
@@ -39,8 +149,8 @@ async function printBootMenu(){
     interactionContainer.appendChild(newGameButtonDOM)
 }
 
-async function initNewGameInteractionEvent(e){
-    if(await loadData() == null){
+function initNewGameInteractionEvent(e){
+    if(data == null){
         volumeValues.SFX = 50
         volumeValues.music = 50
         
@@ -110,6 +220,7 @@ function initBootMenuInteractionEvent(e){
     gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
+            incrementMinuteLoop()
             manageBootState(false)
             gsap.to('#overlapping', {
                 opacity: 0,
@@ -118,7 +229,7 @@ function initBootMenuInteractionEvent(e){
     })
 }
 
-// setTimeout(() => initBootMenuInteractionEvent(), 250)
+// setTimeout(() => initBootMenuInteractionEvent(), 500)
 
 function initBootScene(){
     printBootMenu()
@@ -134,4 +245,32 @@ function clearBootScene(){
 export function manageBootState(state){
     if(state) initBootScene()
     else clearBootScene()
+}
+
+let prevDate = new Date
+let prevSec = prevDate.getSeconds()
+
+function incrementMinuteLoop(){
+    setTimeout(() =>{
+        let currDate = new Date
+        let currSec = currDate.getSeconds()
+
+        if(prevSec != currSec) {
+            prevSec = currSec
+
+            timeObj.sec += 1
+    
+            if(timeObj.sec == 60){
+                timeObj.min += 1
+                timeObj.sec = 0
+            }
+    
+            if(timeObj.min == 60){
+                timeObj.hr += 1
+                timeObj.min = 0
+            }
+        }
+
+        incrementMinuteLoop()
+    }, 500)
 }

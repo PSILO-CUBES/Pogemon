@@ -3,8 +3,12 @@ import { pogemonsObj } from "../../data/pogemonData.js"
 import { Sprite } from "../../classes.js"
 
 import { scenes, backgroundSprite } from "../canvas.js"
+import { player } from "../player.js"
+import { loadData } from "../../save.js"
 
 let pogedexAnimationId
+
+const data = await loadData()
 
 const pogedexTargetImg = new Image()
 const pogedexTargetSprite = new Sprite({
@@ -38,11 +42,13 @@ function changeTargetPogemonInfo(target){
 }
 
 function pogedexSectionClickEvent(e){
+    if(e.target.parentNode.childNodes[2].innerText == '???') return
+
     document.querySelectorAll(`.${e.target.parentNode.classList[0]}`).forEach(node =>{
-        node.style.background = 'rgb(75,75,75)'
+        node.style.backgroundColor = 'rgb(75,75,75)'
     })
 
-    e.target.parentNode.style.background = 'rgb(150,150,150)'
+    e.target.parentNode.style.backgroundColor = 'rgb(150,150,150)'
     
     changeTargetPogemonInfo(pogemonsObj[`${e.target.parentNode.childNodes[2].innerText.toLowerCase()}`])
 }
@@ -50,7 +56,7 @@ function pogedexSectionClickEvent(e){
 function pogedexCancelClickEvent(e){
     if(e.target.parentNode.classList[0] == 'pogedexSceneScrollContent') return
     document.querySelectorAll(`.pogedexSceneScrollContent`).forEach(node =>{
-        node.style.background = 'rgb(75,75,75)'
+        node.style.backgroundColor = 'rgb(75,75,75)'
     })
 
     document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = ``
@@ -124,8 +130,11 @@ function createPogedexMenu(){
 
     document.querySelector('#pogedexSceneScrollContainer').appendChild(pogedexSceneScroll)
 
-    for(let i = 0; i < Object.keys(pogemonsObj).length; i++){
-        const currPogemon = Object.values(pogemonsObj)[i]
+    for(let i = 0; i < player.pogedexInfo.length; i++){
+        let currPogemon
+
+        if(data != null) currPogemon = data.playerInfo.player.pogedexInfo[i]
+        else currPogemon = player.pogedexInfo[i]
 
         const pogedexSceneScrollContent = document.createElement('div')
         pogedexSceneScrollContent.setAttribute('class', 'pogedexSceneScrollContent') 
@@ -134,19 +143,25 @@ function createPogedexMenu(){
 
         const pogedexSceneScrollPogemonImg = document.createElement('img')
         pogedexSceneScrollPogemonImg.setAttribute('class', 'pogedexSceneScrollPogemonImg')
-        if (currPogemon.pogedex >= 100) pogedexSceneScrollPogemonImg.src = `../../../img/pogemon/${currPogemon.pogedex}_${currPogemon.name}/${currPogemon.name}.png`
-        else if (currPogemon.pogedex >= 10) pogedexSceneScrollPogemonImg.src = `../../../img/pogemon/0${currPogemon.pogedex}_${currPogemon.name}/${currPogemon.name}.png`
-        else if (currPogemon.pogedex < 10) pogedexSceneScrollPogemonImg.src = `../../../img/pogemon/00${currPogemon.pogedex}_${currPogemon.name}/${currPogemon.name}.png`
-        pogedexSceneScrollPogemonImg.addEventListener('click', e => pogedexSectionClickEvent(e))
 
+        // if seen here
+        if(currPogemon.seen) {
+            pogedexSceneScrollPogemonImg.src = currPogemon.sprite
+            pogedexSceneScrollContent.setAttribute('class', 'pogedexSceneScrollContent pogedexHover')
+        } else pogedexSceneScrollPogemonImg.src = '../../../img/questionMark.png'
+
+        pogedexSceneScrollPogemonImg.addEventListener('click', e => pogedexSectionClickEvent(e))
         pogedexSceneScrollContent.appendChild(pogedexSceneScrollPogemonImg)
 
         for(let i = 0; i < 2; i++){
             const pogedexPogemonInfo = document.createElement('div')
             pogedexPogemonInfo.setAttribute('class', 'pogedexPogemonInfo')
 
-            if(i == 0) pogedexPogemonInfo.textContent = `${currPogemon.pogedex}`
-            else pogedexPogemonInfo.textContent = `${currPogemon.name}`
+            if(i == 0) pogedexPogemonInfo.textContent = `${currPogemon.pogedexIndex}`
+            else {
+                if(currPogemon.seen) pogedexPogemonInfo.textContent = `${currPogemon.name}`
+                else pogedexPogemonInfo.textContent = `???`
+            }
 
             pogedexPogemonInfo.addEventListener('click', e => pogedexSectionClickEvent(e))
 

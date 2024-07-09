@@ -2,14 +2,14 @@
 
 import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
-import { generateMapData, currMap, pogecenterReturnInfo } from '../maps.js'
+import { generateMapData, currMap, pogecenterReturnInfo, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
-import { hr, min, manageTrainerState } from './trainer.js'
+import { timeObj, manageTrainerState } from './trainer.js'
 import { mapsObj } from '../../data/mapsData.js'
 import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
@@ -21,16 +21,18 @@ const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
-let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+export let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 let movables
 
 async function setMapData(){
-  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData()
+  [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData()
 
-  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...NPCSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
 }
 
 await setMapData()
+
+const data = await loadData()
 
 let animationId
 
@@ -51,19 +53,27 @@ function startOverWorldWeather(){
   else OWSceneContainer.style.backgroundColor = `#${typesObj[mapsObj[currMap.name].weather.element].color}${mapsObj[currMap.name].weather.opacity}`
 }
 
+let pogelocationBackUp
+
 export async function switchMap(nextMapInfo, preMapInfo){
   if(nextMapInfo != undefined) {
     if(nextMapInfo.name != 'undefined'){
-      [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(nextMapInfo)
-      console.log(obstacleSpritesArr)
+      [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(nextMapInfo)
       prevMap = preMapInfo
     }
+  }
+
+  console.log(nextMapInfo)
+  console.log(preMapInfo)
+  console.log(pogecenterReturnInfo)
+
+  if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
+    pogelocationBackUp = preMapInfo
   }
 
   if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
     // vvvv wtf?????? why if true? delaying something????? vvvv
     if(true){
-      const data = await loadData()
 
       if(data != null){
         if(firstLoad){
@@ -82,7 +92,14 @@ export async function switchMap(nextMapInfo, preMapInfo){
       pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
     }
 
-    [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
+    if(pogecenterReturnInfo.name == 'pogemart' || pogecenterReturnInfo.name == 'pogecenter') {
+      pogecenterReturnInfo.name = pogelocationBackUp.name
+      pogecenterReturnInfo.spawnPosition = pogelocationBackUp.position
+
+      pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
+    }
+
+    [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(pogecenterReturnInfo)
 
     pogecenterReturnInfo.name = null
     pogecenterReturnInfo.spawnPosition.x = null
@@ -91,7 +108,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
 
   // if(typeof obstacleSpritesArr != 'array') obstacleSpritesArr = []
 
-  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
+  movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...NPCSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
 
   gsap.to('#overlapping', {
     opacity: 0,
@@ -124,9 +141,7 @@ function initOverworldMenu(){
 
 let optionMenuState = false
 
-const data = await loadData()
-
-if(data!= null){
+if(data != null){
   volumeValues.music = data.volumeValues.music
   volumeValues.SFX = data.volumeValues.SFX
 }
@@ -277,6 +292,8 @@ function overworldMenuClickEvent(e){
           nextMapInfo.spawnPosition.y = data.nextMapInfo.spawnPosition.y
         }
       }
+
+      
       
       const bagSave = []
 
@@ -298,10 +315,8 @@ function overworldMenuClickEvent(e){
         volumeValues,
         bag: bagSave,
         pc: pc,
-        timeObj: {
-          hr: hr,
-          min: min
-        }
+        timeObj,
+        worldEventData
       })
       break
     case 'options':
@@ -420,6 +435,7 @@ function transitionScenes(prevScene){
         opacity: 1,
         onComplete: () =>{
           manageBattleState(true)
+          prevScene = 'battle'
           gsap.to('#overlapping', {opacity: 0})
         }
       })
@@ -504,7 +520,7 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    console.log(player.team)
+    console.log(player)
   }
 }
 
@@ -611,7 +627,6 @@ function manageWeatherParticles(weather){
   }
 
   OWWeatherParticles.push(particle)
-
 }
 
 const overWorldAnimation = timeSpent =>{
@@ -621,9 +636,11 @@ const overWorldAnimation = timeSpent =>{
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
   lastFrameSpent = timeSpent
 
+  if(currMap == undefined) return
+
   manageWeatherParticles(mapsObj[currMap.name].weather)
-  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)
-  playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, itemSpritesArr, obstacleSpritesArr)
+  printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)
+  playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones)
 }
 
 export function manageOverWorldState(state){
@@ -639,6 +656,13 @@ export function manageOverWorldState(state){
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     document.querySelector('#overworldScene').style.display = 'block'
     document.querySelector('#overworldMenu').style.display = 'none'
+
+    if(player.interaction != null) if(player.interaction.info.gymLeader != undefined){
+      if(prevScene == 'battle')
+      document.querySelector('#overworldDialogueContainer').style.display = 'flex'
+      player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!")
+    }
+
     overWorldAnimation()
     startOverWorldWeather()
     scenes.set('overworld', {initiated : true})

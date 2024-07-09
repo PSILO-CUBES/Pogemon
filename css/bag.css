@@ -228,6 +228,7 @@
 .bagSceneItemImgDom{
   height: 115px;
   width: auto;
+  max-width: 124px;
 }
 
 .bagSceneItemInterfaceContainer{

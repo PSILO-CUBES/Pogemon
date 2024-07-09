@@ -6,6 +6,8 @@ import { player } from "../player.js"
 import { manageOverWorldState } from "./overworld.js"
 import { manageStatsState } from "./stats.js"
 
+const data = await loadData()
+
 let pcAnimationId
 
 const testImg = new Image()
@@ -55,8 +57,6 @@ export let pc = [
         null, null, null, null, null, null,
     ]
 ]
-
-const data = await loadData()
 
 if(data != null){
     data.pc.forEach((box, i) =>{
@@ -228,7 +228,7 @@ function rearrangeTeam(first, second){
     first.DOM = document.querySelectorAll('.pcScenePogemonContainer')[first.i]
     second.DOM = document.querySelectorAll('.pcScenePogemonContainer')[second.i]
 
-    player.team = player.team.filter(function( element ) {
+    player.team = player.team.filter(element => {
         return element !== undefined;
     });
 

@@ -77,3 +77,73 @@
     background-color: rgba(150, 0, 0);
     cursor: pointer;
 }
+
+#bootInfoContainer{
+    display: grid;
+    grid-template-rows: 120px auto 175px;
+}
+
+#badgeContainer{
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+}#badgeContainer > img {
+    width: 100% !important;
+
+    max-height: 120px;
+
+    background-color: rgba(50,50,50, 0.01);
+
+    border-radius: 150px;
+}
+
+.noSaveCentering{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: end;
+    margin-right: -15%;
+}
+
+#trainerInfoContainer{
+    display: grid;
+    grid-template-columns: 65% 35%;
+}
+
+#trainerInfoSubContainer{
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+}
+
+.trainerInfoSubContainerContent{
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    height: 100%;
+    width: 100%;
+}
+
+.trainerInfoSubContainerContentDisplay:nth-child(1){
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}.trainerInfoSubContainerContentDisplay:nth-child(2){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#trainerImageContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}#trainerImageContainer > img {
+    height: 500px;
+}
+
+#trainerTeamContainer{
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+}#trainerTeamContainer > img{
+    height: 150px;
+}

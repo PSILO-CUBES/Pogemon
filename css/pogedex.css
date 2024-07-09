@@ -80,9 +80,11 @@
    height: 150px;
    width: 97.25%;
    background-color: rgba(75, 75, 75, 1);
-}.pogedexSceneScrollContent:hover{
-   background-color: rgba(150, 150, 150, 1);
-   cursor: pointer;
+}
+
+.pogedexHover:hover{
+   background-color: rgba(150, 150, 150, 1) !important;
+   cursor: pointer !important;
 }
 
 .pogedexSceneScrollPogemonImg{

@@ -29,10 +29,12 @@ export const pogemonsObj = {
       abilitiesObj.last_Ditch_Effort
     ],
     movepool: {
-      1: {move: movesObj.fire_Ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 20},
-      3: {move: movesObj.heat_Wave, lvl: 20},
-      4: {move: movesObj.frost_Wave, lvl: 20},
+      1: {move: movesObj.super_power, lvl: 1},
+      2: {move: movesObj.fire_ball, lvl: 1},
+      3: {move: movesObj.trick_room, lvl: 50},
+      4: {move: movesObj.tackle, lvl: 50},
+      5: {move: movesObj.headbutt, lvl: 50},
+      6: {move: movesObj.frost_wave, lvl: 50},
     },
     sprites: {
       classic:{
@@ -403,7 +405,7 @@ export const pogemonsObj = {
       abilitiesObj.fairy_Tale
     ],
     movepool: {
-      1: {move: movesObj.shadow_Ball, lvl: 1},
+      1: {move: movesObj.shadow_ball, lvl: 1},
     },
     sprites: {
       classic:{
@@ -587,7 +589,7 @@ export const pogemonsObj = {
       abilitiesObj.overgrow
     ],
     movepool: {
-      1: {move: movesObj.fire_Ball, lvl: 1},
+      1: {move: movesObj.fire_ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
@@ -624,7 +626,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 5000,
+    yeild: 65,
     catchRate: 200,
     surfable: false
   },
@@ -636,19 +638,19 @@ export const pogemonsObj = {
       2: 'psychic'
     },
     stats: {
-      hp: 50,
-      atk: 30,
-      def: 30,
-      spatk: 60,
-      spdef: 60,
-      spd: 30
+      hp: 80,
+      atk: 45,
+      def: 45,
+      spatk: 80,
+      spdef: 100,
+      spd: 50
     },
     evo: null,
     abilities: [
       abilitiesObj.overgrow
     ],
     movepool: {
-      1: {move: movesObj.fire_Ball, lvl: 1},
+      1: {move: movesObj.fire_ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
@@ -711,7 +713,7 @@ export const pogemonsObj = {
       abilitiesObj.torrent
     ],
     movepool: {
-      1: {move: movesObj.fire_Ball, lvl: 1},
+      1: {move: movesObj.fire_ball, lvl: 1},
       2: {move: movesObj.headbutt, lvl: 7}
     },
     sprites: {
@@ -748,7 +750,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 5000,
+    yeild: 85,
     catchRate: 200,
     surfable: true
   },
@@ -776,7 +778,7 @@ export const pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fire_Ball, lvl: 7}
+      2: {move: movesObj.fire_ball, lvl: 7}
     },
     sprites: {
       classic:{
@@ -812,7 +814,7 @@ export const pogemonsObj = {
         }
       }
     },
-    yeild: 5000,
+    yeild: 55,
     catchRate: 200,
     surfable: false
   },
@@ -875,7 +877,695 @@ export const pogemonsObj = {
         }
       }
     },
+    yeild: 55,
+    catchRate: 200,
+    surfable: false
+  },
+
+  // #21 - #22 kangooroo line
+  wallafi: {
+    pogedex: 21,
+    name: 'wallafi',
+    element:{
+      1: 'normal',
+      2: 'fighting'
+    },
+    stats: {
+      hp: 40,
+      atk: 60,
+      def: 40,
+      spatk: 30,
+      spdef: 40,
+      spd: 70
+    },
+    evo: null,
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/021_Wallafi/Wallafi.png',
+        frontSprite: 'img/pogemon/021_Wallafi/Wallafi_Animation.png',
+        backSprite: 'img/pogemon/021_Wallafi/Wallafi_Back_Animation.png',
+        teamSprite: 'img/pogemon/021_Wallafi/Wallafi_Team_Animation.png',
+        bagSprite: 'img/pogemon/021_Wallafi/Wallafi_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/021_Wallafi/Wallafi_Shiny.png',
+        frontSprite: 'img/pogemon/021_Wallafi/Wallafi_Animation_Shiny.png',
+        backSprite: 'img/pogemon/021_Wallafi/Wallafi_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/021_Wallafi/Wallafi_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/021_Wallafi/Wallafi_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 45,
+    catchRate: 200,
+    surfable: false
+  },
+
+  // #23 - #24
+  flailegant: {
+    pogedex: 23,
+    name: 'flailegant',
+    element:{
+      1: 'normal',
+      2: 'fairy'
+    },
+    stats: {
+      hp: 40,
+      atk: 60,
+      def: 40,
+      spatk: 30,
+      spdef: 40,
+      spd: 70
+    },
+    evo: null,
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/023_Flailegant/Flailegant.png',
+        frontSprite: 'img/pogemon/023_Flailegant/Flailegant_Animation.png',
+        backSprite: 'img/pogemon/023_Flailegant/Flailegant_Back_Animation.png',
+        teamSprite: 'img/pogemon/023_Flailegant/Flailegant_Team_Animation.png',
+        bagSprite: 'img/pogemon/023_Flailegant/Flailegant_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/023_Flailegant/Flailegant_Shiny.png',
+        frontSprite: 'img/pogemon/023_Flailegant/Flailegant_Animation_Shiny.png',
+        backSprite: 'img/pogemon/023_Flailegant/Flailegant_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/023_Flailegant/Flailegant_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/023_Flailegant/Flailegant_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 45,
+    catchRate: 200,
+    surfable: false
+  },
+
+  // #25 - #31 slimes
+  slimie: {
+    pogedex: 25,
+    name: 'slimie',
+    element:{
+      1: 'normal',
+      2: null
+    },
+    stats: {
+      hp: 80,
+      atk: 30,
+      def: 70,
+      spatk: 30,
+      spdef: 70,
+      spd: 40
+    },
+    evo: [
+      {name: 'flamie', type: 'item', item: 'fire_Stone'},
+      {name: 'wettie', type: 'item', item: 'water_Stone'},
+      {name: 'grassie', type: 'item', item: 'leaf_Stone'},
+      {name: 'statikie', type: 'item', item: 'thunder_Stone'},
+      {name: 'pukie', type: 'held', item: 'black_Sludge'},
+      {name: 'godlie', type: 'event'},
+    ],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/025_Slimie/Slimie.png',
+        frontSprite: 'img/pogemon/025_Slimie/Slimie_Animation.png',
+        backSprite: 'img/pogemon/025_Slimie/Slimie_Back_Animation.png',
+        teamSprite: 'img/pogemon/025_Slimie/Slimie_Team_Animation.png',
+        bagSprite: 'img/pogemon/025_Slimie/Slimie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/025_Slimie/Slimie_Shiny.png',
+        frontSprite: 'img/pogemon/025_Slimie/Slimie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/025_Slimie/Slimie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/025_Slimie/Slimie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/025_Slimie/Slimie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
     yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  flamie: {
+    pogedex: 26,
+    name: 'flamie',
+    element:{
+      1: 'fire',
+      2: null
+    },
+    stats: {
+      hp: 100,
+      atk: 80,
+      def: 40,
+      spatk: 80,
+      spdef: 70,
+      spd: 70
+    },
+    evo: [{name: 'godlie', type: 'event'},],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/026_Flamie/Flamie.png',
+        frontSprite: 'img/pogemon/026_Flamie/Flamie_Animation.png',
+        backSprite: 'img/pogemon/026_Flamie/Flamie_Back_Animation.png',
+        teamSprite: 'img/pogemon/026_Flamie/Flamie_Team_Animation.png',
+        bagSprite: 'img/pogemon/026_Flamie/Flamie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/026_Flamie/Flamie_Shiny.png',
+        frontSprite: 'img/pogemon/026_Flamie/Flamie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/026_Flamie/Flamie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/026_Flamie/Flamie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/026_Flamie/Flamie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  wettie: {
+    pogedex: 27,
+    name: 'wettie',
+    element:{
+      1: 'water',
+      2: null
+    },
+    stats: {
+      hp: 100,
+      atk: 50,
+      def: 70,
+      spatk: 70,
+      spdef: 90,
+      spd: 60
+    },
+    evo: [{name: 'godlie', type: 'event'},],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/027_Wettie/Wettie.png',
+        frontSprite: 'img/pogemon/027_Wettie/Wettie_Animation.png',
+        backSprite: 'img/pogemon/027_Wettie/Wettie_Back_Animation.png',
+        teamSprite: 'img/pogemon/027_Wettie/Wettie_Team_Animation.png',
+        bagSprite: 'img/pogemon/027_Wettie/Wettie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/027_Wettie/Wettie_Shiny.png',
+        frontSprite: 'img/pogemon/027_Wettie/Wettie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/027_Wettie/Wettie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/027_Wettie/Wettie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/027_Wettie/Wettie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  grassie: {
+    pogedex: 28,
+    name: 'grassie',
+    element:{
+      1: 'grass',
+      2: null
+    },
+    stats: {
+      hp: 100,
+      atk: 70,
+      def: 80,
+      spatk: 70,
+      spdef: 70,
+      spd: 50
+    },
+    evo: [{name: 'godlie', type: 'event'},],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/028_Grassie/Grassie.png',
+        frontSprite: 'img/pogemon/028_Grassie/Grassie_Animation.png',
+        backSprite: 'img/pogemon/028_Grassie/Grassie_Back_Animation.png',
+        teamSprite: 'img/pogemon/028_Grassie/Grassie_Team_Animation.png',
+        bagSprite: 'img/pogemon/028_Grassie/Grassie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/028_Grassie/Grassie_Shiny.png',
+        frontSprite: 'img/pogemon/028_Grassie/Grassie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/028_Grassie/Grassie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/028_Grassie/Grassie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/028_Grassie/Grassie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  statikie: {
+    pogedex: 29,
+    name: 'statikie',
+    element:{
+      1: 'electric',
+      2: null
+    },
+    stats: {
+      hp: 100,
+      atk: 70,
+      def: 40,
+      spatk: 90,
+      spdef: 50,
+      spd: 90
+    },
+    evo: [{name: 'godlie', type: 'event'},],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/029_Statikie/Statikie.png',
+        frontSprite: 'img/pogemon/029_Statikie/Statikie_Animation.png',
+        backSprite: 'img/pogemon/029_Statikie/Statikie_Back_Animation.png',
+        teamSprite: 'img/pogemon/029_Statikie/Statikie_Team_Animation.png',
+        bagSprite: 'img/pogemon/029_Statikie/Statikie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/029_Statikie/Statikie_Shiny.png',
+        frontSprite: 'img/pogemon/029_Statikie/Statikie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/029_Statikie/Statikie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/029_Statikie/Statikie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/029_Statikie/Statikie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  pukie: {
+    pogedex: 30,
+    name: 'pukie',
+    element:{
+      1: 'poison',
+      2: null
+    },
+    stats: {
+      hp: 100,
+      atk: 50,
+      def: 90,
+      spatk: 70,
+      spdef: 90,
+      spd: 40
+    },
+    evo: [{name: 'godlie', type: 'event'},],
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/030_Pukie/Pukie.png',
+        frontSprite: 'img/pogemon/030_Pukie/Pukie_Animation.png',
+        backSprite: 'img/pogemon/030_Pukie/Pukie_Back_Animation.png',
+        teamSprite: 'img/pogemon/030_Pukie/Pukie_Team_Animation.png',
+        bagSprite: 'img/pogemon/030_Pukie/Pukie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/030_Pukie/Pukie_Shiny.png',
+        frontSprite: 'img/pogemon/030_Pukie/Pukie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/030_Pukie/Pukie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/030_Pukie/Pukie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/030_Pukie/Pukie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+  godlie: {
+    pogedex: 31,
+    name: 'godlie',
+    element:{
+      1: 'normal',
+      2: 'ghost'
+    },
+    stats: {
+      hp: 120,
+      atk: 70,
+      def: 110,
+      spatk: 70,
+      spdef: 110,
+      spd: 120
+    },
+    evo: null,
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/031_Godlie/Godlie.png',
+        frontSprite: 'img/pogemon/031_Godlie/Godlie_Animation.png',
+        backSprite: 'img/pogemon/031_Godlie/Godlie_Back_Animation.png',
+        teamSprite: 'img/pogemon/031_Godlie/Godlie_Team_Animation.png',
+        bagSprite: 'img/pogemon/031_Godlie/Godlie_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/031_Godlie/Godlie_Shiny.png',
+        frontSprite: 'img/pogemon/031_Godlie/Godlie_Animation_Shiny.png',
+        backSprite: 'img/pogemon/031_Godlie/Godlie_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/031_Godlie/Godlie_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/031_Godlie/Godlie_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 5000,
+    catchRate: 200,
+    surfable: false
+  },
+
+  // #32 - #34 rock type guy
+  sturdle: {
+    pogedex: 32,
+    name: 'sturdle',
+    element:{
+      1: 'rock',
+      2: null
+    },
+    stats: {
+      hp: 40,
+      atk: 60,
+      def: 40,
+      spatk: 30,
+      spdef: 40,
+      spd: 70
+    },
+    evo: null,
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/032_Sturdle/Sturdle.png',
+        frontSprite: 'img/pogemon/032_Sturdle/Sturdle_Animation.png',
+        backSprite: 'img/pogemon/032_Sturdle/Sturdle_Back_Animation.png',
+        teamSprite: 'img/pogemon/032_Sturdle/Sturdle_Team_Animation.png',
+        bagSprite: 'img/pogemon/032_Sturdle/Sturdle_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/032_Sturdle/Sturdle_Shiny.png',
+        frontSprite: 'img/pogemon/032_Sturdle/Sturdle_Animation_Shiny.png',
+        backSprite: 'img/pogemon/032_Sturdle/Sturdle_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/032_Sturdle/Sturdle_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/032_Sturdle/Sturdle_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 55,
+    catchRate: 200,
+    surfable: false
+  },
+
+  // #35 - #36 ma'at signature pogemon
+  balancia: {
+    pogedex: 35,
+    name: 'balancia',
+    element:{
+      1: 'normal',
+      2: 'psychic'
+    },
+    stats: {
+      hp: 60,
+      atk: 60,
+      def: 60,
+      spatk: 60,
+      spdef: 60,
+      spd: 60
+    },
+    evo: {name: 'harmonium', type: 'lvl', lvl: 50},
+    abilities: [
+      abilitiesObj.pick_Up
+    ],
+    movepool: {
+      1: {move: movesObj.tackle, lvl: 1},
+      2: {move: movesObj.headbutt, lvl: 7}
+    },
+    sprites: {
+      classic:{
+        sprite: 'img/pogemon/035_Balancia/Balancia.png',
+        frontSprite: 'img/pogemon/035_Balancia/Balancia_Animation.png',
+        backSprite: 'img/pogemon/035_Balancia/Balancia_Back_Animation.png',
+        teamSprite: 'img/pogemon/035_Balancia/Balancia_Team_Animation.png',
+        bagSprite: 'img/pogemon/035_Balancia/Balancia_Bag_Animation.png',
+      },
+      shiny: {
+        sprite: 'img/pogemon/035_Balancia/Balancia_Shiny.png',
+        frontSprite: 'img/pogemon/035_Balancia/Balancia_Animation_Shiny.png',
+        backSprite: 'img/pogemon/035_Balancia/Balancia_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/035_Balancia/Balancia_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/035_Balancia/Balancia_Bag_Animation_Shiny.png',
+      }
+    },
+    animationPositions:{
+      ally:{
+        launch:{
+          x: 50, y: 250
+        },
+        receive:{
+          x: -50, y:-250
+        }
+      },
+      foe:{
+        launch:{
+          x: -200, y: 165
+        },
+        receive:{
+          x: -100, y: -50
+        }
+      }
+    },
+    yeild: 85,
     catchRate: 200,
     surfable: false
   },
@@ -956,17 +1646,14 @@ export const pogemonsObj = {
       def: 60,
       spatk: 50,
       spdef: 60,
-      spd: 45,
+      spd: 1,
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: [
       abilitiesObj.pick_Up
     ],
     movepool: {
-      1: {move: movesObj.quick_Attack, lvl: 1},
-      2: {move: movesObj.fire_Ball, lvl: 2},
-      3: {move: movesObj.rainy_Day, lvl: 3},
-      4: {move: movesObj.trick_Room, lvl: 3},
+      1: {move: movesObj.fire_ball, lvl: 1},
     },
     sprites: {
       classic:{
@@ -1026,7 +1713,7 @@ export const pogemonsObj = {
       null
     ],
     movepool: {
-      1: {move: movesObj.shadow_Ball, lvl: 10},
+      1: {move: movesObj.shadow_ball, lvl: 10},
     },
     sprites: {
       classic:{
@@ -1087,10 +1774,10 @@ export const pogemonsObj = {
       abilitiesObj.pick_Up
     ],
     movepool: {
-      1: {move: movesObj.quick_Attack, lvl: 1},
-      2: {move: movesObj.fire_Ball, lvl: 2},
+      1: {move: movesObj.quick_attack, lvl: 1},
+      2: {move: movesObj.fire_ball, lvl: 2},
       3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_Ball, lvl: 10},
+      4: {move: movesObj.shadow_ball, lvl: 10},
       5: {move: movesObj.slash, lvl: 10},
     },
     sprites: {
@@ -1149,10 +1836,10 @@ export const pogemonsObj = {
   //     abilitiesObj.pick_Up
   //   ],
   //   movepool: {
-  //     1: {move: movesObj.quick_Attack, lvl: 1},
-  //     2: {move: movesObj.fire_Ball, lvl: 2},
+  //     1: {move: movesObj.quick_attack, lvl: 1},
+  //     2: {move: movesObj.fire_ball, lvl: 2},
   //     3: {move: movesObj.tackle, lvl: 3},
-  //     4: {move: movesObj.shadow_Ball, lvl: 10},
+  //     4: {move: movesObj.shadow_ball, lvl: 10},
   //     5: {move: movesObj.slash, lvl: 10},
   //   },
   //   sprites: {

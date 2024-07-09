@@ -396,13 +396,9 @@ function definePogemonSprites(i){
   player.team[i].width = 250
 
   pogemonSpriteArr.push(player.team[i])
-
-  console.log(player.team[i].pogemon.sprites.shiny)
   
   if(player.team[i].isShiny) pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.shiny.teamSprite
   else pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.classic.teamSprite
-
-  console.log(pogemonSpriteArr[i].img.src)
   
   pogemonSpriteArr[i].opacity = 1
 }
@@ -531,6 +527,10 @@ function createSceneLayout(){
   })
 }
 
+export const faintSwitch = {
+  active: false
+}
+
 function cleanTeamScene(){
   scenes.set('team', {initiated: false})
   document.querySelector('#teamScene').style.display = 'none'
@@ -547,6 +547,8 @@ function cleanTeamScene(){
   pogemonSpriteArr = []
 
   window.cancelAnimationFrame(teamAnimationId)
+
+  faintSwitch.active = true
 }
 
 function teamAnimation() {

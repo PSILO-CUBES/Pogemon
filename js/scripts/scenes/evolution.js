@@ -5,6 +5,8 @@ import { manageOverWorldState } from "./overworld.js"
 import { manageLearnedMoves, learnMoveMenu, manageLvlUpDisplay } from "./battle.js"
 import { player } from "../player.js"
 import { mapsObj } from "../../data/mapsData.js"
+import { evoItemUsed } from "./bag.js"
+import { itemsObj } from "../../data/itemsData.js"
 
 export const queue = []
 export const queueProcess = {
@@ -39,6 +41,7 @@ let evolutionArr
 
 function pogemonTransition(target){
   //might loop here from properties
+  console.log(targetEvo)
   target.pogemon = pogemonsObj[targetEvo.name]
   target.name = pogemonsObj[targetEvo.name].name
   target.element = pogemonsObj[targetEvo.name].element
@@ -74,6 +77,7 @@ function letEvolveChoice(state){
     document.querySelector('#evoConfirmButtonContainer').style.display = 'none'
     queueProcess.disabled = false
     let firstTarget = true
+
     if(evolutionArr.length > 1){
       for (let i = 0; i < evolutionArr.length; i++) {
         if(targetMon.id == evolutionArr[0].id){
@@ -86,8 +90,6 @@ function letEvolveChoice(state){
         pogemonTransition(targetMon)
         queue[0]()
         queue.shift()
-      } else {
-
       }
     } else {
       targetMon.dialogue('evolution', `${targetMon.name} is evolving!`)
@@ -96,7 +98,17 @@ function letEvolveChoice(state){
       queue.shift()
     }
 
+    if(evoItemUsed.item != null){
+      player.bag.set(evoItemUsed.item, {item: {...itemsObj[evoItemUsed.item]}, quantity: player.bag.get(`${evoItemUsed.item}`).quantity - 1})
+      evoItemUsed.item = null
+    }
 
+    player.pogedexInfo.forEach(index =>{
+      if(targetMon.name == index.name) {
+        index.seen = true
+        index.caught = true
+      }
+    })
   } else {
     if(evolutionArr.length > 1){
       document.querySelector('#evolutionDialogue').style.cursor = 'pointer'
@@ -104,9 +116,6 @@ function letEvolveChoice(state){
       queueProcess.disabled = false
       evolutionArr[0].dialogue('evolution', `${targetMon.name} didint evolve.`)
       queue.splice(0, 4)
-            
-      console.log(targetMon.id)
-      console.log(evolutionArr[evolutionArr.length - 1].id)
 
       if(targetMon.id == evolutionArr[evolutionArr.length - 1].id) queue.push(() => manageEvolutionState(false, evolutionArr[evolutionArr.length - 1]))
     } else {
@@ -126,7 +135,26 @@ function initEvo(target, i){
   scenes.set('evolution', {initiated : true})
 
   targetMon = target
-  targetEvo = pogemonsObj[target.evo.name]
+  if(pogemonsObj[target.evo.name] != undefined) targetEvo = pogemonsObj[target.evo.name]
+  else {
+    if(evoItemUsed.item != null || target.heldItem != null) {
+      target.evo.forEach(evoType =>{
+
+        if(evoType.item === evoItemUsed.item) {
+          targetEvo = pogemonsObj[evoType.name]
+        }
+
+        if(evoType.type == 'held') if(target.heldItem != null) if(evoType.item == target.heldItem.name) targetEvo = pogemonsObj[evoType.name]
+      })
+    } else {
+      target.evo.forEach(evoType =>{
+        if(evoType.type == 'event'){
+          targetEvo = pogemonsObj[evoType.name]
+        } 
+      })
+    }
+  }
+  
 
   if(target.isShiny) target.img.src = target.pogemon.sprites.shiny.frontSprite
   else target.img.src = target.pogemon.sprites.classic.frontSprite
@@ -140,7 +168,6 @@ function initEvo(target, i){
 
   if(i == 0) setEvoScene()
 
-  console.log('here')
   queueProcess.disabled = true
   document.querySelector('#evolutionDialogue').style.cursor = 'auto'
 
@@ -201,7 +228,6 @@ function clearEvolutionScene(target){
 }
 
 function evoProcess(target, preEvo){
-  console.log('here')
   queueProcess.disabled = true
   gsap.to(target, {
     opacity: 0,
@@ -226,33 +252,28 @@ function evoProcess(target, preEvo){
 }
 
 function manageEvolutionChain(evoArr){
-  console.log(evoArr)
   if(evoArr.length == 1){
 
     initEvo(evoArr[0], 0)
     const preEvo = {...evoArr[0]}
     queue.push(() => {
-      console.log('wtf?')
       evoProcess(evoArr[0], preEvo)
     })
-    console.log(preEvo)
+    
     manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[0])
     manageLearnedMoves(evoArr[0], queue, 'evolution')
-    console.log(preEvo)
     queue.push(() => manageEvolutionState(false, evoArr[0]))
 
     return
   } else {
     for(let i = 0; i < evoArr.length; i++){
       const preEvo = {...evoArr[i]}
-      console.log(preEvo.name)
       if(i == evoArr.length - 1) {
 
         queue.push(() => {
           queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
           queue.push(() => initEvo(evoArr[i], i))
           queue.push(() => {
-            console.log('wtf?')
             evoProcess(evoArr[i], preEvo)
           })
           // queue.push(() => {
@@ -273,7 +294,6 @@ function manageEvolutionChain(evoArr){
           queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
           queue.push(() => initEvo(evoArr[i], i))
           queue.push(() => {
-            console.log('wtf')
             evoProcess(evoArr[i], preEvo)
           })
           // queue.push(() => {
@@ -284,10 +304,8 @@ function manageEvolutionChain(evoArr){
         })
       }
       else {
-        console.log('wtf?')
         initEvo(evoArr[i], i)
-        queue.push(() => {  
-          console.log(i) 
+        queue.push(() => {
           evoProcess(evoArr[i], preEvo)
         })
         manageLvlUpDisplay('evolution', preEvo.stats, queue, null, evoArr[i])

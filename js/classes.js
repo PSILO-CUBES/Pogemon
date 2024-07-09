@@ -4,8 +4,7 @@ import { natureObj } from "./data/natureData.js"
 import { pogemonsObj } from "./data/pogemonData.js"
 import { typesObj } from "./data/typesData.js"
 
-import { c, scenes } from "./scripts/canvas.js"
-import { disableOWMenu } from "./scripts/scenes/overworld.js"
+import { c } from "./scripts/canvas.js"
 
 export class Sprite {
   constructor({
@@ -100,8 +99,8 @@ export class Boundary {
   }
 
   generateInfo(){
-    const opacity = 0.1
-    const opacity2 = 0.25
+    const opacity = 0
+    const opacity2 = 0
     switch(this.type){
       case 1:
         this.color = `rgba(255,0,0,${opacity})`
@@ -392,7 +391,7 @@ export class Pogemon extends Sprite{
   }
 
   generateShiny(){
-    const rng = Math.floor(Math.random() * 2)
+    const rng = Math.floor(Math.random() * 4)
 
     if(rng == 0) return true
     else return false
@@ -514,6 +513,8 @@ export class Pogemon extends Sprite{
     let launcPos = this.pogemon.animationPositions.ally.launch
     let receivePos = recipient.pogemon.animationPositions.foe.receive
 
+    let crit
+
     if(this.isEnemy){
       recipientStatus = document.querySelector('#allyStatus')
 
@@ -602,7 +603,7 @@ export class Pogemon extends Sprite{
       }
 
       // determins crit
-      let crit = 1
+      crit = 1
       if(typeEffectivness != 0) if(critHit(this, recipient)) crit = 1.5
 
       // determins held item damage
@@ -658,7 +659,7 @@ export class Pogemon extends Sprite{
         }
       }
 
-      console.log(damage)
+      if(immuned) damage = 0
 
       if(recipient.protected.active){
         queue.push(() => this.dialogue('battle', `${recipient.name} protected itself.`))
@@ -818,7 +819,7 @@ export class Pogemon extends Sprite{
                 switch(move.name){
                   case 'protect':
                   case 'substitute':
-                  case 'trick_Room':
+                  case 'trick_room':
                   case 'heal':
                   case 'growl':
                   case 'sharpen':
@@ -931,7 +932,7 @@ export class Pogemon extends Sprite{
                   switch(move.name){
                     case 'protect':
                     case 'substitute':
-                    case 'trick_Room':
+                    case 'trick_room':
                     case 'heal':
                     case 'growl':
                     case 'sharpen':
@@ -1229,43 +1230,44 @@ export class Pogemon extends Sprite{
           }, timer)
         } else if (type == 'status') {
           switch(move.name) {
-            case 'heat_Wave':
+            case 'heat_wave':
             case 'hypnosis':
-            case 'frost_Wave':
-            case 'trick_Room':
+            case 'frost_wave':
+            case 'trick_room':
               const color = typesObj[move.element].color
   
               const tl1 = gsap.timeline()
               const tl2 = gsap.timeline()
   
-              if(effect == 'trickroom'){
+              if(effect == 'trick_room'){
                 const fieldEffect = document.querySelector('#fieldEffect')
   
-                const fieldEffectContent = document.createElement('div')
-                fieldEffectContent.id = 'trickroom'
+                // const fieldEffectContent = document.createElement('div')
+                // fieldEffectContent.id = 'trickroom'
   
-                for(let i = 0; i < 15; i++){
-                  const trickRoomCells = document.createElement('div')
-                  trickRoomCells.id = 'trickroomCells'
+                // for(let i = 0; i < 15; i++){
+                //   const trickRoomCells = document.createElement('div')
+                //   trickRoomCells.id = 'trickroomCells'
   
-                  fieldEffectContent.appendChild(trickRoomCells)
-                }
+                //   fieldEffectContent.appendChild(trickRoomCells)
+                // }
   
-                fieldEffect.appendChild(fieldEffectContent)
+                // fieldEffect.appendChild(fieldEffectContent)
 
                 tl1.to(fieldEffect, {
-                  opacity: 0,
+                  backgroundColor: 'rgba(255, 0, 255, 0)',
                 }).to(fieldEffect, {
-                  opacity: 50,
+                  opacity: 'rgba(255, 0, 255, 0.5)',
                   duration: 0.5
                 }).to(fieldEffect, {
-                  opacity: 0,
+                  opacity: 'rgba(255, 0, 255, 1)',
                   duration: 0.01,
                   onComplete: () =>{
-                    fieldEffect.replaceChildren()
-                    terrainConditions.etc.trickroom.active = true
-                    terrainConditions.etc.trickroom.turns = 5
+                    document.querySelector('#trickroom').parentNode.removeChild(document.querySelector('#trickroom'))
+                    terrainConditions.etc.trick_room.active = true
+                    terrainConditions.etc.trick_room.turns = 5
                     queueProcess.disabled = false
+                    fieldEffect.opacity = 1
                   }
                 })
               }
@@ -1288,7 +1290,7 @@ export class Pogemon extends Sprite{
                 }
               })
               break
-            case 'thunder_Wave':
+            case 'thunder_wave':
               if(this.isEnemy){
                 statusSprite.position = {
                   x: recipient.position.x + recipient.width / 4,
@@ -1332,7 +1334,7 @@ export class Pogemon extends Sprite{
                 renderedSprites.pop()
               }, 1000)
               break
-            case 'confuse_Ray':
+            case 'confuse_ray':
               if(this.isEnemy){
                 statusSprite.position = {
                   x: recipient.position.x + recipient.width / 4,
@@ -1354,7 +1356,7 @@ export class Pogemon extends Sprite{
                 renderedSprites.pop()
               }, 1000)
               break
-            case 'leech_Seed':
+            case 'leech_seed':
               //change all this later
               if(this.isEnemy){
                 statusSprite.position = {
@@ -1511,7 +1513,7 @@ export class Pogemon extends Sprite{
               }
   
               protectAnimation()
-              this.protected.turns++
+              this.protected.turns += 1
               this.protected.active = true
               break
           }
@@ -1578,7 +1580,7 @@ export class Pogemon extends Sprite{
             repeat: 5,
             duration: 0.08,
             onComplete: () =>{
-              queueProcess.disabled = false
+              if(crit == 1) queueProcess.disabled = false
               if(type) renderedSprites.splice(1,1)
             }
           })
@@ -1591,7 +1593,7 @@ export class Pogemon extends Sprite{
     let projectileAnimation = () => {
       queueProcess.disabled = true
       console.log(queueProcess.disabled)
-      if(move.name != 'fire_Ball') rotation = 0
+      if(move.name != 'fire_ball') rotation = 0
       const projectileImg = new Image()
       projectileImg.src = move.sprite
       const projectileSprite = new Sprite({
@@ -1655,8 +1657,9 @@ export class Pogemon extends Sprite{
       if(recipient.hp <= 0) return
       if(isSubActive) return
       if(recipient.protected.active == true) return
-      if(recipient.stats != null) return
+      // if(recipient.stats != null) return
       // work here
+      
       let rng = Math.floor(Math.random() * 100)
 
       let applyAffliction = type =>{
@@ -1721,7 +1724,7 @@ export class Pogemon extends Sprite{
         if(move.effects == undefined) return
         applyAffliction(Object.keys(Object.values(move.effects)[0])[0])
         if(Object.keys(Object.values(move.effects)[0])[0] == 'confusion' || Object.keys(Object.values(move.effects)[0])[0] == 'seeded' ) return
-        if(move.effects.type == 'status') if(move.name != 'trickroom') queue.push(() => this.dialogue('battle', `${recipient.name} already has a status affliction.`))
+        if(move.effects.type == 'status') if(move.name != 'trick_room') queue.push(() => this.dialogue('battle', `${recipient.name} already has a status affliction.`))
         return
       }
 
@@ -1848,6 +1851,15 @@ export class Pogemon extends Sprite{
                 manageWeatherState('snow', terrainConditions.weather.snow, 'init')
               }
               break
+            case 'trick_room':
+              if(terrainConditions.etc.trick_room.active){
+                this.dialogue('battle', `Trick room is already active.`)
+                queueProcess.disabled = false
+              } else {
+                this.dialogue('battle', `${this.name} used ${this.switchUnderScoreForSpace(move.name)}. \n\n It summoned a trick room.`)
+                manageWeatherState('trick_room', terrainConditions.etc.trick_room, 'init')
+              }
+              break  
           }
         }
       }
@@ -1857,7 +1869,7 @@ export class Pogemon extends Sprite{
     
     if(recipient.protected.active && recipient.protected.turns == 0) recipient.protected.turns = 1
 
-    if(move.name != 'fire_Ball') rotation = 0
+    if(move.name != 'fire_ball') rotation = 0
 
     // should find a way to manage moves better or this will become a cluster fuck very quickly
     switch(move.name){
@@ -1865,23 +1877,23 @@ export class Pogemon extends Sprite{
 
     //normal
       case 'tackle': 
-      case 'quick_Attack':
+      case 'quick_attack':
       case 'headbutt':
       case 'struggle':
         //should put struggle apart
         hitAnimation(false)
         break
       case 'slash':
-      case 'super_Power':
+      case 'super_power':
         hitAnimation(true)
         break
 
     // special
 
       // fire
-      case 'fire_Ball':
+      case 'fire_ball':
       // ghost
-      case 'shadow_Ball':
+      case 'shadow_ball':
         projectileAnimation()
         break
       
@@ -1908,31 +1920,31 @@ export class Pogemon extends Sprite{
       case 'protect':
 
       // grass
-      case 'leech_Seed':
+      case 'leech_seed':
 
       // water
-      case 'rainy_Day':
+      case 'rainy_day':
 
       // fire
-      case 'heat_Wave':
-      case 'sunny_Day':
+      case 'heat_wave':
+      case 'sunny_day':
 
       // rock
-      case 'sand_Storm':
+      case 'sand_storm':
 
       // electric
-      case 'thunder_Wave':
+      case 'thunder_wave':
       
       // poison
       case 'fart':
 
       // ice
-      case 'frost_Wave':
+      case 'frost_wave':
       case 'iceStorm':
       //psychic
       case 'hypnosis':
-      case 'confuse_Ray':
-      case 'trick_Room':
+      case 'confuse_ray':
+      case 'trick_room':
         // should change to statusAnimation manye
         statusAnimation('status', move.effects)
         break  
@@ -2159,7 +2171,7 @@ export class Pogemon extends Sprite{
   }
 
   // should pass foe instead of slower
-  checkStatus(healthBar, healthAmount, renderedSprites, queue, queueProcess, faintEvent, opponent, info, debounce, terrainConditions, manageWeatherState){
+  checkStatus(healthBar, healthAmount, renderedSprites, queue, queueProcess, faintEvent, opponent, info, debounce, terrainConditions, manageWeatherState, faintSwitch){
     //makes sure the pogemon isint fainted and that the second pogemon's statusCheck is queued up
 
     let opponentHealthBar
@@ -2194,7 +2206,6 @@ export class Pogemon extends Sprite{
           queue.push(() =>{{
             if(this.fainted) return
             if(opponent.fainted) return
-            console.log('thisFaint')
             thisFaints()
   
             let chip = Math.floor(this.stats.baseHp / 8)
@@ -2224,8 +2235,7 @@ export class Pogemon extends Sprite{
             healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
             
             this.dialogue('battle', `${this.name}'s health was sapped by the seeds.`)
-            
-            console.log('thisFaint')
+
             thisFaints()
             
             this.statusEffectAnimation(affliction.name, renderedSprites, queueProcess)
@@ -2244,7 +2254,7 @@ export class Pogemon extends Sprite{
     if(this.status.name == null && opponent.status.name == null){
       // thisFaints()
       if(info != undefined && !debounce){
-        opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState) 
+        opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch) 
       }
 
     }
@@ -2252,7 +2262,7 @@ export class Pogemon extends Sprite{
     if(this.status.name == null && opponent.status.name != null){
       // thisFaints()
       if(info != undefined && !debounce){
-        opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState)
+        opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch)
       }
 
     }
@@ -2260,7 +2270,7 @@ export class Pogemon extends Sprite{
     if(this.status.name != null && opponent.status.name == null){
       if(!debounce){
         // thisFaints()
-        opponent.checkStatus(opponentHealthBar, opponentHealthAmount, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState)
+        opponent.checkStatus(opponentHealthBar, opponentHealthAmount, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
       }
     }
 
@@ -2269,7 +2279,6 @@ export class Pogemon extends Sprite{
     if(this.status.name != null) {
       queue.push(() =>{
         if(this.fainted) return
-        console.log('thisFaint')
         thisFaints()
         let chip
   
@@ -2292,11 +2301,10 @@ export class Pogemon extends Sprite{
             if(this.status.name == 'burn') this.dialogue('battle', `${this.name} felt the burn.`)
             else if(this.status.name == 'frz') this.dialogue('battle', `${this.name} was hurt by the frost.`)
             
-            console.log('thisFaint')
             thisFaints()
   
             if(opponent != null && opponent.status.name != null) {
-              if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState)
+              if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
             }
             
             this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
@@ -2316,11 +2324,10 @@ export class Pogemon extends Sprite{
             healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
             this.dialogue('battle', `${this.name} felt sick.`)
   
-            console.log('thisFaint')
             thisFaints()
   
             if(opponent.status.name != null && info != null) {
-              opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState)
+              opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
             }
             
             this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
@@ -2331,7 +2338,7 @@ export class Pogemon extends Sprite{
           case 'slp':
           case 'para':
             if(opponent.status.name != null && info != null) {
-              opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState)
+              opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
             }
             break
         }
@@ -2349,7 +2356,7 @@ export class Pogemon extends Sprite{
           }
         })
       })
-      console.log(terrainArr)
+
       return [flag, terrainArr]
     }
 
@@ -2360,32 +2367,32 @@ export class Pogemon extends Sprite{
       const tl2 = gsap.timeline()
 
       switch(type){
-        case 'trick_Room':
+        case 'trick_room':
           const fieldEffect = document.querySelector('#fieldEffect')
 
-          const fieldEffectContent = document.createElement('div')
-          fieldEffectContent.id = 'trickroom'
+          // const fieldEffectContent = document.createElement('div')
+          // fieldEffectContent.id = 'trickroom'
   
-          for(let i = 0; i < 15; i++){
-            const trickRoomCells = document.createElement('div')
-            trickRoomCells.id = 'trickroomCells'
+          // for(let i = 0; i < 15; i++){
+          //   const trickRoomCells = document.createElement('div')
+          //   trickRoomCells.id = 'trickroomCells'
   
-            fieldEffectContent.appendChild(trickRoomCells)
-          }
+          //   fieldEffectContent.appendChild(trickRoomCells)
+          // }
   
-          fieldEffect.appendChild(fieldEffectContent)
+          // fieldEffect.appendChild(fieldEffectContent)
   
           tl1.to(fieldEffect, {
-            opacity: 0,
+            opacity: 'rgba(255, 0, 255, 0)',
           }).to(fieldEffect, {
-            opacity: 50,
+            opacity: 'rgba(255, 0, 255, 0.5)',
             duration: 0.5
           }).to(fieldEffect, {
-            opacity: 0,
+            opacity: 'rgba(255, 0, 255, 1)',
             duration: 0.01,
             onComplete: () =>{
-              fieldEffect.replaceChildren()
-              terrainConditions.etc.trickroom.active = true
+              // document.querySelector('#trickroom').parentNode.removeChild(document.querySelector('#trickroom'))
+              terrainConditions.etc.trick_room.active = true
               queueProcess.disabled = false
             }
           })
@@ -2416,19 +2423,26 @@ export class Pogemon extends Sprite{
     if(info == null){
       // end of turn animation stuff
       if(terrainFlag){
+        if(faintSwitch.active){
+          faintSwitch.active = false
+          return
+        }
+        
         terrainArr.forEach(activeTerrain =>{
           if(activeTerrain.info.turns == 1){
             manageWeatherState(null, null, 'endOfTurn', activeTerrain)
             return
           }
-          console.log(activeTerrain)
+
           queue.push(() =>{
             terrainAnimation(activeTerrain.type, activeTerrain.info.element)
             activeTerrain.info.turns--
           })
+
           queue.push(() =>{
             document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
-            this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type}.`)
+            document.querySelector('#fieldEffect').opacity = 1
+            this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
           })
         })
       }
@@ -2460,7 +2474,7 @@ export class Pogemon extends Sprite{
         this.statusEffectAnimation('para', renderedSprites, queueProcess)
         break
       case 'slp':
-        this.status.turns = this.status.turns + 1
+        this.status.turns += 1
         this.dialogue('battle', `${this.name} is deep asleep.`)
         this.statusEffectAnimation('slp', renderedSprites, queueProcess)
         break
@@ -2509,6 +2523,8 @@ export class Pogemon extends Sprite{
         gsap.to(this.position, {
           y: this.position.y - 20,
         })
+
+        this.manageFriendliness(-10)
       }
     })
     gsap.to(this, {
@@ -2673,7 +2689,8 @@ export class Pogemon extends Sprite{
     queueProcess.disabled = true
     console.log(queueProcess.disabled)
 
-    lvlUpLvlDom.textContent = `lv ${prevLvl}`
+    if(prevLvl == null) lvlUpLvlDom.textContent = `lv ${this.lvl}`
+    else lvlUpLvlDom.textContent = `lv ${prevLvl}`
 
     for(let i = 0; i < Object.keys(this.stats).length; i++){
       lvlUpStatsArr[i].textContent = `${Object.values(oldStats)[i]}`
@@ -2694,7 +2711,11 @@ export class Pogemon extends Sprite{
             else lvlUpStatsArr[i].textContent = `${increase} + ${Object.values(oldStats)[i]}`
           }
 
-          setTimeout(() => queueProcess.disabled = false, 1000)
+          setTimeout(() => {
+            queueProcess.disabled = false
+            console.log(false), 1000
+          })
+                  
         }, 1000)
       }
     })
@@ -2760,7 +2781,6 @@ export class Pogemon extends Sprite{
     switch(item.effect){
       case 'heal':
         if(this.hp <= 0) {
-          console.log('haha')
           faintEvent(this)
           return
         }
@@ -2807,15 +2827,22 @@ export class Pogemon extends Sprite{
 
     if(item.consume) this.heldItem = null
   }
+
+  manageFriendliness(amount){
+    this.friendliness += amount
+    if(this.friendliness < 0) this.friendliness = 0
+    if(this.friendliness > 255) this.friendliness = 255
+  }
 }
 
-export class NPC extends Sprite{
+export class Character extends Sprite{
   constructor(
     team,
     bag,
     money,
     direction,
     trainerName,
+    playerCharacter,
     {
       type, 
       position, 
@@ -2842,7 +2869,8 @@ export class NPC extends Sprite{
     this.surfing = false
     this.disabled = false
     this.assingDirection(direction)
-    if(trainerName != undefined) this.name = trainerName
+    if(trainerName != null) this.name = trainerName
+    if(playerCharacter != null) this.playerCharacter = playerCharacter
     if(type == 'player') {
       this.startTime = new Date()
       this.badges = {
@@ -2855,28 +2883,7 @@ export class NPC extends Sprite{
         6: false,
         7: false
       }
-    }
-  }
-
-  assingDirection(direction){
-    if(direction == undefined) this.direction = 1
-    switch(direction){
-      case 'Up':
-        this.direction = 1
-        this.spriteHeightFrame = 3
-        break
-      case 'Right':
-        this.direction = 2
-        this.spriteHeightFrame = 2
-        break
-      case 'Down':
-        this.direction = 3
-        this.spriteHeightFrame = 0
-        break
-      case 'Left':
-        this.direction = 4
-        this.spriteHeightFrame = 1
-        break
+      this.pogedexInfo = this.createPogedexInfo()
     }
   }
 
@@ -2921,7 +2928,29 @@ export class NPC extends Sprite{
 
   }
 
-  catch(pogemon, starter, currMap, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc, queueFaintTrigger){
+  assingDirection(direction){
+    if(direction == undefined) this.direction = 1
+    switch(direction){
+      case 'Up':
+        this.direction = 1
+        this.spriteHeightFrame = 3
+        break
+      case 'Right':
+        this.direction = 2
+        this.spriteHeightFrame = 2
+        break
+      case 'Down':
+        this.direction = 3
+        this.spriteHeightFrame = 0
+        break
+      case 'Left':
+        this.direction = 4
+        this.spriteHeightFrame = 1
+        break
+    }
+  }
+
+  catch(pogemon, starter, currMap, inUse, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, pogemonInUse, queue, faintEvent, pc, queueFaintTrigger, queueProcess, terrainConditions, manageWeatherState){
     let newPogemon
 
     const catchCalc = ball => {
@@ -2929,6 +2958,15 @@ export class NPC extends Sprite{
       const rng = Math.floor(Math.random() * 100)
       const rate = Math.floor(((3 * pogemon.stats.baseHp - 2 * pogemon.hp) * pogemon.pogemon.catchRate * ball.pow / (3 * pogemon.stats.baseHp) * statusBonus))
       return {rng, rate} 
+    }
+    
+    const markAsCaught = () =>{
+      this.pogedexInfo.forEach(dexPogemon =>{
+        if(dexPogemon.name == pogemon.name) { 
+          dexPogemon.caught = true 
+          dexPogemon.seen = true
+        }
+      })
     }
 
     const catchEvent = ballSprite => {
@@ -2946,6 +2984,7 @@ export class NPC extends Sprite{
           }
         }
         document.querySelector('#dialogueInterface').textContent = `${pogemon.name} was caught`
+        markAsCaught()
         manageQueue(true)
         backToOverWorld()
       } else {
@@ -2959,12 +2998,14 @@ export class NPC extends Sprite{
               opacity: 1,
               onComplete: () =>{
                 let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
-                pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue, queueFaintTrigger})
+
+                pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
+
+                //move, recipient, renderedSprites, critHit, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState
 
                 manageQueue(true)
                 if(pogemonInUse.hp <= 0){
                   // pogemonInUse.faint(queueFaintTrigger)
-                  console.log('haha')
                   faintEvent(pogemonInUse)
                   // put this in a queue
                   // check if they all fainted
@@ -2988,30 +3029,31 @@ export class NPC extends Sprite{
     function ballAnimation(ballSprite){
       renderedSprites.splice(1, 0, ballSprite)
   
-      gsap.to(ballSprite.position, {
+      TweenMax.to(ballSprite.position, {
         x: pogemon.position.x + pogemon.width / 3,
         y: pogemon.position.y + pogemon.height / 2,
         onComplete: () =>{
           ballSprite.animate = false
-          gsap.to(pogemon, {
+          TweenMax.to(pogemon, {
             opacity: 0,
             onComplete: () =>{
-              gsap.to(ballSprite.position, {
+              TweenMax.to(ballSprite.position, {
                 y: pogemon.position.y + 250,
                 onComplete: () => {
-                  gsap.to(ballSprite, {
-                    rotation: '-0.5',
+                  TweenMax.to(ballSprite, {
+                    rotation: '0.15',
                     onComplete: () => {
-                      gsap.to(ballSprite, {
-                        rotation: '0.5',
+                      TweenMax.to(ballSprite, {
+                        rotation: '-0.15',
                         onComplete: () => {
-                          gsap.to(ballSprite, {
-                            rotation: '-0.5',
+                          TweenMax.to(ballSprite, {
+                            rotation: '0.15',
                             onComplete: () => {
-                              gsap.to(ballSprite, {
+                              TweenMax.to(ballSprite, {
                                 rotation: '0',
                                 onComplete: () =>{
                                   catchEvent(ballSprite)
+                                  queueProcess.disabled = false
                                 }
                               })
                             }
@@ -3040,8 +3082,9 @@ export class NPC extends Sprite{
         animate: true
       })
 
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(15, 3), false, currMap, null, null, pogemonSprite)
 
+      markAsCaught()
       this.team.push(newPogemon)
     } else {
 
@@ -3055,7 +3098,7 @@ export class NPC extends Sprite{
         type: 'catch',
         position: {
           x: 0,
-          y: 100
+          y: 0
         },
         img: ballImg,
         frames: {
@@ -3067,5 +3110,15 @@ export class NPC extends Sprite{
 
       ballAnimation(ballSprite)
     }
+  }
+
+  createPogedexInfo(){
+    const pogedexArr = []
+
+    Object.values(pogemonsObj).forEach(pogemon =>{
+      pogedexArr.push({ name : pogemon.name, pogedexIndex : pogemon.pogedex, sprite : pogemon.sprites.classic.sprite, seen : false, caught : false })
+    })
+
+    return pogedexArr
   }
 }

@@ -32,7 +32,6 @@ const pogemonSprite = new Sprite({
 pogemonImg.src = '../../../img/female_icon.png'
 
 export function switchUnderScoreForSpace(text){
-	console.log(text)
 	return text.replace(/_/g, ' ')
 }
 
@@ -116,8 +115,9 @@ function statsSceneMovesInteraction(e, state){
     document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.background = 'transparent'
     document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
 
+		console.log(`${e.target.innerText.replace(' ', '_')}`)
     e.target.style.backgroundColor = 'rgba(75,75,75,0.35)'
-    printMoveDesc(movesObj[`${e.target.innerText.toLowerCase()}`])
+    printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
 
     document.querySelector('#statsSceneMovesInterface').style.display = 'grid'
 
@@ -144,6 +144,7 @@ function statsSceneMovesInteraction(e, state){
 }
 
 function printMoveDesc(selectedMove){
+	console.log(selectedMove)
   if(selectedMove == undefined) return
   const statsSceneMovesInterfaceDescContainer = document.querySelector('#statsSceneMovesInterfaceDescContainer')
 
@@ -153,7 +154,7 @@ function printMoveDesc(selectedMove){
     if(Object.keys(selectedMove)[i] == 'effects') {
       statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : null`
       if(Object.values(selectedMove)[i] != null){
-      statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.keys(Object.values(selectedMove)[i])}`
+      	statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.keys(Object.values(selectedMove)[i])}`
       }
     } else {
 			if(i == 2){
@@ -169,7 +170,11 @@ function printMoveDesc(selectedMove){
 				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementTag)
 				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementName)
 			} else {
-				statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i]}`
+				console.log(Object.values(selectedMove)[i])
+				if(i == 0) {
+					statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i].replace(/_/g, ' ')}`
+				}
+				else statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i]}`
 			}
     }
 
@@ -287,6 +292,7 @@ function createMenu(){
 										statsSceneGridSectionInfoTypeSectionElements.setAttribute('class', 'statsSceneGridSectionInfoTypeSectionElements')
 
 										statsSceneGridSectionInfoTypeSectionElements.innerText = selectedPogemon.element[i]
+										console.log(typesObj[`${selectedPogemon.element[i]}`])
 										statsSceneGridSectionInfoTypeSectionElements.style.backgroundColor = `#${typesObj[`${selectedPogemon.element[i]}`].color}`
 
 										statsSceneGridSectionInfoTypeSectionContent.appendChild(statsSceneGridSectionInfoTypeSectionElements)
@@ -474,6 +480,19 @@ function createMenu(){
 		case 2:
 			// data section
 			statsSceneGridSection.setAttribute('id', 'statsSceneGridSectionDataContainer')
+
+			function changeAffectedStatColor(value, DOM){
+				const [inc, dec] = Object.values(selectedPogemon.nature.values)
+
+				if(inc == dec) return
+
+				if(value == inc){
+					DOM.style.color = 'green'
+				} else if(value == dec){
+					DOM.style.color = 'red'
+				}
+			}
+
 			for(let i = 0; i < 2; i++){
 				const statsSceneGridSectionData = document.createElement('div')
 				statsSceneGridSectionData.setAttribute('class', 'statsSceneGridSectionData')
@@ -485,7 +504,19 @@ function createMenu(){
 						for(let i = 0; i < 6; i++){
 							const statsSceneGridSectionDataStats = document.createElement('div')
 							statsSceneGridSectionDataStats.setAttribute('class', 'statsSceneGridSectionDataStats')
-							statsSceneGridSectionDataStats.innerText = `${statsArr[i]} \n\n\n ${Object.values(selectedPogemon.stats)[i]}`
+
+							const statsSceneGridSectionDataStatsTag = document.createElement('div')
+							statsSceneGridSectionDataStatsTag.setAttribute('class', 'statsSceneGridSectionDataStatsTag')
+							statsSceneGridSectionDataStatsTag.innerText = `${statsArr[i]}`
+
+							const statsSceneGridSectionDataStatsNumber = document.createElement('div')
+							statsSceneGridSectionDataStatsNumber.setAttribute('class', 'statsSceneGridSectionDataStatsNumber')
+							statsSceneGridSectionDataStatsNumber.innerText = `${Object.values(selectedPogemon.stats)[i]}`
+							
+							changeAffectedStatColor(statsArr[i].toLowerCase(), statsSceneGridSectionDataStatsNumber)
+
+							statsSceneGridSectionDataStats.appendChild(statsSceneGridSectionDataStatsTag)
+							statsSceneGridSectionDataStats.appendChild(statsSceneGridSectionDataStatsNumber)
 						
 							statsSceneGridSectionData.appendChild(statsSceneGridSectionDataStats)
 						}
@@ -546,6 +577,8 @@ function clearStatsMenu(prevScene){
 }
 
 export function switchStatsTargetWithKeys(key){
+	if(player.team.length == 1) return
+	
 	if(key == 'w') {
 		if(selectedPogemonTeamIndex - 1 < 0) return
 		selectedPogemonTeamIndex = selectedPogemonTeamIndex - 1
