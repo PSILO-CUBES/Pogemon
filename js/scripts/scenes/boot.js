@@ -1,4 +1,4 @@
-import { volumeValues } from "../../data/audioData.js"
+import { audioObj, volumeValues } from "../../data/audioData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
 import { loadData } from "../../save.js"
 import { manageOverWorldState } from "./overworld.js"
@@ -224,6 +224,9 @@ function initBootMenuInteractionEvent(e){
             manageBootState(false)
             gsap.to('#overlapping', {
                 opacity: 0,
+                onComplete: () =>{
+                    // audioObj.music.map.play()
+                }
             })
         }
     })

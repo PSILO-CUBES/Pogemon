@@ -303,7 +303,6 @@ export const itemsObj = {
     heldType: 'after',
     consume: false,
   },
-
   focus_Band:{
     name: 'focus_Band',
     type: 'battle',
@@ -313,7 +312,7 @@ export const itemsObj = {
     desc: "The bandana makes the wearer extra weary of hits.\n\nIf the wearer were to faint, has a 10% chance to remain alive with 1 hp.",
     heldType: 'after',
     consume: false,
-    odds: 100
+    odds: 10
   },
   focus_Sash:{
     name: 'focus_Sash',
@@ -326,6 +325,7 @@ export const itemsObj = {
     consume: true,
     odds: 100
   },
+  
   // vals
   // key
   glowy_Halo:{

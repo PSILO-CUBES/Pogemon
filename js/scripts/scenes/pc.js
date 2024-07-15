@@ -110,6 +110,7 @@ function pcAnimation(){
 
     backgroundSprite.draw()
     selectedPogemonSprite.draw()
+
     teamSprites.forEach(sprite =>{
         sprite.draw()
     })
@@ -210,8 +211,11 @@ function hoverEvent(state, DOM, target, i, type){
 
         if(target != null) {
             target.animate = true
+
             if(targetPogemon == null || targetPogemon == undefined) return
-            selectedPogemonImg.src = targetPogemon.pogemon.sprites.frontSprite
+
+            if(player.team[i].isShiny) selectedPogemonImg.src = targetPogemon.pogemon.sprites.shiny.frontSprite
+            else selectedPogemonImg.src = targetPogemon.pogemon.sprites.classic.frontSprite
         }
     } else {
         document.querySelector('#pcSceneSelectedPogemonInfoContainer').style.display = 'none'
@@ -242,17 +246,17 @@ function rearrangeTeam(first, second){
 
                     let node = document.querySelectorAll('.pcScenePogemonContainer')[i]
                     if(player.team[i] == null || player.team[i] == undefined){
-                        console.log(teamSprites[i].img.src)
                         teamSprites[i].img.src = ''
                         node.childNodes[0].childNodes[0].textContent = ''
                         node.childNodes[0].childNodes[1].src = ``
                         node.childNodes[1].textContent = ''
                     } else {
-                        console.log(teamSprites[i].img.src)
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
                         node.childNodes[1].textContent = `${player.team[i].name}`
-                        teamSprites[i].img.src = player.team[i].pogemon.sprites.bagSprite
+
+                        if(player.team[i].isShiny) teamSprites[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
+                        else teamSprites[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
                     }
 
                     oldDOM = null
@@ -281,7 +285,9 @@ function rearrangeTeam(first, second){
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
                         node.childNodes[1].textContent = `${player.team[i].name}`
-                        teamSprites[i].img.src = player.team[i].pogemon.sprites.bagSprite
+
+                        if(player.team[i].isShiny) teamSprites[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
+                        else teamSprites[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
                     }
 
                     oldDOM = null
@@ -295,7 +301,11 @@ function rearrangeTeam(first, second){
 
     //if second slot selected is empty
     if(second.pogemon == undefined || second.pogemon == null){
-        second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.bagSprite
+        
+        if(player.team[i].isShiny) second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.shiny.bagSprite
+        else second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.classic.bagSprite
+
+        
         first.type.animationArr[first.i].img.src = 'img/blank.png'
 
         if(first.type.name == 'team'){
@@ -427,7 +437,11 @@ function clickPogemonEvent(state, e, DOM, target, i, type){
     if(state){
         if(selectedEvent.initiated){
             if(target != null) {
-                selectedPogemonImg.src = target.pogemon.sprites.frontSprite
+
+                if(player.team[i].isShiny) selectedPogemonImg.src = target.pogemon.sprites.shiny.frontSprite
+                else selectedPogemonImg.src = target.pogemon.sprites.classic.frontSprite
+
+                
                 target.animate = true
     
                 switchEvent.target.second.i = i
@@ -675,7 +689,8 @@ function printPcMenu(){
 
                     if(player.team[i] == undefined) continue
 
-                    pogemonImg.src = player.team[i].pogemon.sprites.bagSprite
+                    if(player.team[i].isShiny) pogemonImg.src = player.team[i].pogemon.sprites.shiny.bagSprite
+                    else pogemonImg.src = player.team[i].pogemon.sprites.classic.bagSprite
                 }
                 break
             case 1:
@@ -713,7 +728,12 @@ function printPcMenu(){
                     pcSceneBoxContent.setAttribute('class', 'pcSceneBoxContent')
 
                     const boxPogemonImg = new Image()
-                    if(pc[currBox][i] != null) boxPogemonImg.src = pc[currBox][i].pogemon.sprites.bagSprite
+
+                    if(pc[currBox][i] != null) {
+                        if(player.team[i].isShiny) boxPogemonImg.src = pc[currBox][i].pogemon.sprites.shiny.bagSprite
+                        else boxPogemonImg.src = pc[currBox][i].pogemon.sprites.classic.bagSprite
+                    }
+                        
 
                     switch(i){
                         case 6:

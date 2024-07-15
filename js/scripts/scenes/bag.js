@@ -220,7 +220,6 @@ function useItemOnClickEvent(e){
         case 'misc':
           switch(currItem.effect){
             case 'evo':
-              console.log(targetPogemon.evo.length)
               if(targetPogemon.evo.length == undefined){
                 if(targetPogemon.evo.item == currItem.name){
                   if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
@@ -240,7 +239,6 @@ function useItemOnClickEvent(e){
                 }
               } else {
                 targetPogemon.evo.forEach(evoType =>{
-                  console.log(evoType)
                   if(evoType.item == currItem.name){
                     evoItemUsed.item = currItem.name
 

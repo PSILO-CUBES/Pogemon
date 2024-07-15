@@ -16,6 +16,7 @@ import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
 import { queue as evoQueue, queue } from './evolution.js'
 import { typesObj } from '../../data/typesData.js'
+import { weatherObj } from '../../data/weatherData.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -50,22 +51,20 @@ function startOverWorldWeather(){
   const OWSceneContainer = document.querySelector('#weatherContainer')
 
   if(mapsObj[currMap.name].weather == undefined) OWSceneContainer.style.backgroundColor = `transparent`
-  else OWSceneContainer.style.backgroundColor = `#${typesObj[mapsObj[currMap.name].weather.element].color}${mapsObj[currMap.name].weather.opacity}`
+  else OWSceneContainer.style.backgroundColor = `#${typesObj[weatherObj[mapsObj[currMap.name].weather].element].color}${weatherObj[mapsObj[currMap.name].weather].opacity}`
 }
 
 let pogelocationBackUp
 
 export async function switchMap(nextMapInfo, preMapInfo){
+  audioObj.SFX.changeMap.play()
+
   if(nextMapInfo != undefined) {
     if(nextMapInfo.name != 'undefined'){
       [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(nextMapInfo)
       prevMap = preMapInfo
     }
   }
-
-  console.log(nextMapInfo)
-  console.log(preMapInfo)
-  console.log(pogecenterReturnInfo)
 
   if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
     pogelocationBackUp = preMapInfo
@@ -638,7 +637,7 @@ const overWorldAnimation = timeSpent =>{
 
   if(currMap == undefined) return
 
-  manageWeatherParticles(mapsObj[currMap.name].weather)
+  manageWeatherParticles(weatherObj[mapsObj[currMap.name].weather])
   printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)
   playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones)
 }

@@ -668,7 +668,6 @@ export class Pogemon extends Sprite{
         recipient.subHp -= damage
         if(recipient.subHp <= 0){
           queueProcess.disabled = true
-          console.log(queueProcess.disabled)
           queue.push(() => this.dialogue('battle', `${recipient.name}'s substitute was destroyed.`))
           //sub faints
           gsap.to(recipient, {
@@ -957,7 +956,6 @@ export class Pogemon extends Sprite{
     let statusAnimation = (type, effect) =>{
       if(this.fainted) return
       queueProcess.disabled = true
-      console.log(queueProcess.disabled)
       const statusImg = new Image()
       statusImg.src = move.sprite
 
@@ -1483,7 +1481,6 @@ export class Pogemon extends Sprite{
 
                 renderedSprites.splice(renderedSprites.length, 0, protectSprite)
                 queueProcess.disabled = true
-                console.log(queueProcess.disabled)
                 protectSprite.opacity = 0
   
                 gsap.to(protectSprite, {
@@ -1532,7 +1529,6 @@ export class Pogemon extends Sprite{
 
     let hitAnimation = type => {
       queueProcess.disabled = true
-      console.log(queueProcess.disabled)
       if(type){
         const hitImg = new Image()
         hitImg.src = move.sprite
@@ -1592,7 +1588,6 @@ export class Pogemon extends Sprite{
     
     let projectileAnimation = () => {
       queueProcess.disabled = true
-      console.log(queueProcess.disabled)
       if(move.name != 'fire_ball') rotation = 0
       const projectileImg = new Image()
       projectileImg.src = move.sprite
@@ -1962,7 +1957,6 @@ export class Pogemon extends Sprite{
 
   statusEffectAnimation(type, renderedSprites, queueProcess){
     queueProcess.disabled = true
-    console.log(queueProcess.disabled)
     let rotation = 45
     let yOffset = 0
     let xOffset = 0
@@ -2192,8 +2186,8 @@ export class Pogemon extends Sprite{
     let thisFaints = () => {
       if(this.fainted) return
       if(this.hp <= 0){
-        audioObj.music.battle.stop()
-        audioObj.music.victory.play()
+        // audioObj.music.battle.stop()
+        // audioObj.music.victory.play()
         this.hpManagement()
         faintEvent(this)
         return
@@ -2453,7 +2447,6 @@ export class Pogemon extends Sprite{
   //should change for disrupt and pass it 'miss' and 'flinched' arguments
   miss(type, renderedSprites, queueProcess){
     queueProcess.disabled = true
-    console.log(queueProcess.disabled)
     switch(type){
       case 'missed':
       case 'flinched':
@@ -2583,7 +2576,6 @@ export class Pogemon extends Sprite{
 
       if(this.lvl > prevLvl) {
         queueProcess.disabled = true
-        console.log(queueProcess.disabled)
         gsap.to(document.querySelector('#teamLvlUpWindow').style, {
           left: '82.5%',
           onComplete: () =>{
@@ -2687,7 +2679,6 @@ export class Pogemon extends Sprite{
     lvlUpWindowDom.style.display = 'grid'
 
     queueProcess.disabled = true
-    console.log(queueProcess.disabled)
 
     if(prevLvl == null) lvlUpLvlDom.textContent = `lv ${this.lvl}`
     else lvlUpLvlDom.textContent = `lv ${prevLvl}`
@@ -2713,8 +2704,7 @@ export class Pogemon extends Sprite{
 
           setTimeout(() => {
             queueProcess.disabled = false
-            console.log(false), 1000
-          })
+          }, 1000)
                   
         }, 1000)
       }
@@ -2773,7 +2763,7 @@ export class Pogemon extends Sprite{
     } else return false
   }
 
-  useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove){
+  useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, characters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState){
     const item = this.heldItem
 
     if(item == undefined) return
@@ -2805,23 +2795,37 @@ export class Pogemon extends Sprite{
         this.dialogue('battle', `${this.name}'s ${this.heldItem.name} healed it by ${healedAmount} HP!`)
         break
       case 'sturdy':
-        console.log(this.hp)
         if(this.hp != 0) return
-        if(item.name == 'focusSash') if(targetHpBeforeMove !== 100)  return
+        if(this.fainted) return
+        if(item.name == 'focusSash') if(targetHpBeforeMove !== 100) return
 
         const rng = Math.floor(Math.random() * 99) + 1
+
+        console.log(rng)
+        console.log(this.heldItem.odds)
+
+        console.log(rng > this.heldItem.odds)
+
+        console.log(this)
+        
         if(rng > this.heldItem.odds) return
 
-        this.hp = 1
-        this.fainted = false
-        this.hpManagement()
-        queueProcess.disabled = true
-        console.log(queueProcess.disabled)
-        this.dialogue('battle', `Thanks to it's ${this.heldItem.name}, ${this.name} held on by the grit of it's teeth!`)
-
-        setTimeout(() =>{
-          queueProcess.disabled = false
-        }, 500)
+        if(this.fainted == false){
+          this.hp = 1
+          this.fainted = false
+          this.hpManagement()
+          queueProcess.disabled = true
+          this.dialogue('battle', `Thanks to it's ${this.switchUnderScoreForSpace(this.heldItem.name)}, ${this.name} held on by the grit of it's teeth!`)
+  
+          queue.push(() => {
+            if(this.isEnemy) this.move({move: moves.foe, recipient: characters.ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
+            else this.move({move: moves.ally, recipient: characters.foe, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState})
+          })
+  
+          setTimeout(() =>{
+            queueProcess.disabled = false
+          }, 500)
+        }
         break
     }
 

@@ -101,13 +101,11 @@ function statsSceneSwitchMoves(first, second){
 function statsSceneMovesInteraction(e, state){
   if(state){
     if(switchMoveProcess.active){
-		console.log(switchMoveProcess)
         statsSceneSwitchMoves(switchMoveProcess.moves.first, movesObj[`${e.target.innerText.toLowerCase()}`])
       return
     }
 
     switchMoveProcess.moves.first = movesObj[`${e.target.innerText.toLowerCase()}`]
-	console.log(switchMoveProcess)
 
     document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
       node.style.backgroundColor = 'transparent'
@@ -115,7 +113,6 @@ function statsSceneMovesInteraction(e, state){
     document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.background = 'transparent'
     document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
 
-		console.log(`${e.target.innerText.replace(' ', '_')}`)
     e.target.style.backgroundColor = 'rgba(75,75,75,0.35)'
     printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
 
@@ -144,7 +141,6 @@ function statsSceneMovesInteraction(e, state){
 }
 
 function printMoveDesc(selectedMove){
-	console.log(selectedMove)
   if(selectedMove == undefined) return
   const statsSceneMovesInterfaceDescContainer = document.querySelector('#statsSceneMovesInterfaceDescContainer')
 
@@ -170,7 +166,6 @@ function printMoveDesc(selectedMove){
 				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementTag)
 				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementName)
 			} else {
-				console.log(Object.values(selectedMove)[i])
 				if(i == 0) {
 					statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i].replace(/_/g, ' ')}`
 				}
@@ -241,7 +236,6 @@ function createMenu(){
 					case 0:
 						//catch info
 						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoCatch')
-						console.log(selectedPogemon)
 						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 						break
 					case 1:
@@ -255,7 +249,6 @@ function createMenu(){
 								case 0:
 									// ability name
 									statsSceneGridSectionInfoAbility.setAttribute('id', 'statsSceneGridSectionInfoAbilityName')
-									console.log(selectedPogemon.abilityInfo.ability)
 									statsSceneGridSectionInfoAbility.innerText = `Ability : ${switchUnderScoreForSpace(selectedPogemon.abilityInfo.ability.name)}`
 									break
 								case 1:
@@ -292,7 +285,6 @@ function createMenu(){
 										statsSceneGridSectionInfoTypeSectionElements.setAttribute('class', 'statsSceneGridSectionInfoTypeSectionElements')
 
 										statsSceneGridSectionInfoTypeSectionElements.innerText = selectedPogemon.element[i]
-										console.log(typesObj[`${selectedPogemon.element[i]}`])
 										statsSceneGridSectionInfoTypeSectionElements.style.backgroundColor = `#${typesObj[`${selectedPogemon.element[i]}`].color}`
 
 										statsSceneGridSectionInfoTypeSectionContent.appendChild(statsSceneGridSectionInfoTypeSectionElements)
@@ -599,10 +591,6 @@ export function switchStatsTargetWithKeys(key){
 			})
 		}
 	})
-
-	// console.log(key)
-	console.log(player.team[selectedPogemonTeamIndex].name)
-	// console.log(selectedPogemonTeamIndex)
 }
 
 export function manageStatsState(state, target, prevScene, i){

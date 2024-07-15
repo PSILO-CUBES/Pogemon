@@ -310,7 +310,6 @@ function critLanded(pogemon, recipient){
     critHit = true
     if(recipient.subHp > 0 || recipient.protected.active == true) return
     queueProcess.disabled = true
-    console.log(queueProcess.disabled)
     setTimeout(() =>{
       pogemon.dialogue('battle', `${pogemon.name} landed a critical hit!!!`)
       queueProcess.disabled = true
@@ -360,7 +359,6 @@ function startWeather(type, info){
   weatherIcon.src = `img/field/${type}.png`
 
   queueProcess.disabled = true
-  console.log(queueProcess.disabled)
 
   // maybe put this in clearWeather when i make that
   Object.values(terrainConditions.weather).forEach(weather =>{
@@ -426,7 +424,21 @@ const shinySparklesManagement = {
 }
 
 export function initBattle(faintedTriggered, info, tileInfo){
-  if(prevScene == 'overworld') enemyTrainerInfo = info
+  if(prevScene == 'overworld') {
+    enemyTrainerInfo = info
+
+    if(battleType == 'trainer'){
+      document.querySelector('#foeTeamShowcase').style.display = 'flex'
+
+      document.querySelectorAll('.foeTeamShowcaseIndividual').forEach(node =>{
+        node.childNodes[1].src = 'img/transparent_pogeball.png'
+      })
+  
+      enemyTrainerInfo.createdTrainer.team.forEach((pogemon, i) =>{
+        document.querySelectorAll('.foeTeamShowcaseIndividual')[i].childNodes[1].src = 'img/item_scene/items/ball/pogeball.png'
+      })
+    } else document.querySelector('#foeTeamShowcase').style.display = 'none'
+  }
 
   queueFaintTrigger.initiated = false
 
@@ -524,7 +536,6 @@ export function initBattle(faintedTriggered, info, tileInfo){
     if(itemUsed.item.type == 'ball'){
       if(enemyTrainer == undefined){
         queueProcess.disabled = true
-        console.log(queueProcess.disabled)
         function backToOverWorld(){
           //might throw error
 
@@ -586,7 +597,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
       ally.dialogue('battle', `${ally.name} switched in!`)
 
-      let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+      foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
 
       moveProcess = true
 
@@ -642,7 +653,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
       return
     }
 
-    let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+    foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
     proceedWithMove(foeRNGMove)
     document.querySelector('#encounterInterface').style.display = 'none'
   }
@@ -652,10 +663,7 @@ function clearBattleScene(nextScene){
   if(enemyTrainer != undefined) {
     player.interaction.info.beaten = true
 
-    console.log(eventZones)
-
     mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
-      console.log(trainer)
       if(trainer.name == player.interaction.info.name) trainer.beaten = true
     })
     
@@ -677,8 +685,8 @@ function clearBattleScene(nextScene){
       battleSceneDom.style.display = 'none'
       optionBox.replaceChildren()
 
-      audioObj.music.victory.stop()
-      audioObj.music.map.play()
+      // audioObj.music.victory.stop()
+      // audioObj.music.map.play()
        
       if(nextScene == 'team') manageTeamState(true, 'battle')
       else if (nextScene == 'bag') manageBagState(true, 'battle')
@@ -1074,10 +1082,15 @@ export function createMovesMenuButtons(state, type, event, target){
   }
 }
 
+let currMove
+let foeRNGMove
+
 function chooseMove(e) {
   let selectedMove = movesObj[`${e.target.textContent.replace(/ /g, "_")}`]
+  moves.ally = selectedMove
   //should change ai move depending on decided difficulty
-  let foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+  foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
+  moves.foe = foeRNGMove
 
   return [selectedMove, foeRNGMove]
 }
@@ -1356,7 +1369,6 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
             learntMove = newMoves[i]
             learnMoveMenu(false)
             learnMoveMenu(type, true, ally)
-            console.log('haha')
             document.querySelector('#evolutionInterface').style.display = 'none'
             interfaceDom.style.display = 'grid'
             dialogueDom.textContent = `Change one of ${ally.name}'s moves for ${switchUnderScoreForSpace(learntMove.name)}?`
@@ -1409,7 +1421,6 @@ function enemyTeamWiped(enemyTrainerInfo){
 function switchEnemyAfterFaint(){
   if(enemyTrainerInfo == undefined) return
   let currTrainer = enemyTrainerInfo.createdTrainer
-  console.log(enemyTrainerInfo)
   for(let i = 0; i < currTrainer.team.length; i++){
     if(currTrainer.team[i].fainted === false){
       foe = currTrainer.team[i]
@@ -1463,15 +1474,12 @@ export let evoArr = []
 function addToEvoArr(battler){
   let pass = true
 
-  console.log(battler)
-
   if(battler.evo == null) return
 
   if(battler.evo.length != 0){
     switch(battler.name){
       case 'slimie':
         battler.evo.forEach(evo =>{
-          console.log(battler)
 
           if(evo != 'black_Sludge') if(battler.heldItem.name != 'black_Sludge') if(battler.lvl > prevLvl) pass = false
         })
@@ -1514,6 +1522,17 @@ function manageFaintingEvent(target){
     }
   }
 
+  if(battleType == 'trainer'){
+    for(let i = 0; i < document.querySelectorAll('.foeTeamShowcaseIndividual').length; i++){
+      const node = document.querySelectorAll('.foeTeamShowcaseIndividual')[i]
+  
+      if(node.childNodes[1].src == 'http://localhost:3000/img/item_scene/items/ball/pogeball.png'){
+        node.childNodes[1].src = 'img/fainted_pogeball.png'
+        break
+      }
+    }
+  }
+
   battlerArr.forEach((battler, i) =>{
     prevLvl = ally.lvl
 
@@ -1522,13 +1541,18 @@ function manageFaintingEvent(target){
     if(battlerArr.length == 1) {
       oldStats = {...battler.stats}
       battler.expGain(target, battleType, battlerArr, true)
+
       // vvv checking if can add to evoArr in there vvv
+
       addToEvoArr(battler)
+      
       if(battler.lvl > prevLvl) {
         lvlUpArr.push(battler)
         manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battler)
         manageLearnedMoves(battler, queue, 'battle')
       }
+
+      console.log(enemyTeamWiped(enemyTrainerInfo))
 
       if(enemyTeamWiped(enemyTrainerInfo)){
         if(ally.pogemon.evo == null) {
@@ -1537,6 +1561,7 @@ function manageFaintingEvent(target){
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
           queue.push(() => {
             manageBattleState(false)
+            console.log('here')
           })
           return
         }
@@ -1546,14 +1571,17 @@ function manageFaintingEvent(target){
           player.money = player.money + enemyTrainerInfo.reward
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
           manageEvolution(evoArr)
-        } else {
-          queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
-          player.money = player.money + enemyTrainerInfo.reward
-          queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-          queue.push(() => {
-            manageBattleState(false)
-          })
+          return
         }
+
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+        queue.push(() => {
+          manageBattleState(false)
+          console.log('here')
+        })
+
         return
       } else {
         queue.push(() => switchEnemyAfterFaint())
@@ -1607,6 +1635,7 @@ function manageFaintingEvent(target){
               queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
               queue.push(() => {
                 manageBattleState(false)
+                console.log('here')
               })
               return
             }
@@ -1615,7 +1644,6 @@ function manageFaintingEvent(target){
               queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
               player.money = player.money + enemyTrainerInfo.reward
               queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-              console.log('hahaha')
               manageEvolution(evoArr)
             } else {
               queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
@@ -1623,6 +1651,7 @@ function manageFaintingEvent(target){
               queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
               queue.push(() => {
                 manageBattleState(false)
+                console.log('here')
               })
             }
             return
@@ -1684,18 +1713,19 @@ function manageFaintingEvent(target){
         if(ally.pogemon.evo == null) {
           queue.push(() => {
             manageBattleState(false)
+            console.log('here')
           })
           return
         }
   
         if(evoArr.length > 0) {
           queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
-          console.log('hahaha')
           manageEvolution(evoArr)
         } else {
           queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
           queue.push(() => {
             manageBattleState(false)
+            console.log('here')
           })
         }
       } else {
@@ -1708,6 +1738,7 @@ function manageFaintingEvent(target){
         queue.push(() => ally.dialogue('battle', `${foe.name} has been defeated.`))
         queue.push(() => {
           manageBattleState(false)
+          console.log('here')
         })
       }
       return
@@ -1723,6 +1754,7 @@ function manageFaintingEvent(target){
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
           queue.push(() => {
             manageBattleState(false)
+            console.log('here')
           })
           return
         }
@@ -1731,7 +1763,6 @@ function manageFaintingEvent(target){
           queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
           player.money = player.money + enemyTrainerInfo.reward
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
-          console.log('hahaha')
           manageEvolution(evoArr)
         } else {
           queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
@@ -1739,6 +1770,7 @@ function manageFaintingEvent(target){
           queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
           queue.push(() => {
             manageBattleState(false)
+            console.log('here')
           })
         }
         return
@@ -1762,11 +1794,16 @@ function checkIfTeamWipedOut(){
 
 export let faintedTriggered = {active: false}
 
+let moves = {ally: null, foe: null}
+
+let inBattleCharacters = {ally: null, foe: null}
+
 function faintEvent(target){
-  target.useBattleItem(queueProcess, queue, fasterHpBeforeMove, slowerHpBeforeMove)
+  inBattleCharacters.ally = ally
+  inBattleCharacters.foe = foe
+
+  target.useBattleItem(queueProcess, queue, faintEvent, fasterHpBeforeMove, slowerHpBeforeMove, moves, inBattleCharacters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState)
   if(target.hp > 0) return
-
-
 
   queue.push(() =>{
     if(target.fainted) return
@@ -1797,6 +1834,7 @@ function faintEvent(target){
         if(!target.fainted) return
         faintedTriggered.active = true
         manageBattleState(false, 'team', {active : true})
+        console.log('here')
       }
     })
   })
@@ -1824,8 +1862,8 @@ function checkIfFainted(target){
       //   return
       // }
       
-      audioObj.music.battle.stop()
-      audioObj.SFX.faint.play()
+      // audioObj.music.battle.stop()
+      // audioObj.SFX.faint.play()
       // target.dialogue('battle', `${target.name} fainted!`)
       // target.faint(queueFaintTrigger)
       faintEvent(target)
@@ -1883,8 +1921,6 @@ let fasterHpBeforeMove
 let slowerHpBeforeMove
 
 function attackMove(e) {
-  let currMove
-  
   for(let i = 0; i < ally.moves.length; i++){
     if(ally.moves[i].name === `${e.target.textContent.replace(/ /g, "_")}`){
       currMove = ally.moves[i]
@@ -2043,7 +2079,9 @@ function attackMove(e) {
     function pushRecipientEndOfTurnBattleItemEvent(target, targetHpBeforeMove, recipientHpBeforeMove){
       if(target.heldItem != null) if(target.heldItem.heldType != undefined) if(target.checkBattleItemRng()) {
         itemEvent = true
-        queue.push(() => target.useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove))
+        inBattleCharacters.ally = ally
+        inBattleCharacters.foe = foe
+        queue.push(() => target.useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, inBattleCharacters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState))
       }
     }
 
@@ -2120,11 +2158,9 @@ function spendQueue(){
       // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
       queue.push(() => {
         if(battleType == 'trainer') {if(enemyTeamWiped(enemyTrainerInfo)) {
-          console.log('hahaha')
           manageEvolution(evoArr)
         }}
         else {
-          console.log('hahaha')
           manageEvolution(evoArr)
         }
       })
@@ -2133,6 +2169,7 @@ function spendQueue(){
       // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
       queue.push(() => {
         manageBattleState(false)
+        console.log('here')
       })
     }
   } else {

@@ -210,12 +210,12 @@ finish cross link map : {
 }
 
 finish events in sol town: {
-    gym: need to add ma'at's real team
+    gym: need to add ma'at's real team x
 
     heisenberg x
 }
 
-remaining pogemon on enemy team indicator
+remaining pogemon on enemy team indicator 
 
 gym order : {
     normal
@@ -223,9 +223,15 @@ gym order : {
     water   
 }
 
-make sludge tiles for slime pogemon ???
+exodus road
 
 make 2 more gyms
+
+pogedex info + : {
+    show base stats
+
+    show moves to learn ??
+}
 
 at least 1 overworld encounter?
 

@@ -9,8 +9,6 @@ let trainerAnimationId
 
 function trainerAnimation(timeSpent){
     trainerAnimationId = window.requestAnimationFrame(trainerAnimation)
-
-    console.log(timeObj)
     printInfo()
 
     backgroundSprite.draw()
@@ -31,7 +29,6 @@ function returnAmountOfSeenPogemon(player){
     if(data != null) currPlayer = data.playerInfo.player
 
     currPlayer.pogedexInfo.forEach(dexPogemon =>{
-        console.log(dexPogemon)
         if(dexPogemon.seen) i += 1  
     })
 

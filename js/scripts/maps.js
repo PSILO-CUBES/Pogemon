@@ -54,8 +54,6 @@ const background = new Sprite({
   frames: {max: 1}
 })
 
-audioObj.music.map.play()
-
 export const trainerSpritesArr = []
 export const NPCSpritesArr = []
 export const itemSpritesArr = []
@@ -66,8 +64,9 @@ async function generateBoundaries(nextMapInfo){
   await setBoundries(mapsObj)
 
   if(data == null) {
-    if(currMap == undefined) currMap = mapsObj.sol_Town
+    if(currMap == undefined) currMap = mapsObj.banishment_Road
   } else {
+    console.log(data)
     currMap = mapsObj[`${data.currMapName}`]
   }
 
@@ -448,9 +447,16 @@ async function generateBoundaries(nextMapInfo){
       obstaclesMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type != 7) return
-            
+
           let obstacleInfo = currMap.obstaclesInfo[z]
 
+          if(z == 0) z = z + 1
+          else z++
+
+          console.log(obstacleInfo)
+
+          if(obstacleInfo.disabled) return
+            
           let boundary = new Boundary({
             position:{
               x: j * Boundary.width + currMap.spawnPosition.x,
@@ -461,17 +467,14 @@ async function generateBoundaries(nextMapInfo){
           })
 
           boundaries.push(boundary)
-              
-          if(z == 0) z = z + 1
-          else z++
 
           const obstacleImg = new Image()
           switch(obstacleInfo.name){
             case 'tree':
-              obstacleImg.src = 'img/maps/obstacles/cut.png'
+              obstacleImg.src = 'img/obstacles/cut.png'
               break
             case 'rock':
-              obstacleImg.src = 'img/maps/obstacles/rockSmash.png'
+              obstacleImg.src = 'img/obstacles/rockSmash.png'
               break
           }
 
@@ -877,8 +880,13 @@ async function generateBoundaries(nextMapInfo){
       obstaclesMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type != 7) return
-            
+
           let obstacleInfo = nextMapInfoObj.obstaclesInfo[z]
+
+          if(z == 0) z = z + 1
+          else z++
+
+          if(obstacleInfo.disabled) return
 
           let boundary = new Boundary({
             position:{
@@ -890,17 +898,15 @@ async function generateBoundaries(nextMapInfo){
           })
 
           boundaries.push(boundary)
-              
-          if(z == 0) z = z + 1
-          else z++
 
           const obstacleImg = new Image()
+
           switch(obstacleInfo.name){
             case 'tree':
-              obstacleImg.src = 'img/maps/obstacles/cut.png'
+              obstacleImg.src = 'img/obstacles/cut.png'
               break
             case 'rock':
-              obstacleImg.src = 'img/maps/obstacles/rockSmash.png'
+              obstacleImg.src = 'img/obstacles/rockSmash.png'
               break
           }
 
@@ -954,7 +960,18 @@ function showMapNameAnimation(currMap){
 
   if(currMap.name == 'undefined') currMap.name = pogecenterReturnInfo.name
 
-  changeMapContainer.textContent = switchUnderScoreForSpace(currMap.name)
+  let mapName = switchUnderScoreForSpace(currMap.name)
+
+  switch(mapName){
+    case 'maat House':
+      mapName = "ma'at House"
+      break
+    case 'keme Town House1':
+    case 'keme Town House2':
+      return
+  }
+
+  changeMapContainer.textContent = mapName
 
   gsap.to(changeMapContainer, {
     top: '2.5%',
@@ -972,6 +989,7 @@ function showMapNameAnimation(currMap){
 
 export function changeMapInfo(nextMapInfo, currMapInfo){
   let info = nextMapInfo.info
+  if(info.name == 'undefined') if(data != null) info = data.nextMapInfo
 
   currMap = mapsObj[`${info.name}`]
   

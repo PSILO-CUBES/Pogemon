@@ -88,7 +88,7 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.godlie, true, 'geneTown')
+      player.catch(pogemonsObj.balancia, true, 'geneTown')
 
       return player
     } else {
@@ -138,8 +138,6 @@ export async function generatePlayer(canvas){
         if(player.team[i].nature.values == undefined){
           player.team[i].nature.values = natureObj[player.team[i].nature.name]
         }
-
-        console.log(player.team[i].nature)
       })
 
       player.money = data.playerInfo.player.money
@@ -504,12 +502,9 @@ function playerInteraction(e) {
 
       let chosenDialogue = player.interaction.info.dialogue
 
-      console.log(player.interaction.info)
-
       if(player.interaction.info.eventKey != undefined){
         switch(player.interaction.info.eventKey){
           case 'maatMeeting' :
-            console.log('happens')
             worldEventData.maat.firstMeet = true
             break
           case 'heisenbergHouse' :
@@ -597,7 +592,6 @@ function playerInteraction(e) {
           break
         case 'pogemart':
           queue.push(() =>{
-            console.log(mapsObj[`pogemart`].productOptions[0])
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[0])
             disableOWMenu.active = false
             inputValue = 0
@@ -699,7 +693,8 @@ function playerInteraction(e) {
     case 'rock':
       if(player.interaction.info.disabled) return
 
-      if(player.interaction.name == 'tree') if(!worldEventData.maat.gym) return
+      // if(player.interaction.name == 'tree') if(!worldEventData.maat.gym) return
+      if(player.interaction.name == 'rock') return
 
       player.interaction.collisionInstance.obstacleSprite.animate = true
       player.disabled = true
@@ -929,7 +924,7 @@ function engageBattle(animationId, battleZones) {
             opacity: 0,
             duration: 0.4
           })
-          audioObj.music.battle.play()
+          // audioObj.music.battle.play()
           manageBattleState(animationId, null, null, null, battleZone.name)
         }
       })
@@ -1011,7 +1006,6 @@ function addFriendlinessWhenMoving(){
     if(passRNG > 0) continue
 
     player.team[i].manageFriendliness(1)
-    console.log(player.team[i].friendliness)
 
   }
 }
@@ -1075,6 +1069,9 @@ function changeMapEvent(changeMap, currPos){
       })
     ){
       if(changeMapFlag) return
+
+      audioObj.SFX.changeMap.play()
+      
       changeMapFlag = true
       player.disabled = true
 
@@ -1111,6 +1108,7 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
+      console.log('interacted')
       player.interaction = eventZonesIndex
       if(player.team.length >= 1) {
         if(eventZonesIndex.info.createdTrainer != undefined){
@@ -1133,16 +1131,16 @@ function eventZoneManagement(eventZones){
               break
           }
 
-          console.log(eventZonesIndex)
-
           if(eventZonesIndex.info.beaten) return
           
           disableOWMenu.active = true
           
           player.disabled = true
     
-          exclamation.style.left = eventZonesIndex.position.x + 6
+          exclamation.style.left = eventZonesIndex.position.x
           exclamation.style.top = eventZonesIndex.position.y - 46
+
+          audioObj.SFX.trainerEncounter.play()
     
           gsap.to(exclamation, {
             opacity: 1,

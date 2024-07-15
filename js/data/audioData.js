@@ -55,5 +55,13 @@ export const audioObj = {
       src: '../../audio/faint.wav',
       volume: SFXVolume
     }),
+    changeMap: new Howl({
+      src: '../../audio/changeMap.wav',
+      volume: SFXVolume
+    }),
+    trainerEncounter: new Howl({
+      src: '../../audio/trainerEncounter.mp3',
+      volume: SFXVolume
+    }),
   }
 }

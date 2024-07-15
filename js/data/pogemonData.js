@@ -1529,7 +1529,8 @@ export const pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      2: {move: movesObj.headbutt, lvl: 7},
+      3: {move: movesObj.fire_ball, lvl: 7},
     },
     sprites: {
       classic:{

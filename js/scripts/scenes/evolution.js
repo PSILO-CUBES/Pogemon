@@ -41,7 +41,6 @@ let evolutionArr
 
 function pogemonTransition(target){
   //might loop here from properties
-  console.log(targetEvo)
   target.pogemon = pogemonsObj[targetEvo.name]
   target.name = pogemonsObj[targetEvo.name].name
   target.element = pogemonsObj[targetEvo.name].element
