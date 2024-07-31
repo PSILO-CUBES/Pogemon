@@ -69,27 +69,27 @@ export function printImages(background, FG, map, boundaries, battleZones, change
   player.draw()
   FG.draw()
 
-  for(let i = 0; i < OWWeatherParticles.length; i++){
-    if(OWWeatherParticles[i] == undefined) break
+  for(let i = 0; i < OWWeatherParticles.arr.length; i++){
+    if(OWWeatherParticles.arr[i] == undefined) break
 
-    if(OWWeatherParticles[i].rotation != undefined){
+    if(OWWeatherParticles.arr[i].rotation != undefined){
       c.save()
-      c.translate(OWWeatherParticles[i].position.x + OWWeatherParticles[i].size.width / 2, OWWeatherParticles[i].position.y + OWWeatherParticles[i].size.height / 2)
-      c.rotate((OWWeatherParticles[i].rotation * Math.PI) / 22.5)
-      c.translate(-(OWWeatherParticles[i].position.x + (OWWeatherParticles[i].size.width / 2)), -(OWWeatherParticles[i].position.y))
-      c.fillStyle = OWWeatherParticles[i].color
-      c.fillRect(OWWeatherParticles[i].position.x, OWWeatherParticles[i].position.y, OWWeatherParticles[i].size.width, OWWeatherParticles[i].size.height)
+      c.translate(OWWeatherParticles.arr[i].position.x + OWWeatherParticles.arr[i].size.width / 2, OWWeatherParticles.arr[i].position.y + OWWeatherParticles.arr[i].size.height / 2)
+      c.rotate((OWWeatherParticles.arr[i].rotation * Math.PI) / 22.5)
+      c.translate(-(OWWeatherParticles.arr[i].position.x + (OWWeatherParticles.arr[i].size.width / 2)), -(OWWeatherParticles.arr[i].position.y))
+      c.fillStyle = OWWeatherParticles.arr[i].color
+      c.fillRect(OWWeatherParticles.arr[i].position.x, OWWeatherParticles.arr[i].position.y, OWWeatherParticles.arr[i].size.width, OWWeatherParticles.arr[i].size.height)
       c.restore()
 
-      OWWeatherParticles[i].rotation -= 0.5
+      OWWeatherParticles.arr[i].rotation -= 0.5
     } else {
-      c.fillStyle = OWWeatherParticles[i].color
-      c.fillRect(OWWeatherParticles[i].position.x, OWWeatherParticles[i].position.y, OWWeatherParticles[i].size.width, OWWeatherParticles[i].size.height)
+      c.fillStyle = OWWeatherParticles.arr[i].color
+      c.fillRect(OWWeatherParticles.arr[i].position.x, OWWeatherParticles.arr[i].position.y, OWWeatherParticles.arr[i].size.width, OWWeatherParticles.arr[i].size.height)
     }
 
-    OWWeatherParticles[i].position = {
-      x: OWWeatherParticles[i].position.x += OWWeatherParticles[i].velocity.x,
-      y: OWWeatherParticles[i].position.y += OWWeatherParticles[i].velocity.y
+    OWWeatherParticles.arr[i].position = {
+      x: OWWeatherParticles.arr[i].position.x += OWWeatherParticles.arr[i].velocity.x,
+      y: OWWeatherParticles.arr[i].position.y += OWWeatherParticles.arr[i].velocity.y
     }
   }
 

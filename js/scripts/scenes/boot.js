@@ -1,7 +1,7 @@
 import { audioObj, volumeValues } from "../../data/audioData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
 import { loadData } from "../../save.js"
-import { manageOverWorldState } from "./overworld.js"
+import { manageOverWorldState, waitForNextBattle } from "./overworld.js"
 import { timeObj } from "./trainer.js"
 
 export const data = await loadData()
@@ -221,6 +221,7 @@ function initBootMenuInteractionEvent(e){
         opacity: 1,
         onComplete: () =>{
             incrementMinuteLoop()
+            waitForNextBattle.initiated = true
             manageBootState(false)
             gsap.to('#overlapping', {
                 opacity: 0,
@@ -246,6 +247,9 @@ function clearBootScene(){
 }
 
 export function manageBootState(state){
+    setTimeout(() =>{
+        waitForNextBattle.initiated = false
+    }, 1500)
     if(state) initBootScene()
     else clearBootScene()
 }

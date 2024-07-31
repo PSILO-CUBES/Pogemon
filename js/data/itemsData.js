@@ -36,6 +36,15 @@ export const itemsObj = {
     desc: "Can trigger certain pogemon's evolution.",
     consume: true
   },
+  royal_Jelly:{
+    name:'royal_Jelly',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/royal_Jelly.png',
+    desc: "Can trigger certain pogemon's evolution, also quite tasty.",
+    consume: true
+  },
   // med
   potion: {
     name: 'potion',
@@ -292,8 +301,7 @@ export const itemsObj = {
     consume: false,
   },
 
-  // misc battle item
-
+  // battle item
   black_Sludge:{
     name: 'black_Sludge',
     type: 'battle',

@@ -52,6 +52,7 @@ function bagSceneHoverEvent(e, state){
   if(state) {
     if(e.target.id != 'selected') {
       if(e.target.classList[0] == 'bagSceneTeamSection' && !choosePogemon ) return
+      if(e.target.classList[0] == 'bagSceneTeamSectionItem') return
 
       e.target.style.cursor = 'pointer'
       e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
@@ -141,6 +142,7 @@ function bagSceneSectionOnClickEvent(e, state){
   choosePogemon = false
 
   if(returnToBattle) return
+  if(e.target.classList[0] == 'bagSceneTeamSectionItem') return
 
   if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
 
@@ -506,6 +508,33 @@ function printBagScene(){
       if(player.team[i].heldItem == undefined) bagSceneTeamSectionItemDom.src = `img/item_scene/items/blank.png`
       else bagSceneTeamSectionItemDom.src = `img/item_scene/items/${player.team[i].heldItem.type}/${player.team[i].heldItem.name}.png`
       bagSceneTeamSectionItemDom.classList.add('bagSceneTeamSectionItem')
+
+      bagSceneTeamSectionItemDom.addEventListener('mouseover', e =>{
+        if(player.team[i].heldItem == undefined) return
+        e.target.style.cursor = 'pointer'
+        e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
+      })
+
+      bagSceneTeamSectionItemDom.addEventListener('mouseout', e =>{
+        if(player.team[i].heldItem == undefined) return
+        e.target.style.cursor = 'auto'
+        e.target.style.backgroundColor = 'transparent'
+      })
+
+      bagSceneTeamSectionItemDom.addEventListener('click', e =>{
+        if(player.team[i].heldItem == undefined || player.team[i].heldItem == null) return
+
+        const currQuantity = player.bag.get(`${player.team[i].heldItem.name}`).quantity
+
+        player.bag.set(`${player.team[i].heldItem.name}`, {item: player.team[i].heldItem, quantity: currQuantity + 1})
+
+        const bagSceneItemSectionDom = document.querySelector('.bagSceneItemListContainer')
+        printItems(bagSceneItemSectionDom)
+
+        player.team[i].heldItem = undefined
+        bagSceneTeamSectionItemDom.src = `img/item_scene/items/blank.png`
+        bagSceneTeamSectionItemDom.style.backgroundColor = 'transparent'
+      })
 
       bagSceneTeamSectionImgContainerDom.appendChild(bagSceneTeamSectionItemDom)
   

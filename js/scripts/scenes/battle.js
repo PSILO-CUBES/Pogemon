@@ -6,7 +6,7 @@ import { itemsObj } from "../../data/itemsData.js"
 
 import { Sprite, Pogemon, statsChangeObj } from "../../classes.js"
 
-import { eventZones, manageOverWorldState, prevScene } from "./overworld.js"
+import { eventZones, manageOverWorldState, prevScene, waitForNextBattle } from "./overworld.js"
 import { currMap, worldEventData } from "../maps.js"
 import { _preventActionSpam } from "../../app.js"
 import { player } from "../player.js"
@@ -64,7 +64,7 @@ function loadAlly(){
 
   ally.position = {
     x: 300,
-    y: 15
+    y: 50
   }
 
   document.querySelector("#allyGenderImg").src = `../../../img/${ally.gender}_icon.png`
@@ -427,7 +427,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
   if(prevScene == 'overworld') {
     enemyTrainerInfo = info
 
-    if(battleType == 'trainer'){
+    if(enemyTrainerInfo != null){
       document.querySelector('#foeTeamShowcase').style.display = 'flex'
 
       document.querySelectorAll('.foeTeamShowcaseIndividual').forEach(node =>{
@@ -469,7 +469,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
   foe.position = {
     x: 1415,
-    y: 15
+    y: 50
   }
 
   if(foe.isShiny) {
@@ -699,6 +699,11 @@ function clearBattleScene(nextScene){
         })
 
         manageOverWorldState(true)
+
+        waitForNextBattle.initiated = true
+        setTimeout(() =>{
+          waitForNextBattle.initiated = false
+        }, 500)
       }
 
       gsap.to('#overlapping', {opacity: 0})
@@ -1449,7 +1454,7 @@ function switchEnemyAfterFaint(){
   foe.opacity = 1
   foe.position = {
     x: 1415,
-    y: 15
+    y: 50
   }
 
   setBattlersInfo()
@@ -1811,7 +1816,7 @@ function faintEvent(target){
     target.faint(queueFaintTrigger)
 
     setTimeout(() =>{
-      queueProcess.disabled = false
+      queueProcess. d = false
     }, 750)
 
     queue.push(() => {
@@ -2108,12 +2113,14 @@ function attackMove(e) {
         manageStatusEvent(faster, slower)
       } else {
         pushRecipientEndOfTurnBattleItemEvent(faster, fasterHpBeforeMove, slowerHpBeforeMove)
-        if(slower.flinched){
-          slower.miss('flinched', renderedSprites, queueProcess)
-          slower.flinched = false
-          afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', true, slowerStatusIcon)
-          manageStatusEvent(faster, slower)  
-          return
+        if(slower.convertToPercentage(slower.hp, slower.stats.baseHp) != slowerHpBeforeMove){
+          if(slower.flinched){
+            slower.miss('flinched', renderedSprites, queueProcess)
+            slower.flinched = false
+            afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', true, slowerStatusIcon)
+            manageStatusEvent(faster, slower)  
+            return
+          }
         }
         
         if(!slowerCheck){

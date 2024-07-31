@@ -31,7 +31,7 @@ export const movesObj = {
     pow: 80,
     acc: 90,
     pp: 25,
-    effects: [{flinched: 30}],
+    effects: [{flinched: 10}],
     priority: 0
   },
   slash:{

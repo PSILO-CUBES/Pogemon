@@ -4,7 +4,7 @@ import { mapsObj, setBoundries } from "../data/mapsData.js"
 import { audioObj } from "../data/audioData.js"
 
 import { Sprite, Boundary, Pogemon, Character } from "../classes.js"
-import { switchMap } from "./scenes/overworld.js"
+import { OWWeatherParticles, switchMap } from "./scenes/overworld.js"
 import { loadData } from "../save.js"
 import { switchUnderScoreForSpace } from "./scenes/stats.js"
 
@@ -19,6 +19,9 @@ export let worldEventData = {
     firstTalk: false,
     slimieEvolutionShowed: false,
     allSlimesCollected: false
+  },
+  djed:{
+    gym:false
   }
 }
 
@@ -64,7 +67,7 @@ async function generateBoundaries(nextMapInfo){
   await setBoundries(mapsObj)
 
   if(data == null) {
-    if(currMap == undefined) currMap = mapsObj.banishment_Road
+    if(currMap == undefined) currMap = mapsObj.melchi_Cave
   } else {
     console.log(data)
     currMap = mapsObj[`${data.currMapName}`]
@@ -220,7 +223,7 @@ async function generateBoundaries(nextMapInfo){
                 switch(trainerInfo.eventKey){
                   case 'maatGym':
                     if(!worldEventData.maat.firstMeet) return
-                    if(worldEventData.maat.gym) return
+                    if(player.badges[0]) return
                     break
                 }
               
@@ -305,7 +308,7 @@ async function generateBoundaries(nextMapInfo){
               switch(nextMapInfo.name){
                 case 'maat_House':
                   if(!worldEventData.maat.firstMeet) return
-                  if(!worldEventData.maat.gym) return
+                  if(!player.badges[0]) return
                   break
                 case 'cross_Link':
                   if(worldEventData.maat.firstMeet) return
@@ -349,7 +352,7 @@ async function generateBoundaries(nextMapInfo){
 
               if(currMap.name == 'maat_House') {
                 if(!worldEventData.maat.firstMeet) return
-                if(!worldEventData.maat.gym) return
+                if(!player.badges[0]) return
               }
 
               boundaries.push(
@@ -650,13 +653,15 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
 
+                console.log(trainerInfo)
+
                 if(z == 0) z = z + 1
                 else z++
 
                 switch(trainerInfo.eventKey){
                   case 'maatGym':
                     if(!worldEventData.maat.firstMeet) return
-                    if(worldEventData.maat.gym) return
+                    if(player.badges[0]) return
                     break
                 }
               
@@ -739,7 +744,7 @@ async function generateBoundaries(nextMapInfo){
               switch(nextMapInfo.name){
                 case 'maat_House':
                   if(!worldEventData.maat.firstMeet) return
-                  if(!worldEventData.maat.gym) return
+                  if(!player.badges[0]) return
                   break
                 case 'cross_Link':
                   if(worldEventData.maat.firstMeet) return
@@ -783,7 +788,7 @@ async function generateBoundaries(nextMapInfo){
 
               if(nextMapInfo.name == 'maat_House') {
                 if(!worldEventData.maat.firstMeet) return
-                if(!worldEventData.maat.gym) return
+                if(!player.badges[0]) return
               }
 
               boundaries.push(
@@ -800,7 +805,7 @@ async function generateBoundaries(nextMapInfo){
             case 6:
               if(mapsObj[`${nextMapInfoObj.name}`].items == undefined) return
               if(mapsObj[`${nextMapInfoObj.name}`].items[itemIndex].pickedUp) return
-              
+
               let itemsInfo = mapsObj[`${nextMapInfoObj.name}`].items[itemIndex]
 
               if(itemIndex == 0) itemIndex = itemIndex + 1
@@ -958,7 +963,7 @@ export const pogecenterReturnInfo = {
 function showMapNameAnimation(currMap){
   const changeMapContainer = document.querySelector('#changeMapContainer')
 
-  if(currMap.name == 'undefined') currMap.name = pogecenterReturnInfo.name
+  if(currMap.name == 'undefined' || currMap.name == null) currMap.name = pogecenterReturnInfo.name
 
   let mapName = switchUnderScoreForSpace(currMap.name)
 
@@ -991,7 +996,13 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
   let info = nextMapInfo.info
   if(info.name == 'undefined') if(data != null) info = data.nextMapInfo
 
+  const prevWeather = mapsObj[`${currMapInfo.name}`].weather
+
+  console.log(prevWeather == 'sun')
+
   currMap = mapsObj[`${info.name}`]
+
+  OWWeatherParticles.arr = []
   
   showMapNameAnimation(info)
   switchMap(info, currMapInfo)

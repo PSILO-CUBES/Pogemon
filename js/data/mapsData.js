@@ -25,27 +25,31 @@ export let mapsObj = {
 
       {name: 'home', spawnPosition: {x:250, y:-50,}}, 
 
-      {name: 'lab', spawnPosition: {x: 375, y: -425,}}
+      {name: 'lab', spawnPosition: {x: 375, y: -425,}},
+
+
+      {name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},{name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},
+      {name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},{name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},
     ],
     obstaclesInfo: [
       {
         name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
         disabled: false,
       },
     ],
@@ -134,6 +138,26 @@ export let mapsObj = {
         info: {direction: {reach: {pos:{x:35, y:0}, neg:{x:5, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 2},
       },
     ],
+  },
+
+  // eden forest
+  eden_Forest:{
+    name: 'eden_Forest',
+    mapImg: './img/maps/eden_Forest/eden_Forest.png',
+    FGImg: './img/maps/eden_Forest/eden_ForestFG.png',
+    spawnPosition: {
+      x: -962,
+      y: -650
+    },
+    height: 58,
+    width: 79,
+    encounters: [],
+    changeMapLocations:[
+      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}},
+      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}
+    ],
+    obstaclesInfo: [],
+    weather: null
   },
 
   //pearlyPath
@@ -243,23 +267,23 @@ export let mapsObj = {
       
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}},  
 
-      {name: 'sol_Town', spawnPosition: {x: -50, y: -800}}, 
+      {name: 'fair_Town', spawnPosition: {x: -50, y: -800}}, 
 
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
 
-      {name: 'sol_Town', spawnPosition: {x: -200, y: -800}}, 
+      {name: 'fair_Town', spawnPosition: {x: -200, y: -800}}, 
 
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
 
-      {name: 'sol_Town', spawnPosition: {x: -200, y: -800}},       
+      {name: 'fair_Town', spawnPosition: {x: -200, y: -800}},       
       
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
 
-      {name: 'sol_Town', spawnPosition: {x: -200, y: -800}}, 
+      {name: 'fair_Town', spawnPosition: {x: -200, y: -800}}, 
 
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
 
-      {name: 'sol_Town', spawnPosition: {x: -200, y: -800}}, 
+      {name: 'fair_Town', spawnPosition: {x: -200, y: -800}}, 
     ],
     trainers: [
       {
@@ -310,11 +334,11 @@ export let mapsObj = {
     ]
   },
 
-  //sol_Town
-  sol_Town:{
-    name: 'sol_Town',
-    mapImg: './img/maps/sol_Town/sol_Town.png',
-    FGImg: './img/maps/sol_Town/sol_TownFG.png',
+  //fair_Town
+  fair_Town:{
+    name: 'fair_Town',
+    mapImg: './img/maps/fair_Town/fair_Town.png',
+    FGImg: './img/maps/fair_Town/fair_TownFG.png',
     spawnPosition: {
       x: -500,
       y: -500
@@ -358,14 +382,14 @@ export let mapsObj = {
 
       {name: 'maat_House', spawnPosition: {x: 440, y: -175}}, // gym house
 
-      {name: 'sol_Town_Gym', spawnPosition: {x: 480, y: -1475}}, // gym 
+      {name: 'fair_Town_Gym', spawnPosition: {x: 480, y: -1475}}, // gym 
     ],
     weather: null
   },
-  sol_Town_Gym:{
-    name: 'sol_Town_Gym',
-    mapImg: './img/maps/sol_Town_Gym/sol_Town_Gym.png',
-    FGImg: './img/maps/sol_Town_Gym/sol_Town_GymFG.png',
+  fair_Town_Gym:{
+    name: 'fair_Town_Gym',
+    mapImg: './img/maps/fair_Town_Gym/fair_Town_Gym.png',
+    FGImg: './img/maps/fair_Town_Gym/fair_Town_GymFG.png',
     spawnPosition: {
       x: -500,
       y: -500
@@ -373,14 +397,14 @@ export let mapsObj = {
     height: 32,
     width: 15,
     changeMapLocations:[
-      {name: 'sol_Town', spawnPosition: {x: -355, y: -1425}}, {name: 'sol_Town', spawnPosition: {x: -355, y: -1425}}, {name: 'sol_Town', spawnPosition: {x: -355, y: -1425}},
+      {name: 'fair_Town', spawnPosition: {x: -355, y: -1425}}, {name: 'fair_Town', spawnPosition: {x: -355, y: -1425}}, {name: 'fair_Town', spawnPosition: {x: -355, y: -1425}},
     ],
     trainers: [
       {
         name: "Ma'at", 
         team: [[pogemonsObj.flailegant, 11, null], [pogemonsObj.slimie, 12, null], [pogemonsObj.balancia, 13, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/gymLeader1/gymLeader1.png',
+        sprite: "../../img/charSprites/ma'at/ma'at.png",
         dialogue: "Are you ready for your first challenge?",
         reward: 100,
         beaten: false,
@@ -422,12 +446,12 @@ export let mapsObj = {
     height: 12,
     width: 16,
     changeMapLocations:[
-      {name: 'sol_Town', spawnPosition: {x: -1055, y: -1375}}, {name: 'sol_Town', spawnPosition: {x: -1055, y: -1375}},
+      {name: 'fair_Town', spawnPosition: {x: -1055, y: -1375}}, {name: 'fair_Town', spawnPosition: {x: -1055, y: -1375}},
     ],
     event: [
       {
         name: 'npc',
-        sprite: 'img/charSprites/gymLeader1/maatLeft.png',
+        sprite: "img/charSprites/ma'at/ma'atLeft.png",
         info: {direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, dialogue:['Make sure you speak to Professor Heisenberg before you leave town.']},
       },
     ]
@@ -443,7 +467,7 @@ export let mapsObj = {
     height: 12,
     width: 16,
     changeMapLocations:[
-      {name: 'sol_Town', spawnPosition: {x: -1185, y: -400}}, {name: 'sol_Town', spawnPosition: {x: -1185, y: -400}},
+      {name: 'fair_Town', spawnPosition: {x: -1185, y: -400}}, {name: 'fair_Town', spawnPosition: {x: -1185, y: -400}},
     ],
     event: [
       {
@@ -476,15 +500,15 @@ export let mapsObj = {
     changeMapLocations:[
       {name: 'luna_Cave', spawnPosition: {x: -500, y: -500}},
 
-      {name: 'sol_Town', spawnPosition: {x: -675, y: -25}}, {name: 'sol_Town', spawnPosition: {x: -675, y: -25}}, {name: 'sol_Town', spawnPosition: {x: -675, y: -25}},
-      {name: 'sol_Town', spawnPosition: {x: -675, y: -25}}, {name: 'sol_Town', spawnPosition: {x: -675, y: -25}}, {name: 'sol_Town', spawnPosition: {x: -675, y: -25}},
-      {name: 'sol_Town', spawnPosition: {x: -675, y: -25}},
+      {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}},
+      {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}},
+      {name: 'fair_Town', spawnPosition: {x: -675, y: -25}},
       
     ],
     event: [
       {
         name: 'npc',
-        sprite: 'img/charSprites/gymLeader1/maatDown.png',
+        sprite: "img/charSprites/ma'at/ma'atDown.png",
         info: {
           direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
           sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
@@ -554,9 +578,7 @@ export let mapsObj = {
     width: 72,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.allingua, lvls: [4, 7], odds: {min:1,max:33}},
-        {pogemon: pogemonsObj.formal, lvls: [4, 7], odds: {min:33,max:66}},
-        {pogemon: pogemonsObj.formal, lvls: [4, 7], odds: {min:66,max:100}},
+        {pogemon: pogemonsObj.rockwil, lvls: [4, 7], odds: {min:1,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:1,max:100}}
@@ -603,11 +625,14 @@ export let mapsObj = {
       x: -900,
       y: -750
     },
-    height: 46,
+    height: 48,
     width: 59,
     encounters: {},
     changeMapLocations:[
-      {name: 'home', spawnPosition: {x:775, y: -1150,}}, // 2nd gym
+      {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, 
+      {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}},
+
+      {name: 'keme_Town_Gym', spawnPosition: {x:-40, y: -500,}}, // 2nd gym
 
       {name: 'keme_Town_House1', spawnPosition: {x: 440, y: -175}}, // keme_Town_House1
 
@@ -633,7 +658,7 @@ export let mapsObj = {
     width: 16,
     encounters: {},
     changeMapLocations:[
-      {name: 'keme_Town', spawnPosition: {x:-160, y: -720,}},{name: 'keme_Town', spawnPosition: {x:-160, y: -720,}},
+      {name: 'keme_Town', spawnPosition: {x:-160, y: -850}},{name: 'keme_Town', spawnPosition: {x:-160, y: -850}},
     ]
   },
   keme_Town_House2:{
@@ -648,9 +673,145 @@ export let mapsObj = {
     width: 16,
     encounters: {},
     changeMapLocations:[
-      {name: 'keme_Town', spawnPosition: {x:-1120, y: -1050,}},{name: 'keme_Town', spawnPosition: {x:-1120, y: -1050,}},
+      {name: 'keme_Town', spawnPosition: {x:-1120, y: -1170}},{name: 'keme_Town', spawnPosition: {x:-1120, y: -1170}},
     ]
   },
+  keme_Town_Gym:{
+    name: 'keme_Town_Gym',
+    mapImg: './img/maps/keme_Town_Gym/keme_Town_Gym.png',
+    FGImg: './img/maps/keme_Town_Gym/keme_Town_GymFG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 20,
+    width: 32,
+    encounters: {},
+    trainers: [
+      {
+        name: 'Rocky', 
+        team: [[pogemonsObj.sturdle, 15, null], [pogemonsObj.sturdle, 15, null]],
+        direction: {reach: {pos:{x:0, y:150}, neg:{x:0, y:150}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
+        dialogue: 'I still very much like rocks.',
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Onyx', 
+        team: [[pogemonsObj.cobbird, 16, null], [pogemonsObj.sturdle, 17, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:150, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        sprite: '../../img/charSprites/youngwoman/youngwoman.png',
+        dialogue: 'I hope i can be just like Djed one day.',
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Djed', // gym leader
+        team: [[pogemonsObj.cobbird, 18, null],[pogemonsObj.punbreakable, 19, null], [pogemonsObj.rockwil, 20, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/djed/djed.png',
+        dialogue: 'A new challenger for me?\n\n\nBring it on!',
+        reward: 100,
+        beaten: false,
+        gymLeader: {name: "djed", num: 1},
+        eventKey: 'djedGym'
+      },
+      {
+        name: 'Clayton', 
+        team: [[pogemonsObj.allingua, 15, null]],
+        direction: {reach: {pos:{x:150, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/youngman2/youngman2.png',
+        dialogue: "I don't have a rock type pogemon, but Djed was cool enought to let me be here!",
+        reward: 100,
+        beaten: false,
+      },
+
+    ],
+    changeMapLocations:[
+      {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}}, {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}}, {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}},
+    ]
+  },
+
+  //exodus road
+  exodus_Road:{
+    name: 'exodus_Road',
+    mapImg: './img/maps/exodus_Road/exodus_Road.png',
+    FGImg: './img/maps/exodus_Road/exodus_RoadFG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 48,
+    width: 72,
+    encounters: {},
+    changeMapLocations:[
+      {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, 
+      {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, // sinia_Desert
+
+      {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, 
+      {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}} // keme_Town
+    ],
+    weather: 'sun'
+  },
+
+  //sinai desert
+  sinai_Desert:{
+    name: 'sinai_Desert',
+    mapImg: './img/maps/sinai_Desert/sinai_Desert.png',
+    FGImg: './img/maps/sinai_Desert/sinai_DesertFG.png',
+    spawnPosition: {
+      x: -900,
+      y: -1050
+    },
+    height: 58,
+    width: 72,
+    encounters: {},
+    changeMapLocations:[
+      {name: 'melchi_Cave', spawnPosition: {x:125, y: -1050}}, // grotto
+
+      {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, 
+      {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}
+    ],
+    weather: 'sand'
+  },
+  melchi_Cave:{
+    name: 'melchi_Cave',
+    mapImg: './img/maps/melchi_Cave/melchi_Cave.png',
+    FGImg: './img/maps/melchi_Cave/melchi_CaveFG.png',
+    spawnPosition: {
+      x: 0,
+      y: -850
+    },
+    height: 26,
+    width: 26,
+    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    changeMapLocations:[
+      {name: 'sinai_Desert', spawnPosition: {x:-2335, y: -85}}, {name: 'sinai_Desert', spawnPosition: {x:-2335, y: -85}}, // grotto
+    ],
+    weather: null,
+    trainers: [
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\n\nIf you manage to defeat me, i'll let you have this old stick.\n\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: false,
+      },
+    ],
+    items: [
+      {
+        name: 'royal_Jelly',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ],
+  },
+
   
 
   //buildings

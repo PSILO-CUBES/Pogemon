@@ -12,7 +12,7 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
-import { disableOWMenu, manageOverWorldState, returnPrevScene } from "./scenes/overworld.js"
+import { disableOWMenu, manageOverWorldState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
@@ -88,7 +88,7 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.balancia, true, 'geneTown')
+      player.catch(pogemonsObj.contamitoad, true, 'geneTown')
 
       return player
     } else {
@@ -691,10 +691,17 @@ function playerInteraction(e) {
       break
     case 'tree':
     case 'rock':
+      player.badges[1] = true
       if(player.interaction.info.disabled) return
 
-      // if(player.interaction.name == 'tree') if(!worldEventData.maat.gym) return
-      if(player.interaction.name == 'rock') return
+      if(player.interaction.name == 'tree') {
+        if(!player.badges[0]) return
+        setTimeout(() => audioObj.SFX.cut.play(), 250)
+      }
+      if(player.interaction.name == 'rock') {
+        if(!player.badges[1]) return
+        setTimeout(() => audioObj.SFX.rockSmash.play(), 250)
+      }
 
       player.interaction.collisionInstance.obstacleSprite.animate = true
       player.disabled = true
@@ -831,8 +838,8 @@ function stopMotionWhenColliding(boundaries, direction){
       let surfCheck = false
 
       player.team.forEach(pogemon =>{
-        if(pogemon.pogemon.surfable){
-          surfCheck = true
+        if(player.badges[2]){
+          if(pogemon.pogemon.surfable) surfCheck = true
         }
       })
 
@@ -897,6 +904,8 @@ function stopMotionWhenColliding(boundaries, direction){
 
 function engageBattle(animationId, battleZones) {
   if(player.team.length < 1) return
+  if(waitForNextBattle.initiated) return
+  
   for(let i = 0; i < battleZones.length; i++){
     const battleZone = battleZones[i]
     const overlappingArea = Math.max(player.position.x, battleZone.position.x) 
@@ -937,7 +946,7 @@ export let lastDirection = 'Down'
 
 function pickUpAbility(){
   // 19999
-  const pickUpOdds = 19999
+  const pickUpOdds = 1
 
   for(let i = 0; i < player.team.length; i++){
     if(player.team[i].abilityInfo.ability == null) continue
@@ -966,8 +975,12 @@ function pickUpAbility(){
     document.querySelector('#overworldSceneContainer').appendChild(pickUpContainer)
 
     const pickUpImgPogemon = new Image()
+
     if(pogemon.isShiny) pickUpImgPogemon.src = pogemon.pogemon.sprites.shiny.sprite
     else pickUpImgPogemon.src = pogemon.pogemon.sprites.classic.sprite
+
+    console.log(pickUpImgPogemon.src)
+
     const pickUpImgIcon = new Image()
     pickUpImgIcon.src = 'img/pickup.png'
     const pickUpImgItem = new Image()
@@ -1071,7 +1084,7 @@ function changeMapEvent(changeMap, currPos){
       if(changeMapFlag) return
 
       audioObj.SFX.changeMap.play()
-      
+
       changeMapFlag = true
       player.disabled = true
 
@@ -1108,8 +1121,8 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
-      console.log('interacted')
       player.interaction = eventZonesIndex
+      console.log(player.interaction)
       if(player.team.length >= 1) {
         if(eventZonesIndex.info.createdTrainer != undefined){
 
@@ -1120,14 +1133,14 @@ function eventZoneManagement(eventZones){
           switch(eventZonesIndex.info.eventKey){
             case 'maatGymTrainer':
               document.addEventListener('keydown', (e) =>{
-                if(worldEventData.maat.firstMeet && !worldEventData.maat.gym) return
+                if(worldEventData.maat.firstMeet && !player.badges[0]) return
                 if(e.key == ' '){
                   player.disabled = true
                   player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
                 }
               })
               if(!worldEventData.maat.firstMeet) return
-              if(worldEventData.maat.gym) return
+              if(player.badges[0]) return
               break
           }
 

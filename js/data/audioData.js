@@ -63,5 +63,13 @@ export const audioObj = {
       src: '../../audio/trainerEncounter.mp3',
       volume: SFXVolume
     }),
+    cut: new Howl({
+      src: '../../audio/cut.mp3',
+      volume: SFXVolume
+    }),
+    rockSmash: new Howl({
+      src: '../../audio/rockSmash.mp3',
+      volume: SFXVolume
+    })
   }
 }

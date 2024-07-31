@@ -2652,6 +2652,7 @@ export class Pogemon extends Sprite{
       const allyHpDom = document.querySelector('#allyHp')
 
       this.hp = this.hp + (Math.round(this.stats.baseHp * 0.05) + 1)
+      if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
   
       allyHpDom.textContent = `${this.hp}/${this.stats.baseHp}`
       allyLvlDom.textContent = `Lv ${this.lvl}`

@@ -115,7 +115,11 @@
   position: relative;
 
   height: 35px;
+
+  pointer-events: all !important;
 }
+
+
 
 .bagSceneTeamSectionHP{
   padding-left: 15px;

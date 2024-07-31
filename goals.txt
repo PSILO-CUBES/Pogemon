@@ -207,25 +207,54 @@ finish cross link map : {
     add trainer to cross link x
 
     make ma'at event in cross link x
-}
+} x
 
 finish events in sol town: {
     gym: need to add ma'at's real team x
 
     heisenberg x
-}
+} x
 
-remaining pogemon on enemy team indicator 
+remaining pogemon on enemy team indicator x
+
+exodus road x
+
+put desert map after exodus road to introduce more wild mons instead of having them
+all concentrated on one map x
+
+make map below gene town x
+
+test if rock smash works after 2nd gym x
+
+modify obstacles collisions x
+
+eden forest collisions are fucked up x
+
+take items from pogemon by clicking on it in teams and bag menu x
+
+↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
+
+prevent battle from happening 1.5 seconds after combat and after boot
+
+sell function for pogemart
+
+moses event
+
+add event zones and wild mon objects to : {
+    exodus road
+    sidai desert
+    eden forest
+}
 
 gym order : {
-    normal
-    rock
+    normal x
+    rock x
     water   
 }
-
-exodus road
-
-make 2 more gyms
 
 pogedex info + : {
     show base stats
@@ -233,9 +262,7 @@ pogedex info + : {
     show moves to learn ??
 }
 
-at least 1 overworld encounter?
-
-map
+maps
 
 MUSIC AND MOVE SOUNDS
 
@@ -245,13 +272,9 @@ make more moves
 
 make more items
 
-make evos : {
-    piny 3rd evo
-    formal evos
-    tadtoxic evos
-}
+------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- demo release
+at least 1 overworld encounter?
 
 heabutt for trees?
 

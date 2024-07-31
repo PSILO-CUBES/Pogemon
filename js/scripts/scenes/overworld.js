@@ -57,8 +57,6 @@ function startOverWorldWeather(){
 let pogelocationBackUp
 
 export async function switchMap(nextMapInfo, preMapInfo){
-  audioObj.SFX.changeMap.play()
-
   if(nextMapInfo != undefined) {
     if(nextMapInfo.name != 'undefined'){
       [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData(nextMapInfo)
@@ -413,6 +411,10 @@ export function returnPrevScene(scene){
   prevScene = scene
 }
 
+export let waitForNextBattle = {
+  initiated: false
+}
+
 function transitionScenes(prevScene){
   switch(prevScene){
     case 'overworld':
@@ -527,11 +529,13 @@ window.addEventListener('keydown', (e) => _preventActionSpam(escapeKeyEventOptio
 
 let OWAnimationRuning = false
 
-let OWWeatherParticles = []
+export let OWWeatherParticles = {
+  arr: []
+}
 
 function manageWeatherParticles(weather){
-  if(weather == undefined) {
-    OWWeatherParticles = []
+  if(weather == undefined || weather == null) {
+    OWWeatherParticles.arr = []
     return
   }
 
@@ -551,7 +555,7 @@ function manageWeatherParticles(weather){
     color: null,
   }
 
-  if(OWWeatherParticles.length > weather.maxParticleCount) OWWeatherParticles.shift()
+  if(OWWeatherParticles.arr.length > weather.maxParticleCount) OWWeatherParticles.arr.shift()
 
   switch(weather.type){
     case 'sun':
@@ -568,8 +572,9 @@ function manageWeatherParticles(weather){
           height: window.innerHeight * 2,
           width: 5
         },
-        color: '#ffd96617',
-        rotation: 1
+        color: '#ffd96637',
+        rotation: 1,
+        type: weather.type
       }
       break
     case 'rain':
@@ -587,6 +592,7 @@ function manageWeatherParticles(weather){
           width: 3
         },
         color: 'blue',
+        type: weather.type
       }
       break
     case 'sand':
@@ -604,6 +610,7 @@ function manageWeatherParticles(weather){
           width: 5
         },
         color: 'brown',
+        type: weather.type
       }
       break
     case 'snow':
@@ -621,11 +628,12 @@ function manageWeatherParticles(weather){
           width: 2 * Math.floor(Math.random() * 4)
         },
         color: 'white',
+        type: weather.type
       }
       break
   }
 
-  OWWeatherParticles.push(particle)
+  OWWeatherParticles.arr.push(particle)
 }
 
 const overWorldAnimation = timeSpent =>{
@@ -657,9 +665,11 @@ export function manageOverWorldState(state){
     document.querySelector('#overworldMenu').style.display = 'none'
 
     if(player.interaction != null) if(player.interaction.info.gymLeader != undefined){
-      if(prevScene == 'battle')
+      disableOWMenu.active = true
       document.querySelector('#overworldDialogueContainer').style.display = 'flex'
-      player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!")
+
+      if(!player.badges[0]) player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!\n\n\nYou can now cut down pesky tree that are in your way.")
+      else if (!player.badges[1]) player.team[0].dialogue('overworld', "Congratulations, you've earned a second badge!\n\n\nNo rock will ever be in your way from now on.")
     }
 
     overWorldAnimation()
