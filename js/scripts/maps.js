@@ -67,7 +67,7 @@ async function generateBoundaries(nextMapInfo){
   await setBoundries(mapsObj)
 
   if(data == null) {
-    if(currMap == undefined) currMap = mapsObj.melchi_Cave
+    if(currMap == undefined) currMap = mapsObj.fair_Town
   } else {
     console.log(data)
     currMap = mapsObj[`${data.currMapName}`]

@@ -281,7 +281,10 @@ document.querySelector('#pogemonBuyMenuInput').oninput = function(){
   if(document.querySelector('#pogemonBuyMenuInput').value >= 999){
     inputValue = 999
     document.querySelector('#pogemonBuyMenuInput').value = inputValue
-    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+
+    if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+      else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s go for ${pogemartBuyingInteraction.product.value} a unit.\n\nWould you like to sell ${inputValue} for ${pogemartBuyingInteraction.product.value * inputValue}?`
+    
     return
   }
 
@@ -303,7 +306,8 @@ document.querySelector('#pogemonBuyMenuInput').oninput = function(){
       document.querySelector('#pogemonBuyMenuInput').value = inputValue
     }
 
-    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+    if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+      else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s go for ${pogemartBuyingInteraction.product.value} a unit.\n\nWould you like to sell ${inputValue} for ${pogemartBuyingInteraction.product.value * inputValue}?`
   }
 }
 
@@ -314,15 +318,25 @@ function onArrowClickEvent(state){
   }
 
   if(state == 'up'){
-    if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) >= 999) {
-      inputValue = 999
-      document.querySelector('#pogemonBuyMenuInput').value = inputValue
-      return
+    if(transactionType == 'buy'){
+      if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) >= 999) {
+        inputValue = 999
+        document.querySelector('#pogemonBuyMenuInput').value = inputValue
+        return
+      }
+    } else {
+      console.log(player.bag.get(pogemartBuyingInteraction.product.name).quantity)
+      if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) > player.bag.get(pogemartBuyingInteraction.product.name).quantity){
+        inputValue = player.bag.get(pogemartBuyingInteraction.product.name).quantity
+      }
     }
 
     inputValue = parseInt(document.querySelector('#pogemonBuyMenuInput').value) + 1
     document.querySelector('#pogemonBuyMenuInput').value = inputValue
-    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+
+    if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+      else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s go for ${pogemartBuyingInteraction.product.value} a unit.\n\nWould you like to sell ${inputValue} for ${pogemartBuyingInteraction.product.value * inputValue}?`
+  
   } else {
     if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) <= 0 || document.querySelector('#pogemonBuyMenuInput').value == '-') {
       inputValue = 0
@@ -332,37 +346,206 @@ function onArrowClickEvent(state){
 
     inputValue = parseInt(document.querySelector('#pogemonBuyMenuInput').value) - 1
     document.querySelector('#pogemonBuyMenuInput').value = inputValue
-    document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+
+    if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+      else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s go for ${pogemartBuyingInteraction.product.value} a unit.\n\nWould you like to sell ${inputValue} for ${pogemartBuyingInteraction.product.value * inputValue}?`
 
     if(inputValue != 0) return
-    document.querySelector('#pogemartBuyMenuTextContainer').textContent = `Who many ${pogemartBuyingInteraction.product.name}'s will you buy?`
+
+    if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s will you buy?`
+    else document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s would you like to sell?`
   }
 }
 
-function buyItemEvent(){
-  const price = pogemartBuyingInteraction.product.price * inputValue
-  if(price > player.money){
-    document.querySelector('#pogemartMenuDescripion').textContent = "You can't afford that.."
-  } else {
-    player.money = player.money - price
-    player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: {...itemsObj[pogemartBuyingInteraction.product.name]}, quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
-    document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
-    document.querySelector('#pogemartMenuDescripion').textContent = 'Thank you for your purchase!'
-  }
+function transactionEvent(){
+  document.querySelector('#pogemartMenuDescripion').style.display = 'block'
   
+  if(transactionType == 'buy'){
+    const price = pogemartBuyingInteraction.product.price * inputValue
+    if(price > player.money){
+      document.querySelector('#pogemartMenuDescripion').textContent = "You can't afford that.."
+    } else {
+      player.money = player.money - price
+      player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: {...itemsObj[pogemartBuyingInteraction.product.name]}, quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity + inputValue})
+      document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
+      document.querySelector('#pogemartMenuDescripion').textContent = 'Thank you for your purchase!'
+    }
+  } else {
+    if(inputValue > player.bag.get(pogemartBuyingInteraction.product.name).quantity){
+      document.querySelector('#pogemartMenuDescripion').textContent = `You do not have this many ${pogemartBuyingInteraction.product.name}'s on you, please enter a correct amount.`
+    } else {
+      const price = pogemartBuyingInteraction.product.value * inputValue
+
+      player.money = player.money + price
+      player.bag.set(`${pogemartBuyingInteraction.product.name}`, {item: {...itemsObj[pogemartBuyingInteraction.product.name]}, quantity: player.bag.get(`${pogemartBuyingInteraction.product.name}`).quantity - inputValue})
+      document.querySelector('#pogemartMoneyAmountContainer').textContent = player.money
+      document.querySelector('#pogemartMenuDescripion').textContent = 'Thank you for your business!'
+
+      printItemList(document.querySelector('#pogemartSellList'))
+    }
+  }
   // pogemartBuyingInteraction.initiated = false
   // pogemartBuyingInteraction.product = null
 }
 
+let transactionType
+
+function openBuyMenu(){
+  transactionType = 'buy'
+  document.querySelector('#pogemartBuyItemsButton').style.display = 'none'
+  document.querySelector('#pogemartSellItemsButton').style.display = 'none'
+  document.querySelector('#pogemartItemsContainer').style.display = 'grid'
+}
+
+function itemHoverEvent(e, state){
+  if(state){
+    e.target.style.cursor = 'pointer'
+    e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
+  } else {
+    if(e.target.id == 'selected') return
+    e.target.style.cursor = 'auto'
+    e.target.style.backgroundColor = 'transparent'
+  }
+}
+
+const defaultType = 'misc'
+let currType = defaultType
+const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key', 'sort']
+
+function itemTypeOnClick(e){
+  document.querySelector('#pogemartSellItemsHeader').childNodes.forEach((node,i) =>{
+    node.childNodes[0].style.backgroundColor = 'transparent'
+    node.childNodes[0].id = ''
+    // currType = itemsTypeArr[i]
+  })
+
+  e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
+  e.target.id = 'selected'
+  currType = e.target.classList[1]
+
+  printItemList(document.querySelector('#pogemartSellList'))
+}
+
+function printItemList(pogemartSellList){
+  pogemartSellList.replaceChildren()
+
+  let currItemsArr = []
+
+  player.bag.forEach(key =>{
+    console.log(key.item.type)
+    if(key.item.type == currType) currItemsArr.push(key)
+  })
+
+  for(let i = 0; i < currItemsArr.length; i++){
+    const sortedItem = currItemsArr[i]
+
+    if(sortedItem.quantity == 0) continue
+
+    const itemContainer = document.createElement('div')
+    itemContainer.setAttribute('class', 'pogemartItemsContainer')
+    itemContainer.addEventListener('mouseover', e => hoverEvent(true, e.target, sortedItem.item))
+    itemContainer.addEventListener('mouseout', e => hoverEvent(false, e.target))
+    itemContainer.addEventListener('click', e => onClickEvent(true, e.target, sortedItem.item))
+
+    const item = sortedItem.item
+
+    const itemImage = new Image()
+    itemImage.setAttribute('class', 'pogemartItemsIcon')
+    itemImage.src = item.img
+
+    const itemName = document.createElement('div')
+    itemName.setAttribute('class', 'pogemartItemsName')
+    itemName.textContent = switchUnderScoreForSpace(item.name)
+
+    const itemQuantity = document.createElement('div')
+    itemQuantity.setAttribute('class', 'pogemartItemsName')
+    itemQuantity.textContent = sortedItem.quantity
+
+    itemContainer.appendChild(itemImage)
+    itemContainer.appendChild(itemName)
+    itemContainer.appendChild(itemQuantity)
+
+    pogemartSellList.appendChild(itemContainer)
+  }
+}
+
+function printSellItemMenu(){
+  const pogemartSellItemsContainer = document.querySelector('#pogemartSellItemsContainer')
+
+  const pogemartSellHeader = document.createElement('div')
+  pogemartSellHeader.id = 'pogemartSellItemsHeader'
+
+  const pogemartSellList = document.createElement('div')
+  pogemartSellList.id = 'pogemartSellList'
+
+  pogemartSellItemsContainer.appendChild(pogemartSellHeader)
+  pogemartSellItemsContainer.appendChild(pogemartSellList)
+
+  for(let j = 0; j < 9; j++){
+    //icon containers
+    pogemartSellHeader.style.display = 'grid'
+
+    const martSellItemTypeDom = document.createElement('div')
+    martSellItemTypeDom.classList.add('pogemartSceneSellItemType')
+    pogemartSellHeader.appendChild(martSellItemTypeDom)
+
+    //indiv icon
+    const martSellItemTypeImgDom = new Image()
+    martSellItemTypeImgDom.classList.add('pogemartSelItemTypeImg')
+    martSellItemTypeImgDom.classList.add(`${itemsTypeArr[j]}`)
+    martSellItemTypeImgDom.src = `img/item_scene/${j}.png`
+    if(martSellItemTypeImgDom.classList[1] == currType){
+      martSellItemTypeImgDom.style.backgroundColor = 'rgba(128, 128, 128, 0.3)'
+      martSellItemTypeImgDom.id = 'selected'
+    }
+
+    martSellItemTypeImgDom.addEventListener('mouseover', e => itemHoverEvent(e, true))
+    martSellItemTypeImgDom.addEventListener('mouseout', e => itemHoverEvent(e, false))
+    martSellItemTypeImgDom.addEventListener('click', e => itemTypeOnClick(e))
+
+    martSellItemTypeDom.appendChild(martSellItemTypeImgDom)
+  }
+
+  printItemList(pogemartSellList)
+}
+
+function openSellMenu(){
+  transactionType = 'sell'
+  document.querySelector('#pogemartBuyItemsButton').style.display = 'none'
+  document.querySelector('#pogemartSellItemsButton').style.display = 'none'
+  document.querySelector('#pogemartSellItemsContainer').style.display = 'grid'
+
+  printSellItemMenu()
+}
+
 document.querySelectorAll('.pogemonBuyMenuArrow')[0].addEventListener('click', e => onArrowClickEvent('up'))
 document.querySelectorAll('.pogemonBuyMenuArrow')[1].addEventListener('click', e => onArrowClickEvent('down'))
-document.querySelectorAll('.pogemartBuyConfirmationOptions')[0].addEventListener('click', e => buyItemEvent())
+document.querySelector('#pogemartBuyItemsButton').addEventListener('click', e => openBuyMenu())
+document.querySelectorAll('.pogemartBuyConfirmationOptions')[0].addEventListener('click', e => transactionEvent())
+document.querySelector('#pogemartSellItemsButton').addEventListener('click', e => openSellMenu())
 
-function onClickEvent(state, target, item){
+function onClickEvent(state, target, itemType){
+  if(itemType == undefined) return
+
+  const item = itemsObj[itemType.name]
+  
+  if(item != undefined){
+    if(item.value == null && transactionType == 'sell'){
+      document.querySelector('#pogemartMenuDescripion').textContent = 'I cannot buy this from you, sorry.'
+      return
+    }
+  }
+
+  if(transactionType == 'buy') document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'buy'
+  else document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'sell'
+  
   const pogemartMenuDescripion = document.querySelector('#pogemartMenuDescripion')
   const pogemartBuyMenu = document.querySelector('#pogemartBuyMenu')
 
+  if(target.classList[0] == 'pogemartItemsContainer') document.querySelector('#pogemartSellItemsButton').style.display = 'none'
+
   pogemartBuyingInteraction.initiated = true
+
   if(item != undefined){
     pogemartBuyingInteraction.product = item
   }
@@ -370,8 +553,14 @@ function onClickEvent(state, target, item){
   if(pogemartInteraction.initiated == false) return
   if(state){
     if(inputValue == undefined) inputValue = 0
-    if(inputValue == 0) document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(item.name)}'s will you buy?`
-    else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(item.name)}'s?\n\nThat will cost you ${item.price * inputValue}.`
+    if(inputValue == 0) {
+      if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s will you buy?`
+      else document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s would you like to sell?`
+    }
+    else {
+      if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').innerText = `So, you want to buy ${inputValue} ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s?\n\nThat will cost you ${pogemartBuyingInteraction.product.price * inputValue}.`
+      else document.querySelector('#pogemartBuyMenuTextContainer').innerText = `${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s go for ${pogemartBuyingInteraction.product.value} a unit.\n\nWould you like to sell ${inputValue} for ${pogemartBuyingInteraction.product.value * inputValue}?`
+    }
 
     document.querySelectorAll('.pogemartItemsContainer').forEach(node =>{
       node.style.backgroundColor = 'transparent'
@@ -409,7 +598,8 @@ addEventListener('click', e => {
 document.querySelector('#pogemonBuyMenuBuyInteraction').addEventListener('click', e =>{
   if(inputValue <= 0) return
 
-  document.querySelector('#pogemartBuyConfirmationMenuText').innerText = `Do you really want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nIt will cost you a total of ${inputValue * pogemartBuyingInteraction.product.price}`
+  if(transactionType == 'buy') document.querySelector('#pogemartBuyConfirmationMenuText').innerText = `Do you really want to buy ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nIt will cost you a total of ${inputValue * pogemartBuyingInteraction.product.price}`
+  else document.querySelector('#pogemartBuyConfirmationMenuText').innerText = `Do you really want to sell ${inputValue} ${pogemartBuyingInteraction.product.name}'s?\n\nI'll buy them from you for a total of ${inputValue * pogemartBuyingInteraction.product.value}`
 
   document.querySelector('#pogemartBuyMenu').style.display = 'none'
   document.querySelector('#pogemartMenuDescripion').style.display = 'none'
@@ -454,7 +644,7 @@ function generatePogemartMenu(products){
 
     const itemPrice = document.createElement('div')
     itemPrice.setAttribute('class', 'pogemartItemsAmount')
-    itemPrice.innerText = `${product.price}`
+    itemPrice.innerText = `${itemsObj[product.name].price}`
     itemPriceContainer.appendChild(itemPrice)
   })
 }

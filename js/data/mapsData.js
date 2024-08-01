@@ -852,12 +852,12 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['What will you be buying today?'], type:'pogemart'},
+        info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Welcome to my store, how may i help you?'], type:'pogemart'},
       },
     ],
     changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}],
     productOptions: [
-      [{name:'potion', price: 1}, {name:'resurrect', price: 1}, {name:'pogeball', price: 1}],
+      [{name:'potion'}, {name:'resurrect'}, {name:'pogeball'}, {name:'glowy_Halo'}],
       [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
       [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
       [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],

@@ -459,10 +459,19 @@ function escapeKeyEventOptions(e) {
         
         document.querySelector('#pogemartContainer').style.display = 'none'
         document.querySelector('#pogemartItemsContainer').replaceChildren()
+        document.querySelector('#pogemartSellItemsContainer').replaceChildren()
 
+        document.querySelector('#pogemartBuyItemsButton').style.display = 'flex'
+        document.querySelector('#pogemartSellItemsButton').style.display = 'flex'
+        document.querySelector('#pogemartItemsContainer').style.display = 'none'
+        document.querySelector('#pogemartSellItemsContainer').style.display = 'none'
+
+        disableOWMenu.active = true
         player.team[0].dialogue('overworld', 'Have a good day! :D')
+        document.querySelector('#pogemartMenuDescripion').textContent = ''
 
         queue.push(() =>{
+          disableOWMenu.active = false
           player.disabled = false
         })
         return

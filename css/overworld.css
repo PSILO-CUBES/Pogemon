@@ -267,7 +267,7 @@ body{
 }
 
 #pogemartItemsContainer{
-  display: grid;
+  display: none;
   justify-self: end;
   align-items: center;
 
@@ -277,7 +277,7 @@ body{
   background-color: rgba(0, 0, 0, 0.75);
 
   overflow-y: scroll;
-  overflow-x: none;
+  overflow-x: hidden;
 }
 
 .pogemartItemsContainer{
@@ -288,9 +288,12 @@ body{
 
   height: 100%;
   min-height: 140px;
+  max-height: 240px;
   width: 100%;
 
   cursor: pointer;
+} .pogemartItemsContainer:hover{
+  background-color: rgba(75,75,75,0.5) !important;
 }
 
 .pogemartItemsContainer > * {
@@ -422,6 +425,67 @@ body{
   cursor: pointer;
 }
 
+#pogemartBuyItemsButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+
+  width: 50%;
+  height: 30%;
+} #pogemartBuyItemsButton:before{
+  content: 'buy';
+} #pogemartBuyItemsButton:hover{
+  background-color: rgba(75, 75, 75, 0.5);
+  cursor: pointer;
+}
+
+#pogemartSellItemsButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  float: inline-end;
+
+  width: 50%;
+  height: 100%;
+} #pogemartSellItemsButton:before{
+  content: 'sell';
+} #pogemartSellItemsButton:hover{
+  background-color: rgba(75, 75, 75, 0.5);
+  cursor: pointer;
+}
+
+#pogemartSellItemsContainer{
+  display: none;
+  grid-template-rows: 104px auto;
+}
+
+#pogemartSellItemsHeader{
+  display: grid;
+  grid-template-columns: repeat(9, auto);
+
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#pogemartSellList{
+  background-color: rgba(0, 0, 0, 0.75);
+  overflow-y: scroll;
+
+  max-height: 590;
+}
+
+.pogemartSceneSellItemType{
+  justify-self: center;
+  align-self: center;
+}
+
+.pogemartSelItemTypeImg{
+  border-radius: 15px;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -473,7 +537,7 @@ input[type="range"]::-webkit-slider-thumb {
 
   transition: ease-in 0.5s;
 
-  /* z-index: -999 */
+  pointer-events: none;
 }
 
 #pickUpContainer{

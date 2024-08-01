@@ -232,15 +232,17 @@ eden forest collisions are fucked up x
 
 take items from pogemon by clicking on it in teams and bag menu x
 
+prevent battle from happening 1.5 seconds after combat and after boot x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
-prevent battle from happening 1.5 seconds after combat and after boot
-
 sell function for pogemart
+
+add sort function to bag and sell items
 
 moses event
 

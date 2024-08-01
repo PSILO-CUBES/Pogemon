@@ -37,11 +37,8 @@ let choosePogemon = false
 
 async function sortCurrItemsArr(){
   currItemsArr = []
-  await player.bag.forEach(key =>{0
-
-    if(key.item.type == currType) {
-      currItemsArr.push(key)
-    }
+  await player.bag.forEach(key =>{
+    if(key.item.type == currType) currItemsArr.push(key)
   })
 }
 
@@ -530,6 +527,8 @@ function printBagScene(){
 
         const bagSceneItemSectionDom = document.querySelector('.bagSceneItemListContainer')
         printItems(bagSceneItemSectionDom)
+
+        document.querySelector('.bagSceneItemDialogueContainer').innerText = `You took back a ${player.team[i].heldItem.name} from ${player.team[i].name}.`
 
         player.team[i].heldItem = undefined
         bagSceneTeamSectionItemDom.src = `img/item_scene/items/blank.png`

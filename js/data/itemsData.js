@@ -7,7 +7,9 @@ export const itemsObj = {
     pow: '---',
     img: 'img/item_scene/items/misc/leaf_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
-    consume: true
+    consume: true,
+    price: 1,
+    value: 1
   },
   water_Stone:{
     name:'water_Stone',
@@ -16,7 +18,9 @@ export const itemsObj = {
     pow: '---',
     img: 'img/item_scene/items/misc/water_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
-    consume: true
+    consume: true,
+    price: 1,
+    value: 1
   },
   fire_Stone:{
     name:'fire_Stone',
@@ -25,7 +29,9 @@ export const itemsObj = {
     pow: '---',
     img: 'img/item_scene/items/misc/fire_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
-    consume: true
+    consume: true,
+    price: 1,
+    value: 1
   },
   thunder_Stone:{
     name:'thunder_Stone',
@@ -34,7 +40,9 @@ export const itemsObj = {
     pow: '---',
     img: 'img/item_scene/items/misc/thunder_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
-    consume: true
+    consume: true,
+    price: 1,
+    value: 1
   },
   royal_Jelly:{
     name:'royal_Jelly',
@@ -43,7 +51,9 @@ export const itemsObj = {
     pow: '---',
     img: 'img/item_scene/items/misc/royal_Jelly.png',
     desc: "Can trigger certain pogemon's evolution, also quite tasty.",
-    consume: true
+    consume: true,
+    price: 1,
+    value: 1
   },
   // med
   potion: {
@@ -53,7 +63,9 @@ export const itemsObj = {
     pow: '20',
     img: 'img/item_scene/items/med/potion.png',
     desc: 'Standard Heal',
-    friendliness: 1
+    friendliness: 1,
+    price: 1,
+    value: 1
   },
   good_Potion: {
     name: 'good_Potion',
@@ -62,7 +74,9 @@ export const itemsObj = {
     pow: '50',
     img: 'img/item_scene/items/med/heal.png',
     desc: 'Good Heal',
-    friendliness: 2
+    friendliness: 2,
+    price: 1,
+    value: 1
   },
   mega_Potion: {
     name: 'mega_Potion',
@@ -71,7 +85,9 @@ export const itemsObj = {
     pow: '200',
     img: 'img/item_scene/items/med/heal.png',
     desc: 'Crazy Heal',
-    friendliness: 3
+    friendliness: 3,
+    price: 1,
+    value: 1
   },
   resurrect: {
     name: 'resurrect',
@@ -80,7 +96,9 @@ export const itemsObj = {
     pow: '0.25',
     img: 'img/item_scene/items/med/resurrect.png',
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
-    friendliness: 4
+    friendliness: 4,
+    price: 1,
+    value: 1
   },
   // balls
   pogeball: {
@@ -90,6 +108,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/ball/pogeball.png',
     animation: 'img/item_scene/items/ball/pogeball_Animation.png',
     desc: "Catches pogemons",
+    price: 1,
+    value: 1
   },
   megaball: {
     name: 'megaball',
@@ -98,6 +118,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/ball/pogeball.png',
     animation: 'img/item_scene/items/ball/pogeball_Animation.png',
     desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+    price: 1,
+    value: 1
   },
   // berry
   banana: {
@@ -111,7 +133,9 @@ export const itemsObj = {
     heldEffect: 'flatHealing',
     heldThreshHold: 100,
     consume: true,
-    friendliness: 1
+    friendliness: 1,
+    price: 1,
+    value: 1
   },
   yellow_Berry: {
     name: 'yellow_Berry',
@@ -124,7 +148,9 @@ export const itemsObj = {
     heldEffect: 'percentHealing',
     heldThreshHold: 100,
     consume: true,
-    friendliness: 1
+    friendliness: 1,
+    price: 1,
+    value: 1
   },
   // tm
   // battleItm
@@ -139,6 +165,8 @@ export const itemsObj = {
     desc: 'A silky scarf.\n\nWhen held, boosts normal type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   charcoal:{
     name: 'charcoal',
@@ -149,6 +177,8 @@ export const itemsObj = {
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   mystic_Water:{
     name: 'mystic_Water',
@@ -159,6 +189,8 @@ export const itemsObj = {
     desc: 'A necklass coated with condentation.\n\nWhen held, boosts water type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   miracle_Seed:{
     name: 'miracle_Seed',
@@ -169,6 +201,8 @@ export const itemsObj = {
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   magnet:{
     name: 'magnet',
@@ -179,6 +213,8 @@ export const itemsObj = {
     desc: 'A strong magnet.\n\nWhen held, boosts electric type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   sharp_Beak:{
     name: 'sharp_Beak',
@@ -189,6 +225,8 @@ export const itemsObj = {
     desc: 'A beak as shark as a knife.\n\nWhen held, boosts flying type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   hard_Stone:{
     name: 'hard_Stone',
@@ -199,6 +237,8 @@ export const itemsObj = {
     desc: 'A very sturdy stone.\n\nWhen held, boosts stone type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   soft_Sand:{
     name: 'soft_Sand',
@@ -209,6 +249,8 @@ export const itemsObj = {
     desc: 'A bag of very fine sand.\n\nWhen held, boosts ground type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   silver_Powder:{
     name: 'silver_Powder',
@@ -219,6 +261,8 @@ export const itemsObj = {
     desc: 'A very sticky and reflective substence.\n\nWhen held, boosts bug type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   poison_Barb:{
     name: 'poison_Barb',
@@ -229,6 +273,8 @@ export const itemsObj = {
     desc: 'Handle carefully. :)\n\nWhen held, boosts poison type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   black_Glasses:{
     name: 'black_Glasses',
@@ -239,6 +285,8 @@ export const itemsObj = {
     desc: 'A strong magnet.\n\nWhen held, boosts dark type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   spell_Tag:{
     name: 'spell_Tag',
@@ -249,6 +297,8 @@ export const itemsObj = {
     desc: 'A very ominous tag with strange writing on it.\n\nWhen held, boosts ghost type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   twisted_Spoon:{
     name: 'twisted_Spoon',
@@ -259,6 +309,8 @@ export const itemsObj = {
     desc: 'A twisted up spoon. How did it even get like this?..\n\nWhen held, boosts psychic type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   black_Belt:{
     name: 'black_Belt',
@@ -269,6 +321,8 @@ export const itemsObj = {
     desc: 'A worn out belt. Smells funny...\n\nWhen held, boosts fighting type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   dargon_Fang:{
     name: 'dargon_Fang',
@@ -279,6 +333,8 @@ export const itemsObj = {
     desc: 'A very ancient tooth.\n\nWhen held, boosts dragon type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   fairy_Feather:{
     name: 'fairy_Feather',
@@ -289,6 +345,8 @@ export const itemsObj = {
     desc: 'Very soft to the touch.\n\nWhen held, boosts fairy type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
   metal_Coat:{
     name: 'metal_Coat',
@@ -299,6 +357,8 @@ export const itemsObj = {
     desc: 'A lightweight coat of a strong alloy.\n\nWhen held, boosts steel type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
+    price: 1,
+    value: 1
   },
 
   // battle item
@@ -310,6 +370,8 @@ export const itemsObj = {
     desc: "If held, holder will loose 1/16th or it's max HP per turn.",
     heldType: 'after',
     consume: false,
+    price: 1,
+    value: 1
   },
   focus_Band:{
     name: 'focus_Band',
@@ -320,7 +382,9 @@ export const itemsObj = {
     desc: "The bandana makes the wearer extra weary of hits.\n\nIf the wearer were to faint, has a 10% chance to remain alive with 1 hp.",
     heldType: 'after',
     consume: false,
-    odds: 10
+    odds: 10,
+    price: 1,
+    value: 1
   },
   focus_Sash:{
     name: 'focus_Sash',
@@ -331,7 +395,9 @@ export const itemsObj = {
     desc: "The bandana makes the wearer extra weary of hits.\n\nIf the wearer's health is full, will remain alive with 1 hp.",
     heldType: 'after',
     consume: true,
-    odds: 100
+    odds: 100,
+    price: 1,
+    value: 1
   },
   
   // vals
@@ -342,9 +408,11 @@ export const itemsObj = {
     effect: 'evolution',
     pow: "---",
     img: 'img/item_scene/items/key/halo.png',
-    desc: "A strange and glowy halo, given to you by Professor Heisenberg in Sol Town.\n\nHe mentioned something about it allowing the slime to evolve somehow.",
+    desc: "A strange and glowy halo, given to you by Professor Heisenberg in Sol Town.\n\nHe mentioned something about it allowing slimie to somehow evolve.",
     heldType: '---',
     consume: false,
-    odds: 0
+    odds: 0,
+    price: 1,
+    value: null
   }
 }
