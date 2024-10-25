@@ -86,10 +86,10 @@ export let mapsObj = {
       {name: 'gene_Town', spawnPosition: {x: -1435, y: -615,}}, {name: 'gene_Town', spawnPosition: {x: -1435, y: -615,}}
     ]
   },
-  gene_Town_home1:{
-    name: 'gene_Town_home1',
-    mapImg: './img/maps/gene_Town_home1/gene_Town_home1.png',
-    FGImg: './img/maps/gene_Town_home1/gene_Town_home1FG.png',
+  gene_Town_Home1:{
+    name: 'gene_Town_Home1',
+    mapImg: './img/maps/gene_Town_Home1/gene_Town_Home1.png',
+    FGImg: './img/maps/gene_Town_Home1/gene_Town_Home1FG.png',
     spawnPosition: {
       x: -75,
       y: -750
@@ -166,7 +166,7 @@ export let mapsObj = {
     mapImg: './img/maps/pearly_Path/pearly_Path.png',
     FGImg: './img/maps/pearly_Path/pearly_PathFG.png',
     spawnPosition: {
-      x: 775,
+      x: -1775,
       y: -1150
     },
     height: 56,
@@ -182,6 +182,9 @@ export let mapsObj = {
       ]
     },
     changeMapLocations:[
+      {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, 
+      {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, {name: 'revelation_Road', spawnPosition: {x: -1150, y: -1500}}, 
+
       {name: 'banishment_Road', spawnPosition: {x: -2486, y: -38}}, {name: 'slither_Road', spawnPosition: {x: -185, y: -400}},
       
       {name: 'banishment_Road', spawnPosition: {x: -2486, y: -38}}, {name: 'slither_Road', spawnPosition: {x: -185, y: -400}},
@@ -496,9 +499,19 @@ export let mapsObj = {
     },
     height: 43,
     width: 53,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:50}}, {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:50,max:95}}, {pogemon: pogemonsObj.slimie, lvls: [7, 10], odds: {min:95,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:85}}, {pogemon: pogemonsObj.slimie, lvls: [7, 10], odds: {min:85,max:100}}]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.piny, lvls: [2, 6], odds: {min:1,max:45}}, 
+        {pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:45,max:60}}, 
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:60,max:95}}, 
+        {pogemon: pogemonsObj.slimie, lvls: [7, 10], odds: {min:95,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:85}}, {pogemon: pogemonsObj.slimie, lvls: [7, 10], odds: {min:85,max:100}}
+      ]
+    },
     changeMapLocations:[
-      {name: 'luna_Cave', spawnPosition: {x: -500, y: -500}},
+      {name: 'luna_Mountain_Entrance', spawnPosition: {x: -995, y: -1500}},
 
       {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}},
       {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}}, {name: 'fair_Town', spawnPosition: {x: -675, y: -25}},
@@ -536,33 +549,363 @@ export let mapsObj = {
     obstaclesInfo: [
       {
         name: 'rock',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        disabled: false,
+        id: 0
       }
     ],
     items: [
       {
         name: 'leaf_Stone',
-        amount: 50,
+        amount: 1,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'fire_Stone',
-        amount: 50,
+        amount: 1,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'water_Stone',
-        amount: 50,
+        amount: 1,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
       },
     ],
+  },
 
+  //luna_Mountain
+  luna_Mountain_Entrance:{
+    name: 'luna_Mountain_Entrance',
+    mapImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_Entrance.png',
+    FGImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_EntranceFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 40,
+    width: 55,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, 
+
+      {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}},
+      
+    ],
+    event: [
+    ],
+    trainers: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+  },
+  luna_Mountain:{
+    name: 'luna_Mountain',
+    mapImg: './img/maps/luna_Mountain/luna_Mountain.png',
+    FGImg: './img/maps/luna_Mountain/luna_MountainFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 64,
+    width: 76,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, 
+
+      {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}},
+      
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Caseoh', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/burglar/burglar.png',
+        dialogue: "Kinda hard to walk around me, i get it...",
+        reward: 0,
+        beaten: true
+      },
+      
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+  },
+
+  //sol_Path
+  sol_Path:{
+    name: 'sol_Path',
+    mapImg: './img/maps/sol_Path/sol_Path.png',
+    FGImg: './img/maps/sol_Path/sol_PathFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 36,
+    width: 62,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}},
+
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Caseoh', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        sprite: '../../img/charSprites/fatguy/fatguy.png',
+        dialogue: "Kinda hard to walk around me, i get it...",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Alicia', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/blackbelt/blackbelt.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: 'sun'
+  },
+
+  //commandment_Road
+  commandment_Road:{
+    name: 'commandment_Road',
+    mapImg: './img/maps/commandment_Road/commandment_Road.png',
+    FGImg: './img/maps/commandment_Road/commandment_RoadFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1300
+    },
+    height: 72,
+    width: 78,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+
+      {name: 'mousa_Peak', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Peak', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Peak', spawnPosition: {x: -3150, y: -1200}},
+      {name: 'mousa_Peak', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Peak', spawnPosition: {x: -3150, y: -1200}},
+
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Alicia', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Hieronymus', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        sprite: '../../img/charSprites/artist/artist.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Granite', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Quwill', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+
+  // mousa_Peak
+  mousa_Peak:{
+    name: 'mousa_Peak',
+    mapImg: './img/maps/mousa_Peak/mousa_Peak.png',
+    FGImg: './img/maps/mousa_Peak/mousa_PeakFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1300
+    },
+    height: 38,
+    width: 82,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
+      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
+    ],
+    event: [
+    ],
+    trainers: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+
+  //scribble_Town
+  scribble_Town:{
+    name: 'scribble_Town',
+    mapImg: './img/maps/scribble_Town/scribble_Town.png',
+    FGImg: './img/maps/scribble_Town/scribble_TownFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 42,
+    width: 72,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 1
+
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 2
+
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 3
+
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, // exit map
+
+      {name: 'pogecenter', spawnPosition: {x:405, y: -50,}},
+
+      {name: 'pogemart', spawnPosition: {x:597.5, y: 0,}}, 
+      
+      {name: 'scribble_Town_Gym', spawnPosition: {x: 160, y: -1450}},// gym
+    ],
+    event: [
+    ],
+    trainers: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+  scribble_Town_Gym:{
+    name: 'scribble_Town_Gym',
+    mapImg: './img/maps/scribble_Town_Gym/scribble_Town_Gym.png',
+    FGImg: './img/maps/scribble_Town_Gym/scribble_Town_GymFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 33,
+    width: 24,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, 
+    ],
+    event: [
+    ],
+    trainers: [      
+      {
+        name: "Hermes", 
+        team: [[pogemonsObj.flailegant, 11, null], [pogemonsObj.slimie, 12, null], [pogemonsObj.balancia, 13, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
+        sprite: "../../img/charSprites/hermes/hermes.png",
+        dialogue: "I heard from my wife that you defeated her all the way back in fair town.\n\n\nI'm sure she tried to teach you as much as she could.\n\n\nLet me do the same..",
+        reward: 100,
+        beaten: false,
+        gymLeader: {name: "hermes", num: 2},
+      },
+      {
+        name: 'Saphir', 
+        team: [[pogemonsObj.formal, 9, null], [pogemonsObj.allingua, 10, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/bluehairgirl/bluehairgirl.png',
+        dialogue: '...',
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Stza',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        sprite: '../../img/charSprites/bluepunk/bluepunk.png',
+        dialogue: "We're the gang in blue!\n\n\nNo, not that one..",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Quartz',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/bluehairwoman2/bluehairwoman2.png',
+        dialogue: "Have you met my little sister yet?\n\n\nShe had a strong connection to pogemons ever since she was very little..\n\n\nHermes even took her as his pupil.\n\n\nShe grew to strong and free, i'm proud of her for that.",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Ruby',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/bluehairwoman/bluehairwoman.png',
+        dialogue: "Let me show you what i've got!\n\n\nYou're never gonna recover from this! >:)",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Hurley',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        sprite: '../../img/charSprites/bluehairsunglasses/bluehairsunglasses.png',
+        dialogue: "My bike fell in the water, so i'm stuck here now..",
+        reward: 100,
+        beaten: false,
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
   },
 
   //banismentRoad
@@ -578,7 +921,7 @@ export let mapsObj = {
     width: 72,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.rockwil, lvls: [4, 7], odds: {min:1,max:100}},
+        {pogemon: pogemonsObj.dahgua, lvls: [4, 7], odds: {min:1,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:1,max:100}}
@@ -766,12 +1109,19 @@ export let mapsObj = {
     },
     height: 58,
     width: 72,
-    encounters: {},
+    encounters: {      
+      ground: [
+        {pogemon: pogemonsObj.cataclismus, lvls: [4, 7], odds: {min:1,max:100}},
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'melchi_Cave', spawnPosition: {x:125, y: -1050}}, // grotto
 
       {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, 
-      {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}
+      {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}, {name: 'exodus_Road', spawnPosition: {x: -1250, y: -100}}
     ],
     weather: 'sand'
   },
@@ -812,7 +1162,73 @@ export let mapsObj = {
     ],
   },
 
-  
+  // revelation_Road
+  revelation_Road:{
+    name: 'revelation_Road',
+    mapImg: './img/maps/revelation_Road/revelation_Road.png',
+    FGImg: './img/maps/revelation_Road/revelation_RoadFG.png',
+    spawnPosition: {
+      x: -250,
+      y: -850
+    },
+    height: 42,
+    width: 66,
+    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    changeMapLocations:[
+      {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, 
+      {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, 
+
+      {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, 
+      {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, {name: 'pearly_Path', spawnPosition: {x:-1100, y: -250}}, 
+    ],
+    weather: null,
+    trainers: [
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\n\nIf you manage to defeat me, i'll let you have this old stick.\n\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: false,
+      },
+    ],
+    items: [
+      {
+        name: 'royal_Jelly',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ],
+  },
+
+  // bellum_Way
+  bellum_Way:{
+    name: 'bellum_Way',
+    mapImg: './img/maps/bellum_Way/bellum_Way.png',
+    FGImg: './img/maps/bellum_Way/bellum_WayFG.png',
+    spawnPosition: {
+      x: -250,
+      y: -850
+    },
+    height: 42,
+    width: 66,
+    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    changeMapLocations:[
+      {name: 'sinai_Desert', spawnPosition: {x:-2335, y: -85}}, // icy cave
+
+      {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, 
+      {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, {name: 'revelation_Road', spawnPosition: {x:-1150, y: -100}}, 
+    ],
+    weather: 'rain',
+    trainers: [
+    ],
+    items: [
+    ],
+    
+  },
 
   //buildings
   pogecenter:{
@@ -857,17 +1273,19 @@ export let mapsObj = {
     ],
     changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}],
     productOptions: [
-      [{name:'potion'}, {name:'resurrect'}, {name:'pogeball'}, {name:'glowy_Halo'}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
-      [{name:'potion', price: 999}, {name:'resurrect', price: 999}, {name:'pogeball', price: 999}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'super_Potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
+      [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
     ]
   },
 }
+
+export const defaultMapsObj = {...mapsObj}
 
 export async function setBoundries(mapsObj){
   let mapArr = new Map()
@@ -880,14 +1298,27 @@ export async function setBoundries(mapsObj){
       if(map.trainers != undefined) {
         map.trainers.forEach((trainer, j) =>{
           if(trainer.beaten) return
-          trainer.beaten = Object.values(data['mapsObjState'])[i].trainers[j].beaten
+          if(Object.values(data.mapsObjState)[i].trainers == undefined) return
+          if(Object.values(data.mapsObjState)[i].trainers[j] == undefined) return
+          trainer.beaten = Object.values(data.mapsObjState)[i].trainers[j].beaten
         })
       }
 
       if(map.items != undefined) {
         map.items.forEach((item, j) =>{
           if(item.pickedUp) return
-          item.pickedUp = Object.values(data['mapsObjState'])[i].items[j].pickedUp
+          if(Object.values(data.mapsObjState)[i].items == undefined) return
+          if(Object.values(data.mapsObjState)[i].items[j] == null) {
+            // Object.values(data.mapsObjState)[i].items[j] = mapsObj[map.name].items[j]
+            // Object.values(data.mapsObjState)[i].items[j].pickedUp = true
+
+            // item = mapsObj[map.name].items[j]
+            // item.pickedUp = true
+          } else {
+            console.log(Object.values(data.mapsObjState)[i].items[j].name)
+            console.log(Object.values(data.mapsObjState)[i].items[j].pickedUp)
+            item.pickedUp = Object.values(data.mapsObjState)[i].items[j].pickedUp
+          }
         })
       }
     })

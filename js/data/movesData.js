@@ -1,7 +1,7 @@
 import { audioObj } from "./audioData.js"
 
 export const movesObj = {
-  // physical
+                              // physical
 
   // normal
   tackle:{
@@ -73,7 +73,7 @@ export const movesObj = {
     hitAudio: audioObj.SFX.hitFireBall
   },
 
-  // special
+                              // special
 
   // fire
   fire_ball:{
@@ -179,7 +179,7 @@ export const movesObj = {
     priority: 0,
   },
 
-  // status
+                        // status
 
   //normal
   protect: {

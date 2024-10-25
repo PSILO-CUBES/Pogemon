@@ -67,7 +67,7 @@ async function generateBoundaries(nextMapInfo){
   await setBoundries(mapsObj)
 
   if(data == null) {
-    if(currMap == undefined) currMap = mapsObj.fair_Town
+    if(currMap == undefined) currMap = mapsObj.sinai_Desert
   } else {
     console.log(data)
     currMap = mapsObj[`${data.currMapName}`]
@@ -101,6 +101,10 @@ async function generateBoundaries(nextMapInfo){
     const changeMapMap = []
     const eventZonesMap = []
     const obstaclesMap = []
+
+    if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+    else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
+    else flashContainerManagement('none')
 
     // collisionsMap
     if(currMap.collisions != undefined){
@@ -368,12 +372,19 @@ async function generateBoundaries(nextMapInfo){
             break
             case 6:
               if(mapsObj[`${currMap.name}`].items == undefined) return
-              if(mapsObj[`${currMap.name}`].items[itemIndex].pickedUp) return
+              if(mapsObj[`${currMap.name}`].items[itemIndex] == undefined) {
+                if(itemIndex == 0) itemIndex = itemIndex + 1
+                else itemIndex++
+                return
+              }else if(mapsObj[`${currMap.name}`].items[itemIndex].pickedUp) {
+                if(itemIndex == 0) itemIndex = itemIndex + 1
+                else itemIndex++
+                return
+              }
               
               let itemsInfo = mapsObj[`${currMap.name}`].items[itemIndex]
               
-              if(itemIndex == 0) itemIndex = itemIndex + 1
-              else itemIndex++
+              console.log(mapsObj[`${currMap.name}`].items)
 
               let boundary = new Boundary({
                 position:{
@@ -383,10 +394,11 @@ async function generateBoundaries(nextMapInfo){
                 type: 1,
                 collision: true
               })
+
+              if(itemIndex == 0) itemIndex = itemIndex + 1
+              else itemIndex++
               
               boundaries.push(boundary)
-            
-
 
               if(!itemsInfo.hidden){
                 const pogeballImg = new Image()
@@ -433,6 +445,7 @@ async function generateBoundaries(nextMapInfo){
                     collisionInstance: {boundary}
                   })
                 )
+                console.log(eventZones)
               }
               break
           }
@@ -451,12 +464,28 @@ async function generateBoundaries(nextMapInfo){
         row.forEach((type, j) =>{
           if(type != 7) return
 
+          
           let obstacleInfo = currMap.obstaclesInfo[z]
+
+          if(data != undefined) {
+            let newObstacleInfo
+            if(typeof data.mapsObjState[currMap.name].obstaclesInfo == 'array') newObstacleInfo = data.mapsObjState[currMap.name].obstaclesInfo[z]
+            // if(newObstacleInfo == undefined) newObstacleInfo = mapsObj[currMap.name].obstaclesInfo[z]
+
+            obstacleInfo = newObstacleInfo
+          }
+
+          console.log(obstacleInfo)
+          if(obstacleInfo == null) {
+            console.log('nulled')
+            obstacleInfo = currMap.obstaclesInfo[z]
+            obstacleInfo.disabled = true
+          }
+
+          console.log(obstacleInfo)
 
           if(z == 0) z = z + 1
           else z++
-
-          console.log(obstacleInfo)
 
           if(obstacleInfo.disabled) return
             
@@ -804,13 +833,23 @@ async function generateBoundaries(nextMapInfo){
             break
             case 6:
               if(mapsObj[`${nextMapInfoObj.name}`].items == undefined) return
-              if(mapsObj[`${nextMapInfoObj.name}`].items[itemIndex].pickedUp) return
+              if(mapsObj[`${nextMapInfoObj.name}`].items[itemIndex] == undefined) {
+                if(itemIndex == 0) itemIndex = itemIndex + 1
+                else itemIndex++
+                return
+              }else if(mapsObj[`${nextMapInfoObj.name}`].items[itemIndex].pickedUp) {
+                if(itemIndex == 0) itemIndex = itemIndex + 1
+                else itemIndex++
+                return
+              }
+              // console.log(data.mapsObjState[currMap.name].items)
 
               let itemsInfo = mapsObj[`${nextMapInfoObj.name}`].items[itemIndex]
 
+              console.log(itemsInfo)
+
               if(itemIndex == 0) itemIndex = itemIndex + 1
               else itemIndex++
-
 
               let boundary = new Boundary({
                 position:{
@@ -869,7 +908,6 @@ async function generateBoundaries(nextMapInfo){
                   })
                 )
               }
-
               break
           }
         })
@@ -887,10 +925,23 @@ async function generateBoundaries(nextMapInfo){
           if(type != 7) return
 
           let obstacleInfo = nextMapInfoObj.obstaclesInfo[z]
+          if(data != undefined) {
+            let newObstacleInfo
+            if(typeof data.mapsObjState[nextMapInfoObj.name].obstaclesInfo == 'array') newObstacleInfo = data.mapsObjState[nextMapInfoObj.name].obstaclesInfo[z]
+            if(newObstacleInfo == undefined) newObstacleInfo = mapsObj[nextMapInfoObj.name].obstaclesInfo[z]
+
+            obstacleInfo = newObstacleInfo
+          }
+          if(obstacleInfo == null) {
+            obstacleInfo = nextMapInfoObj.obstaclesInfo[z]
+            obstacleInfo.disabled = true
+          }
+
+          console.log(obstacleInfo)
 
           if(z == 0) z = z + 1
           else z++
-
+          
           if(obstacleInfo.disabled) return
 
           let boundary = new Boundary({
@@ -992,17 +1043,55 @@ function showMapNameAnimation(currMap){
   })
 }
 
+function flashContainerManagement(type){
+  const flashContainer =  document.querySelector('#flashContainer')
+  const flashStuffArr = []
+
+  for(let i = 0; i < flashContainer.childNodes.length; i++){
+    if(i == 0 || i == 2 || i == 4 || i == 6) continue
+    flashStuffArr.push(flashContainer.childNodes[i])
+  }
+
+  switch(type){
+    case 'shade':
+      flashContainer.style.display = 'block'
+      flashContainer.style.backgroundColor = 'rgba(0,0,0,0.75)'
+
+      console.log(flashStuffArr)
+
+      flashStuffArr.forEach(node =>{
+        node.style.display = 'none'
+      })
+      break
+    case 'full':
+      flashContainer.style.display = 'grid'
+      flashContainer.style.backgroundColor = 'transparent'
+
+      flashStuffArr.forEach((node,i) =>{
+        if(i == 0 || i == 2) node.style.display = 'block'
+        else node.style.display = 'grid'
+      })
+      break
+    case 'none':
+      flashContainer.style.display = 'none'
+      flashContainer.style.backgroundColor = 'transparent'
+
+      break
+  }
+}
+
 export function changeMapInfo(nextMapInfo, currMapInfo){
   let info = nextMapInfo.info
   if(info.name == 'undefined') if(data != null) info = data.nextMapInfo
 
-  const prevWeather = mapsObj[`${currMapInfo.name}`].weather
-
-  console.log(prevWeather == 'sun')
-
   currMap = mapsObj[`${info.name}`]
 
   OWWeatherParticles.arr = []
+
+  //deal with flash container stuff
+  if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+  else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
+  else flashContainerManagement('none')
   
   showMapNameAnimation(info)
   switchMap(info, currMapInfo)

@@ -88,7 +88,16 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.contamitoad, true, 'geneTown')
+      player.catch(pogemonsObj.loko , true, 'geneTown')
+
+      player.pogedexInfo.forEach(pogedex =>{
+        pogedex.seen = true
+        pogedex.caught = true
+      })
+
+      player.badges[0] = true
+      player.badges[1] = true
+      player.badges[2] = true
 
       return player
     } else {
@@ -116,7 +125,7 @@ export async function generatePlayer(canvas){
           img: pogemonImg,
           frames: {
             max: 4,
-            hold: 50
+            hold: 100
           },
           animate: true
         })
@@ -151,6 +160,10 @@ export async function generatePlayer(canvas){
         surfPogemonSprite.img.src = `img/charSprites/surf/surf_down.png`
         surfPogemonSprite.animate = true
       }
+
+      Object.values(data.playerInfo.player.badges).forEach((badge,i) =>{
+        player.badges[i] = badge
+      })
 
       return player
     }
@@ -410,13 +423,12 @@ function itemHoverEvent(e, state){
 
 const defaultType = 'misc'
 let currType = defaultType
-const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key', 'sort']
+const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key']
 
 function itemTypeOnClick(e){
-  document.querySelector('#pogemartSellItemsHeader').childNodes.forEach((node,i) =>{
+  document.querySelector('#pogemartSellItemsHeader').childNodes.forEach(node =>{
     node.childNodes[0].style.backgroundColor = 'transparent'
     node.childNodes[0].id = ''
-    // currType = itemsTypeArr[i]
   })
 
   e.target.style.backgroundColor = 'rgba(75,75,75,0.3)'
@@ -481,7 +493,7 @@ function printSellItemMenu(){
   pogemartSellItemsContainer.appendChild(pogemartSellHeader)
   pogemartSellItemsContainer.appendChild(pogemartSellList)
 
-  for(let j = 0; j < 9; j++){
+  for(let j = 0; j < itemsTypeArr.length; j++){
     //icon containers
     pogemartSellHeader.style.display = 'grid'
 
@@ -630,7 +642,7 @@ function generatePogemartMenu(products){
 
     const itemName = document.createElement('div')
     itemName.setAttribute('class', 'pogemartItemsName')
-    itemName.innerText = `${product.name}`
+    itemName.innerText = `${switchUnderScoreForSpace(product.name)}`
     itemContainer.appendChild(itemName)
 
     const itemPriceContainer = document.createElement('div')
@@ -656,6 +668,7 @@ export const pogemartInteraction = {
 let healProcess = false
 
 let goldieEvoFlag = false
+let soundFlag = false
 
 function playerInteraction(e) {
   if(scenes.get('overworld').initiated == false) return
@@ -782,7 +795,13 @@ function playerInteraction(e) {
           break
         case 'pogemart':
           queue.push(() =>{
-            generatePogemartMenu(mapsObj[`pogemart`].productOptions[0])
+            let index
+            for(let i = 0; i < Object.values(player.badges).length; i++){
+              if(Object.values(player.badges)[i] == false) break
+              index = i
+            }
+            generatePogemartMenu(mapsObj[`pogemart`].productOptions[index])
+            console.log(index)
             disableOWMenu.active = false
             inputValue = 0
           })
@@ -877,19 +896,36 @@ function playerInteraction(e) {
       player.interaction.collisionInstance.boundary.collision = false
       player.interaction.info.pickedUp = true
 
+      mapsObj[currMap.name].items.forEach(item =>{
+        console.log(item.name == player.interaction.info.name)
+        if(item.name == player.interaction.info.name) item.pickedUp = true
+      })
+
+      if(data != undefined || data != null){
+        data.mapsObjState[currMap.name].items.forEach((item,i) =>{
+          if(item == null) item = mapsObj[currMap.name].items[i]
+          if(item.name == player.interaction.info.name) item.pickedUp = true
+        })
+        console.log(data.mapsObjState.cross_Link)
+      }
+
       itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
       break
     case 'tree':
     case 'rock':
-      player.badges[1] = true
       if(player.interaction.info.disabled) return
 
       if(player.interaction.name == 'tree') {
         if(!player.badges[0]) return
+        if(soundFlag) return
+        soundFlag = true
         setTimeout(() => audioObj.SFX.cut.play(), 250)
       }
+
       if(player.interaction.name == 'rock') {
         if(!player.badges[1]) return
+        if(soundFlag) return
+        soundFlag = true
         setTimeout(() => audioObj.SFX.rockSmash.play(), 250)
       }
 
@@ -899,7 +935,9 @@ function playerInteraction(e) {
         player.interaction.collisionInstance.obstacleSprite.animate = false
         player.interaction.collisionInstance.boundary.collision = false      
         player.interaction.info.disabled = true
+        console.log(mapsObj[currMap.name].obstaclesInfo)
         player.disabled = false
+        soundFlag = false
         obstacleSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.obstacleSprite.type) obstacleSpritesArr.splice(i, 1)})
       }, 1450)
       break
@@ -948,71 +986,26 @@ function stopMotionWhenColliding(boundaries, direction){
     let yOffset
 
     let playerOffset = 16
-    let surfOffset = 0.25
     
-    switch(type){
-      case 1:
-        switch(direction){
-          case 'Up':
-            xOffset = 0
-            yOffset = playerOffset
-          break
-          case 'Right':
-            xOffset = -playerOffset
-            yOffset = 0
-          break
-          case 'Down':
-            xOffset = 0
-            yOffset = -playerOffset
-          break
-          case 'Left':
-            xOffset = playerOffset
-            yOffset = 0
-          break
-        }
-        break
-      case 8:
-        if(waterCollided){
-          switch(direction){
-            case 'Up':
-              xOffset = 0
-              yOffset = playerOffset * -2
-            break
-            case 'Right':
-              xOffset = -playerOffset * 10
-              yOffset = 0
-            break
-            case 'Down':
-              xOffset = 0
-              yOffset = -playerOffset * 6
-            break
-            case 'Left':
-              xOffset = playerOffset
-              yOffset = 0
-            break
-          }
-        } else {
-          switch(direction){
-            case 'Up':
-              xOffset = 0
-              yOffset = playerOffset
-            break
-            case 'Right':
-              xOffset = -playerOffset
-              yOffset = 0
-            break
-            case 'Down':
-              xOffset = 0
-              yOffset = -playerOffset
-            break
-            case 'Left':
-              xOffset = playerOffset
-              yOffset = 0
-            break
-          }
-        }
-        break
+    switch(direction){
+      case 'Up':
+        xOffset = 0
+        yOffset = playerOffset
+      break
+      case 'Right':
+        xOffset = -playerOffset
+        yOffset = 0
+      break
+      case 'Down':
+        xOffset = 0
+        yOffset = -playerOffset
+      break
+      case 'Left':
+        xOffset = playerOffset
+        yOffset = 0
+      break
     }
+
 
     if(
       rectangularCollision({
@@ -1027,11 +1020,11 @@ function stopMotionWhenColliding(boundaries, direction){
 
       let surfCheck = false
 
-      player.team.forEach(pogemon =>{
-        if(player.badges[2]){
+      if(player.badges[2]){
+        player.team.forEach(pogemon =>{
           if(pogemon.pogemon.surfable) surfCheck = true
-        }
-      })
+        })
+      }
 
       if(!surfCheck) return
 

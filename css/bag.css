@@ -172,7 +172,7 @@
 
 .bagSceneItemTypeContainer{
   display: grid;
-  grid-template-columns: repeat(9, 11.11%);
+  grid-template-columns: repeat(8, auto);
 
   height: 100%;
   width: 100%;

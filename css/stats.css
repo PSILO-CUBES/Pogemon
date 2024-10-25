@@ -74,7 +74,7 @@
 
 #statsSceneGridSectionInfoContainer{
   display: grid;
-  grid-template-rows: 35% 45% 10% 10%;
+  grid-template-rows: 35% 42.5% 12.5% 10%;
 
   height: 100%;
   width: 100%

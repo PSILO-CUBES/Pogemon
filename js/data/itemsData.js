@@ -67,12 +67,12 @@ export const itemsObj = {
     price: 1,
     value: 1
   },
-  good_Potion: {
-    name: 'good_Potion',
+  super_Potion: {
+    name: 'super_Potion',
     type: 'med',
     effect: 'heal',
     pow: '50',
-    img: 'img/item_scene/items/med/heal.png',
+    img: 'img/item_scene/items/med/super_Potion.png',
     desc: 'Good Heal',
     friendliness: 2,
     price: 1,
@@ -89,13 +89,13 @@ export const itemsObj = {
     price: 1,
     value: 1
   },
-  resurrect: {
-    name: 'resurrect',
+  revive: {
+    name: 'revive',
     type: 'med',
     effect: 'revive',
     pow: '0.25',
-    img: 'img/item_scene/items/med/resurrect.png',
-    desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+    img: 'img/item_scene/items/med/revive.png',
+    desc: "Revivifies a fainted pogemon and heals it by 25% of it's max HP.",
     friendliness: 4,
     price: 1,
     value: 1
@@ -131,7 +131,7 @@ export const itemsObj = {
     desc: 'A very ordinary banana.',
     heldType: 'after',
     heldEffect: 'flatHealing',
-    heldThreshHold: 100,
+    heldThreshHold: 50,
     consume: true,
     friendliness: 1,
     price: 1,
@@ -146,7 +146,7 @@ export const itemsObj = {
     desc: 'A very sour yellow berry.',
     heldType: 'after',
     heldEffect: 'percentHealing',
-    heldThreshHold: 100,
+    heldThreshHold: 50,
     consume: true,
     friendliness: 1,
     price: 1,

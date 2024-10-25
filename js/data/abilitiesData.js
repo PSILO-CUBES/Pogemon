@@ -1,6 +1,7 @@
 import { itemsObj } from "./itemsData.js";
 
 export const abilitiesObj = {
+    // utility abilities
     pick_Up: {
         name: 'pick_Up',
         type: 'pick_Up',
@@ -22,6 +23,8 @@ export const abilitiesObj = {
             ]
         }
     },
+
+    //elemental abilities
     blaze:{
         name: 'blaze',
         type: 'lowHpDamageBoost',
@@ -92,6 +95,8 @@ export const abilitiesObj = {
             type: 'fairy'
         }
     },
+
+    // status abilities
     hot_Stuff:{
         name: 'hot_Stuff',
         type: 'lowHpDamageBoost',
@@ -100,6 +105,16 @@ export const abilitiesObj = {
             threshold: 30,
             pow: 50,
             type: 'fairy'
+        }
+    },
+
+    //battle abilities
+    levitate:{
+        name: 'levitate',
+        type: 'immuned',
+        desc: "gives the ability to levitate, becoming immuned to ground type attacks",
+        info: {
+            type: 'ground'
         }
     },
 }

@@ -219,6 +219,10 @@ function useItemOnClickEvent(e){
         case 'misc':
           switch(currItem.effect){
             case 'evo':
+              if(targetPogemon.evo == null) {
+                targetPogemon.dialogue('bag', "This item can't be used on this pogemon.")
+                return
+              }
               if(targetPogemon.evo.length == undefined){
                 if(targetPogemon.evo.item == currItem.name){
                   if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
@@ -528,7 +532,7 @@ function printBagScene(){
         const bagSceneItemSectionDom = document.querySelector('.bagSceneItemListContainer')
         printItems(bagSceneItemSectionDom)
 
-        document.querySelector('.bagSceneItemDialogueContainer').innerText = `You took back a ${player.team[i].heldItem.name} from ${player.team[i].name}.`
+        document.querySelector('.bagSceneItemDialogueContainer').innerText = `You took back a ${switchUnderScoreForSpace(player.team[i].heldItem.name)} from ${player.team[i].name}.`
 
         player.team[i].heldItem = undefined
         bagSceneTeamSectionItemDom.src = `img/item_scene/items/blank.png`
@@ -603,7 +607,7 @@ function printBagScene(){
   const bagSceneItemContainerDom = document.createElement('div')
   bagSceneItemContainerDom.classList.add('bagSceneItemsMenu')
 
-  const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key', 'sort']
+  const itemsTypeArr = ['misc', 'med', 'ball', 'berry', 'tm', 'battle', 'vals', 'key']
 
   for(let i = 0; i < 3; i++){
     const bagSceneItemSectionDom = document.createElement('div')
@@ -611,7 +615,7 @@ function printBagScene(){
       case 0:
         //icon types
         bagSceneItemSectionDom.classList.add('bagSceneItemTypeContainer')
-        for(let j = 0; j < 9; j++){
+        for(let j = 0; j < itemsTypeArr.length; j++){
           //icon containers
           const bagSceneItemTypeDom = document.createElement('div')
           bagSceneItemTypeDom.classList.add('bagSceneItemType')

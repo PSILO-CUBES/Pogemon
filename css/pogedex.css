@@ -73,7 +73,7 @@
 
 .pogedexSceneScrollContent{
    display: grid;
-   grid-template-columns: 160px repeat(2, auto);
+   grid-template-columns: 160px 250px auto;
 
    margin-top: 10px;
 

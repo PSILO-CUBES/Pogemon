@@ -17,6 +17,7 @@ import { manageEvolutionState, queueProcess as evoQueueProcess } from "./evoluti
 import { pc } from "./pc.js"
 import { typesObj } from "../../data/typesData.js"
 import { switchUnderScoreForSpace } from "./stats.js"
+import { weatherObj } from "../../data/weatherData.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 export let queue = []
@@ -25,7 +26,7 @@ let queueProcess = {
 }
 
 const battleBackgroundImage = new Image()
-battleBackgroundImage.src = '../../img/battleBackground/battleBackground.png'
+battleBackgroundImage.src = '../../img/battleBackgrounds/void.png'
 const battleBackground = new Sprite({
   type: 'battleBackground',
   frames: {
@@ -60,7 +61,7 @@ function loadAlly(){
   else ally.img.src = pogemonsObj[`${ally.name}`].sprites.classic.backSprite
 
   ally.animate = true
-  ally.hold = 100
+  ally.hold = 50
 
   ally.position = {
     x: 300,
@@ -265,6 +266,8 @@ function initWildEncounter(tileInfo){
   battleType = 'wild'
 
   let returnedFoe = foeRNGEncounter(tileInfo)
+  if(returnedFoe == undefined) return
+  
   let foeObj = returnedFoe.pogemon
 
   const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0] + 1)
@@ -278,7 +281,7 @@ function initWildEncounter(tileInfo){
     },
     frames: {
       max: 4,
-      hold: 50
+      hold: 100
     },
     img: foeImage,
     animate: true
@@ -353,6 +356,7 @@ function startWeather(type, info){
   fieldContainer.style.display = 'flex'
 
   const weatherTurnIndicator = document.querySelector('#fieldEffectTurnIndicator')
+  console.log(info)
   weatherTurnIndicator.textContent = info.turns
 
   const weatherIcon = document.querySelector('#fieldEffectIcon')
@@ -519,7 +523,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
   }
 
   if(currMap.weather != undefined){
-    manageWeatherState(currMap.weather.type, terrainConditions.weather[currMap.weather.type], 'init')
+    console.log(info)
+    console.log(terrainConditions.weather[currMap.weather])
+    manageWeatherState(currMap.weather, terrainConditions.weather[currMap.weather], 'init')
   }
 
   const textBox = document.querySelector('#textBox')
@@ -2151,6 +2157,7 @@ let queueFaintTrigger = {
 function spendQueue(){
   if(queueProcess.disabled) return
   if(queue.length > 0){
+    console.log(queue)
     queue[0]()
     queue.shift()
     return

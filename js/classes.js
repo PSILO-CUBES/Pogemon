@@ -100,7 +100,7 @@ export class Boundary {
 
   generateInfo(){
     const opacity = 0
-    const opacity2 = 0
+    const opacity2 = 0.5
     switch(this.type){
       case 1:
         this.color = `rgba(255,0,0,${opacity})`
@@ -118,7 +118,7 @@ export class Boundary {
         this.color = `rgba(150,150,150,${opacity2})`
         break
       case 6:
-        this.color = `rgba(250,150,50,${opacity})`
+        this.color = `rgba(250,150,50,${opacity2})`
         break
       case 7:
         this.color = `rgba(0,150,50,${opacity})`
@@ -1727,13 +1727,16 @@ export class Pogemon extends Sprite{
         let statusOdd = Object.values(Object.values(move.effects)[0])[0]
         applyAffliction(Object.keys(Object.values(move.effects)[0])[0])
         if(rng <= statusOdd){
+          let prevText = document.querySelector('#dialogueInterface').innerText
+          queueProcess.disabled = true
           switch(Object.keys(Object.values(move.effects)[0])[0]){
             case 'burn':
+              console.log('now')
               if(recipient.element[0] == 'fire' || recipient.element[1] == 'fire'){
-                queue.push(() => this.dialogue('battle', `${recipient.name} cannot get burnt...`))
+                this.dialogue('battle', `${prevText} \n\n but ${recipient.name} cannot be burnt...`)
                 return
               } else if(recipient.element[0] == 'water' || recipient.element[1] == 'water'){
-                queue.push(() => this.dialogue('battle', `${recipient.name} cannot get burnt...`))
+                this.dialogue('battle', `${prevText} \n\n but ${recipient.name} cannot be burnt...`)
                 return
               }
 
@@ -1947,6 +1950,7 @@ export class Pogemon extends Sprite{
 
     // stats effect after attack
     if(move.type == 'physical' || move.type == 'special') if(move.effects != null) {
+      console.log(immuned)
       queue.push(() => {
         if(immuned) return
         statusAnimation('array', move.effects)
@@ -2771,6 +2775,9 @@ export class Pogemon extends Sprite{
 
     switch(item.effect){
       case 'heal':
+
+        if(item.heldEffect == undefined) return
+
         if(this.hp <= 0) {
           faintEvent(this)
           return
@@ -3082,7 +3089,7 @@ export class Character extends Sprite{
         img: pogemonImg,
         frames:{
           max: 4,
-          hold: 50
+          hold: 100
         },
         animate: true
       })

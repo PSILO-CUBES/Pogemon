@@ -234,53 +234,141 @@ take items from pogemon by clicking on it in teams and bag menu x
 
 prevent battle from happening 1.5 seconds after combat and after boot x
 
+sell function for pogemart x
+
+put flag on rock smash sound x
+
+backup save and give option to load it from options menu x
+
+prevent items from being picked up multiple times between saves : {
+    all items become leaf stones x
+}
+
+gym order : {
+    normal x
+    rock x
+    water x
+}
+
+moses event x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
-sell function for pogemart
+damage goes negative dmg BIG L
 
-add sort function to bag and sell items
+level up lvl is wrong
 
-moses event
+maps : {
+    cross link cave : going up mountain in darkness x
+    sol road : leads so commending path x
+    commending path : leads to scribe town x
+    musa peak: goes up the mountain at commending path, gains fly x
+    scrible town : 3rd gym, gain surf x
+    revelation road : gain acces to it from pearly path x
+    bellum way : leads to glatial cave - rain map x
+    glatial cave : leads to end trail - ice cave
+    end trail : strong pogemon, leads to last challenge - snow map
+    alqiama town : last resting place before last challenge
+    neo-gene : maybe have a trinity of fighters that lead to one last very powerful trainer
+    gg, you finished all maps :-]
+}
+
+finish all sprites from sheets reference : {
+    Ibis 1 x
+    Ibis 2 x
+
+    ice ferret 1 x
+    ice ferret 2 x
+
+    snow fox 1 x
+    snow fox 2 x
+
+    Uthrsa x
+    Scarletrum x
+
+    Aquerio x
+    Leonidas x
+
+    Skopt x
+    Yaldabaoth x
+
+    Jlorox - BackSprite x
+    Jleenex x
+
+    Horus x
+    Anubis x
+    Ra x
+    Thoth x
+
+    Osiris x
+    Isis x
+    Set x
+
+    Dahgha x
+
+    skeleton t-rex mon
+}
+
+rename pogemon option after catching?
+
+leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB
+
+fix Moldy Sprite overflow
+
+fix Jleenex back Sprite leftover bits
+
+fix Grey highlights : {
+ Antber
+ Regaligyne
+}
+
+fix surf visuals
 
 add event zones and wild mon objects to : {
     exodus road
     sidai desert
     eden forest
+    luna mountain entrance
+    luna mountain
+    sol path
+    commandment road
+    revelation road
+
+    need to put Event Zones on tiles for battle zones to work
 }
-
-gym order : {
-    normal x
-    rock x
-    water   
-}
-
-pogedex info + : {
-    show base stats
-
-    show moves to learn ??
-}
-
-maps
-
-MUSIC AND MOVE SOUNDS
 
 add info to save event
+
+pogedex {
+    blank out unchaught pogemons in pogedex
+
+    info + {
+
+        show base stats
+
+        show moves learn lvl
+
+    }
+}
+
+
+make multiple boxes for pc
 
 make more moves
 
 make more items
+
+MUSIC AND MOVE SOUNDS
 
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 at least 1 overworld encounter?
 
 heabutt for trees?
-
-make multiple boxes for pc
 
 EV
 
@@ -305,6 +393,6 @@ breeding??
 
 multiplayer?????
 
-online trading???
+online trading?????
 
-online battle???
+online battle?????

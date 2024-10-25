@@ -10,13 +10,14 @@ import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState } from './stats.js'
 import { managePogedexState } from './pogedex.js'
 import { timeObj, manageTrainerState } from './trainer.js'
-import { mapsObj } from '../../data/mapsData.js'
+import { defaultMapsObj, mapsObj } from '../../data/mapsData.js'
 import { managePcState, pc } from './pc.js'
 import { loadData, setSaveData } from '../../save.js'
 import { audioObj, volumeValues } from '../../data/audioData.js'
 import { queue as evoQueue, queue } from './evolution.js'
 import { typesObj } from '../../data/typesData.js'
 import { weatherObj } from '../../data/weatherData.js'
+import { itemsObj } from '../../data/itemsData.js'
 
 const frameRate = 60
 const frameRateInMilliseconds = 1000 / frameRate
@@ -156,8 +157,15 @@ document.querySelectorAll('.volumeRange').forEach(node =>{
 })
 
 document.querySelector('#optionsMenuDelete').addEventListener('click', e =>{
-  alert('Save File Deleted!')
-  localStorage.clear()
+  if(data == undefined) alert('You need to have saved at least twice to use this feature.')
+  else if(data.backupSave == null) alert('You need to save and refresh the game once more to use this feature.')
+  else {
+    console.log(data.backupSave)
+  
+    alert('Save File Backed Up.')
+    setSaveData(data.backupSave)
+    location.reload()
+  }
 })
 
 function manageOptionMenuState(state){
@@ -289,14 +297,32 @@ function overworldMenuClickEvent(e){
           nextMapInfo.spawnPosition.y = data.nextMapInfo.spawnPosition.y
         }
       }
-
-      
       
       const bagSave = []
 
       player.bag.forEach(item =>{
         bagSave.push(item)
       })
+
+      if(mapsObj[currMap.name].obstaclesInfo != undefined) mapsObj[currMap.name].obstaclesInfo = [...mapsObj[currMap.name].obstaclesInfo]
+
+      let mapsObject = mapsObj
+      // if(data != undefined) {
+      //   Object.values(mapsObject).forEach(map =>{
+      //     if(map.obstaclesInfo == undefined) return
+      //     map.obstaclesInfo = data.mapsObjState[map.name].obstaclesInfo
+      //   }) 
+      // }
+
+      let backupSaveFile
+      if(data == undefined) backupSaveFile = null
+      else backupSaveFile = data
+
+      for(let i = 0; i < player.team.length; i++){
+        let pogemon = player.team[i]
+        if(pogemon.heldItem == null) continue 
+        pogemon.heldItem = {...itemsObj[pogemon.heldItem.name]}
+      }
 
       setSaveData({
         playerInfo: {
@@ -306,14 +332,16 @@ function overworldMenuClickEvent(e){
         },
         currMapName: currMap.name,
         spawnPosition: {x: map.position.x, y: map.position.y},
-        mapsObjState: mapsObj,
+        mapsObjState: mapsObject,
+        // defMapsObj: {...defaultMapsObj},
         nextMapInfo,
         interactionFlags: interaction.flags,
         volumeValues,
         bag: bagSave,
         pc: pc,
         timeObj,
-        worldEventData
+        worldEventData,
+        backupSave: backupSaveFile
       })
       break
     case 'options':
