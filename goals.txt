@@ -1,0 +1,398 @@
+experience and stat growth x
+
+evolutions x
+
+general overworld menu x
+
+team scene x
+
+bag scene x
+item menu x
+pogeballs x
+
+team management x
+
+attack effects x
+super effective x
+
+pogedex scene x
+
+change maps x
+
+held items x
+
+make trainers x
+
+pc x
+
+evolution items x
+
+talkable NPC's x
+
+trainer card scene x
+
+save state x
+
+options x
+
+pogemart x
+
+pogecenter x
+
+SHINYS x
+
+split exp when multiple pogemons were in battle x
+
+prevent pogemon from gaining exp if fainted x
+
+Show exp split x
+
+odds of meeting certain wild pogemon x
+
+button to see the info of the move being learned x
+
+cancel evolution x
+
+make burn halve physical dmg x
+
+moves can effect stats change x
+
+make stats changing moves have animations x
+
+more status conditions {
+    burn x
+    para x
+    psn x
+    slp x
+    frz x
+    afflictions: {
+        flinch x
+        confused x
+        leech seed x
+        trick room x
+    }
+    substitute x
+    protect x
+    swagger????
+}
+
+set status condition icon in bag scene x
+
+pick up items on the ground x
+
+up and down option in stats scene x
+
+held items effect in battle {
+    - before damage is taken
+    elemental item x
+    quick claw?
+
+    - after damage has been taken
+    focus band x
+    focus sash x
+    banana x
+    sitrus berry x
+
+    evo held items
+    outside of battle
+}
+
+HM : {
+    cut x
+    rock smash x
+    surf x
+    fly
+    flash?
+    cascade?
+    dive?
+
+    actual moves not done : {
+        cut 
+        rock smash 
+        surf 
+        fly
+        flash?
+        cascade?
+        dive?
+    }
+}
+
+weather : {
+    sun x
+    rain x
+    sandstorm x
+    hail x
+
+    make move x
+    make weather affect stats x
+    overworld animation for weather : {
+        background-color x
+        particle effects : {
+            rain x
+            sun x
+            sand x
+            snow x
+        }
+    }
+}
+
+prevent item giving during battle x
+
+Abilities : {
+    pick up x
+
+    starter abilities x
+
+    Hot stuff - 10% to burn
+    At home - moves of the same type heals 1/16
+    Tripped out - Confused target on field receive 1.25x more dmg (stacks)
+
+    will make abilities as i make new pogemons, no point in making a shit load of ability with only 16 mons to choose from
+
+    intimidate
+    flame body
+    rock head
+    arena trap
+    water compaction
+}
+
+friendship : {
+    adding and subtracting friendliness x
+} x
+
+make pogedex count x
+
+fix trainer card x
+
+fix start menu x
+
+make character sprint again after getting off of surf x
+
+fix maps that have already been made {
+    fix edge of map x
+    add surf tiles  x
+    add change map where water connects x
+} x
+
+show map name when map switch x
+
+shiny sparkle: {
+    on enemy x
+    on player x
+} x
+
+make enought mons to have an interesting gym fight x
+
+make more maps to reach first gym x
+ 
+make first gym x
+
+first team trainers : {
+    trainer 1: {
+        wallafi - lvl 8
+    }
+
+    trainer 2: {
+        allingua - lvl 9
+        formal - lvl 10
+    }
+
+    gym leader : {
+        flailegant - lvl 11
+        slimie - lvl 14
+    }
+} x
+
+finish cross link map : {
+    add trainer to cross link x
+
+    make ma'at event in cross link x
+} x
+
+finish events in sol town: {
+    gym: need to add ma'at's real team x
+
+    heisenberg x
+} x
+
+remaining pogemon on enemy team indicator x
+
+exodus road x
+
+put desert map after exodus road to introduce more wild mons instead of having them
+all concentrated on one map x
+
+make map below gene town x
+
+test if rock smash works after 2nd gym x
+
+modify obstacles collisions x
+
+eden forest collisions are fucked up x
+
+take items from pogemon by clicking on it in teams and bag menu x
+
+prevent battle from happening 1.5 seconds after combat and after boot x
+
+sell function for pogemart x
+
+put flag on rock smash sound x
+
+backup save and give option to load it from options menu x
+
+prevent items from being picked up multiple times between saves : {
+    all items become leaf stones x
+}
+
+gym order : {
+    normal x
+    rock x
+    water x
+}
+
+moses event x
+
+↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
+
+damage goes negative dmg BIG L
+
+level up lvl is wrong
+
+maps : {
+    cross link cave : going up mountain in darkness x
+    sol road : leads so commending path x
+    commending path : leads to scribe town x
+    musa peak: goes up the mountain at commending path, gains fly x
+    scrible town : 3rd gym, gain surf x
+    revelation road : gain acces to it from pearly path x
+    bellum way : leads to glatial cave - rain map x
+    glatial cave : leads to end trail - ice cave
+    end trail : strong pogemon, leads to last challenge - snow map
+    alqiama town : last resting place before last challenge
+    neo-gene : maybe have a trinity of fighters that lead to one last very powerful trainer
+    gg, you finished all maps :-]
+}
+
+finish all sprites from sheets reference : {
+    Ibis 1 x
+    Ibis 2 x
+
+    ice ferret 1 x
+    ice ferret 2 x
+
+    snow fox 1 x
+    snow fox 2 x
+
+    Uthrsa x
+    Scarletrum x
+
+    Aquerio x
+    Leonidas x
+
+    Skopt x
+    Yaldabaoth x
+
+    Jlorox - BackSprite x
+    Jleenex x
+
+    Horus x
+    Anubis x
+    Ra x
+    Thoth x
+
+    Osiris x
+    Isis x
+    Set x
+
+    Dahgha x
+
+    skeleton t-rex mon
+}
+
+rename pogemon option after catching?
+
+leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB
+
+fix Moldy Sprite overflow
+
+fix Jleenex back Sprite leftover bits
+
+fix Grey highlights : {
+ Antber
+ Regaligyne
+}
+
+fix surf visuals
+
+add event zones and wild mon objects to : {
+    exodus road
+    sidai desert
+    eden forest
+    luna mountain entrance
+    luna mountain
+    sol path
+    commandment road
+    revelation road
+
+    need to put Event Zones on tiles for battle zones to work
+}
+
+add info to save event
+
+pogedex {
+    blank out unchaught pogemons in pogedex
+
+    info + {
+
+        show base stats
+
+        show moves learn lvl
+
+    }
+}
+
+
+make multiple boxes for pc
+
+make more moves
+
+make more items
+
+MUSIC AND MOVE SOUNDS
+
+------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+at least 1 overworld encounter?
+
+heabutt for trees?
+
+EV
+
+stats menu number tags to see how much EVS have been collected
+
+held items effect in battle {
+    leftovers
+    life orb
+}
+
+spikes
+
+grid walking?
+
+make league?
+
+NPC trading?
+
+fishing?
+
+breeding??
+
+multiplayer?????
+
+online trading?????
+
+online battle?????

@@ -1,0 +1,163 @@
+#evolutionScene{
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: none;
+  grid-template-rows: 70% 30%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.evoMenuInterface{
+  position: absolute;
+  bottom: 0;
+
+  height: 300px;
+  width: 100%;
+}
+
+#evolutionInterface{
+  display: block;
+}
+
+#evolutionMovesInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+#evolutionLearnMovesInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+#evolutionDialogue{
+  height: 100%;
+  width: 100%;
+
+  background-color: black;
+
+  padding: 25;
+
+  cursor: pointer;
+}
+
+#evolutionLearnMoveDialogue{
+  padding: 25;
+}
+
+#evolutionMovesBox{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.evolutionMovesButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+.evolutionMovesButton:hover{
+  background-color: rgba(255, 255, 255, 0.25);
+
+  cursor: pointer;
+}
+
+#evoLvlUpWindow{
+  position: absolute;
+
+  height: 500;
+  width: 650;
+
+  left: 2900;
+  top: 41.25%;
+  transform: translate(-50%,-50%);
+  
+  display: none;
+  grid-template-rows: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+
+  background-color: rgba(25, 25, 25, 0.75);
+
+  transition: 1s ease-out;
+}
+
+#evoLvlUpLvl{
+  text-align: center;
+  align-self: center;
+}
+
+.evoLvlUpStatsContainer{
+  display: grid;
+  grid-template-columns: 45% 55%;
+}
+
+.evoLvlUpStatsName{
+  padding-left: 10px;
+}
+
+.evoLvlUpStats{
+  justify-self: end;
+  padding-right: 25px;
+}
+
+#evoLearnMoveInfo{
+  display: grid;
+  grid-template-rows: 60% 40%;
+
+  position: absolute;
+
+  height: 400;
+  width: 650;
+
+  left: 2900;
+  top: 39.5%;
+  transform: translate(-50%,-50%);
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.5s ease-in-out;
+}
+
+#evoLearnMovesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+}
+
+#evoLearnMoveName{
+  display: grid;
+  text-align: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#evoConfirmButtonContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  height: 270;
+  width: 768;
+}
+
+.evoChoice{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 768;
+  height: 100%;
+}.evoChoice:hover{
+  background-color: rgb(25, 25, 25, 0.75);
+  cursor: pointer;
+}
