@@ -3,6 +3,7 @@ import { pogemonsObj } from "./pogemonData.js"
 
 const data = await loadData("saveFile")
 
+
 export let mapsObj = {
   background: './img/background.png',
   // geneTown
@@ -281,7 +282,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oldman2/oldman2.png',
         dialogue: 'The road ahead is steep..\n\nMay the light in your heart guide you forward..',
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'NPC', 
@@ -299,7 +300,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "I can't get throught those darned trees..\n\nThere's so much room around them it, makes no sence.. ;-;",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },    
       {
         name: 'NPC', 
@@ -317,7 +318,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: "Wagwan man?",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
     ],
     obstaclesInfo: [
@@ -1877,6 +1878,8 @@ export let mapsObj = {
     ]
   },
 }
+
+if(data != null) mapsObj = data.mapsObjState
 
 export const defaultMapsObj = {...mapsObj}
 

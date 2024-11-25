@@ -356,8 +356,9 @@ export class Pogemon extends Sprite{
 
   generateAbility(){
     let rng = Math.floor(Math.random() * Math.floor(this.pogemon.abilities.length))
-
-    return {ability: {...this.pogemon.abilities[rng]}, index: rng}
+    
+    this.pogemon.abilities[rng].seen = true
+    return {ability: {...this.pogemon.abilities[rng].ability}, index: rng}
   }
 
   generateMoves = (init, type) => {
@@ -376,13 +377,20 @@ export class Pogemon extends Sprite{
           if(this.learntMoves.includes(movepool[key].move.name)) return
 
           moves.push({...movepool[key].move})
+          if(!this.isEnemy) movepool[key].seen = true
         } else {
           // isint an array when trying to push things to it
+          console.log(this)
           if(this.learntMoves.includes(movepool[key].move.name)) return
 
           this.learntMoves.push(movepool[key].move.name)
+          if(!this.isEnemy) movepool[key].seen = true
+          
+
           if(moves.length == 4) moves.splice(0, 1)
           moves.push({...movepool[key].move})
+
+          console.log(movepool[key])
         }
       }
     })
@@ -1140,7 +1148,7 @@ console.log('here')
                     onComplete: () =>{
                       document.querySelector('#scene').removeChild(buffDiv)
                       queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     }
                   }) 
                 }
@@ -1151,7 +1159,7 @@ console.log('here')
                   if(statsChangeObj.foe.denominator[effect.target] > 8) {
                     statsChangeObj.foe.denominator[effect.target] = 8
                     queueProcess.disabled = false
-console.log('here')
+                    console.log('here')
                     return
                   }
                 
@@ -1165,14 +1173,14 @@ console.log('here')
                     onComplete: () =>{
                       document.querySelector('#scene').removeChild(buffDiv)
                       queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     }
                   }) 
                 } else {
                   if(statsChangeObj.ally.denominator[effect.target] > 8) {
                     statsChangeObj.ally.denominator[effect.target] = 8
                     queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     return
                   }
                 
@@ -1186,7 +1194,7 @@ console.log('here')
                     onComplete: () =>{
                       document.querySelector('#scene').removeChild(buffDiv)
                       queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     }
                   }) 
                 }
@@ -1198,21 +1206,21 @@ console.log('here')
                   if(statsChangeObj.ally.nominator[effect.target] > 8) {
                     statsChangeObj.ally.nominator[effect.target] = 8
                     queueProcess.disabled = false
-console.log('here')
+                    console.log('here')
                     return
                   }
                 
                   // ally buff
                   buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -700
+                  buffDiv.style.top = 0
                 
                   gsap.to(buffDiv, {
-                    top: -500,
+                    top: 200,
                     duration: 0.5,
                     onComplete: () =>{
                       document.querySelector('#scene').removeChild(buffDiv)
                       queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     }
                   }) 
                 } else {
@@ -1221,21 +1229,21 @@ console.log('here')
                   if(statsChangeObj.foe.nominator[effect.target] > 8) {
                     statsChangeObj.foe.nominator[effect.target] = 8
                     queueProcess.disabled = false
-console.log('here')
+                    console.log('here')
                     return
                   }
                 
                   // foe buff
                   buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -800
+                  buffDiv.style.top = -100
                 
                   gsap.to(buffDiv, {
-                    top: -600,
+                    top: 100,
                     duration: 0.5,
                     onComplete: () =>{
                       document.querySelector('#scene').removeChild(buffDiv)
                       queueProcess.disabled = false
-console.log('here')
+                      console.log('here')
                     }
                   }) 
                 }

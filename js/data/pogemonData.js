@@ -1,3 +1,4 @@
+import { loadData } from "../save.js"
 import { abilitiesObj } from "./abilitiesData.js"
 import { movesObj } from "./movesData.js"
 
@@ -7,7 +8,9 @@ import { movesObj } from "./movesData.js"
 // third stage : 180 ~ 250
 // legendary/high exp yeilders : 250 ~ 400
 
-export const pogemonsObj = {
+const data = await loadData('saveFile')
+
+export let pogemonsObj = {
   // #1 - #3 fighting starter
   loko: {
     pogedex: 1,
@@ -26,17 +29,15 @@ export const pogemonsObj = {
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
-      abilitiesObj.last_Ditch_Effort,
-      abilitiesObj.last_Ditch_Effort,
-      abilitiesObj.last_Ditch_Effort
+      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.super_power, lvl: 1},
-      2: {move: movesObj.heat_wave, lvl: 1},
-      3: {move: movesObj.trick_room, lvl: 1},
-      4: {move: movesObj.leech_seed, lvl: 1},
-      5: {move: movesObj.headbutt, lvl: 50},
-      6: {move: movesObj.frost_wave, lvl: 50},
+      1: {move: movesObj.super_power, lvl: 1, seen: false},
+      2: {move: movesObj.heat_wave, lvl: 1, seen: false},
+      3: {move: movesObj.trick_room, lvl: 1, seen: false},
+      4: {move: movesObj.leech_seed, lvl: 1, seen: false},
+      5: {move: movesObj.headbutt, lvl: 50, seen: false},
+      6: {move: movesObj.frost_wave, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -94,12 +95,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'lokump', lvl: 31, type: 'lvl'},
     abilities: [
-      abilitiesObj.last_Ditch_Effort
+      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.growl, lvl: 17},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -156,11 +155,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.last_Ditch_Effort
+      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -219,11 +217,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'steeler', lvl: 17, type: 'lvl'},
     abilities: [
-      abilitiesObj.sharpened_Edges
+      {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -280,12 +277,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'steevil', lvl: 30, type: 'lvl'},
     abilities: [
-      abilitiesObj.sharpened_Edges
+      {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.slash, lvl: 15},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -342,11 +337,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.sharpened_Edges
+      {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -405,10 +399,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'maaphett', lvl: 15, type: 'lvl'},
     abilities: [
-      abilitiesObj.fairy_Tale
+      {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.shadow_ball, lvl: 1},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -465,11 +459,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'maapheeno', lvl: 32, type: 'lvl'},
     abilities: [
-      abilitiesObj.fairy_Tale
+      {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -526,11 +519,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.fairy_Tale
+      {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -589,11 +581,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'fruity', lvl: 22, type: 'lvl',},
     abilities: [
-      abilitiesObj.overgrow
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -650,11 +641,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'moldy', type:'item', item:'leaf_Stone'},
     abilities: [
-      abilitiesObj.overgrow
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -711,12 +701,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.overgrow
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fart, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -775,11 +763,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'venophibian', lvl: 19, type: 'lvl'},
     abilities: [
-      abilitiesObj.torrent
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      // 2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -836,11 +823,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'contamitoad', type: 'item', item:'water_Stone'},
     abilities: [
-      abilitiesObj.torrent
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -897,11 +883,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.torrent
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -960,12 +945,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'Antber', type: 'item', item:'fire_Stone'}, {name: 'Antber', type: 'item', item:'royal_Jelly'}],
     abilities: [
-      abilitiesObj.swarm,
-      abilitiesObj.blaze
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1022,12 +1005,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.swarm,
-      abilitiesObj.blaze
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1084,12 +1065,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.swarm,
-      abilitiesObj.blaze
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1148,11 +1127,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'sterra', lvl: 20, type: 'lvl'},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1209,11 +1187,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1272,11 +1249,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.super_power, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1333,11 +1309,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1396,11 +1371,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'kampgooroo', lvl: 23, type: 'lvl'},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1457,11 +1431,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1520,11 +1493,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'kampgooroo', lvl: 22, type: 'lvl'},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1581,11 +1553,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1651,11 +1622,10 @@ export const pogemonsObj = {
       {name: 'godlie', type: 'event'},
     ],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1712,11 +1682,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1773,11 +1742,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1834,11 +1802,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1895,11 +1862,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1956,11 +1922,10 @@ export const pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2017,11 +1982,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2080,12 +2044,10 @@ export const pogemonsObj = {
       },
       evo: {name: 'harmonium', type: 'lvl', lvl: 50},
       abilities: [
-        abilitiesObj.pick_Up
+        {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
       ],
       movepool: {
-        1: {move: movesObj.tackle, lvl: 1},
-        2: {move: movesObj.headbutt, lvl: 7},
-        3: {move: movesObj.fire_ball, lvl: 7},
+        1: {move: movesObj.tackle, lvl: 1, seen: false},
       },
       sprites: {
         classic:{
@@ -2142,12 +2104,10 @@ export const pogemonsObj = {
       },
       evo: null,
       abilities: [
-        abilitiesObj.pick_Up
+        {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
       ],
       movepool: {
-        1: {move: movesObj.tackle, lvl: 1},
-        2: {move: movesObj.headbutt, lvl: 7},
-        3: {move: movesObj.fire_ball, lvl: 7},
+        1: {move: movesObj.tackle, lvl: 1, seen: false},
       },
       sprites: {
         classic:{
@@ -2206,11 +2166,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2267,11 +2226,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2328,11 +2286,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2391,11 +2348,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2452,11 +2408,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2515,11 +2470,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2576,12 +2530,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2640,11 +2592,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2703,11 +2654,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7}
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2766,12 +2716,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'Rokwil', type: 'lvl', lvl: 30},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2828,12 +2776,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2892,12 +2838,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2954,12 +2898,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3018,12 +2960,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3080,12 +3020,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3142,12 +3080,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3206,12 +3142,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3268,12 +3202,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3332,12 +3264,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3394,12 +3324,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3458,12 +3386,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3520,12 +3446,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3584,12 +3508,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3646,12 +3568,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3710,12 +3630,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3772,12 +3690,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3836,12 +3752,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3898,12 +3812,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3962,12 +3874,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4024,12 +3934,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.levitate
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.headbutt, lvl: 7},
-      3: {move: movesObj.fire_ball, lvl: 7},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4088,10 +3996,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'jleech', type:'lvl', lvl: 11,},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.fire_ball, lvl: 1},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4148,10 +4056,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      null
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.shadow_ball, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4208,14 +4116,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4272,14 +4176,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4338,14 +4238,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4404,14 +4300,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4470,14 +4362,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4536,14 +4424,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4602,14 +4486,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4668,14 +4548,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4734,14 +4610,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4800,14 +4672,10 @@ export const pogemonsObj = {
     },
     evo: null,
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 2},
-      3: {move: movesObj.tackle, lvl: 3},
-      4: {move: movesObj.shadow_ball, lvl: 10},
-      5: {move: movesObj.slash, lvl: 10},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4866,12 +4734,10 @@ export const pogemonsObj = {
     },
     evo: {name: 'evo1', lvl: 20},
     abilities: [
-      abilitiesObj.pick_Up
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      // 1: {move: movesObj.tackle, lvl: 1},
-      2: {move: movesObj.fire_ball, lvl: 1},
-
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4912,3 +4778,21 @@ export const pogemonsObj = {
     surfable: false
   },
 }
+
+if(data != null) {
+  Object.values(pogemonsObj).forEach((pogemon, i) =>{
+    Object.values(pogemon.abilities).forEach((ability, j) =>{
+        ability.seen = Object.values(Object.values(data.pogemonsObjState)[i]['abilities'])[j].seen
+    })
+
+    
+    Object.values(pogemon.movepool).forEach((move, j) =>{
+      move.seen = Object.values(Object.values(data.pogemonsObjState)[i]['moves'])[j].seen
+    })
+  })
+
+  data.pogemonsObjState
+}
+
+// console.log(data.pogemonsObjState)
+// if(data != null) pogemonsObj = data.pogemonsObjState

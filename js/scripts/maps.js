@@ -7,6 +7,8 @@ import { Sprite, Boundary, Pogemon, Character } from "../classes.js"
 import { OWWeatherParticles, switchMap } from "./scenes/overworld.js"
 import { loadData } from "../save.js"
 import { switchUnderScoreForSpace } from "./scenes/stats.js"
+import { pogemonsObj } from "../data/pogemonData.js"
+import { itemsObj } from "../data/itemsData.js"
 
 const data = await loadData("saveFile")
 
@@ -71,7 +73,7 @@ async function generateBoundaries(nextMapInfo){
 
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
-    if(currMap == undefined) currMap = mapsObj.banishment_Road
+    if(currMap == undefined) currMap = mapsObj.lab
   } else {
     currMap = mapsObj[`${data.currMapName}`]
   }
@@ -251,7 +253,8 @@ async function generateBoundaries(nextMapInfo){
 
                 for(let i = 0; i < trainerInfo.team.length; i++){
                   const foeImg = new Image()
-                  foeImg.src = trainerInfo.team[i][0].sprites.frontSprite
+                  const pogemonInfo = pogemonsObj[trainerInfo.team[i][0].name]
+                  foeImg.src = pogemonInfo.sprites.frontSprite
 
                   const foeSprite = new Sprite({
                     type: 'trainerPogemon',
@@ -266,7 +269,8 @@ async function generateBoundaries(nextMapInfo){
                     },
                     animate: true
                   })
-                  trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
+
+                  trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
                 }
               
                 const trainerImg = new Image()
@@ -348,7 +352,7 @@ async function generateBoundaries(nextMapInfo){
               )
 
               if(eventInfo.sprite != undefined){
-                console.log(eventInfo.sprite)
+                // console.log(eventInfo.sprite)
 
                 const NPCImg = new Image()
                 NPCImg.src = eventInfo.sprite
@@ -412,7 +416,7 @@ async function generateBoundaries(nextMapInfo){
               
               let itemsInfo = mapsObj[`${currMap.name}`].items[itemIndex]
               
-              console.log(mapsObj[`${currMap.name}`].items)
+              // console.log(mapsObj[`${currMap.name}`].items)
 
               let boundary = new Boundary({
                 position:{
@@ -473,7 +477,7 @@ async function generateBoundaries(nextMapInfo){
                     collisionInstance: {boundary}
                   })
                 )
-                console.log(eventZones)
+                // console.log(eventZones)
               }
               break
           }
@@ -503,14 +507,14 @@ async function generateBoundaries(nextMapInfo){
             obstacleInfo = newObstacleInfo
           }
 
-          console.log(obstacleInfo)
+          // console.log(obstacleInfo)
           if(obstacleInfo == null) {
-            console.log('nulled')
+            // console.log('nulled')
             obstacleInfo = currMap.obstaclesInfo[z]
             obstacleInfo.disabled = true
           }
 
-          console.log(obstacleInfo)
+          // console.log(obstacleInfo)
 
           if(z == 0) z = z + 1
           else z++
@@ -722,7 +726,7 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
 
-                console.log(trainerInfo)
+                // console.log(trainerInfo)
 
                 if(z == 0) z = z + 1
                 else z++
@@ -738,7 +742,8 @@ async function generateBoundaries(nextMapInfo){
 
                 for(let i = 0; i < trainerInfo.team.length; i++){
                   const foeImg = new Image()
-                  foeImg.src = trainerInfo.team[i][0].sprites.frontSprite
+                  const pogemonInfo = pogemonsObj[trainerInfo.team[i][0].name]
+                  foeImg.src = pogemonInfo.sprites.frontSprite
 
                   const foeSprite = new Sprite({
                     type: 'trainerPogemon',
@@ -753,7 +758,8 @@ async function generateBoundaries(nextMapInfo){
                     },
                     animate: true
                   })
-                  trainerTeam.push(new Pogemon(trainerInfo.team[i][0], Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
+
+                  trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
                 }
               
                 const trainerImg = new Image()
@@ -899,7 +905,7 @@ async function generateBoundaries(nextMapInfo){
 
               let itemsInfo = mapsObj[`${nextMapInfoObj.name}`].items[itemIndex]
 
-              console.log(itemsInfo)
+              // console.log(itemsInfo)
 
               if(itemIndex == 0) itemIndex = itemIndex + 1
               else itemIndex++
@@ -990,7 +996,7 @@ async function generateBoundaries(nextMapInfo){
             obstacleInfo.disabled = true
           }
 
-          console.log(obstacleInfo)
+          // console.log(obstacleInfo)
 
           if(z == 0) z = z + 1
           else z++
@@ -1096,7 +1102,7 @@ function showMapNameAnimation(currMap){
   })
 
   if(!mapsObj[currMap.name].seen) mapsObj[currMap.name].seen = true
-  console.log(mapsObj[currMap.name])
+  // console.log(mapsObj[currMap.name])
 }
 
 function flashContainerManagement(type){
@@ -1113,7 +1119,7 @@ function flashContainerManagement(type){
       flashContainer.style.display = 'block'
       flashContainer.style.backgroundColor = 'rgba(0,0,0,0.75)'
 
-      console.log(flashStuffArr)
+      // console.log(flashStuffArr)
 
       flashStuffArr.forEach(node =>{
         node.style.display = 'none'
@@ -1142,12 +1148,12 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 
   currMap = mapsObj[`${info.name}`]
 
-  console.log(info)
+  // console.log(info)
 
   OWWeatherParticles.arr = []
 
   //deal with flash container stuff
-  console.log(currMap)
+  // console.log(currMap)
 
   if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
   else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')

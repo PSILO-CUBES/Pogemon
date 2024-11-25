@@ -183,12 +183,12 @@
    flex-direction: column;
 
    align-items: center;
-   justify-content: center;
+   /* justify-content: center; */
    
    height: 100%;
    width: 100%;
 
-   overflow-y: scroll;
+   /* overflow-y: scroll; */
 }
 
 #rightInfoStatsContainer{
@@ -352,6 +352,7 @@
 
 .pogedexInfoAbilityContainer{
    display: flex;
+   justify-content: center;
    align-items: center;
    text-align: center;
 
@@ -444,4 +445,12 @@
    50% {
       opacity: 0;
    }
+}
+
+#rightInfoAbilitiesContainer{
+   justify-content: center;
+}
+
+#rightInfoMovesContainer{
+   overflow-y: scroll;
 }

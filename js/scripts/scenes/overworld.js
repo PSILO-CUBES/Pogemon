@@ -309,7 +309,11 @@ function overworldMenuClickEvent(e){
 
       if(mapsObj[currMap.name].obstaclesInfo != undefined) mapsObj[currMap.name].obstaclesInfo = [...mapsObj[currMap.name].obstaclesInfo]
 
-      let mapsObject = mapsObj
+      let mapsSaveObj = mapsObj
+
+      // Object.values(mapsObj).forEach(map =>{
+      //   mapsSaveObj[map.name] = {...map}
+      // })
       // if(data != undefined) {
       //   Object.values(mapsObject).forEach(map =>{
       //     if(map.obstaclesInfo == undefined) return
@@ -327,7 +331,7 @@ function overworldMenuClickEvent(e){
         pogemon.heldItem = {...itemsObj[pogemon.heldItem.name]}
       }
 
-      Object.values(mapsObject).forEach((map,i) =>{
+      Object.values(mapsSaveObj).forEach((map,i) =>{
         if(i != 0) {
           if(map.encounters != undefined) {
             Object.values(map.encounters).forEach(encounterType =>{
@@ -341,12 +345,11 @@ function overworldMenuClickEvent(e){
           if(map.trainers != undefined) {
             Object.values(map.trainers).forEach(trainer =>{ 
               trainer.team.forEach(pogemon =>{
-                console.log(pogemon[0])
                 if(pogemon[0] != null) {
-                  Object.values(pogemon[0].movepool).forEach(move =>{
+                  if(pogemon[0].movepool == undefined) pogemon[0].movepool = {}
+                  Object.values(pogemonsObj[pogemon[0].name].movepool).forEach(move =>{
+                    pogemon[0].movepool[move.name] = {...movesObj[move.name]}
                     // console.log(move)
-                    move = {...movesObj[move.name]}
-                    console.log(move)
                   })
                 }
               })
@@ -354,6 +357,27 @@ function overworldMenuClickEvent(e){
           }
         }
       })
+
+      let pogemonSaveObj = {}
+
+      Object.values(pogemonsObj).forEach(pogemon =>{
+        pogemonSaveObj[pogemon.name] = {}
+        const seenObj = pogemonSaveObj[pogemon.name]
+        seenObj['abilities'] = {}
+        Object.values(pogemon.abilities).forEach(abilityObj =>{
+          console.log(abilityObj)
+          seenObj['abilities'][abilityObj.ability.name] = {seen: abilityObj.seen}
+        })
+
+        seenObj['moves'] = {}
+        Object.values(pogemon.movepool).forEach(moveInfo =>{
+          if(moveInfo.move != undefined) seenObj['moves'][moveInfo.move.name] = {seen: moveInfo.seen}
+        })
+
+        // pogemonSaveObj[pogemon.name] = {...pogemon}
+      })
+
+      console.log(pogemonSaveObj)
 
       setSaveData(
         'saveFile',
@@ -365,8 +389,8 @@ function overworldMenuClickEvent(e){
           },
           currMapName: currMap.name,
           spawnPosition: {x: map.position.x, y: map.position.y},
-          mapsObjState: mapsObject,
-          // defMapsObj: {...defaultMapsObj},
+          mapsObjState: mapsSaveObj,
+          pogemonsObjState: pogemonSaveObj,
           nextMapInfo,
           interactionFlags: interaction.flags,
           volumeValues,

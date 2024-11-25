@@ -204,6 +204,8 @@
 
   border: 2.5px solid rgba(128, 128, 128, 0.125);
   background-color: rgba(128, 128, 128, 0.25);
+
+  height: 20;
 }
 
 #statsSceneGridSectionPogemonDataGender{
@@ -450,6 +452,8 @@
 
   border: 2.5px solid rgba(128, 128, 128, 0.125);
   background-color: rgba(128, 128, 128, 0.25);
+
+  height: 20;
 }
 
 #statsSceneGridSectionInfoAbilityName{

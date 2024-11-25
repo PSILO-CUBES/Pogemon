@@ -89,7 +89,7 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.dahgua , true, 'geneTown')
+      player.catch(pogemonsObj.loko , true, 'geneTown')
 
       player.pogedexInfo.forEach(pogedex =>{
         pogedex.seen = true

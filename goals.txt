@@ -252,16 +252,6 @@ gym order : {
 
 moses event x
 
-↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
-
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
-
-damage goes negative dmg BIG L
-
-level up lvl is wrong
-
 maps : {
     cross link cave : going up mountain in darkness x
     sol road : leads so commending path x
@@ -270,12 +260,14 @@ maps : {
     scrible town : 3rd gym, gain surf x
     revelation road : gain acces to it from pearly path x
     bellum way : leads to glatial cave - rain map x
-    glatial cave : leads to end trail - ice cave
-    end trail : strong pogemon, leads to last challenge - snow map
-    alqiama town : last resting place before last challenge
+    stagnation cave : leads to end trail - ice cave x
+    end trail : strong pogemon, leads to last challenge - snow map x
+    alqiama town : last resting place before last challenge x
     neo-gene : maybe have a trinity of fighters that lead to one last very powerful trainer
     gg, you finished all maps :-]
 }
+
+hidden items have collisions
 
 finish all sprites from sheets reference : {
     Ibis 1 x
@@ -309,24 +301,67 @@ finish all sprites from sheets reference : {
     Set x
 
     Dahgha x
+}
 
-    skeleton t-rex mon
+pogedex {
+    blank out unchaught pogemons in pogedex x
+
+    info + {
+
+        show base stats x
+
+        show moves learn lvl x
+
+        show catching areas x
+    }
+}
+
+↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
+
+starter ID becomes undefined for some reason
+
+save and load pogedex info
+
+stats scene move info fucked up
+
+buff / debuff arrow needs to be ajusted
+
+damage goes negative BIG L
+
+prev level during lvl up is wrong
+
+burn status locks the queue progress
+
+pogemart didint set spawn position in fair_Town
+
+surf animation very klunky
+
+set level cap if Xth gym isint beaten???
+
+item img doesnt disapear after pickup
+
+obstacles {
+    leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB
+    
+    cut trees disapear after: {
+        battle
+    }
+}
+
+npc bad sprites: {
+    '../../img/charSprites/oldman2/oldman2.png'
 }
 
 rename pogemon option after catching?
-
-leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB
-
-fix Moldy Sprite overflow
-
-fix Jleenex back Sprite leftover bits
 
 fix Grey highlights : {
  Antber
  Regaligyne
 }
-
-fix surf visuals
 
 add event zones and wild mon objects to : {
     exodus road
@@ -343,19 +378,6 @@ add event zones and wild mon objects to : {
 
 add info to save event
 
-pogedex {
-    blank out unchaught pogemons in pogedex
-
-    info + {
-
-        show base stats
-
-        show moves learn lvl
-
-    }
-}
-
-
 make multiple boxes for pc
 
 make more moves
@@ -370,7 +392,9 @@ at least 1 overworld encounter?
 
 heabutt for trees?
 
-EV
+sand and ice should damage????
+
+Infinite EV's??????
 
 stats menu number tags to see how much EVS have been collected
 
@@ -396,3 +420,7 @@ multiplayer?????
 online trading?????
 
 online battle?????
+
+skeleton t-rex mon ???
+
+disso ability / evo

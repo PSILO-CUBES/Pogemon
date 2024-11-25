@@ -46,7 +46,14 @@ function changeTargetPogemonInfo(target){
 
     document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = `${target.pogedex}`
     document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = `${target.name}`
-    document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = 'INFO+'
+
+    let pogemonCaught = false
+
+    for(let i = 0; i < player.pogedexInfo.length; i++) if(player.pogedexInfo[i].name == target.name) if(player.pogedexInfo[i].caught) pogemonCaught = true
+
+    if(pogemonCaught) document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = 'INFO+'
+    else document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = '---'
+    
     document.querySelector('#pogedexSceneTargetMoreInfoButton').classList.add('infoHover')
 
     pogedexTargetImg.src = target.sprites.classic.frontSprite
@@ -549,17 +556,49 @@ function createInfoMenu(){
                                                 }
                                             }
 
-                                            Object.values(targetPogemon.movepool).forEach((moveInfo,i) =>{
+                                            let lastMove = false
+
+                                            for(let i = 0; Object.values(targetPogemon.movepool).length; i++){
+                                                const moveInfo = Object.values(targetPogemon.movepool)[i]
                                                 const pogedexInfoMoveContainer = document.createElement('div')
                                                 const pogedexInfoMoveHR = document.createElement('hr')
                                                 pogedexInfoMoveContainer.setAttribute('class', 'pogedexInfoMoveContainer')
-                                                pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
-                                                pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))
+
+                                                if(moveInfo.seen) {
+                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
+                                                    pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
+                                                } else {
+                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ???`
+                                                    pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))
+                                                    lastMove = true
+                                                }
+
                                                 pogedexInfoMoveContainer.addEventListener('mouseout', e => printMoveInfo('---'))
                                                 
                                                 rightInfoMovesContainer.appendChild(pogedexInfoMoveContainer)
-                                                if(i != Object.values(targetPogemon.movepool).length - 1) rightInfoMovesContainer.appendChild(pogedexInfoMoveHR)
-                                            })
+                                                if(lastMove) break
+                                                rightInfoMovesContainer.appendChild(pogedexInfoMoveHR)
+                                            }
+
+                                            // Object.values(targetPogemon.movepool).forEach((moveInfo,i) =>{
+                                            //     console.log(moveInfo)
+                                            //     const pogedexInfoMoveContainer = document.createElement('div')
+                                            //     const pogedexInfoMoveHR = document.createElement('hr')
+                                            //     pogedexInfoMoveContainer.setAttribute('class', 'pogedexInfoMoveContainer')
+
+                                            //     if(moveInfo.seen) {
+                                            //         pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
+                                            //         pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
+                                            //     } else {
+                                            //         pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ???`
+                                            //         pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
+                                            //     }
+
+                                            //     pogedexInfoMoveContainer.addEventListener('mouseout', e => printMoveInfo('---'))
+                                                
+                                            //     rightInfoMovesContainer.appendChild(pogedexInfoMoveContainer)
+                                            //     if(i != Object.values(targetPogemon.movepool).length - 1) rightInfoMovesContainer.appendChild(pogedexInfoMoveHR)
+                                            // })
                                         }
 
                                         function printAbilities(){
@@ -574,8 +613,26 @@ function createInfoMenu(){
                                                 const pogedexInfoAbilityContainer = document.createElement('div')
                                                 const pogedexInfoAbilityHR = document.createElement('hr')
                                                 pogedexInfoAbilityContainer.setAttribute('class', 'pogedexInfoAbilityContainer')
-                                                pogedexInfoAbilityContainer.innerText = `Ability ${i + 1} \n\n ${switchUnderScoreForSpace(abilityInfo.name)}`
-                                                pogedexInfoAbilityContainer.addEventListener('mouseover', e => printAbilityInfo(abilityInfo.desc))
+                                                console.log(abilityInfo)
+
+                                                if(abilityInfo.hidden) {
+                                                    if(abilityInfo.seen) {
+                                                        pogedexInfoAbilityContainer.innerText = `Hidden Ability \n\n ${switchUnderScoreForSpace(abilityInfo.ability.name)}`
+                                                        pogedexInfoAbilityContainer.addEventListener('mouseover', e => printAbilityInfo(abilityInfo.ability.desc))
+                                                    } else {
+                                                        pogedexInfoAbilityContainer.innerText = `Hidden Ability \n\n ???`
+                                                        pogedexInfoAbilityContainer.addEventListener('mouseover', e => printAbilityInfo('---'))
+                                                    }
+                                                } else {
+                                                    if(abilityInfo.seen) {
+                                                        pogedexInfoAbilityContainer.innerText = `Ability ${i + 1} \n\n ${switchUnderScoreForSpace(abilityInfo.ability.name)}`
+                                                        pogedexInfoAbilityContainer.addEventListener('mouseover', e => printAbilityInfo(abilityInfo.ability.desc))
+                                                    } else {
+                                                        pogedexInfoAbilityContainer.innerText = `Ability ${i + 1} \n\n ???`
+                                                        pogedexInfoAbilityContainer.addEventListener('mouseover', e => printAbilityInfo('---'))
+                                                    }
+                                                }
+                                                
                                                 pogedexInfoAbilityContainer.addEventListener('mouseout', e => printAbilityInfo('---'))
                                                 
                                                 rightInfoAbilitiesContainer.appendChild(pogedexInfoAbilityContainer)
@@ -651,12 +708,7 @@ function setCaptureAreas(){
         
         const mapDom = document.querySelector(`#${map.name}`)
 
-        document.querySelectorAll('.encounterBackground').forEach(node =>{
-            if(node.id == `${map.name}_Background`) {
-                console.log(map)
-                if(map.seen) node.style.opacity = 0
-            }
-        })
+        document.querySelectorAll('.encounterBackground').forEach(node => {if(node.id == `${map.name}_Background`) if(map.seen) node.style.opacity = 0})
 
         // if(document.querySelector(`#${map.name}_Background`) != null) if(map.seen) document.querySelector(`#${map.name}_Background`).style.opacity = 0
 
@@ -665,7 +717,7 @@ function setCaptureAreas(){
                 Object.values(map.encounters).forEach((encounterTypeArr, j) =>{
                     if(encounterTypeArr.length == 0) return
                     encounterTypeArr.forEach((encounter, i2) =>{
-                        console.log(targetPogemon, encounter)
+                        // console.log(targetPogemon, encounter)
                         if(targetPogemon.name == encounter.pogemon.name) {
                             const odds = encounter.odds.max - encounter.odds.min
 
