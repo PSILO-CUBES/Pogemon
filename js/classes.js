@@ -380,7 +380,6 @@ export class Pogemon extends Sprite{
           if(!this.isEnemy) movepool[key].seen = true
         } else {
           // isint an array when trying to push things to it
-          console.log(this)
           if(this.learntMoves.includes(movepool[key].move.name)) return
 
           this.learntMoves.push(movepool[key].move.name)
@@ -389,8 +388,6 @@ export class Pogemon extends Sprite{
 
           if(moves.length == 4) moves.splice(0, 1)
           moves.push({...movepool[key].move})
-
-          console.log(movepool[key])
         }
       }
     })

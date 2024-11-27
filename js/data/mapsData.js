@@ -1879,11 +1879,23 @@ export let mapsObj = {
   },
 }
 
-if(data != null) mapsObj = data.mapsObjState
-
 export const defaultMapsObj = {...mapsObj}
 
-// if(data != null) mapsObj = data.mapsObjState
+if(data != null) {
+  mapsObj = data.mapsObjState
+  Object.values(mapsObj).forEach((map, i) =>{
+    if(map.trainers != undefined){
+      if(map.trainers.length != 0) {
+        // console.log(map.trainers)
+        map.trainers.forEach((trainer, j) =>{
+          if(trainer.team.length != 0) trainer.team.forEach((pogemon, i2) =>{
+            pogemon[0] = Object.values(defaultMapsObj)[i].trainers[j].team[i2][0]
+          })
+        })
+      }
+    }
+  })
+}
 
 export async function setBoundries(mapsObj){
   let mapArr = new Map()

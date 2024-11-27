@@ -316,15 +316,17 @@ pogedex {
     }
 }
 
+save and load pogedex info
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
-starter ID becomes undefined for some reason
+put info+ for seen but not caught pogemon
 
-save and load pogedex info
+starter ID becomes undefined for some reason
 
 stats scene move info fucked up
 
@@ -385,6 +387,8 @@ make more moves
 make more items
 
 MUSIC AND MOVE SOUNDS
+
+cant find this pogemon yet and pogemon cannot be found in the wild interactions in pogedex
 
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -13,7 +13,7 @@ let pogedexAnimationId
 
 const data = await loadData("saveFile")
 
-export const pogedexInfoState = {active : false, flag: false}
+export const pogedexInfoState = {active : false, flag: false, type: '---'}
 
 const pogedexTargetImg = new Image()
 const pogedexTargetSprite = new Sprite({
@@ -48,11 +48,18 @@ function changeTargetPogemonInfo(target){
     document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = `${target.name}`
 
     let pogemonCaught = false
+    let pogemonSeen = false
 
-    for(let i = 0; i < player.pogedexInfo.length; i++) if(player.pogedexInfo[i].name == target.name) if(player.pogedexInfo[i].caught) pogemonCaught = true
+    for(let i = 0; i < player.pogedexInfo.length; i++) if(player.pogedexInfo[i].name == target.name) {
+        if(player.pogedexInfo[i].caught) pogemonCaught = true
+        if(player.pogedexInfo[i].seen) pogemonSeen = true
+    }
 
-    if(pogemonCaught) document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = 'INFO+'
-    else document.querySelector('#pogedexSceneTargetMoreInfoButton').innerText = '---'
+    const infoButton = document.querySelector('#pogedexSceneTargetMoreInfoButton')
+
+    infoButton.innerText = '---'
+    if(pogemonSeen) infoButton.innerText = 'INFO'
+    if(pogemonCaught) infoButton.innerText = 'INFO+'
     
     document.querySelector('#pogedexSceneTargetMoreInfoButton').classList.add('infoHover')
 
@@ -89,9 +96,10 @@ function pogedexCancelClickEvent(e){
     if(e.target.parentNode.classList[0] == 'pogedexSceneScrollContent') return
 
     if(e.target.id == 'pogedexSceneTargetMoreInfoButton') {
-        if(e.target.textContent != 'INFO+') return
+        if(e.target.textContent == '---') return
         pogedexInfoState.active = true
         pogedexInfoState.flag = true
+        pogedexInfoState.type = e.target.textContent
     }
 
     document.querySelectorAll(`.pogedexSceneScrollContent`).forEach(node =>{
@@ -328,8 +336,19 @@ function createInfoMenu(){
                     encounterBackground.style.height = mapBackgroundInfo.height
                     encounterBackground.style.width = mapBackgroundInfo.width
 
+                    encounterBackground.style.opacity = 1
+
                     infoSegment.appendChild(encounterBackground)
                 }
+
+                const pogedexMapOverlappingContainer = document.createElement('div')
+                pogedexMapOverlappingContainer.id = 'pogedexMapOverlappingContainer'
+
+                const pogedexMapOverlappingTextContainer = document.createElement('div')
+                pogedexMapOverlappingTextContainer.id = 'pogedexMapOverlappingTextContainer'
+
+                pogedexMapOverlappingContainer.appendChild(pogedexMapOverlappingTextContainer)
+                infoSegment.appendChild(pogedexMapOverlappingContainer)
                 break
             // sprite case
             case 1:
@@ -569,7 +588,7 @@ function createInfoMenu(){
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
                                                 } else {
                                                     pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ???`
-                                                    pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))
+                                                    pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo('---'))
                                                     lastMove = true
                                                 }
 
@@ -640,7 +659,6 @@ function createInfoMenu(){
                                             })
                                         }
 
-                                        
                                         function setSelectedInfoStuff(type, e){
                                             document.querySelector('#rightInfoSelectionContainer').style.display = 'none'
                                             document.querySelector('#rightInfoReturnContainer').style.display = 'block'
@@ -701,6 +719,9 @@ function setCaptureAreas(){
         node.style.opacity = 0
     })
 
+    let pogemonCatchable = false
+    let mapSeen = false
+
     for(let i = 0; i < Object.values(mapsObj).length; i++){
         if(i == 0) continue
 
@@ -712,20 +733,45 @@ function setCaptureAreas(){
 
         // if(document.querySelector(`#${map.name}_Background`) != null) if(map.seen) document.querySelector(`#${map.name}_Background`).style.opacity = 0
 
+        const pogedexImgOverlappingContainer = document.querySelector('#pogedexMapOverlappingContainer')
+        const pogedexImgOverlappingText = document.querySelector('#pogedexMapOverlappingTextContainer')
+
         if(mapDom != null){
             if(map.encounters != undefined) {
                 Object.values(map.encounters).forEach((encounterTypeArr, j) =>{
                     if(encounterTypeArr.length == 0) return
                     encounterTypeArr.forEach((encounter, i2) =>{
-                        // console.log(targetPogemon, encounter)
+                        // console.log(document.querySelector(`#${map.name}_Background`).style.opacity)
+                        // console.log(targetPogemon.name == encounter.pogemon.name)
                         if(targetPogemon.name == encounter.pogemon.name) {
-                            const odds = encounter.odds.max - encounter.odds.min
+                            if(document.querySelector(`#${map.name}_Background`).style.opacity == 0){
+                                mapSeen = true
+                                pogemonCatchable = true
 
-                            if(odds > 30) mapDom.style.backgroundColor = 'rgb(49 255 0 / 25%)'
-                            else if(odds < 30 && odds > 4) mapDom.style.backgroundColor = 'rgb(255 188 0 / 25%)'
-                            else mapDom.style.backgroundColor = 'rgb(125 0 0 / 25%)'
+                                pogedexImgOverlappingContainer.style.display = 'none'
+                                const odds = encounter.odds.max - encounter.odds.min
+    
+                                if(odds > 30) mapDom.style.backgroundColor = 'rgb(49 255 0 / 25%)'
+                                else if(odds < 30 && odds > 4) mapDom.style.backgroundColor = 'rgb(255 188 0 / 25%)'
+                                else mapDom.style.backgroundColor = 'rgb(125 0 0 / 25%)'
+    
+                                console.log(targetPogemon.name)
+                                mapDom.style.opacity = 1
+                            } else {
+                                pogemonCatchable = true
+                                if(mapSeen) return
 
-                            mapDom.style.opacity = 1
+                                pogedexImgOverlappingContainer.style.display = 'flex'
+                                pogedexImgOverlappingText.textContent = 'Zone not visited'
+                                // console.log('pogemon not catchable yet')
+                            }
+                        } else {
+                            // console.log(pogemonCatchable)
+                            if(pogemonCatchable) return
+
+                            pogedexImgOverlappingContainer.style.display = 'flex'
+                            pogedexImgOverlappingText.textContent = 'Data cannot be fetched...'
+                            // console.log('pogemon cannot be caught')
                         }
                     })
                 })
@@ -737,19 +783,33 @@ function setCaptureAreas(){
 }
 
 function setInfoMenu(){
+    const statsPlacementArr = ['atk', 'spatk', 'spd', 'def', 'spdef', 'hp']
+
     document.querySelector('#pogemonInfoImg').src = targetPogemon.sprites.classic.sprite
-    document.querySelector('#bottomInfoContainer').innerText = targetPogemon.description
     document.querySelector('#pogemonNameContainer').innerText = targetPogemon.name
 
-    for(let i = 0; i < 2; i++){
-        document.querySelectorAll('.pogemonInfoType')[i].textContent = ''
-        document.querySelectorAll('.pogemonInfoType')[i].style.backgroundColor = 'transparent'
-        if(targetPogemon.element[i + 1] == null) continue
-        document.querySelectorAll('.pogemonInfoType')[i].textContent = targetPogemon.element[i + 1]
-        document.querySelectorAll('.pogemonInfoType')[i].style.backgroundColor = typesObj[targetPogemon.element[i + 1]].color
-    }
+    if(pogedexInfoState.type == 'INFO+') {
+        document.querySelector('#bottomInfoContainer').innerText = targetPogemon.description
 
-    const statsPlacementArr = ['atk', 'spatk', 'spd', 'def', 'spdef', 'hp']
+        for(let i = 0; i < 2; i++){
+            document.querySelectorAll('.pogemonInfoType')[i].textContent = ''
+            document.querySelectorAll('.pogemonInfoType')[i].style.backgroundColor = 'transparent'
+            if(targetPogemon.element[i + 1] == null) continue
+            document.querySelectorAll('.pogemonInfoType')[i].textContent = targetPogemon.element[i + 1]
+            document.querySelectorAll('.pogemonInfoType')[i].style.backgroundColor = typesObj[targetPogemon.element[i + 1]].color
+        }
+
+        document.querySelector('#rightInfoSelectionContainer').style.display = 'grid'
+    }
+    else if(pogedexInfoState.type == 'INFO') {
+        document.querySelector('#bottomInfoContainer').innerText = ''
+        document.querySelector('#rightInfoSelectionContainer').style.display = 'none'
+
+        for(let i = 0; i < 2; i++){
+            document.querySelectorAll('.pogemonInfoType')[i].textContent = ''
+            document.querySelectorAll('.pogemonInfoType')[i].style.backgroundColor = 'transparent'
+        }
+    }
 
     function pickRightStatLmao(stat){
         let pickedStat
@@ -761,7 +821,10 @@ function setInfoMenu(){
         return pickedStat
     }
 
-    document.querySelectorAll('.pogedexInfoStatContent').forEach((node, i) => node.innerText = `${statsPlacementArr[i]} \n\n ${pickRightStatLmao(statsPlacementArr[i])}`)
+    const statsDomContentArr = document.querySelectorAll('.pogedexInfoStatContent')
+
+    if(pogedexInfoState.type == 'INFO')statsDomContentArr.forEach((node, i) => node.innerText = `${statsPlacementArr[i]} \n\n ---`)
+    if(pogedexInfoState.type == 'INFO+') statsDomContentArr.forEach((node, i) => node.innerText = `${statsPlacementArr[i]} \n\n ${pickRightStatLmao(statsPlacementArr[i])}`)
 
     function printAbilities(){
         Object.values(targetPogemon.abilities).forEach(ability =>{

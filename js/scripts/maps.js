@@ -723,10 +723,10 @@ async function generateBoundaries(nextMapInfo){
           switch(type){
             case 0: break
             case 4:
+              console.log(mapsObj)
+
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
-
-                // console.log(trainerInfo)
 
                 if(z == 0) z = z + 1
                 else z++
@@ -740,26 +740,29 @@ async function generateBoundaries(nextMapInfo){
               
                 let trainerTeam = []
 
-                for(let i = 0; i < trainerInfo.team.length; i++){
-                  const foeImg = new Image()
-                  const pogemonInfo = pogemonsObj[trainerInfo.team[i][0].name]
-                  foeImg.src = pogemonInfo.sprites.frontSprite
+                console.log(trainerInfo.team)
+                if(trainerInfo.team.length != 0){
+                  for(let i = 0; i < trainerInfo.team.length; i++){
+                    const foeImg = new Image()
+                    const pogemonInfo = pogemonsObj[trainerInfo.team[i][0].name]
+                    foeImg.src = pogemonInfo.sprites.frontSprite
 
-                  const foeSprite = new Sprite({
-                    type: 'trainerPogemon',
-                    position: {
-                      x: 0,
-                      y: 0
-                    },
-                    img: foeImg,
-                    frames: {
-                      max: 4,
-                      hold: 25,
-                    },
-                    animate: true
-                  })
+                    const foeSprite = new Sprite({
+                      type: 'trainerPogemon',
+                      position: {
+                        x: 0,
+                        y: 0
+                      },
+                      img: foeImg,
+                      frames: {
+                        max: 4,
+                        hold: 25,
+                      },
+                      animate: true
+                    })
 
-                  trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, foeSprite))
+                  }
                 }
               
                 const trainerImg = new Image()

@@ -437,8 +437,6 @@
    position: absolute;
 
    background-color: rgb(30.75,30.75,30.75);
-
-   opacity: 1;
 }
 
 @keyframes blinker {
@@ -453,4 +451,33 @@
 
 #rightInfoMovesContainer{
    overflow-y: scroll;
+}
+
+#pogedexMapOverlappingContainer{
+   display: none;
+   justify-content: center;
+   align-items: center;
+
+   position: relative;
+   top: -91.8%;
+   left: 36;
+
+   height: 94.5%;
+   width: 87.5%;
+
+   background-color: rgba(5, 5, 5, 0.85);
+}
+
+#pogedexMapOverlappingTextContainer{
+   display: flex;
+   align-items: center;
+
+   position: absolute;
+
+   height: 150px;
+   width: 300px;
+
+   text-align: center;
+
+   background-color: rgba(128, 128, 128, 0.125);
 }
