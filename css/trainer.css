@@ -110,7 +110,7 @@ hr{
 
 #trainerCardFooter{
     display: grid;
-    grid-template-columns: repeat(8, auto);
+    grid-template-columns: repeat(3, auto);
 }
 
 .trainerBadgeContainer{

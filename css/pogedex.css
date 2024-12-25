@@ -123,8 +123,8 @@
 #pogedexInfoMap{
    position: relative;
    top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
+   /* left: 50%; */
+   /* transform: translate(-50%, -50%); */
 
    border: 2.5px solid rgba(128, 128, 128, 0.125);
    background-color: rgba(128, 128, 128, 0.25);
@@ -437,6 +437,8 @@
    position: absolute;
 
    background-color: rgb(30.75,30.75,30.75);
+
+   display: none;
 }
 
 @keyframes blinker {
@@ -458,14 +460,13 @@
    justify-content: center;
    align-items: center;
 
-   position: relative;
-   top: -91.8%;
-   left: 36;
+   position: absolute;
+   top: 0;
 
-   height: 94.5%;
+   height: 100%;
    width: 87.5%;
 
-   background-color: rgba(5, 5, 5, 0.85);
+   background-color: rgba(5, 5, 5, 0.975);
 }
 
 #pogedexMapOverlappingTextContainer{
@@ -480,4 +481,11 @@
    text-align: center;
 
    background-color: rgba(128, 128, 128, 0.125);
+}
+
+#pogedexLeftContainerContent{
+   position: relative;
+   top: 50%;
+   left: 55.5%;
+   transform: translate(-50%, -50%);
 }

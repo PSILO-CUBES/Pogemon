@@ -316,7 +316,100 @@ pogedex {
     }
 }
 
+starter pogeball sprite removed x
+
+damage goes negative BIG L x
+
+put info+ for seen but not caught pogemon x
+
+reset image when picking up items x
+
 save and load pogedex info
+
+stats scene move info fucked up
+
+burn status locks the queue progress
+
+cant find this pogemon yet and pogemon cannot be found in the wild interactions in pogedex
+
+trick room crashed the game
+
+Jah's wallafi's growl deosnt display attack reduced message x
+
+stats change queueing is fugged
+
+item img doesnt disapear after pickup ????
+
+prev level during lvl up is wrong????
+
+pogemart didint set spawn position in fair_Town
+
+obstacles {
+    cut trees disapear after: {
+        battle x
+        save x
+    }
+}
+
+leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB x -- answer was very easy i was just tilted lmao take a break bro :3
+
+set block to banishment_Road x
+
+burn timing is wacked x -- burn queue disabling should be ok now, now 100% sure tho -- make sure to keep console.log('here') next to queueProcess.disabled = true
+
+rain already active doesnt let queueProgress go x
+
+sometimes end turn when hit by confusion if first x
+
+confusion is totaly fuuuuuucked -- when attacking during confusion, deals so much more damage -- doesnt do more damage, attacks twice x
+
+pogemon wont faint after headbutt / tackle fights lmao? x
+
+status isint checked on first turn, checked normaly on second and goes ape shit on 3rd x
+
+felt the burn is fucked, seed event wont play after it x
+
+check seeds and confusion, second turn fires status event thingy multiple times for some reason x
+
+seed event only checks first / ally x
+
+was burnt queues in too fast x
+
+weather happens before seed and burn if seeded and burnt x
+
+weather skips a turn -- classes.js:2734 x
+
+was burnt shows up late x
+
+is already burnt doestn show up -- think is fixed x
+
+when wallafi did rainy_day on first turn, no weather even happend -- used trickroom x
+
+when wallafi did heat_wave on 2nd turn, weather happend twice -- used heat_wave x
+
+weather + status + trickroom + leech seed + confusion probably doesnt show in proper order x
+
+change confusion turn from 99 to 3 again x
+
+buff / debuff arrow needs to be ajusted AGAIN XDDDD x
+
+fix shiny sparkle position -- fixed ifself???????????? x
+
+PARA DOESNT HAPPEN AFTER CONFUSION x
+
+sleep is all kinds of fucked up x
+
+slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process -- not sure if fixed but harder to make happen x
+
+check flinch with confuse + sleep combo x
+
+stat change happens after weather x
+
+fix move rotations x
+
+potion during battle doesnt make opponent move happen x
+
+battle items needs testing x
 
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
@@ -324,73 +417,65 @@ save and load pogedex info
 
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
-put info+ for seen but not caught pogemon
+stuffToDo:{
+    battle: {
+        test switch with confuse and para
 
-starter ID becomes undefined for some reason
-
-stats scene move info fucked up
-
-buff / debuff arrow needs to be ajusted
-
-damage goes negative BIG L
-
-prev level during lvl up is wrong
-
-burn status locks the queue progress
-
-pogemart didint set spawn position in fair_Town
-
-surf animation very klunky
-
-set level cap if Xth gym isint beaten???
-
-item img doesnt disapear after pickup
-
-obstacles {
-    leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB
+        catch and switch needs testing
     
-    cut trees disapear after: {
-        battle
+        events still fire after fainting <-- this needs to stop
+
+        pogemon sometimes doesnt faint, lot of testing ahead
+    
+        queue.length = 0 at faint and deal with fainting on queueSpent function
+    
+        should test more with trickroom, some end turn stuff seems funky like sleep being animated at the same time as confusion
+
+        fix move hit location
+    }
+    sprites:{
+        leech seed move animation is fucky
+
+        make npc get to me slower relative to how far away i am from them
+    }
+    data: {
+        add event zones and wild mon objects to : {
+            exodus road
+            sidai desert
+            eden forest
+            luna mountain entrance
+            luna mountain
+            sol path
+            commandment road
+            revelation road
+        
+            need to put Event Zones on tiles for battle zones to work
+        }
+
+        scribble town houses
+    }
+    ideas:{
+        set level cap if Xth gym isint beaten??? maybe half exp gained after Xth level
+
+        rename pogemon option after catching?
+
+        add info to save event
+
+        make multiple boxes for pc
+
+        make more moves
+
+        make more items
+
+        MUSIC AND MOVE SOUNDS
+
+        slide in animations for mons and healthbars
     }
 }
 
-npc bad sprites: {
-    '../../img/charSprites/oldman2/oldman2.png'
-}
-
-rename pogemon option after catching?
-
-fix Grey highlights : {
- Antber
- Regaligyne
-}
-
-add event zones and wild mon objects to : {
-    exodus road
-    sidai desert
-    eden forest
-    luna mountain entrance
-    luna mountain
-    sol path
-    commandment road
-    revelation road
-
-    need to put Event Zones on tiles for battle zones to work
-}
-
-add info to save event
-
-make multiple boxes for pc
-
-make more moves
-
-make more items
-
-MUSIC AND MOVE SOUNDS
-
-cant find this pogemon yet and pogemon cannot be found in the wild interactions in pogedex
-
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+print battle info in chrome console and fresh it when battle ends
 
 at least 1 overworld encounter?
 
@@ -427,4 +512,8 @@ online battle?????
 
 skeleton t-rex mon ???
 
+rival????????????????
+
 disso ability / evo
+
+frozen jail lmao

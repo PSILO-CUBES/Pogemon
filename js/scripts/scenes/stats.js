@@ -35,6 +35,10 @@ export function switchUnderScoreForSpace(text){
 	return text.replace(/_/g, ' ')
 }
 
+export function switchSpaceForUnderScore(text){
+	return text.replace(' ', '_')
+}
+
 function statsAnimation(){
   statsAnimationFrame = window.requestAnimationFrame(statsAnimation)
 
@@ -49,6 +53,7 @@ function getOrdinalNum(n) {
 let switchMoveProcess = {active : false, moves: {first : null, second: null}}
 
 function statsSceneSwitchMoves(first, second){
+	console.log(first, second)
   if(first.name == second.name) return
 
   let firstIndex
@@ -89,7 +94,7 @@ function statsSceneSwitchMoves(first, second){
     duration: 0.5,
   })
 
-  document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.backgroundColor = 'transparent'
+//   document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.backgroundColor = 'transparent'
   document.querySelector('#statsSceneMovesInterface').style.display = 'none'
   document.querySelectorAll('.statsSceneGridSectionDataMoves').forEach(node =>{
     node.style.backgroundColor = 'transparent'
@@ -100,21 +105,24 @@ function statsSceneSwitchMoves(first, second){
 
 function statsSceneMovesInteraction(e, state){
   if(state){
+	if(document.querySelector('#statsSceneGridSectionDataMovesContainer').childNodes.length == 1) return
+
     if(switchMoveProcess.active){
-        statsSceneSwitchMoves(switchMoveProcess.moves.first, movesObj[`${e.target.innerText.toLowerCase()}`])
+        statsSceneSwitchMoves(switchMoveProcess.moves.first, movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`])
       return
     }
 
-    switchMoveProcess.moves.first = movesObj[`${e.target.innerText.toLowerCase()}`]
+    switchMoveProcess.moves.first = movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`]
+	console.log(switchSpaceForUnderScore(e.target.innerText.toLowerCase()))
 
     document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
       node.style.backgroundColor = 'transparent'
     })
-    document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.background = 'transparent'
+    // document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.background = 'transparent'
     document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
 
     e.target.style.backgroundColor = 'rgba(75,75,75,0.35)'
-    printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
+    // printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
 
     document.querySelector('#statsSceneMovesInterface').style.display = 'grid'
 
@@ -132,10 +140,10 @@ function statsSceneMovesInteraction(e, state){
   document.querySelectorAll(`.statsSceneGridSectionDataMoves`).forEach(node =>{
     node.style.backgroundColor = 'transparent'
   })
-  document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.backgroundColor = 'transparent'
 
   document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
   document.querySelector('#statsSceneMovesInterface').style.display = 'none'
+  document.querySelector('#statsSceneMovesInterfaceSwitchButton').style.backgroundColor = null
 
   switchMoveProcess = {active : false, moves: {first : null, second: null}}
 }
@@ -235,8 +243,12 @@ function createMenu(){
 				switch(i){
 					case 0:
 						//catch info
-						statsSceneGridSectionInfo.setAttribute('id', 'statsSceneGridSectionInfoCatch')
-						statsSceneGridSectionInfo.innerText = `${selectedPogemon.name} was met on ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
+						const statsSceneCatchContainer = document.createElement('div')
+						statsSceneCatchContainer.id = 'statsSceneGridSectionInfoCatch'
+						statsSceneCatchContainer.innerText = `${selectedPogemon.name} was met at ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
+
+						statsSceneGridSectionInfo.appendChild(statsSceneCatchContainer)
+						statsSceneGridSectionInfo.id = 'statsSceneGridSectionInfo'
 						break
 					case 1:
 						// ability info

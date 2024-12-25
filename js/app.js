@@ -43,7 +43,7 @@ function preventScrolling(){
 }
 
 document.addEventListener("keydown", e => {
-  if(e.key == "F11") e.preventDefault();
+  // if(e.key == "F11") e.preventDefault();
 });
 
 preventScrolling()

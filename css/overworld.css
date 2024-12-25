@@ -30,10 +30,11 @@ body{
   align-items: center;
 
   position: absolute;
+  top: -15%;
 
   background-color: black;
 
-  height: 100%;
+  height: 115%;
   width: 100%;
 
   opacity: 0;
@@ -92,12 +93,12 @@ body{
   justify-content: center;
   align-items: center;
   
-  background-color: rgb(50, 50, 50);
-  color: black;
+  background-color: rgba(75, 75, 75, 1);
+  color: lightgray;
 }
 
 .overworldMenuSections:hover{
-  background-color: rgb(75, 75, 75);
+  background-color: rgb(85, 85, 85);
   cursor: pointer;
 }
 
@@ -122,6 +123,7 @@ body{
 }
 
 .exclamation{
+  display: none;
   position: absolute;
   opacity: 0;
 }
@@ -460,7 +462,7 @@ body{
 
 #pogemartSellItemsContainer{
   display: none;
-  grid-template-rows: 104px auto;
+  grid-template-rows: 105px auto;
 }
 
 #pogemartSellItemsHeader{
@@ -553,6 +555,8 @@ input[type="range"]::-webkit-slider-thumb {
   transform: translateX(-50%);
 
   opacity: 0;
+
+  z-index: 1;
 }
 
 #changeMapContainer{

@@ -1,5 +1,7 @@
 import { loadData } from "../save.js"
+import { itemsObj } from "./itemsData.js"
 import { pogemonsObj } from "./pogemonData.js"
+
 
 const data = await loadData("saveFile")
 
@@ -137,19 +139,38 @@ export let mapsObj = {
       {
         name: 'npc',
         sprite: 'img/charSprites/oak/oak.png',
-        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Hi, how are you?', 'Please pick one of those pogemon.'], looking: 'Down'},
+        info: {
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
+          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          dialogue:[`I hope you enjoy the adventure you'll have alongside one of those 3!`], 
+          looking: 'Down'
+        },
+      },
+    ],
+    items: [
+      {
+        name: 'loko',
+        amount: 0,
+        direction: {reach: {pos:{x:2, y:20}, neg:{x:2, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        pickedUp: false,
+        hidden: false,
+        starter: true
       },
       {
-        name: 'starter',
-        info: {direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 0},
+        name: 'steeli',
+        amount: 1,
+        direction: {reach: {pos:{x:2, y:20}, neg:{x:2, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        pickedUp: false,
+        hidden: false,
+        starter: true
       },
       {
-        name: 'starter',
-        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 1},
-      },
-      {
-        name: 'starter',
-        info: {direction: {reach: {pos:{x:35, y:0}, neg:{x:5, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, starter: 2},
+        name: 'maaph',
+        amount: 2,
+        direction: {reach: {pos:{x:20, y:20}, neg:{x:20, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        pickedUp: false,
+        hidden: false,
+        starter: true
       },
     ],
   },
@@ -166,7 +187,15 @@ export let mapsObj = {
     },
     height: 58,
     width: 79,
-    encounters: [],
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}},
       {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}
@@ -175,7 +204,8 @@ export let mapsObj = {
       {
         name: 'May', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Right',
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: 'slither_Road NPC',
         reward: 0,
@@ -184,7 +214,8 @@ export let mapsObj = {
       {
         name: 'Tristan', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Up',
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "I can't get throught those darned trees, there is so much room around them it\n\nmakes no sence.. ;-;",
         reward: 100,
@@ -193,7 +224,8 @@ export let mapsObj = {
       {
         name: 'Gab', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Down',
         sprite: '../../img/charSprites/youngman2/youngman2.png',
         dialogue: 'Git gud',
         reward: 100,
@@ -203,7 +235,7 @@ export let mapsObj = {
     event: [
       {
         name: 'vignus',
-        sprite: "img/charSprites/ma'at/ma'atDown.png",
+        sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
           direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
           sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
@@ -236,7 +268,7 @@ export let mapsObj = {
     FGImg: './img/maps/pearly_Path/pearly_PathFG.png',
     spawnPosition: {
       x: -1775,
-      y: -1150
+      y: -1850
     },
     height: 56,
     width: 64,
@@ -278,7 +310,8 @@ export let mapsObj = {
       {
         name: 'Samael', 
         team: [[pogemonsObj.ouroboross, 30, null], [pogemonsObj.rockwil, 30, null], [pogemonsObj.skopt, 50, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Left',
         sprite: '../../img/charSprites/oldman2/oldman2.png',
         dialogue: 'The road ahead is steep..\n\nMay the light in your heart guide you forward..',
         reward: 0,
@@ -287,25 +320,18 @@ export let mapsObj = {
       {
         name: 'NPC', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Right',
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: 'slither_Road NPC',
         reward: 0,
         beaten: true,
-      },
-      {
-        name: 'Tristan', 
-        team: [[pogemonsObj.allingua, 6, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
-        sprite: '../../img/charSprites/youngster/youngster.png',
-        dialogue: "I can't get throught those darned trees..\n\nThere's so much room around them it, makes no sence.. ;-;",
-        reward: 100,
-        beaten: false,
-      },    
+      }, 
       {
         name: 'NPC', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Right',
         sprite: '../../img/charSprites/guy2/guy2.png',
         dialogue: 'banishment_Road NPC',
         reward: 100,
@@ -313,29 +339,13 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 7, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        team: [[pogemonsObj.wallafi, 7, itemsObj.banana]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: "Wagwan man?",
         reward: 100,
         beaten: false,
-      },
-    ],
-    obstaclesInfo: [
-      {
-        name: 'tree',
-        direction: {reach: {pos:{x:50, y:-10}, neg:{x:50, y:-10}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
-        disabled: false,
-      },
-      {
-        name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
-        disabled: false,
-      },
-      {
-        name: 'tree',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
-        disabled: false,
       },
     ],
     items: [
@@ -354,13 +364,27 @@ export let mapsObj = {
         hidden: false
       },
       {
-        name: 'fire_Stone',
+        name: 'pogeball',
         amount: 1,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
       },
     ],
+    event: [
+      {
+        name: 'npc',
+        sprite: 'img/charSprites/youngster/youngster.png',
+        info: {
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:275}}, 
+          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          dialogue:[`This next area is a bit too strong for you right now..\n\nIf you manage to show me an oran berry, i'll concider letting you through.`], 
+          looking: 'Down',
+          eventKey: 'banishmentPathBlock'
+        },
+      },
+    ],
+    weather: 'rain'
   },
 
   //slither_Road
@@ -417,7 +441,8 @@ export let mapsObj = {
       {
         name: 'Rocky', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
         reward: 0,
@@ -426,7 +451,8 @@ export let mapsObj = {
       {
         name: 'May', 
         team: [[pogemonsObj.flailegant, 7, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: "This poor thing is trying to fly but is failing misebarly at it..\n\nI love mine regardless of how goofy it looks!",
         reward: 100,
@@ -435,7 +461,8 @@ export let mapsObj = {
       {
         name: 'Jah', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: 'pearly_Path NPC',
         reward: 100,
@@ -444,7 +471,8 @@ export let mapsObj = {
       {
         name: 'Dakota', 
         team: [[pogemonsObj.nahass, 9, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left' ,
         sprite: '../../img/charSprites/youngman3/youngman3.png',
         dialogue: "I've never seen this type of critter before..\n\nI'm glad i managed to catch it!",
         reward: 0,
@@ -453,7 +481,8 @@ export let mapsObj = {
       {
         name: 'Marley', 
         team: [[pogemonsObj.flailegant, 8, null], [pogemonsObj.formal, 11, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Up',
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: "I love Ma'at so much!\n\nShe taught me many great things.",
         reward: 100,
@@ -496,7 +525,8 @@ export let mapsObj = {
       {
         name: 'Rocky', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
         reward: 0,
@@ -505,7 +535,8 @@ export let mapsObj = {
       {
         name: 'Marley', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Up', 
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: "slither_Road NPC",
         reward: 0,
@@ -550,7 +581,8 @@ export let mapsObj = {
       {
         name: "Ma'at", 
         team: [[pogemonsObj.flailegant, 14, null], [pogemonsObj.slimie, 15, null], [pogemonsObj.balancia, 16, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        looking: 'Down', 
         sprite: "../../img/charSprites/ma'at/ma'at.png",
         dialogue: "Are you ready for your first challenge?",
         reward: 100,
@@ -561,7 +593,8 @@ export let mapsObj = {
       {
         name: 'Larry', 
         team: [[pogemonsObj.formal, 11, null], [pogemonsObj.allingua, 13, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/youngman/youngman.png',
         dialogue: 'Gramps is facinated with those slime pogemon.\n\nHe talked about stones being the catalysts for evolution or\n\nsomething like that.',
         OWdialogue: "Ma'at, our dear gym leader, found something strange at the cross link.\n\nYou might want to let her know you're looking for her.",
@@ -572,7 +605,8 @@ export let mapsObj = {
       {
         name: 'Barry',
         team: [[pogemonsObj.wallafi, 12, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "Ma'at is one of my best friends!\n\nShe helped me catch my first pogemon!",
         OWdialogue: "I wish i could be as cool as Ma'at some day..",
@@ -599,8 +633,11 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        sprite: "img/charSprites/ma'at/ma'atLeft.png",
-        info: {direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, dialogue:['Make sure you speak to Professor Heisenberg before you leave town.']},
+        sprite: "img/charSprites/ma'at/ma'at.png",
+        info: {
+          direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+          dialogue:['Make sure you speak to Professor Heisenberg before you leave town.'],
+        },
       },
     ]
   },
@@ -668,10 +705,10 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        sprite: "img/charSprites/ma'at/ma'atDown.png",
+        sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          looking: 'Down',
           dialogue:
           [
             "Hey, how are ya?\n\nMy name is Ma'at, what's yours?", 
@@ -686,7 +723,8 @@ export let mapsObj = {
       {
         name: 'Rocky', 
         team: [[pogemonsObj.sturdle, 8, null], [pogemonsObj.sturdle, 9, null], [pogemonsObj.sturdle, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        looking: 'Left',
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: 'I love collecting stones!\n\nSome cool ones often appear around the bigger ones! :D',
         reward: 100,
@@ -724,364 +762,6 @@ export let mapsObj = {
         hidden: true
       },
     ],
-  },
-
-  //luna_Mountain
-  luna_Mountain_Entrance:{
-    seen: false,
-    name: 'luna_Mountain_Entrance',
-    mapImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_Entrance.png',
-    FGImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_EntranceFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1200
-    },
-    height: 40,
-    width: 55,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
-    changeMapLocations:[
-      {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, 
-
-      {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}},
-      
-    ],
-    event: [
-      {
-        name: 'npc',
-        sprite: "img/charSprites/brownlady/brownlady.png",
-        info: {
-          looking: 'Down',
-          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
-          dialogue:
-          [
-            `It's so dark up ahead, seems to be impossible to carry on without a light source...`
-          ],
-        },
-      },
-    ],
-    trainers: [
-      {
-        name: 'Rocky', 
-        team: [[pogemonsObj.sturdle, 8, null], [pogemonsObj.sturdle, 9, null], [pogemonsObj.sturdle, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/rangermale/rangermale.png',
-        dialogue: "I keep running into cobwebs, it's starting to get on my nerves....",
-        reward: 100,
-        beaten: true,
-      },
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-  },
-  luna_Mountain:{
-    seen: false,
-    name: 'luna_Mountain',
-    mapImg: './img/maps/luna_Mountain/luna_Mountain.png',
-    FGImg: './img/maps/luna_Mountain/luna_MountainFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1200
-    },
-    height: 64,
-    width: 76,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
-    changeMapLocations:[
-      {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, 
-
-      {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}},
-      
-    ],
-    event: [
-    ],
-    trainers: [
-      {
-        name: 'Caseoh', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/burglar/burglar.png',
-        dialogue: "Kinda hard to walk around me, i get it...",
-        reward: 0,
-        beaten: true
-      },
-      
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-  },
-
-  //sol_Path
-  sol_Path:{
-    seen: false,
-    name: 'sol_Path',
-    mapImg: './img/maps/sol_Path/sol_Path.png',
-    FGImg: './img/maps/sol_Path/sol_PathFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1200
-    },
-    height: 36,
-    width: 62,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
-    changeMapLocations:[
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}},
-
-      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
-      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
-      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
-    ],
-    event: [
-    ],
-    trainers: [
-      {
-        name: 'Caseoh', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
-        sprite: '../../img/charSprites/fatguy/fatguy.png',
-        dialogue: "Kinda hard to walk around me, i get it...",
-        reward: 0,
-        beaten: true
-      },
-      {
-        name: 'Alicia', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/blackbelt/blackbelt.png',
-        dialogue: "cross_Link NPC",
-        reward: 0,
-        beaten: true
-      },
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-    weather: 'sun'
-  },
-
-  //commandment_Road
-  commandment_Road:{
-    seen: false,
-    name: 'commandment_Road',
-    mapImg: './img/maps/commandment_Road/commandment_Road.png',
-    FGImg: './img/maps/commandment_Road/commandment_RoadFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1300
-    },
-    height: 72,
-    width: 78,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
-    changeMapLocations:[
-      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
-      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
-      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
-
-      {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}},
-      {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}},
-
-      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
-      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
-      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
-    ],
-    event: [
-    ],
-    trainers: [
-      {
-        name: 'Alicia', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
-        dialogue: "cross_Link NPC",
-        reward: 0,
-        beaten: true
-      },
-      {
-        name: 'Hieronymus', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
-        sprite: '../../img/charSprites/artist/artist.png',
-        dialogue: "cross_Link NPC",
-        reward: 0,
-        beaten: true
-      },
-      {
-        name: 'Granite', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
-        dialogue: "cross_Link NPC",
-        reward: 0,
-        beaten: true
-      },
-      {
-        name: 'Quwill', 
-        team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
-        dialogue: "cross_Link NPC",
-        reward: 0,
-        beaten: true
-      },
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-    weather: null
-  },
-
-  // mousa_Crest
-  mousa_Crest:{
-    seen: false,
-    name: 'mousa_Crest',
-    mapImg: './img/maps/mousa_Crest/mousa_Crest.png',
-    FGImg: './img/maps/mousa_Crest/mousa_CrestFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1300
-    },
-    height: 38,
-    width: 82,
-    encounters: {ground: [], water: []},
-    changeMapLocations:[
-      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
-      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
-    ],
-    event: [
-    ],
-    trainers: [
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-    weather: null
-  },
-
-  //scribble_Town
-  scribble_Town:{
-    seen: false,
-    name: 'scribble_Town',
-    mapImg: './img/maps/scribble_Town/scribble_Town.png',
-    FGImg: './img/maps/scribble_Town/scribble_TownFG.png',
-    spawnPosition: {
-      x: -675,
-      y: -1200
-    },
-    height: 42,
-    width: 72,
-    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
-    changeMapLocations:[
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 1
-
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 2
-
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 3
-
-      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
-      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
-      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, // exit map
-
-      {name: 'pogecenter', spawnPosition: {x:405, y: -50,}},
-
-      {name: 'pogemart', spawnPosition: {x:597.5, y: 0,}}, 
-      
-      {name: 'scribble_Town_Gym', spawnPosition: {x: 160, y: -1450}},// gym
-    ],
-    event: [
-    ],
-    trainers: [
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-    weather: null
-  },
-  scribble_Town_Gym:{
-    seen: false,
-    name: 'scribble_Town_Gym',
-    mapImg: './img/maps/scribble_Town_Gym/scribble_Town_Gym.png',
-    FGImg: './img/maps/scribble_Town_Gym/scribble_Town_GymFG.png',
-    spawnPosition: {
-      x: -275,
-      y: -1200
-    },
-    height: 33,
-    width: 24,
-    encounters: {ground: [], water: []},
-    changeMapLocations:[
-      {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, 
-    ],
-    event: [
-    ],
-    trainers: [      
-      {
-        name: "Hermes", 
-        team: [[pogemonsObj.flailegant, 11, null], [pogemonsObj.slimie, 12, null], [pogemonsObj.balancia, 13, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
-        sprite: "../../img/charSprites/hermes/hermes.png",
-        dialogue: "I heard from my wife that you defeated her all the way back in fair town.\n\nI'm sure she tried to teach you as much as she could.\n\nLet me do the same..",
-        reward: 100,
-        beaten: false,
-        gymLeader: {name: "hermes", num: 2},
-      },
-      {
-        name: 'Saphir', 
-        team: [[pogemonsObj.formal, 9, null], [pogemonsObj.allingua, 10, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/bluehairgirl/bluehairgirl.png',
-        dialogue: '...',
-        reward: 100,
-        beaten: false,
-      },
-      {
-        name: 'Stza',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
-        sprite: '../../img/charSprites/bluepunk/bluepunk.png',
-        dialogue: "We're the gang in blue!\n\nNo, not that one..",
-        reward: 100,
-        beaten: false,
-      },
-      {
-        name: 'Quartz',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/bluehairwoman2/bluehairwoman2.png',
-        dialogue: "Have you met my little sister yet?\n\nShe had a strong connection to pogemons ever since she was very little..\n\nHermes even took her as his pupil.\n\nShe grew to strong and free, i'm proud of her for that.",
-        reward: 100,
-        beaten: false,
-      },
-      {
-        name: 'Ruby',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
-        sprite: '../../img/charSprites/bluehairwoman/bluehairwoman.png',
-        dialogue: "Let me show you what i've got!\n\nYou're never gonna recover from this! >:)",
-        reward: 100,
-        beaten: false,
-      },
-      {
-        name: 'Hurley',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
-        sprite: '../../img/charSprites/bluehairsunglasses/bluehairsunglasses.png',
-        dialogue: "My bike fell in the water, so i'm stuck here now..",
-        reward: 100,
-        beaten: false,
-      },
-    ],
-    obstaclesInfo: [
-    ],
-    items: [
-    ],
-    weather: null
   },
 
   //banisment_Road
@@ -1122,7 +802,8 @@ export let mapsObj = {
       {
         name: 'Spritz', 
         team: [[pogemonsObj.allingua, 17, null], [pogemonsObj.formal, 17, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "Both my pogemons can't stand each other, i'm not sure why...",
         reward: 100,
@@ -1130,8 +811,9 @@ export let mapsObj = {
       },   
       {
         name: 'Tristan', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Up'}, 
+        team: [],
+        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "pearly_Path",
         reward: 100,
@@ -1140,7 +822,8 @@ export let mapsObj = {
       {
         name: 'Splinter', 
         team: [[pogemonsObj.piny, 16, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/guy2/guy2.png',
         dialogue: "I love this guy, he's a mushroom thing. :)",
         reward: 0,
@@ -1149,7 +832,8 @@ export let mapsObj = {
       {
         name: 'Duster', 
         team: [[pogemonsObj.sturdle, 15, null], [pogemonsObj.tadtoxic, 15, null], [pogemonsObj.wallafi, 15]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "Who knows what true riches hide away in these mountains..",
         reward: 0,
@@ -1243,7 +927,8 @@ export let mapsObj = {
       {
         name: 'Spritz', 
         team: [[pogemonsObj.allingua, 10, null], [pogemonsObj.formal, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "Both my pogemons can't stand each other, i'm not sure why...",
         reward: 100,
@@ -1299,7 +984,8 @@ export let mapsObj = {
       {
         name: 'Rocky', 
         team: [[pogemonsObj.sturdle, 15, null], [pogemonsObj.sturdle, 15, null]],
-        direction: {reach: {pos:{x:0, y:150}, neg:{x:0, y:150}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:150}, neg:{x:0, y:150}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: 'I still very much like rocks.',
         reward: 100,
@@ -1308,7 +994,8 @@ export let mapsObj = {
       {
         name: 'Onyx', 
         team: [[pogemonsObj.cobbird, 16, null], [pogemonsObj.sturdle, 17, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:150, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:150, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: 'I hope i can be just like Djed one day.',
         reward: 100,
@@ -1317,7 +1004,8 @@ export let mapsObj = {
       {
         name: 'Djed', // gym leader
         team: [[pogemonsObj.cobbird, 18, null],[pogemonsObj.punbreakable, 19, null], [pogemonsObj.rockwil, 20, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/djed/djed.png',
         dialogue: 'A new challenger for me?\n\nBring it on!',
         reward: 100,
@@ -1328,7 +1016,8 @@ export let mapsObj = {
       {
         name: 'Clayton', 
         team: [[pogemonsObj.allingua, 15, null]],
-        direction: {reach: {pos:{x:150, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:150, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/youngman2/youngman2.png',
         dialogue: "I don't have a rock type pogemon, but Djed was cool enought to let me be here!",
         reward: 100,
@@ -1366,17 +1055,20 @@ export let mapsObj = {
       ]
     },
     changeMapLocations:[
+      // sinia_Desert
       {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, 
-      {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, // sinia_Desert
+      {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}}, {name: 'sinai_Desert', spawnPosition: {x: -1375, y: -2350}},
 
+      // keme_Town
       {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, 
-      {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}} // keme_Town
+      {name: 'keme_Town', spawnPosition: {x: -930, y: -175}}, {name: 'keme_Town', spawnPosition: {x: -930, y: -175}} 
     ],
     trainers: [
       {
-        name: 'Buzzy', 
+        name: 'Bugzzy', 
         team: [[pogemonsObj.sparkust, 16, null], [pogemonsObj.antber, 18, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}, looking: 'Down'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Down', 
         sprite: '../../img/charSprites/bugman/bugman.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
@@ -1385,7 +1077,8 @@ export let mapsObj = {
       {
         name: 'Kim', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
@@ -1394,7 +1087,8 @@ export let mapsObj = {
       {
         name: 'Buzzy', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:450, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}, looking: 'Right'}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:450, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Right', 
         sprite: '../../img/charSprites/guitarist/guitarist.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
@@ -1403,7 +1097,8 @@ export let mapsObj = {
       {
         name: 'Buzzy', 
         team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:450, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:450, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
@@ -1425,14 +1120,146 @@ export let mapsObj = {
     },
     height: 58,
     width: 72,
-    encounters: {      
+    encounters: {
       ground: [
-        {pogemon: pogemonsObj.disso, lvls: [10, 11], odds: {min:1,max:100}},
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [4, 7], odds: {min:1,max:100}}
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
+    trainers: [
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Moses', 
+        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/moses/moses.png',
+        dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Bugzzy', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/bugman/bugman.png',
+        dialogue: "OTHER MAP",
+        reward: 100,
+        beaten: true,
+      },
+      {
+        name: 'Kim', 
+        team: [],
+        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
+        dialogue: "OTHER MAP",
+        reward: 100,
+        beaten: true,
+      },
+    ],
+    items: [
+      {
+        name: 'royal_Jelly',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'royal_Jelly',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'royal_Jelly',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ],
+    event: [
+      {
+        name: 'npc',
+        sprite: "img/charSprites/guy1/guy1.png",
+        info: {
+          looking: 'Up',
+          direction: {reach: {pos:{x:20, y:40}, neg:{x:-20, y:0}}, 
+          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          dialogue:
+          [
+            `Djed is a pretty rad dude!\n\nHe's the drummer of our band "THE ROCK QUILLERS!!!".`
+          ],
+        },
+      },
+      {
+        name: 'npc',
+        sprite: "img/charSprites/beardguy/beardguy.png",
+        info: {
+          looking: 'Down',
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
+          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          dialogue:
+          [
+            "The winds are pretty sandy around here."
+          ],
+        },
+      },
+    ],
+    obstaclesInfo: [
+      {
+        name: 'rock',
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        disabled: false,
+        id: 0
+      }
+    ],
     changeMapLocations:[
       {name: 'melchi_Cave', spawnPosition: {x:125, y: -1050}}, // grotto
 
@@ -1452,7 +1279,15 @@ export let mapsObj = {
     },
     height: 26,
     width: 26,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'sinai_Desert', spawnPosition: {x:-2335, y: -85}}, {name: 'sinai_Desert', spawnPosition: {x:-2335, y: -85}}, // grotto
     ],
@@ -1461,7 +1296,8 @@ export let mapsObj = {
       {
         name: 'Moses', 
         team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Left'}, 
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
         reward: 100,
@@ -1479,6 +1315,418 @@ export let mapsObj = {
     ],
   },
 
+  //luna_Mountain
+  luna_Mountain_Entrance:{
+    seen: false,
+    name: 'luna_Mountain_Entrance',
+    mapImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_Entrance.png',
+    FGImg: './img/maps/luna_Mountain_Entrance/luna_Mountain_EntranceFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 40,
+    width: 55,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, {name: 'luna_Mountain', spawnPosition: {x: -1700, y: -3000}}, 
+
+      {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}}, {name: 'cross_Link', spawnPosition: {x: -865, y: -375}},
+      
+    ],
+    event: [
+      {
+        name: 'npc',
+        sprite: "img/charSprites/brownlady/brownlady.png",
+        info: {
+          looking: 'Down',
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
+          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          dialogue:
+          [
+            `It's so dark up ahead, seems to be impossible to carry on without a light source...`
+          ],
+        },
+      },
+    ],
+    trainers: [
+      {
+        name: 'Rocky', 
+        team: [[pogemonsObj.sturdle, 8, null], [pogemonsObj.sturdle, 9, null], [pogemonsObj.sturdle, 10, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/rangermale/rangermale.png',
+        dialogue: "I keep running into cobwebs, it's starting to get on my nerves....",
+        reward: 100,
+        beaten: true,
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+  },
+  luna_Mountain:{
+    seen: false,
+    name: 'luna_Mountain',
+    mapImg: './img/maps/luna_Mountain/luna_Mountain.png',
+    FGImg: './img/maps/luna_Mountain/luna_MountainFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 64,
+    width: 76,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, {name: 'sol_Path', spawnPosition: {x: -225, y: -100}}, 
+
+      {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}}, {name: 'luna_Mountain_Entrance', spawnPosition: {x: -350, y: -250}},
+      
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Caseoh', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/burglar/burglar.png',
+        dialogue: "Kinda hard to walk around me, i get it...",
+        reward: 0,
+        beaten: true
+      },
+      
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+  },
+
+  //sol_Path
+  sol_Path:{
+    seen: false,
+    name: 'sol_Path',
+    mapImg: './img/maps/sol_Path/sol_Path.png',
+    FGImg: './img/maps/sol_Path/sol_PathFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 36,
+    width: 62,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}},
+
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}}, {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+      {name: 'commandment_Road', spawnPosition: {x: -2725, y: -3550}},
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Caseoh', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Up', 
+        sprite: '../../img/charSprites/fatguy/fatguy.png',
+        dialogue: "Kinda hard to walk around me, i get it...",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Alicia', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/blackbelt/blackbelt.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: 'sun'
+  },
+
+  //commandment_Road
+  commandment_Road:{
+    seen: false,
+    name: 'commandment_Road',
+    mapImg: './img/maps/commandment_Road/commandment_Road.png',
+    FGImg: './img/maps/commandment_Road/commandment_RoadFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1300
+    },
+    height: 72,
+    width: 78,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}}, {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+      {name: 'scribble_Town', spawnPosition: {x: -2550, y: -500}},
+
+      {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}},
+      {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}}, {name: 'mousa_Crest', spawnPosition: {x: -3150, y: -1200}},
+
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}}, {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+      {name: 'sol_Path', spawnPosition: {x: -1700, y: -125}},
+    ],
+    event: [
+    ],
+    trainers: [
+      {
+        name: 'Alicia', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Hieronymus', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Up', 
+        sprite: '../../img/charSprites/artist/artist.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Granite', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Quwill', 
+        team: [],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
+        dialogue: "cross_Link NPC",
+        reward: 0,
+        beaten: true
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+
+  // mousa_Crest
+  mousa_Crest:{
+    seen: false,
+    name: 'mousa_Crest',
+    mapImg: './img/maps/mousa_Crest/mousa_Crest.png',
+    FGImg: './img/maps/mousa_Crest/mousa_CrestFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1300
+    },
+    height: 38,
+    width: 82,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
+      {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}}, {name: 'commandment_Road', spawnPosition: {x: -325, y: -3100}},
+    ],
+    event: [
+    ],
+    trainers: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+
+  //scribble_Town
+  scribble_Town:{
+    seen: false,
+    name: 'scribble_Town',
+    mapImg: './img/maps/scribble_Town/scribble_Town.png',
+    FGImg: './img/maps/scribble_Town/scribble_TownFG.png',
+    spawnPosition: {
+      x: -675,
+      y: -1200
+    },
+    height: 42,
+    width: 72,
+    encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
+    changeMapLocations:[
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 1
+
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 2
+
+      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 3
+
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
+      {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, // exit map
+
+      {name: 'pogecenter', spawnPosition: {x:405, y: -50,}},
+
+      {name: 'pogemart', spawnPosition: {x:597.5, y: 0,}}, 
+      
+      {name: 'scribble_Town_Gym', spawnPosition: {x: 160, y: -1450}},// gym
+    ],
+    event: [
+    ],
+    trainers: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+  scribble_Town_Gym:{
+    seen: false,
+    name: 'scribble_Town_Gym',
+    mapImg: './img/maps/scribble_Town_Gym/scribble_Town_Gym.png',
+    FGImg: './img/maps/scribble_Town_Gym/scribble_Town_GymFG.png',
+    spawnPosition: {
+      x: -275,
+      y: -1200
+    },
+    height: 33,
+    width: 24,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, {name: 'scribble_Town', spawnPosition: {x: -2080, y: -1300}}, 
+    ],
+    event: [
+    ],
+    trainers: [      
+      {
+        name: "Hermes", 
+        team: [[pogemonsObj.flailegant, 11, null], [pogemonsObj.slimie, 12, null], [pogemonsObj.balancia, 13, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        looking: 'Down', 
+        sprite: "../../img/charSprites/hermes/hermes.png",
+        dialogue: "I heard from my wife that you defeated her all the way back in fair town.\n\nI'm sure she tried to teach you as much as she could.\n\nLet me do the same..",
+        reward: 100,
+        beaten: false,
+        gymLeader: {name: "hermes", num: 2},
+      },
+      {
+        name: 'Saphir', 
+        team: [[pogemonsObj.formal, 9, null], [pogemonsObj.allingua, 10, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/bluehairgirl/bluehairgirl.png',
+        dialogue: '...',
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Stza',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/bluepunk/bluepunk.png',
+        dialogue: "We're the gang in blue!\n\nNo, not that one..",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Quartz',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/bluehairwoman2/bluehairwoman2.png',
+        dialogue: "Have you met my little sister yet?\n\nShe had a strong connection to pogemons ever since she was very little..\n\nHermes even took her as his pupil.\n\nShe grew to strong and free, i'm proud of her for that.",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Ruby',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/bluehairwoman/bluehairwoman.png',
+        dialogue: "Let me show you what i've got!\n\nYou're never gonna recover from this! >:)",
+        reward: 100,
+        beaten: false,
+      },
+      {
+        name: 'Hurley',
+        team: [[pogemonsObj.wallafi, 8, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/bluehairsunglasses/bluehairsunglasses.png',
+        dialogue: "My bike fell in the water, so i'm stuck here now..",
+        reward: 100,
+        beaten: false,
+      },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+
   // revelation_Road
   revelation_Road:{
     seen: false,
@@ -1491,7 +1739,15 @@ export let mapsObj = {
     },
     height: 42,
     width: 66,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, 
       {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, {name: 'bellum_Way', spawnPosition: {x:-1175, y: -2285}}, 
@@ -1518,7 +1774,15 @@ export let mapsObj = {
     },
     height: 42,
     width: 66,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave', spawnPosition: {x:-175, y: -2385}}, // icy cave
 
@@ -1544,7 +1808,15 @@ export let mapsObj = {
     },
     height: 55,
     width: 86,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave_Upper_Level', spawnPosition: {x:-200, y: -155}}, // top left up ladder
 
@@ -1588,7 +1860,15 @@ export let mapsObj = {
     },
     height: 52,
     width: 86,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave', spawnPosition: {x:-325, y: 115}}, {name: 'stasis_Cave', spawnPosition: {x:-325, y: 115}}, // top left down ladder
 
@@ -1628,7 +1908,15 @@ export let mapsObj = {
     },
     height: 61,
     width: 52,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave', spawnPosition: {x:-2432, y: -115}}, // legendary cave
       
@@ -1653,7 +1941,15 @@ export let mapsObj = {
     },
     height: 47,
     width: 42,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave_Upper_Level', spawnPosition: {x:-3230, y: -255}}, {name: 'stasis_Cave_Upper_Level', spawnPosition: {x:-3230, y: -255}}, // exit
       
@@ -1678,7 +1974,15 @@ export let mapsObj = {
     },
     height: 52,
     width: 70,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'alquima_Town', spawnPosition: {x:-2400, y: -2255}},  {name: 'alquima_Town', spawnPosition: {x:-2400, y: -2255}},  
       {name: 'alquima_Town', spawnPosition: {x:-2400, y: -2255}},  {name: 'alquima_Town', spawnPosition: {x:-2400, y: -2255}},  {name: 'alquima_Town', spawnPosition: {x:-2400, y: -2255}},  
@@ -1704,7 +2008,15 @@ export let mapsObj = {
     },
     height: 52,
     width: 70,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, 
       {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}},
@@ -1741,7 +2053,15 @@ export let mapsObj = {
     },
     height: 52,
     width: 84,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'transit_Peak', spawnPosition: {x:-1065, y: -2325}}, {name: 'transit_Peak', spawnPosition: {x:-1065, y: -2325}}, {name: 'transit_Peak', spawnPosition: {x:-1065, y: -2325}}, 
 
@@ -1767,7 +2087,15 @@ export let mapsObj = {
     },
     height: 52,
     width: 58,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, 
     ],
@@ -1790,7 +2118,15 @@ export let mapsObj = {
     },
     height: 54,
     width: 86,
-    encounters: {ground:[{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water:[]},
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
     changeMapLocations:[
       {name: 'stasis_Cave_Upper_Level', spawnPosition: {x:-200, y: -155}}, // top left up ladder
 
@@ -1846,7 +2182,7 @@ export let mapsObj = {
         info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}},
       },
     ],
-    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}]
+    changeMapLocations:[{name: 'prevMap', spawnPosition: {x: 0, y: 0,}}]
   },
   pogemart:{
     name: 'pogemart',
@@ -1865,7 +2201,7 @@ export let mapsObj = {
         info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Welcome to my store, how may i help you?'], type:'pogemart'},
       },
     ],
-    changeMapLocations:[{name: 'undefined', spawnPosition: {x: 0, y: 0,}}],
+    changeMapLocations:[{name: 'prevMap', spawnPosition: {x: 0, y: 0,}}],
     productOptions: [
       [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
       [{name:'potion'}, {name:'revive'}, {name:'pogeball'}],
@@ -1879,22 +2215,61 @@ export let mapsObj = {
   },
 }
 
-export const defaultMapsObj = {...mapsObj}
+export let defaultMapsObj = {...mapsObj}
 
 if(data != null) {
-  mapsObj = data.mapsObjState
+  // mapsObj = data.mapsObjState
+
+  // mapsObj[data.currMapName] = defaultMapsObj[data.currMapName]
+
   Object.values(mapsObj).forEach((map, i) =>{
     if(map.trainers != undefined){
       if(map.trainers.length != 0) {
-        // console.log(map.trainers)
         map.trainers.forEach((trainer, j) =>{
-          if(trainer.team.length != 0) trainer.team.forEach((pogemon, i2) =>{
-            pogemon[0] = Object.values(defaultMapsObj)[i].trainers[j].team[i2][0]
-          })
+          if(trainer.team.length != 0) 
+            trainer.team.forEach((pogemon, i2) =>{
+              if(defaultMapsObj[map.name].trainers != undefined)
+                if(defaultMapsObj[map.name].trainers.length != 0)
+                  defaultMapsObj[map.name].trainers.forEach(trainer =>{
+                    trainer.team.forEach(pogemonInfo =>{
+                      pogemon[0] = pogemonInfo[0]
+                    })
+                  })
+            })
         })
       }
     }
+    if(map.seen != undefined) map.seen = data.mapsObjState[map.name].seen
+    if(map.obstaclesInfo != undefined) {
+      map.obstaclesInfo.forEach((obstacle, i) =>{{
+        obstacle.disabled = data.mapsObjState[map.name].obstaclesInfo[i].disabled
+      }})
+    }
   })
+
+  // for(let i = 0; i < Object.entries(data.currMapObj).length; i++){
+  //   const mapSavedData = Object.entries(data.currMapObj)
+
+  //   for(let j = 0; j < Object.entries(mapsObj[data.currMapName]).length; j++){
+  //     const mapData = Object.entries(mapsObj[data.currMapName])
+
+  //     if(mapData[j][0] === mapSavedData[i][0]){
+  //       if(mapData[j][0] == 'changeMapLocations') continue
+  //       mapData[j][1] = mapSavedData[i][1]
+  //     }
+  //   }
+  // }
+
+
+  // console.log(data.currMapObj.obstaclesInfo)
+
+  if(mapsObj[data.currMapName].obstaclesInfo != undefined){
+    for(let i = 0; i < Object.values(mapsObj[data.currMapName].obstaclesInfo).length; i++){
+      Object.values(mapsObj[data.currMapName].obstaclesInfo)[i].disabled = Object.values(data.currMapObj.obstaclesInfo)[i].disabled
+    }
+  }
+
+  // console.log(mapsObj[data.currMapName].obstaclesInfo)
 }
 
 export async function setBoundries(mapsObj){

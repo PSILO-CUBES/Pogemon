@@ -8,7 +8,7 @@ export const movesObj = {
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 45,
+    pow: 1,
     acc: 95,
     pp: 50,
     effects: null,
@@ -31,7 +31,7 @@ export const movesObj = {
     pow: 80,
     acc: 90,
     pp: 25,
-    effects: [{flinched: 10}, {burn: 20}],
+    effects: [{flinched: 30}],
     priority: 0
   },
   slash:{
@@ -61,10 +61,10 @@ export const movesObj = {
     name: 'super_power',
     type: 'physical',
     element: 'fighting',
-    pow: 120,
+    pow: 1,
     acc: 100,
     pp: 30,
-    effects: [{name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}],
+    effects: [{name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 0.5,
@@ -73,7 +73,36 @@ export const movesObj = {
     hitAudio: audioObj.SFX.hitFireBall
   },
 
+  // electric
+  nuzzle:{
+    name: 'nuzzle',
+    type: 'physical',
+    element: 'electric',
+    pow: 20,
+    acc: 100,
+    pp: 32,
+    effects: [{para: 100, type: 'status'}],
+    priority: 0
+  },
+
                               // special
+
+  // water
+  water_gun:{
+    name: 'water_gun',
+    type: 'special',
+    element: 'water',
+    pow: 50,
+    acc: 100,
+    pp: 30,
+    effects: null,
+    priority: 0,
+    rotation: {ally: -2, foe: 1},
+    duration: 0.5,
+    sprite: '../../img/moves/watergun.png',
+    initAudio: audioObj.SFX.watergunLaunch,
+    hitAudio: audioObj.SFX.watergunHit
+  },
 
   // fire
   fire_ball:{
@@ -91,6 +120,7 @@ export const movesObj = {
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall
   },
+
   //ghost
   shadow_ball:{
     name: 'shadow_ball',
@@ -108,7 +138,7 @@ export const movesObj = {
     hitAudio: audioObj.SFX.hitFireBall
   },
 
-                        // status
+                              // status
 
   // buff
   sharpen:{
@@ -120,6 +150,7 @@ export const movesObj = {
     pp: 30,
     effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}],
     priority: 0,
+    sprite: '../../img/moves/sharpen.png',
   },
   feather_weight:{
     name: 'feather_weight',
@@ -128,8 +159,9 @@ export const movesObj = {
     pow: '---',
     acc: 100,
     pp: 30,
-    effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    effects: [{name: 'buff', target:'spd', pow: 2, type: 'stats'}],
     priority: 0,
+    rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/feather_weight.png',
     position:{
       x: 200,
@@ -147,11 +179,11 @@ export const movesObj = {
     pp: 30,
     effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats'}],
     priority: 0,
-    rotation: {ally: 1, foe: -2},
+    rotation: {ally: 0, foe: -2},
     duration: 1,
     sprite: '../../img/moves/growl.png',
     position:{
-      x: 375,
+      x: 450,
       y: 175
     }
   },

@@ -74,6 +74,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
 
   if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
     // vvvv wtf?????? why if true? delaying something????? vvvv
+    console.log('now')
     if(true){
 
       if(data != null){
@@ -122,8 +123,10 @@ export async function switchMap(nextMapInfo, preMapInfo){
 
       if(nextMapInfo.name == 'pogemart' || nextMapInfo.name == 'pogecenter'){
         pogecenterReturnInfo.name = preMapInfo.name
-        pogecenterReturnInfo.spawnPosition.x = preMapInfo.position.x
-        pogecenterReturnInfo.spawnPosition.y = preMapInfo.position.y
+        pogecenterReturnInfo.spawnPosition.x = preMapInfo.spawnPosition.x
+        pogecenterReturnInfo.spawnPosition.y = preMapInfo.spawnPosition.y
+
+        console.log(pogecenterReturnInfo, preMapInfo)
       }
     }
   })
@@ -173,6 +176,7 @@ document.querySelector('#optionsMenuDelete').addEventListener('click', e =>{
 
 function manageOptionMenuState(state){
   const optionsMenuContainer = document.querySelector("#optionsMenuContainer").style
+  const overworldScene = document.querySelector('#overworldScene').style
 
   if(menu.initiated != true) return
 
@@ -211,6 +215,7 @@ function overworldMenuClickEvent(e){
   switch(e.target.textContent){
     case 'team':
       if(player.team < 1) return
+      
       manageOverWorldState(false)
       gsap.to('#overlapping', {
         opacity: 1,
@@ -224,6 +229,7 @@ function overworldMenuClickEvent(e){
       break
     case 'bag':
       if(player.team < 1) return
+
       manageOverWorldState(false)
       gsap.to('#overlapping', {
         opacity: 1,
@@ -236,6 +242,8 @@ function overworldMenuClickEvent(e){
       })
       break
     case 'pogedex':
+      if(player.team < 1) return
+
       manageOverWorldState(false)
       gsap.to('#overlapping', {
         opacity: 1,
@@ -260,9 +268,13 @@ function overworldMenuClickEvent(e){
       })
       break
     case 'save':
+      if(player.team < 1) return
+
       alert('Saved Succesfully')
+
       let teamMovesInfo = []
       let teamLearntMovesInfo = []
+
       player.team.forEach(pogemon =>{
         let pogemonLearntMoves = []
         pogemon.learntMoves.forEach(learntMove =>{
@@ -307,9 +319,7 @@ function overworldMenuClickEvent(e){
         bagSave.push(item)
       })
 
-      if(mapsObj[currMap.name].obstaclesInfo != undefined) mapsObj[currMap.name].obstaclesInfo = [...mapsObj[currMap.name].obstaclesInfo]
-
-      let mapsSaveObj = mapsObj
+      // if(mapsObj[currMap.name].obstaclesInfo != undefined) mapsObj[currMap.name].obstaclesInfo = [...mapsObj[currMap.name].obstaclesInfo]
 
       // Object.values(mapsObj).forEach(map =>{
       //   mapsSaveObj[map.name] = {...map}
@@ -331,8 +341,16 @@ function overworldMenuClickEvent(e){
         pogemon.heldItem = {...itemsObj[pogemon.heldItem.name]}
       }
 
+      let mapsSaveObj = {}
+
+      Object.values(mapsObj).forEach((map, i) =>{
+        if(i == 0) mapsSaveObj['background'] = map
+        else mapsSaveObj[map.name] = {...map}
+      })
+
       Object.values(mapsSaveObj).forEach((map,i) =>{
         if(i != 0) {
+
           if(map.encounters != undefined) {
             Object.values(map.encounters).forEach(encounterType =>{
               if(encounterType.length > 0)
@@ -365,7 +383,7 @@ function overworldMenuClickEvent(e){
         const seenObj = pogemonSaveObj[pogemon.name]
         seenObj['abilities'] = {}
         Object.values(pogemon.abilities).forEach(abilityObj =>{
-          console.log(abilityObj)
+          // console.log(abilityObj)
           seenObj['abilities'][abilityObj.ability.name] = {seen: abilityObj.seen}
         })
 
@@ -377,7 +395,41 @@ function overworldMenuClickEvent(e){
         // pogemonSaveObj[pogemon.name] = {...pogemon}
       })
 
-      console.log(pogemonSaveObj)
+      let currMapSaveObj = {}
+
+      Object.values(currMap).forEach((mapValue, i) =>{
+        switch(typeof mapValue){
+          case 'string':
+          case 'boolean':
+          case 'number':
+            currMapSaveObj[Object.keys(currMap)[i]] = mapValue
+            break
+          case 'object':
+            if(mapValue == undefined) return
+            if(mapValue.length == undefined) {
+              currMapSaveObj[Object.keys(currMap)[i]] = {...mapValue}
+              console.log(currMapSaveObj[Object.keys(currMap)[i]])
+
+            }
+            else {
+              currMapSaveObj[Object.keys(currMap)[i]] = []
+              if(typeof mapValue[0] == 'number') currMapSaveObj[Object.keys(currMap)[i]] = [...mapValue]
+              else {
+                Object.values(mapValue).forEach((mapValueInfo, j) =>{
+                  currMapSaveObj[Object.keys(currMap)[i]][j] = {...mapValueInfo}
+                  // Object.values(mapValueInfo).forEach((indivInfo, i2) =>{
+                  //   if(typeof indivInfo == 'boolean') console.log('miam')
+                  //   console.log(currMapSaveObj[Object.keys(currMap)[i]])
+                  // })
+                  console.log(currMapSaveObj)
+                })
+              }
+            }
+            break
+        }
+      })
+
+      console.log(currMapSaveObj, mapsObj[currMapSaveObj.name])
 
       setSaveData(
         'saveFile',
@@ -388,6 +440,7 @@ function overworldMenuClickEvent(e){
             teamLearntMovesInfo
           },
           currMapName: currMap.name,
+          currMapObj: currMapSaveObj,
           spawnPosition: {x: map.position.x, y: map.position.y},
           mapsObjState: mapsSaveObj,
           pogemonsObjState: pogemonSaveObj,
@@ -566,6 +619,9 @@ function escapeKeyEventOptions(e) {
       }
 
       if(scenes.get('pickingItem').initiated == true) return
+
+      // opens OW menu
+      if(player.interaction != null) if(player.interaction.info.starter) if(player.disabled) return
       manageMenuState(menu.initiated)
     }
 
@@ -627,6 +683,7 @@ function escapeKeyEventOptions(e) {
     }
   } else if(e.key == '`'){
     console.log(player)
+    // console.log(battleQueue)
   }
 }
 
@@ -749,6 +806,8 @@ const overWorldAnimation = timeSpent =>{
   lastFrameSpent = timeSpent
 
   if(currMap == undefined) return
+
+  if(currMap.name == 'lab') if(player.disabled) if(document.querySelector('#overworldDialogueContainer').style.display == 'none' && document.querySelector('#overworldMenu').style.display == 'none') player.disabled = false
 
   manageWeatherParticles(weatherObj[mapsObj[currMap.name].weather])
   printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)

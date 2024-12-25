@@ -6,7 +6,7 @@ export let volumeValues = {
 }
 
 const data = await loadData("saveFile")
-console.log(data)
+// console.log(data)
 
 if(data != null) volumeValues = data.volumeValues
 
@@ -32,20 +32,9 @@ export const audioObj = {
   },
 
   SFX:{
+    // stuff
     initEncounter: new Howl({
       src: '../../audio/initEncounter.wav',
-      volume: SFXVolume
-    }),
-    tackleHit: new Howl({
-      src: '../../audio/tackleHit.wav',
-      volume: SFXVolume
-    }),
-    initFireBall: new Howl({
-      src: '../../audio/initFireball.wav',
-      volume: SFXVolume
-    }),
-    hitFireBall: new Howl({
-      src: '../../audio/fireballHit.wav',
       volume: SFXVolume
     }),
     flee: new Howl({
@@ -71,6 +60,30 @@ export const audioObj = {
     rockSmash: new Howl({
       src: '../../audio/rockSmash.mp3',
       volume: SFXVolume
-    })
+    }),
+
+    // moves
+    tackleHit: new Howl({
+      src: '../../audio/tackleHit.wav',
+      volume: SFXVolume
+    }),
+
+    initFireBall: new Howl({
+      src: '../../audio/initFireball.wav',
+      volume: SFXVolume
+    }),
+    hitFireBall: new Howl({
+      src: '../../audio/fireballHit.wav',
+      volume: SFXVolume
+    }),
+
+    watergunHit: new Howl({
+      src: '../../audio/watergunHit.mp3',
+      volume: SFXVolume
+    }),
+    watergunLaunch: new Howl({
+      src: '../../audio/watergunLaunch.mp3',
+      volume: SFXVolume
+    }),
   }
 }

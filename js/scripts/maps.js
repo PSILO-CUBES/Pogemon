@@ -1,6 +1,6 @@
 // data pertaining to the map
 
-import { mapsObj, setBoundries } from "../data/mapsData.js"
+import { defaultMapsObj, mapsObj, setBoundries } from "../data/mapsData.js"
 import { audioObj } from "../data/audioData.js"
 
 import { Sprite, Boundary, Pogemon, Character } from "../classes.js"
@@ -73,9 +73,12 @@ async function generateBoundaries(nextMapInfo){
 
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
-    if(currMap == undefined) currMap = mapsObj.lab
+    if(currMap == undefined) {
+      currMap = mapsObj.pearly_Path
+      currMap.seen = true
+    }
   } else {
-    currMap = mapsObj[`${data.currMapName}`]
+    currMap = mapsObj[data.currMapName]
   }
 
   map.position = currMap.spawnPosition
@@ -203,7 +206,7 @@ async function generateBoundaries(nextMapInfo){
       changeMapMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type === 0) return
-          const mapInfo = mapsObj[`${currMap.name}`].changeMapLocations[z]
+          const mapInfo = defaultMapsObj[`${currMap.name}`].changeMapLocations[z]
 
           if(z == 0) z = z + 1
           else z++
@@ -241,7 +244,7 @@ async function generateBoundaries(nextMapInfo){
                 if(z == 0) z = z + 1
                 else z++
 
-                console.log(trainerInfo)
+                // console.log(trainerInfo)
                 switch(trainerInfo.eventKey){
                   case 'maatGym':
                     if(!worldEventData.maat.firstMeet) return
@@ -290,7 +293,7 @@ async function generateBoundaries(nextMapInfo){
                   animate: false,
                 })
               
-                let createdTrainer = new Character(trainerTeam, null, null,trainerInfo.direction.looking, trainerInfo.name, null, trainerSprite)
+                let createdTrainer = new Character(trainerTeam, null, null, trainerInfo.looking, trainerInfo.name, null, trainerSprite)
               
                 trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
               
@@ -322,8 +325,10 @@ async function generateBoundaries(nextMapInfo){
               }
               break
             case 5:
-              let eventInfo = mapsObj[`${currMap.name}`].event[x]
+              let eventInfo = defaultMapsObj[`${currMap.name}`].event[x]
               if(eventInfo == undefined) return
+
+              // console.log(worldEventData)
 
               if(x == 0) x = x + 1
               else x++
@@ -336,6 +341,9 @@ async function generateBoundaries(nextMapInfo){
                     break
                   case 'cross_Link':
                     if(worldEventData.maat.firstMeet) return
+                    break
+                  case 'eden_Forest':
+                    if(!worldEventData.vignus.catchable) return
                     break
                 }
 
@@ -391,6 +399,8 @@ async function generateBoundaries(nextMapInfo){
                 if(!player.badges[0]) return
               }
 
+              // console.log(`boundary pushed`)
+
               boundaries.push(
                 new Boundary({
                   position:{
@@ -403,19 +413,26 @@ async function generateBoundaries(nextMapInfo){
               )
             break
             case 6:
-              if(mapsObj[`${currMap.name}`].items == undefined) return
-              if(mapsObj[`${currMap.name}`].items[itemIndex] == undefined) {
+              if(mapsObj[currMap.name].items == undefined) return
+
+              if(mapsObj[currMap.name].items[itemIndex] == undefined) {
+                // i think this resets between reloads
                 if(itemIndex == 0) itemIndex = itemIndex + 1
                 else itemIndex++
                 return
-              }else if(mapsObj[`${currMap.name}`].items[itemIndex].pickedUp) {
+              }else if(mapsObj[currMap.name].items[itemIndex].pickedUp) {
+                // i think this resets between reloads
                 if(itemIndex == 0) itemIndex = itemIndex + 1
                 else itemIndex++
                 return
               }
+
+              let itemsInfo = mapsObj[currMap.name].items[itemIndex]
               
-              let itemsInfo = mapsObj[`${currMap.name}`].items[itemIndex]
-              
+              if(data != null) {
+                itemsInfo.hidden = data.currMapObj.items[itemIndex].hidden
+                itemsInfo.pickedUp = data.currMapObj.items[itemIndex].pickedUp
+              }
               // console.log(mapsObj[`${currMap.name}`].items)
 
               let boundary = new Boundary({
@@ -511,7 +528,7 @@ async function generateBoundaries(nextMapInfo){
           if(obstacleInfo == null) {
             // console.log('nulled')
             obstacleInfo = currMap.obstaclesInfo[z]
-            obstacleInfo.disabled = true
+            // obstacleInfo.disabled = true
           }
 
           // console.log(obstacleInfo)
@@ -723,7 +740,7 @@ async function generateBoundaries(nextMapInfo){
           switch(type){
             case 0: break
             case 4:
-              console.log(mapsObj)
+              // console.log(mapsObj)
 
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
@@ -740,7 +757,7 @@ async function generateBoundaries(nextMapInfo){
               
                 let trainerTeam = []
 
-                console.log(trainerInfo.team)
+                // console.log(trainerInfo.team)
                 if(trainerInfo.team.length != 0){
                   for(let i = 0; i < trainerInfo.team.length; i++){
                     const foeImg = new Image()
@@ -782,7 +799,7 @@ async function generateBoundaries(nextMapInfo){
                   animate: false,
                 })
               
-                let createdTrainer = new Character(trainerTeam, null, null,trainerInfo.direction.looking, trainerInfo.name, null, trainerSprite)
+                let createdTrainer = new Character(trainerTeam, null, null, trainerInfo.looking, trainerInfo.name, null, trainerSprite)
               
                 trainerInfo = {...trainerInfo, createdTrainer, type: 'battle'}
               
@@ -813,8 +830,9 @@ async function generateBoundaries(nextMapInfo){
               }
               break
             case 5:
+              // console.log(mapsObj[`${nextMapInfo.name}`])
+              if(mapsObj[`${nextMapInfo.name}`].event[x] == undefined) return
               let eventInfo = mapsObj[`${nextMapInfo.name}`].event[x]
-              if(eventInfo == undefined) return
 
               if(x == 0) x = x + 1
               else x++
@@ -929,7 +947,7 @@ async function generateBoundaries(nextMapInfo){
                 pogeballImg.src = 'img/item_scene/items/OWPogeball.png'
   
                 const pogeballSprite = new Sprite({
-                  type:'enemyTrainer',
+                  type: itemIndex,
                   position:{
                     x: j * Boundary.width + currMap.spawnPosition.x,
                     y: i * Boundary.height + currMap.spawnPosition.y
@@ -1140,13 +1158,14 @@ function flashContainerManagement(type){
     case 'none':
       flashContainer.style.display = 'none'
       flashContainer.style.backgroundColor = 'transparent'
-
       break
   }
 }
 
 export function changeMapInfo(nextMapInfo, currMapInfo){
-  let info = nextMapInfo.info
+  // console.log(currMapInfo)
+  let info = nextMapInfo
+  if(info.name == 'prevMap') info = pogecenterReturnInfo
   if(info.name == 'undefined') if(data != null) info = data.nextMapInfo
 
   currMap = mapsObj[`${info.name}`]
@@ -1156,7 +1175,6 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
   OWWeatherParticles.arr = []
 
   //deal with flash container stuff
-  // console.log(currMap)
 
   if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
   else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')

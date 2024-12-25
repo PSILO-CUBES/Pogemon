@@ -85,7 +85,7 @@ function printTrainerCard(){
 
     document.querySelector('#trainerCardTrainerImg').src = `img/charSprites/${playerCharacter}/${playerCharacter}_Trainer.png`
 
-    for(let i = 0; i < 8; i++){
+    for(let i = 0; i < 3; i++){
         const badgeContainer = document.createElement('div')
         badgeContainer.setAttribute('class', 'trainerBadgeContainer')
 

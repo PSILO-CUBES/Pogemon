@@ -243,72 +243,78 @@ function createInfoMenu(){
             case 0:
                 infoSegment.id = 'pogedexMapSegment'
 
+                const pogedexLeftContainerContent = document.createElement('DIV')
+                pogedexLeftContainerContent.id = 'pogedexLeftContainerContent'
+
                 const mapImg = document.createElement('img')
                 mapImg.id = 'pogedexInfoMap'
                 mapImg.src = 'img/maps/mini_map.png'
 
-                infoSegment.appendChild(mapImg)
+                pogedexLeftContainerContent.appendChild(mapImg)
 
-                const mapsEncounterContainer = [
-                    {name: 'gene_Town', x: 166, y: 750, height: 51, width: 55}, 
+                const mapsEncounterArr = [
+                    {name: 'gene_Town', x: 131, y: 722, height: 51, width: 51}, 
                     {name: 'pearly_Path', x: 165, y: 668, height: 67, width: 54}, 
-                    {name: 'slither_Road', x: 224, y: 685, height: 60, width: 57}, 
-                    {name: 'cross_Link', x: 288, y: 647, height: 40, width: 39}, 
-                    {name: 'eden_Forest', x: 156, y: 823, height: 73, width: 89}, 
-                    {name: 'banishment_Road', x: 90, y: 683, height: 55, width: 66}, 
-                    {name: 'exodus_Road', x: 66, y: 563, height: 50, width: 64}, 
-                    {name: 'sinai_Desert', x: 62, y: 477, height: 73, width: 75}, 
-                    {name: 'melchi_Cave', x: 103, y: 421, height: 47, width: 50} , 
-                    {name: 'luna_Mountain_Entrance', x: 358, y: 610, height: 45, width: 48}, 
-                    {name: 'luna_Mountain', x: 320, y: 510, height: 77, width: 86}, 
-                    {name: 'sol_Path', x: 450, y: 512, height: 42, width: 64}, 
-                    {name: 'commandment_Road', x: 426, y: 382, height: 106, width: 89}, 
-                    {name: 'mousa_Crest', x: 326, y: 442, height: 35, width: 74}, 
-                    {name: 'revelation_Road', x: 160, y: 607, height: 45, width: 65}, 
-                    {name: 'bellum_Way', x: 159, y: 524, height: 61, width: 66}, 
-                    {name: 'stasis_Cave', x: 156, y: 421, height: 85, width: 109}, 
-                    {name: 'stasis_Cave_Upper_Level', x: 64, y: 175, height: 86, width: 111},
-                    {name: 'stasis_Cave_Lower_Level', x: 64, y: 261, height: 130, width: 111},  
-                    {name: 'stasis_Cave_Top_Level', x: 130, y: 95, height: 80, width: 46}, 
-                    {name: 'ascension_Path', x: 226, y: 338, height: 72, width: 77}, 
-                    {name: 'end_Trail', x: 307, y: 175, height: 72, width: 102}, 
-                    {name: 'transit_Peak', x: 372, y: 82, height: 79, width: 51}, 
-                    {name: 'neo_Genesis', x: 262, y: 79, height: 57, width: 60}
+                    {name: 'slither_Road', x: 188, y: 659, height: 60, width: 57}, 
+                    {name: 'cross_Link', x: 252, y: 620, height: 40, width: 39}, 
+                    {name: 'eden_Forest', x: 118, y: 794, height: 73, width: 89}, 
+                    {name: 'banishment_Road', x: 54, y: 656, height: 58, width: 66},
+                    {name: 'exodus_Road', x: 34, y: 536, height: 50, width: 64},
+                    {name: 'sinai_Desert', x: 26, y: 451, height: 73, width: 75},
+                    {name: 'melchi_Cave', x: 67, y: 394, height: 47, width: 50},
+                    {name: 'luna_Mountain_Entrance', x: 322, y: 585, height: 43, width: 48},
+                    {name: 'luna_Mountain', x: 282, y: 484, height: 77, width: 86},
+                    {name: 'sol_Path', x: 415, y: 485, height: 42, width: 64},
+                    {name: 'commandment_Road', x: 390, y: 356, height: 106, width: 89},
+                    {name: 'mousa_Crest', x: 290, y: 415, height: 35, width: 74},
+                    {name: 'revelation_Road', x: 124, y: 580, height: 45, width: 65},
+                    {name: 'bellum_Way', x: 124, y: 497, height: 62, width: 66},
+                    {name: 'stasis_Cave', x: 120, y: 394, height: 85, width: 109},
+                    {name: 'stasis_Cave_Lower_Level', x: 28, y: 234, height: 130, width: 111},
+                    {name: 'stasis_Cave_Upper_Level', x: 28, y: 148, height: 86, width: 111},
+                    {name: 'stasis_Cave_Top_Level', x: 94, y: 67, height: 82, width: 46},
+                    {name: 'ascension_Path', x: 191, y: 310, height: 72, width: 77},
+                    {name: 'end_Trail', x: 271, y: 148, height: 72, width: 102},
+                    {name: 'transit_Peak', x: 336, y: 55, height: 79, width: 51},
+                    {name: 'neo_Genesis', x: 226, y: 52, height: 57, width: 60}
                 ]
 
-                const mapsBlockContainer = [
-                    {name: 'gene_Town', x: 162, y: 746, height: 54, width: 62}, 
-                    {name: 'pearly_Path', x: 156, y: 662, height: 84, width: 68}, 
-                    {name: 'slither_Road', x: 224, y: 609, height: 142, width: 63}, 
-                    {name: 'fair_Town', x: 287, y: 681, height: 70, width: 45}, 
-                    {name: 'cross_Link', x: 287, y: 600, height: 81, width: 45}, 
-                    {name: 'eden_Forest', x: 150, y: 800, height: 101, width: 96}, 
-                    {name: 'banishment_Road', x: 83, y: 690, height: 56, width: 73}, 
-                    {name: 'keme_Town', x: 63, y: 619, height: 71, width: 93}, 
-                    {name: 'exodus_Road', x: 53, y: 555, height: 64, width: 103}, 
-                    {name: 'sinai_Desert', x: 53, y: 460, height: 95, width: 103}, 
-                    {name: 'melchi_Cave', x: 103, y: 420, height: 40, width: 51} , 
-                    {name: 'luna_Mountain_Entrance', x: 332, y: 601, height: 73, width: 84}, 
-                    {name: 'luna_Mountain', x: 304, y: 494, height: 107, width: 121}, 
-                    {name: 'sol_Path', x: 425, y: 494, height: 107, width: 104}, 
-                    {name: 'commandment_Road', x: 425, y: 365, height: 136, width: 104}, 
-                    {name: 'scribble_Town', x: 318, y: 365, height: 66, width: 107}, 
-                    {name: 'mousa_Crest', x: 318, y: 431, height: 63, width: 107}, 
-                    {name: 'revelation_Road', x: 156, y: 609, height: 53, width: 68}, 
-                    {name: 'bellum_Way', x: 156, y: 508, height: 101, width: 109}, 
-                    {name: 'stasis_Cave', x: 155, y: 409, height: 99, width: 110}, 
-                    {name: 'stasis_Cave_Upper_Level', x: 64, y: 174, height: 86, width: 112},
-                    {name: 'stasis_Cave_Lower_Level', x: 64, y: 260, height: 131, width: 112},  
-                    {name: 'stasis_Cave_Top_Level', x: 129, y: 95, height: 80, width: 47}, 
-                    {name: 'ascension_Path', x: 215, y: 157, height: 180, width: 100}, 
-                    {name: 'alquima_Town', x: 215, y: 336, height: 79, width: 92}, 
-                    {name: 'end_Trail', x: 313, y: 158, height: 108, width: 141}, 
-                    {name: 'transit_Peak', x: 341, y: 68, height: 90, width: 113}, 
-                    {name: 'neo_Genesis', x: 248, y: 67, height: 91, width: 93}
+                const mapsBlockArr = [
+                    {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
+                    {name: 'pearly_Path', x: 120, y: 632, height: 92, width: 68}, 
+                    {name: 'slither_Road', x: 188, y: 582, height: 142, width: 63}, 
+                    {name: 'fair_Town', x: 251, y: 663, height: 70, width: 45}, 
+                    {name: 'cross_Link', x: 251, y: 593, height: 81, width: 45}, 
+                    {name: 'eden_Forest', x: 114, y: 772, height: 103, width: 96}, 
+                    {name: 'banishment_Road', x: 47, y: 664, height: 56, width: 73}, 
+                    {name: 'keme_Town', x: 27, y: 593, height: 71, width: 93}, 
+                    {name: 'exodus_Road', x: 17, y: 530, height: 64, width: 103}, 
+                    {name: 'sinai_Desert', x: 17, y: 432, height: 98, width: 103}, 
+                    {name: 'melchi_Cave', x: 67, y: 392, height: 40, width: 51} , 
+                    {name: 'luna_Mountain_Entrance', x: 268, y: 572, height: 75, width: 113}, 
+                    {name: 'luna_Mountain', x: 269, y: 466, height: 107, width: 121}, 
+                    {name: 'sol_Path', x: 390, y: 473, height: 59, width: 104}, 
+                    {name: 'commandment_Road', x: 389, y: 338, height: 136, width: 104}, 
+                    {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
+                    {name: 'mousa_Crest', x: 282, y: 404, height: 63, width: 107}, 
+                    {name: 'revelation_Road', x: 120, y: 573, height: 59, width: 68}, 
+                    {name: 'bellum_Way', x: 120, y: 480, height: 102, width: 109}, 
+                    {name: 'stasis_Cave', x: 119, y: 382, height: 99, width: 110}, 
+                    {name: 'stasis_Cave_Lower_Level', x: 30, y: 234, height: 128, width: 106},  
+                    {name: 'stasis_Cave_Upper_Level', x: 28, y: 146, height: 88, width: 112},
+                    {name: 'stasis_Cave_Top_Level', x: 93, y: 67, height: 81, width: 47}, 
+                    {name: 'ascension_Path', x: 178, y: 297, height: 91, width: 101}, 
+                    {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
+                    {name: 'end_Trail', x: 240, y: 130, height: 108, width: 178}, 
+                    {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
+                    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93}
                 ]
 
-                for(let i = 0;  i < mapsEncounterContainer.length; i++){
-                    const mapAreaInfo = mapsEncounterContainer[i]
+                const mapsEncounterContainer = document.createElement('DIV')
+                mapsEncounterContainer.id = 'mapsEncounterContainer'
+
+                for(let i = 0;  i < mapsEncounterArr.length; i++){
+                    const mapAreaInfo = mapsEncounterArr[i]
 
                     const encounterArea = document.createElement('div')
                     encounterArea.setAttribute('class', 'encounterArea')
@@ -320,11 +326,14 @@ function createInfoMenu(){
                     encounterArea.style.height = mapAreaInfo.height
                     encounterArea.style.width = mapAreaInfo.width
 
-                    infoSegment.appendChild(encounterArea)
+                    mapsEncounterContainer.appendChild(encounterArea)
                 }
 
-                for(let i = 0; i < mapsBlockContainer.length; i++){
-                    const mapBackgroundInfo = mapsBlockContainer[i]
+                const mapsBlockContainer = document.createElement('DIV')
+                mapsBlockContainer.id = 'mapsBlockContainer'
+
+                for(let i = 0; i < mapsBlockArr.length; i++){
+                    const mapBackgroundInfo = mapsBlockArr[i]
 
                     const encounterBackground = document.createElement('div')
                     encounterBackground.setAttribute('class', 'encounterBackground')
@@ -336,9 +345,9 @@ function createInfoMenu(){
                     encounterBackground.style.height = mapBackgroundInfo.height
                     encounterBackground.style.width = mapBackgroundInfo.width
 
-                    encounterBackground.style.opacity = 1
+                    encounterBackground.style.opacity = 0
 
-                    infoSegment.appendChild(encounterBackground)
+                    mapsBlockContainer.appendChild(encounterBackground)
                 }
 
                 const pogedexMapOverlappingContainer = document.createElement('div')
@@ -348,7 +357,12 @@ function createInfoMenu(){
                 pogedexMapOverlappingTextContainer.id = 'pogedexMapOverlappingTextContainer'
 
                 pogedexMapOverlappingContainer.appendChild(pogedexMapOverlappingTextContainer)
-                infoSegment.appendChild(pogedexMapOverlappingContainer)
+
+                pogedexLeftContainerContent.appendChild(mapsEncounterContainer)
+                pogedexLeftContainerContent.appendChild(mapsBlockContainer)
+                pogedexLeftContainerContent.appendChild(pogedexMapOverlappingContainer)
+
+                infoSegment.appendChild(pogedexLeftContainerContent)
                 break
             // sprite case
             case 1:
@@ -632,7 +646,7 @@ function createInfoMenu(){
                                                 const pogedexInfoAbilityContainer = document.createElement('div')
                                                 const pogedexInfoAbilityHR = document.createElement('hr')
                                                 pogedexInfoAbilityContainer.setAttribute('class', 'pogedexInfoAbilityContainer')
-                                                console.log(abilityInfo)
+                                                // console.log(abilityInfo)
 
                                                 if(abilityInfo.hidden) {
                                                     if(abilityInfo.seen) {
@@ -755,7 +769,7 @@ function setCaptureAreas(){
                                 else if(odds < 30 && odds > 4) mapDom.style.backgroundColor = 'rgb(255 188 0 / 25%)'
                                 else mapDom.style.backgroundColor = 'rgb(125 0 0 / 25%)'
     
-                                console.log(targetPogemon.name)
+                                // console.log(targetPogemon.name)
                                 mapDom.style.opacity = 1
                             } else {
                                 pogemonCatchable = true

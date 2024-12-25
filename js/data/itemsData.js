@@ -324,12 +324,12 @@ export const itemsObj = {
     price: 1,
     value: 1
   },
-  dargon_Fang:{
-    name: 'dargon_Fang',
+  dragon_Fang:{
+    name: 'dragon_Fang',
     type: 'battle',
     effect: 'dragon',
     pow: 20,
-    img: 'img/item_scene/items/battle/dargon_Fang.png',
+    img: 'img/item_scene/items/battle/dragon_Fang.png',
     desc: 'A very ancient tooth.\n\nWhen held, boosts dragon type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
@@ -362,6 +362,7 @@ export const itemsObj = {
   },
 
   // battle item
+  // NEED TO ADD EFFECTS ON THESE
   black_Sludge:{
     name: 'black_Sludge',
     type: 'battle',

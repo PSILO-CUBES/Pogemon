@@ -502,6 +502,10 @@
   width: 100%;
 }
 
+#fieldEffect{
+  height: 100%;
+}
+
 #fieldEffectContainer{
   display: none;
   justify-content: end;
@@ -513,7 +517,7 @@
 
   height: 72px;
 
-  padding: 8;
+  padding: 10;
 }
 
 #trickRoomIndicatorContainer{
@@ -540,4 +544,30 @@
 
 #fieldEffectIcon, #trickRoomIcon{
   height: 100%;
+}
+
+#proceedImgContainer{
+  display: none;
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  
+  height: 75;
+  width: 75;
+
+  padding: 15;
+}
+
+#proceedImg{
+  height: 100%;
+
+  opacity: 0;
+  
+  animation: fade 3.5s linear infinite;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
 }

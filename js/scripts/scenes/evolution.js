@@ -168,6 +168,7 @@ function initEvo(target, i){
   if(i == 0) setEvoScene()
 
   queueProcess.disabled = true
+  console.log('there')
   document.querySelector('#evolutionDialogue').style.cursor = 'auto'
 
   target.dialogue('evolution', `${target.name} is about to evolve! \n\n Will you let it?`)
@@ -228,6 +229,7 @@ function clearEvolutionScene(target){
 
 function evoProcess(target, preEvo){
   queueProcess.disabled = true
+  console.log('there')
   gsap.to(target, {
     opacity: 0,
     repeat: 4,

@@ -12,7 +12,7 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { manageBattleState } from "./scenes/battle.js"
-import { disableOWMenu, manageOverWorldState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
+import { changeMap, disableOWMenu, manageOverWorldState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
@@ -50,13 +50,13 @@ const playerImg = new Image()
 export const playerCharacter = 'ethan'
 playerImg.src = `./img/charSprites/${playerCharacter}/${playerCharacter}.png`
 
-let data
+const data = await loadData('saveFile')
 
 export let surfPogemonSprite
 
 export async function generatePlayer(canvas){
   // if(playerInfo == undefined){
-    await loadData("saveFile").then(res => data = res)
+    // await loadData("saveFile").then(res => data = res)
 
     const surfPogemonImage = new Image()
     surfPogemonImage.src = 'img/charSprites/surf/blank.png'
@@ -89,11 +89,13 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.loko , true, 'geneTown')
+      player.catch(pogemonsObj.loko, true, 'geneTown')
+      player.catch(pogemonsObj.steeli, true, 'geneTown')
+      player.catch(pogemonsObj.maaph, true, 'geneTown')      
 
       player.pogedexInfo.forEach(pogedex =>{
         pogedex.seen = true
-        // pogedex.caught = true
+        pogedex.caught = true
       })
 
       player.badges[0] = true
@@ -340,7 +342,7 @@ function onArrowClickEvent(state){
         return
       }
     } else {
-      console.log(player.bag.get(pogemartBuyingInteraction.product.name).quantity)
+      // console.log(player.bag.get(pogemartBuyingInteraction.product.name).quantity)
       if(parseInt(document.querySelector('#pogemonBuyMenuInput').value) > player.bag.get(pogemartBuyingInteraction.product.name).quantity){
         inputValue = player.bag.get(pogemartBuyingInteraction.product.name).quantity
       }
@@ -446,7 +448,7 @@ function printItemList(pogemartSellList){
   let currItemsArr = []
 
   player.bag.forEach(key =>{
-    console.log(key.item.type)
+    // console.log(key.item.type)
     if(key.item.type == currType) currItemsArr.push(key)
   })
 
@@ -715,6 +717,7 @@ function playerInteraction(e) {
           case 'heisenbergHouse' :
             if(!worldEventData.heisenberg.firstTalk) {
               worldEventData.heisenberg.firstTalk = true
+              // might want to remove those when i release the game
               player.bag.set('glowy_Halo', {item: {...itemsObj['glowy_Halo']}, quantity: 1})
               player.bag.set('leaf_Stone', {item: {...itemsObj['leaf_Stone']}, quantity: 1})
               player.bag.set('fire_Stone', {item: {...itemsObj['fire_Stone']}, quantity: 1})
@@ -772,9 +775,9 @@ function playerInteraction(e) {
       }
 
       for(let i = 0; i < chosenDialogue.length; i++){
-        if(i == 0) player.team[0].dialogue('overworld', chosenDialogue[i])
+        if(i == 0) player.dialogue('overworld', chosenDialogue[i])
         else queue.push(() => {
-          player.team[0].dialogue('overworld', chosenDialogue[i])
+          player.dialogue('overworld', chosenDialogue[i])
         })
       }
 
@@ -803,7 +806,7 @@ function playerInteraction(e) {
               index = i
             }
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[index])
-            console.log(index)
+            // console.log(index)
             disableOWMenu.active = false
             inputValue = 0
           })
@@ -812,106 +815,121 @@ function playerInteraction(e) {
         
       if(player.interaction.info.type == undefined) return
       break
-    case 'starter':
-      if(interaction.flags.starter) return
-      if(interaction.initiated) return
-
-      interaction.initiated = true
-
-      let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
-      let starter = starters[player.interaction.info.starter]
-
-      player.disabled = true
-
-      openWindow.replaceChildren()
-      openWindow.style.backgroundColor = 'rgba(0,0,0,0.75)'
-
-      let OWDialogue = document.querySelector('#overworldDialogue')
-      OWDialogue.textContent = `Do you want to pick ${starter.name} as your starter?`
-
-      document.querySelector('#overworldDialogueContainer').style.display = 'grid'
-
-      const starterImg = new Image()
-      starterImg.src = `img/pogemon/00${starter.pogedex}_${starter.name}/${starter.name}.png`
-      starterImg.id = 'overworldStarterImg'
-
-      openWindow.appendChild(starterImg)
-      
-      queue.push(() =>{
-        OWDialogue.setAttribute('class', 'chooseStarterButtonsContainer')
-        OWDialogue.style.padding = 0
-        OWDialogue.innerText = ''
-
-        let choiceArr = ['yes', 'no']
-
-        for (let i = 0; i < choiceArr.length; i++) {
-          const chooseStarterButton = document.createElement('div')
-          chooseStarterButton.setAttribute('class', 'chooseStarterButton')
-          chooseStarterButton.innerText = choiceArr[i]
-
-          OWDialogue.appendChild(chooseStarterButton)
-
-          if(choiceArr[i] == 'no') return
-          chooseStarterButton.addEventListener('click', e =>{
-            queue.push(() =>{
-              OWDialogue.setAttribute('class', '')
-              OWDialogue.style.padding = '35px'
-              OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
-
-              player.catch(starter, true, currMap)
-
-              interaction.flags.starter = true
-
-              openWindow.style.backgroundColor = 'transparent'
-              openWindow.replaceChildren()
-            })
-          })
-        }
-      })
-      break
     case 'item':
       if(player.interaction.info.pickedUp == true) return
-      player.disabled = true
 
-      scenes.set('pickingItem', {initiated: true})
+      // interactions with OW pogeballs that dissapear
 
-      let item = {...itemsObj[player.interaction.info.name]}
+      if(player.interaction.info.starter != undefined){
+        // THIS IS NOT AN ACTUAL ITEM - THIS CONTAINS THE OW STARTER POGEBALL INTERACTION 
+        if(interaction.flags.starter) return
+        if(interaction.initiated) return
+  
+        player.disabled = true
+        interaction.initiated = true
+  
+        let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
+        let starter = starters[player.interaction.info.amount]
+  
+        // console.log(itemSpritesArr)
+  
+        player.disabled = true
+  
+        openWindow.replaceChildren()
+        openWindow.style.backgroundColor = 'rgba(0,0,0,0.75)'
+  
+        let OWDialogue = document.querySelector('#overworldDialogue')
+        OWDialogue.textContent = `Do you want to pick ${starter.name} as your starter?`
+  
+        document.querySelector('#overworldDialogueContainer').style.display = 'grid'
 
-      Object.values(keys).forEach(value =>{
-        value.pressed = false
-      })
+        const starterImg = new Image()
+  
+        setTimeout(() =>{
+          starterImg.src = `img/pogemon/00${starter.pogedex}_${starter.name}/${starter.name}.png`
+          starterImg.id = 'overworldStarterImg'
+        }, 50)
 
-      gsap.to(document.querySelector('#overlapping'), {
-        opacity: 0.5
-      })
+        openWindow.appendChild(starterImg)
+        
+        queue.push(() =>{
+          OWDialogue.setAttribute('class', 'chooseStarterButtonsContainer')
+          OWDialogue.style.padding = 0
+          OWDialogue.innerText = ''
+  
+          let choiceArr = ['yes', 'no']
+  
+          for (let i = 0; i < choiceArr.length; i++) {
+            const chooseStarterButton = document.createElement('div')
+            chooseStarterButton.setAttribute('class', 'chooseStarterButton')
+            chooseStarterButton.innerText = choiceArr[i]
+  
+            OWDialogue.appendChild(chooseStarterButton)
+  
+            if(choiceArr[i] == 'no') return
+            chooseStarterButton.addEventListener('click', e =>{
+              queue.push(() =>{
+                OWDialogue.setAttribute('class', '')
+                OWDialogue.style.padding = '35px'
+                OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
+  
+                player.catch(starter, true, currMap)
+  
+                interaction.flags.starter = true
+                player.interaction.info.pickedUp = true
+                player.interaction.info.hidden = true
 
-      player.team[0].dialogue('overworld', `You picked up a ${switchUnderScoreForSpace(item.name)}.`)
+                // openWindow.style.backgroundColor = 'transparent'
+                // openWindow.replaceChildren()
+  
+                itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+              })
+            })
+          }
+        })
+      } else {
+        player.disabled = true
 
-      const itemImage = new Image()
-      itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
-      itemImage.id = 'pickedUpItem'
+        scenes.set('pickingItem', {initiated: true})
 
-      document.querySelector('#openWindow').appendChild(itemImage)
-      
-      player.bag.set(player.interaction.info.name, {item: {...itemsObj[player.interaction.info.name]}, quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
-
-      player.interaction.collisionInstance.boundary.collision = false
-      player.interaction.info.pickedUp = true
-
-      mapsObj[currMap.name].items.forEach(item =>{
-        console.log(item.name == player.interaction.info.name)
-        if(item.name == player.interaction.info.name) item.pickedUp = true
-      })
-
-      if(data != undefined || data != null){
-        data.mapsObjState[currMap.name].items.forEach((item,i) =>{
-          if(item == null) item = mapsObj[currMap.name].items[i]
+        let item = {...itemsObj[player.interaction.info.name]}
+  
+        Object.values(keys).forEach(value =>{
+          value.pressed = false
+        })
+  
+        gsap.to(document.querySelector('#overlapping'), {
+          opacity: 0.5
+        })
+  
+        player.team[0].dialogue('overworld', `You picked up a ${switchUnderScoreForSpace(item.name)}.`)
+  
+        const itemImage = new Image()
+        itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
+        itemImage.id = 'pickedUpItem'
+  
+        document.querySelector('#openWindow').appendChild(itemImage)
+        
+        player.bag.set(player.interaction.info.name, {item: {...itemsObj[player.interaction.info.name]}, quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
+  
+        player.interaction.collisionInstance.boundary.collision = false
+        player.interaction.info.pickedUp = true
+  
+        mapsObj[currMap.name].items.forEach(item =>{
+          // console.log(item.name == player.interaction.info.name)
           if(item.name == player.interaction.info.name) item.pickedUp = true
         })
-        console.log(data.mapsObjState.cross_Link)
-      }
+  
+        if(data != undefined || data != null){
+          data.mapsObjState[currMap.name].items.forEach((item,i) =>{
+            if(item == null) item = mapsObj[currMap.name].items[i]
+            if(item.name == player.interaction.info.name) item.pickedUp = true
+          })
+          // console.log(data.mapsObjState.cross_Link)
+        }
 
-      itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+        if(!player.interaction.info.hidden) itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+      }
       break
     case 'tree':
     case 'rock':
@@ -937,7 +955,7 @@ function playerInteraction(e) {
         player.interaction.collisionInstance.obstacleSprite.animate = false
         player.interaction.collisionInstance.boundary.collision = false      
         player.interaction.info.disabled = true
-        console.log(mapsObj[currMap.name].obstaclesInfo)
+        // console.log(mapsObj[currMap.name].obstaclesInfo)
         player.disabled = false
         soundFlag = false
         obstacleSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.obstacleSprite.type) obstacleSpritesArr.splice(i, 1)})
@@ -1041,7 +1059,7 @@ function eventWhenColliding(boundaries, direction){
       if(!surfCheck) return
 
       if(type == 9){
-        console.log('now')
+        // console.log('now')
         if(stairsDebuff == false) setTimeout(() => {stairsDebuff = false}, 500)
         stairsDebuff = true
         player.running = false
@@ -1079,7 +1097,7 @@ function eventWhenColliding(boundaries, direction){
       if(type == 1){
 
         if(waterCollided){
-          console.log('hahahaha')
+          // console.log('hahahaha')
           if(!player.surfing) return
           surfPogemonSprite.img.src = `img/charSprites/surf/surf_${direction}.png`
           surfPogemonSprite.animate = true
@@ -1094,7 +1112,7 @@ function eventWhenColliding(boundaries, direction){
         if(!timeoutFlag){
           timeoutFlag = true
           setTimeout(() =>{
-            console.log('water does not collide with player anymore')
+            // console.log('water does not collide with player anymore')
             waterDecollisionFlag = true
             showSurf = false
             timeoutFlag = false
@@ -1120,7 +1138,7 @@ function eventWhenColliding(boundaries, direction){
 }
 
 function engageBattle(animationId, battleZones) {
-  if(true) return // remove to set battles back on
+  // if(true) return // remove to set battles back on
   if(player.team.length < 1) return
   if(waitForNextBattle.initiated) return
   
@@ -1197,7 +1215,7 @@ function pickUpAbility(){
     if(pogemon.isShiny) pickUpImgPogemon.src = pogemon.pogemon.sprites.shiny.sprite
     else pickUpImgPogemon.src = pogemon.pogemon.sprites.classic.sprite
 
-    console.log(pickUpImgPogemon.src)
+    // console.log(pickUpImgPogemon.src)
 
     const pickUpImgIcon = new Image()
     pickUpImgIcon.src = 'img/pickup.png'
@@ -1281,13 +1299,19 @@ function move(direction, movables, moveSpeed){
 // maybe should put this in map
 
 let changeMapFlag = false
+let newGameLabFlag = false
+let newGameFlagFlagLMAO = false
+// let prevMap
 
 function changeMapEvent(changeMap, currPos){
+
+
   for(let i = 0; i < changeMap.length; i++){
-    const changeMapIndex = changeMap[i]
+    let changeMapIndex = changeMap[i]
+    // console.log(changeMap[i])
     const currMapInfo = {
       name: currMap.name,
-      position: {
+      spawnPosition: {
         x: currPos.x,
         y: currPos.y
       }
@@ -1301,27 +1325,81 @@ function changeMapEvent(changeMap, currPos){
     ){
       if(changeMapFlag) return
 
-      audioObj.SFX.changeMap.play()
-
       changeMapFlag = true
       player.disabled = true
 
-      gsap.to('#overlapping', {
-        opacity: 1,
-        duration: 0.4,
-        onComplete(){
-          changeMapInfo(changeMapIndex, currMapInfo)
-        }
-      })
+      // if(changeMapIndex.info.name == 'pogemart' || changeMapIndex.name == 'pogecenter'){
+      //   prevMap = currMapInfo
+      //   console.log(prevMap)
+      // } 
+      
+      // if(currMapInfo.name == 'pogemart' || currMapInfo.name == 'pogecenter'){
+      //   changeMapIndex.info = prevMap
+      //   console.log(changeMapIndex.info)
+      // }
+
+      // console.log(changeMapIndex)
+
+      // if(changeMapIndex.info.name == 'prevMap'){
+      //   changeMapIndex = currMapInfo
+      // }
+
+      if(currMap.name == 'lab' && player.team.length == 0){
+        if(newGameLabFlag) return
+
+        newGameLabFlag = true
+        document.querySelector('#openWindow').style.backgroundColor = 'transparent'
+        player.dialogue('overworld', 'Please, come back and choose a pogemon before leaving on your adventure.')
+        return
+      } else {
+        audioObj.SFX.changeMap.play()
+
+        gsap.to('#overlapping', {
+          opacity: 1,
+          duration: 0.4,
+          onComplete(){
+            // console.log(changeMapIndex)
+            changeMapInfo(changeMapIndex.info, currMapInfo)
+          }
+        })
+      }
+
+
       break
     } else if(!rectangularCollision({
       rectangle1: player,
       rectangle2: changeMapIndex
     })){
       changeMapFlag = false
+
+      if(currMap.name == 'lab'){
+        if(!newGameFlagFlagLMAO) {
+          newGameFlagFlagLMAO = true
+          
+          setTimeout(() =>{
+            newGameFlagFlagLMAO = false
+            newGameLabFlag = false
+          }, 1000)
+
+          // setTimeout(() =>{
+          //   if(player.disabled == true) {
+          //     frozenJail = true
+          //     player.dialogue(
+          //       'overworld', 
+          //       `Look at what you've done, you shoulda just picked a pogemon...\n
+          //       Now you're stuck in frozen jail, good job.. :/ \n
+          //       I hope you enjoyed the game, i guess?? xd \n\n\n
+          //       ~ PSILO`
+          //     )
+          //   }
+          // }, 5000)
+      }
+      }
     }
   }
 }
+
+export let frozenJail = false
 
 let eventZonesFlag = false
 
@@ -1339,8 +1417,45 @@ function eventZoneManagement(eventZones){
         rectangle2: eventZonesIndex
       }, 'event')
     ){
+      // console.log(eventZonesIndex)
+
+      if(eventZonesIndex.info.eventKey == "banishmentPathBlock") {
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.dialogue)
+
+        // console.log('block event')
+        return
+      }
+
+      let playerLookingAtNPC = false
+
+      if(eventZonesIndex.type != 4) {
+        switch(eventZonesIndex.info.looking){
+          case 'Up':
+            if(player.direction == 3) playerLookingAtNPC = true
+            break
+          case 'Right':
+            if(player.direction == 4) playerLookingAtNPC = true
+            break
+          case 'Down':
+            if(player.direction == 1) playerLookingAtNPC = true
+            break
+          case 'Left':
+            if(player.direction == 2) playerLookingAtNPC = true
+            break
+        }
+  
+        if(eventZonesIndex.info.looking != undefined) if(!playerLookingAtNPC) return
+      }
+
+
       player.interaction = eventZonesIndex
-      console.log(player.interaction)
+
+      // console.log(player.interaction)
+
+      // console.log(player.interaction)
       if(player.team.length >= 1) {
         if(eventZonesIndex.info.createdTrainer != undefined){
 
@@ -1367,7 +1482,8 @@ function eventZoneManagement(eventZones){
           disableOWMenu.active = true
           
           player.disabled = true
-    
+          
+          exclamation.style.display = 'block'
           exclamation.style.left = eventZonesIndex.position.x
           exclamation.style.top = eventZonesIndex.position.y - 46
 
@@ -1385,7 +1501,7 @@ function eventZoneManagement(eventZones){
     
                   let eventPos = {x:0, y:0}
           
-                  switch(eventZonesIndex.info.direction.looking){
+                  switch(eventZonesIndex.info.looking){
                     case 'Up':
                       eventPos.x = eventZonesIndex.position.x
                       eventPos.y = player.position.y + player.height
@@ -1431,7 +1547,10 @@ function eventZoneManagement(eventZones){
                             player.disabled = false
                             gsap.to('#overlapping', {
                               opacity: 0,
-                              duration: 0.4
+                              duration: 0.4,
+                              onComplete: () =>{
+                                exclamation.style.display = 'none'
+                              }
                             })
                           }
                         })
@@ -1466,30 +1585,53 @@ document.querySelector('#overworldDialogue').addEventListener('click', (e) => {
 
 function spendQueue(){
   if(!queueEnabled) return
+  // if(frozenJail) return
+
+  // console.log(player.interaction.info.eventKey)
+
   if(queue.length > 0){
     queue[0]()
     queue.shift()
     return
-  } else if(!healProcess) {
-    if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
-      opacity : 0,
-      onComplete : () =>{
-        document.querySelector('#openWindow').replaceChildren()
-        scenes.set('pickingItem', {initiated: false})
-        player.interaction = null
+  } else {
+    if(!healProcess) {
+      if(player.interaction != null){
+        if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
+          opacity : 0,
+          onComplete : () =>{
+            if(player.interaction != null) if(player.interaction.info.starter != undefined) return
+            document.querySelector('#openWindow').replaceChildren()
+            scenes.set('pickingItem', {initiated: false})
+            player.interaction = null
+          }
+        })
+      }
+
+      document.querySelector('#overworldDialogueContainer').style.display = 'none'
+      openWindow.style.backgroundColor = 'transparent'
+      player.disabled = false
+      disableOWMenu.active = false
+      interaction.initiated = false
+      document.querySelector('#overworldDialogue').setAttribute('class', '')
+      document.querySelector('#overworldDialogue').style.padding = '35px'
+
+      if(goldieEvoFlag) {
+        manageEvolutionState('true', [player.team[0]])
+        goldieEvoFlag = false
+      }
+    } 
+    
+    if(player.interaction.info.eventKey == 'banishmentPathBlock'){
+    audioObj.SFX.changeMap.play()
+
+    gsap.to('#overlapping', {
+      opacity: 1,
+      duration: 0.4,
+      onComplete(){
+        // console.log({name:'pearly_Path', spawnPosition:{x:map.position.x + 150, y:map.position.y}})
+        changeMapInfo({name:'pearly_Path', spawnPosition:{x:map.position.x - 150, y:map.position.y}}, {name:'pearly_Path', spawnPosition:{x:map.position.x, y:map.position.y}})
       }
     })
-
-    document.querySelector('#overworldDialogueContainer').style.display = 'none'
-    player.disabled = false
-    disableOWMenu.active = false
-    interaction.initiated = false
-    document.querySelector('#overworldDialogue').setAttribute('class', '')
-    document.querySelector('#overworldDialogue').style.padding = '35px'
-
-    if(goldieEvoFlag) {
-      manageEvolutionState('true', [player.team[0]])
-      goldieEvoFlag = false
     }
   }
 }
@@ -1498,12 +1640,13 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
   player.assingDirection(direction)
   if(player.disabled) return
   eventWhenColliding(boundaries, lastDirection)
+  eventZoneManagement(eventZones)
   // eventWhenColliding(eventZones, lastDirection)
+  // console.log(map.position)
   if(player.animate) {
     returnPrevScene('overworld')
     engageBattle(animationId, battleZones)
     changeMapEvent(changeMap, map.position)
-    eventZoneManagement(eventZones)
     lastDirection = direction
     move(direction, movables, moveSpeed)
     if(player.running){
