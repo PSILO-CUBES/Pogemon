@@ -28,7 +28,7 @@ export const movesObj = {
     name: 'headbutt',
     type: 'physical',
     element: 'normal',
-    pow: 80,
+    pow: 1,
     acc: 90,
     pp: 25,
     effects: [{flinched: 30}],

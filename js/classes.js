@@ -616,6 +616,9 @@ export class Pogemon extends Sprite{
         if(Object.values(typesObj[`${move.element}`])[2].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = 0
       }
 
+      queueProcess.disabled = true
+      console.log('there')
+
       // dialogue for type effectiveness
       switch(typeEffectivness){
         case 0:
@@ -1032,7 +1035,6 @@ export class Pogemon extends Sprite{
 
       let chooseAnimation = (type, effect, move, i) =>{
         queueProcess.disabled = true
-        console.log('choose animation')
         console.log('there')
         if(type == 'heal'){
           renderedSprites.push(statusSprite)
@@ -1978,7 +1980,6 @@ export class Pogemon extends Sprite{
         let prevText = document.querySelector('#dialogueInterface').innerText
         // console.log(Object.keys(Object.values(move.effects)[0])[0])
         if(recipient.status.name != null){
-          console.log('trick room text test 3')
           switch(Object.keys(Object.values(move.effects)[0])[0]){
             case 'sun':
                 if(terrainConditions.weather.sun.active){
@@ -2030,7 +2031,6 @@ export class Pogemon extends Sprite{
                 break
             case 'trick_room':
                 if(terrainConditions.etc.trick_room.active){
-                  console.log('wtf?')
                   this.dialogue('battle', `${this.name} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut trick room is already active...`)
                   setTimeout(() =>{
                     queueProcess.disabled = false
@@ -2128,7 +2128,6 @@ export class Pogemon extends Sprite{
 
       if(move.effects != null){
         // working here
-        console.log('trick room text test 1')
         queueProcess.disabled = true
         console.log('there')
         let statusOdd = Object.values(Object.values(move.effects)[0])[0]
@@ -2136,7 +2135,6 @@ export class Pogemon extends Sprite{
 
         if(rng <= statusOdd){
           let prevText = document.querySelector('#dialogueInterface').innerText
-          console.log('trick room text test 2')
           // console.log(Object.keys(Object.values(move.effects)[0])[0])
           switch(Object.keys(Object.values(move.effects)[0])[0]){
             case 'burn':
@@ -2152,18 +2150,15 @@ export class Pogemon extends Sprite{
               }
 
               recipient.status.name = 'burn'
+              recipient.statusEffectAnimation('burn', renderedSprites, queueProcess)
+              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.name} was burnt!`)
+              recipientStatus.style.display = 'block'
+              recipientStatus.src = 'img/status/burn.png'
               setTimeout(() =>{
-                recipient.statusEffectAnimation('burn', renderedSprites, queueProcess)
-                this.dialogue('battle', `${recipient.name} was burnt!`)
-                recipientStatus.style.display = 'block'
-                recipientStatus.src = 'img/status/burn.png'
-
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
-                // console.log(queueProcess)
+                queueProcess.disabled = false
+                console.log('here')
               }, 1250)
+              // console.log(queueProcess)
               break
             case 'para':
               if(recipient.status.name == null) {
@@ -2180,19 +2175,15 @@ export class Pogemon extends Sprite{
               }
 
               recipient.status.name = 'para'
-              setTimeout(() =>{
-                recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
-                this.dialogue('battle', `${recipient.name} was paralyzed!`)
-                recipientStatus.style.display = 'block'
-                recipientStatus.src = 'img/status/para.png'
+              // recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
+              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.name} was paralyzed!`)
+              recipientStatus.style.display = 'block'
+              recipientStatus.src = 'img/status/para.png'
   
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
+              setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
               }, 1250)
-
-
               break
             case 'psn':
               if(recipient.status.name == null) {
@@ -2206,15 +2197,13 @@ export class Pogemon extends Sprite{
               }
 
               recipient.status.name = 'psn'
+              recipient.statusEffectAnimation('psn', renderedSprites, queueProcess)
+              this.dialogue('battle', `${recipient.name} was poisoned!`)
+              recipientStatus.style.display = 'block'
+              recipientStatus.src = 'img/status/psn.png'
               setTimeout(() =>{
-                recipient.statusEffectAnimation('psn', renderedSprites, queueProcess)
-                this.dialogue('battle', `${recipient.name} was poisoned!`)
-                recipientStatus.style.display = 'block'
-                recipientStatus.src = 'img/status/psn.png'
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
+                queueProcess.disabled = false
+                console.log('here')
               }, 1250)
               break
             case 'slp':
@@ -2229,16 +2218,13 @@ export class Pogemon extends Sprite{
               }
 
               recipient.status.name = 'slp'
+              recipient.statusEffectAnimation('slp', renderedSprites, queueProcess)
+              this.dialogue('battle', `${recipient.name} fell asleep!`)
+              recipientStatus.style.display = 'block'
+              recipientStatus.src = 'img/status/slp.png'
               setTimeout(() =>{
-                recipient.statusEffectAnimation('slp', renderedSprites, queueProcess)
-                this.dialogue('battle', `${recipient.name} fell asleep!`)
-                recipientStatus.style.display = 'block'
-                recipientStatus.src = 'img/status/slp.png'
-
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
+                queueProcess.disabled = false
+                console.log('here')
               }, 1250)
               break
             case 'frz':
@@ -2255,16 +2241,14 @@ export class Pogemon extends Sprite{
               
 
               recipient.status.name = 'frz'
-              setTimeout(() =>{
-                recipient.statusEffectAnimation('frz', renderedSprites, queueProcess)
-                this.dialogue('battle', `${recipient.name} was frozen!`)
-                recipientStatus.style.display = 'block'
-                recipientStatus.src = 'img/status/frz.png'
+              recipient.statusEffectAnimation('frz', renderedSprites, queueProcess)
+              this.dialogue('battle', `${recipient.name} was frozen!`)
+              recipientStatus.style.display = 'block'
+              recipientStatus.src = 'img/status/frz.png'
 
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
+              setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
               }, 1250)
               break
             }
@@ -2592,7 +2576,6 @@ export class Pogemon extends Sprite{
 
   endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState){
     if(info == null){
-      console.log('terrain management')
       let checkIfTerrainConditionActive = () =>{
         let flag = false
         let terrainArr = []
@@ -2691,6 +2674,10 @@ export class Pogemon extends Sprite{
             return
           }
 
+          console.log(terrainConditions.weatherSpent)
+          if(terrainConditions.weatherSpent) return
+          terrainConditions.weatherSpent = true
+
           queue.push(() =>{
             // console.log('terrain now')
             terrainAnimation(activeTerrain.type, activeTerrain.info.element)
@@ -2701,6 +2688,8 @@ export class Pogemon extends Sprite{
 
             document.querySelector('#fieldEffect').opacity = 1
             this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
+
+            console.log(terrainConditions.weatherSpent)
             setTimeout(() =>{
               queueProcess.disabled = false
               console.log('here')
@@ -2728,7 +2717,7 @@ export class Pogemon extends Sprite{
   checkStatus(healthBar, healthAmount, renderedSprites, queue, queueProcess, faintEvent, opponent, info, debounce, terrainConditions, manageWeatherState, faintSwitch){
     //makes sure the pogemon isint fainted and that the second pogemon's statusCheck is queued up
 
-    console.log(this.name)
+    // console.log(this.name)
 
     let opponentHealthBar
     let opponentHealthAmount
@@ -2805,85 +2794,83 @@ export class Pogemon extends Sprite{
       })
     }
 
-    let endTurnStatusEvent = () =>{
-      queue.push(() =>{
-        if(this.fainted) return
-        thisFaints()
-        let chip
-  
-        switch(this.status.name){
-          case 'burn':
-          case 'frz':
-
-            chip = Math.floor(this.stats.baseHp / 16)
-            // console.log(chip)
-            // console.log(this.hp)
-            this.hp = Math.floor(this.hp - chip)
-            // console.log(this.hp)
-            if(this.hp < 1) this.hp = 0
-  
-            if(this.isEnemy) {
-              healthBar = '#foeHealthBar'
-              healthAmount = document.querySelector('#foeHP')
-            }
-  
-            document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
-  
-            healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
-            
-            if(this.status.name == 'burn') this.dialogue('battle', `${this.name} felt the burn.`)
-            else if(this.status.name == 'frz') this.dialogue('battle', `${this.name} was hurt by the frost.`)
-            
-            thisFaints()
-  
-            console.log(opponent)
-            if(opponent != null && opponent.status.name == null) {
-              if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
-              console.log('checkStatus')
-            }
-            
-            this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
-            this.hpManagement()
-
-            setTimeout(() =>{
-              queueProcess.disabled = false
-              console.log('here')
-            }, 1250)
-            break
-          case 'psn':
-            chip = Math.floor((this.stats.baseHp / 16) * this.status.turns + 1)
-            this.hp = Math.floor(this.hp - chip)
-            if(this.hp < 1) this.hp = 0
-  
-            if(this.isEnemy) {
-              healthBar = '#foeHealthBar'
-              healthAmount = document.querySelector('#foeHP')
-            }
-  
-            document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
-            healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
-            this.dialogue('battle', `${this.name} felt sick.`)
-  
-            thisFaints()
-  
-            if(opponent.status.name != null && info != null) {
-              opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
-              console.log('checkStatus')
-            }
-            
-            this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
-            this.hpManagement()
-  
-            this.status.turns = this.status.turns + 1
-            break
-        }
-      })
-
+    let endTurnStatusEvent = statusInfo =>{
+      console.log(statusInfo)
       if(this.status.name == 'para' || this.status.name == 'slp') {
-        if(opponent.status.name != null && info != null) {
-          opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
-          console.log('checkStatus')
-        }
+        if(statusInfo != null || statusInfo != undefined) opponent.checkStatus(statusInfo[0], statusInfo[1], statusInfo[2], statusInfo[3], statusInfo[4], statusInfo[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch)
+      } else {
+        queue.push(() =>{
+          if(this.fainted) return
+          thisFaints()
+          let chip
+    
+          switch(this.status.name){
+            case 'burn':
+            case 'frz':
+  
+              chip = Math.floor(this.stats.baseHp / 16)
+              // console.log(chip)
+              // console.log(this.hp)
+              this.hp = Math.floor(this.hp - chip)
+              // console.log(this.hp)
+              if(this.hp < 1) this.hp = 0
+    
+              if(this.isEnemy) {
+                healthBar = '#foeHealthBar'
+                healthAmount = document.querySelector('#foeHP')
+              }
+    
+              document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
+    
+              healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
+              
+              if(this.status.name == 'burn') this.dialogue('battle', `${this.name} felt the burn.`)
+              else if(this.status.name == 'frz') this.dialogue('battle', `${this.name} was hurt by the frost.`)
+              
+              thisFaints()
+    
+              // console.log(opponent)
+              if(opponent != null && opponent.status.name == null) {
+                if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
+                console.log('checkStatus')
+              }
+              
+              this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
+              this.hpManagement()
+  
+              setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
+              }, 1250)
+              break
+            case 'psn':
+              chip = Math.floor((this.stats.baseHp / 16) * this.status.turns + 1)
+              this.hp = Math.floor(this.hp - chip)
+              if(this.hp < 1) this.hp = 0
+    
+              if(this.isEnemy) {
+                healthBar = '#foeHealthBar'
+                healthAmount = document.querySelector('#foeHP')
+              }
+    
+              document.querySelector(healthBar).style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
+              healthAmount.innerText = `${this.hp}/${this.stats.baseHp}`
+              this.dialogue('battle', `${this.name} felt sick.`)
+    
+              thisFaints()
+    
+              if(opponent.status.name != null && info != null) {
+                opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
+                console.log('checkStatus')
+              }
+              
+              this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
+              this.hpManagement()
+    
+              this.status.turns = this.status.turns + 1
+              break
+          }
+        })
       }
     }
 
@@ -2899,7 +2886,7 @@ export class Pogemon extends Sprite{
       if(opponent.status.name == null){
         // vvvvv manage without affliction and status vvvvv
 
-        console.log(opponent)
+        // console.log(opponent)
         if(!opponent.affliction[0].active == false && opponent.affliction[1].active == false) {
           console.log('no status nor afflictions')
           // this.endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess)
@@ -2909,6 +2896,7 @@ export class Pogemon extends Sprite{
 
         // // thisFaints()
         if(info != undefined && !debounce){
+          // if(info[0] == '#foeHealthBar') return
           console.log(`no status but affliction on ${opponent.name}`)
           opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch) 
           console.log('checkStatus')
@@ -2922,8 +2910,9 @@ export class Pogemon extends Sprite{
         }
       }
     } else {
-      endTurnStatusEvent()
+      endTurnStatusEvent(info)
       if(opponent.status.name != null){
+        console.log('status on both')
         if(!debounce){
           // thisFaints()
           // opponent.checkStatus(opponentHealthBar, opponentHealthAmount, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
@@ -2931,7 +2920,7 @@ export class Pogemon extends Sprite{
         }
       } else {
         // here makes the weather skip a turn
-        console.log('status on both')
+        console.log(`status on ${this.name}`)
       }
     }
 
@@ -2949,6 +2938,7 @@ export class Pogemon extends Sprite{
       case 'missed':
       case 'flinched':
         this.dialogue('battle', `${this.name} ${type}!`)
+
         gsap.to(this.position, {
           x: this.position.x + 10,
           y: this.position.y + 10,
@@ -2963,6 +2953,9 @@ export class Pogemon extends Sprite{
         })
         break
       case 'para':
+        queueProcess.disabled = true
+        console.log('there')
+
         this.dialogue('battle', `${this.name} couldnt move because it's paralyzed.`)
         this.statusEffectAnimation('para', renderedSprites, queueProcess)
         break
@@ -2972,7 +2965,7 @@ export class Pogemon extends Sprite{
         this.statusEffectAnimation('slp', renderedSprites, queueProcess)
         break
       case 'confusion':
-        this.dialogue('battle', `${this.name} hit itself in confusion.`)
+        this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.name} hit itself in confusion.`)
 
         let userId = 'ally'
         let userHp = document.querySelector('#allyHp')
@@ -2999,8 +2992,8 @@ export class Pogemon extends Sprite{
           repeat: 5,
           duration: 0.08,
           onComplete: () =>{
-            // queueProcess.disabled = false
-            // console.log('here')
+            queueProcess.disabled = false
+            console.log('here')
           }
         })
         break

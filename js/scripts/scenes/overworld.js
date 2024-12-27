@@ -626,7 +626,8 @@ function escapeKeyEventOptions(e) {
     }
 
     if(scenes.get('battle').initiated){
-      if(!moveProcess) encounterInterfaceDom.style.display = 'grid'
+      console.log('grided')
+      if(battleQueue.length == 0) if(!moveProcess) encounterInterfaceDom.style.display = 'grid'
       if(moveLearning.initiated) learnMoveOptionEvent(null, learningMove, learningType, learningTarget)
     }
 
@@ -682,8 +683,8 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    console.log(player)
-    // console.log(battleQueue)
+    // console.log(player)
+    console.log(battleQueue)
   }
 }
 

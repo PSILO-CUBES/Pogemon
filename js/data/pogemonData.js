@@ -25,17 +25,17 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 9999999999999
+      spd: 120
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
-      2: {move: movesObj.thunder_wave, lvl: 1, seen: false},
+      1: {move: movesObj.super_power, lvl: 1, seen: false},
+      2: {move: movesObj.hypnosis, lvl: 1, seen: false},
       3: {move: movesObj.confuse_ray, lvl: 1, seen: false},
-      // 4: {move: movesObj.hypnosis, lvl: 1, seen: false},
+      4: {move: movesObj.thunder_wave, lvl: 1, seen: false},
       // 5: {move: movesObj.headbutt, lvl: 50, seen: false},
       // 6: {move: movesObj.frost_wave, lvl: 50, seen: false},
     },
@@ -1247,15 +1247,15 @@ export let pogemonsObj = {
       def: 40,
       spatk: 30,
       spdef: 40,
-      spd: 9999
+      spd: 80
     },
     evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.thunder_wave, lvl: 1, seen: false},
-      // 2: {move: movesObj.growl, lvl: 1, seen: false},
+      // 1: {move: movesObj.thunder_wave, lvl: 1, seen: false},
+      2: {move: movesObj.tackle, lvl: 1, seen: false},
       // 3: {move: movesObj.super_power, lvl: 1, seen: false},
       // 4: {move: movesObj.heat_wave, lvl: 1, seen: false},
     },

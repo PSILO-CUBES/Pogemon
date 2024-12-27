@@ -399,8 +399,6 @@ PARA DOESNT HAPPEN AFTER CONFUSION x
 
 sleep is all kinds of fucked up x
 
-slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process -- not sure if fixed but harder to make happen x
-
 check flinch with confuse + sleep combo x
 
 stat change happens after weather x
@@ -432,6 +430,10 @@ stuffToDo:{
         should test more with trickroom, some end turn stuff seems funky like sleep being animated at the same time as confusion
 
         fix move hit location
+
+        slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process
+
+        pogemon healing item event doesnt trigger often enought
     }
     sprites:{
         leech seed move animation is fucky
