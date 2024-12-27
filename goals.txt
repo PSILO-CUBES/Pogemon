@@ -434,6 +434,8 @@ stuffToDo:{
         slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process
 
         pogemon healing item event doesnt trigger often enought
+
+        paralyze turn makes opponent always go last
     }
     sprites:{
         leech seed move animation is fucky

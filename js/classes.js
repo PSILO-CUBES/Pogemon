@@ -2575,6 +2575,12 @@ export class Pogemon extends Sprite{
   }
 
   endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState){
+    console.log(terrainConditions.weatherSpent)
+    if(terrainConditions.weatherSpent) return
+    terrainConditions.weatherSpent = true
+
+    console.log('wawawiiiii')
+    console.log(info)
     if(info == null){
       let checkIfTerrainConditionActive = () =>{
         let flag = false
@@ -2593,10 +2599,12 @@ export class Pogemon extends Sprite{
   
       let [terrainFlag, terrainArr] = checkIfTerrainConditionActive()
 
+      console.log(terrainArr)
+
       if(terrainFlag){
         if(faintSwitch.active){
           faintSwitch.active = false
-          return
+          // return
         }
         
         // console.log(faintEvent)
@@ -2674,11 +2682,10 @@ export class Pogemon extends Sprite{
             return
           }
 
-          console.log(terrainConditions.weatherSpent)
-          if(terrainConditions.weatherSpent) return
-          terrainConditions.weatherSpent = true
-
+          console.log('nmow')
           queue.push(() =>{
+            console.log('nmow2')
+
             // console.log('terrain now')
             terrainAnimation(activeTerrain.type, activeTerrain.info.element)
             activeTerrain.info.turns--
@@ -2957,7 +2964,8 @@ export class Pogemon extends Sprite{
         console.log('there')
 
         this.dialogue('battle', `${this.name} couldnt move because it's paralyzed.`)
-        this.statusEffectAnimation('para', renderedSprites, queueProcess)
+        if(!this.affliction[0].active) this.statusEffectAnimation('para', renderedSprites, queueProcess)
+        console.log('does this happen?')
         break
       case 'slp':
         this.status.turns += 1

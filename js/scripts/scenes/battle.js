@@ -583,6 +583,9 @@ queueFaintTrigger.initiated = false
 
   foe.status.name = 'para'
 
+  terrainConditions.etc.trick_room.active = true
+  terrainConditions.etc.trick_room.turns = 5
+
   if(battlerArr.length != 0){
     if(checkIfSameId()) battlerArr.push(ally)
   } else {
@@ -2217,7 +2220,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
       console.log(slower)
       console.log(target)
       if(target.id == slower.id){
-        if(teamEvent.switch) target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState)
+        target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState)
         if(target.status.name == 'para' || target.status.name == 'slp') return
 
         let RNG = Math.floor(Math.random() * recipient.moves.length)
@@ -2450,8 +2453,8 @@ function attackMove(e) {
   
       if(target.affliction[0].active) pass = false
   
-      console.log(confusionProcess.foe)
-      console.log(confusionProcess.ally)
+      // console.log(confusionProcess.foe)
+      // console.log(confusionProcess.ally)
 
       paraState.foe = false
       paraState.ally = false
@@ -2461,7 +2464,7 @@ function attackMove(e) {
   
       // if(pass){
         if(target.status.name == 'para') {
-          console.log('now 2')
+          // console.log('now 2')
           if(attackLanded(50)) {
             if(target.isEnemy) {
               paraState.foe = true
@@ -2469,12 +2472,12 @@ function attackMove(e) {
               paraState.ally = true
             }
             target.miss('para', renderedSprites, queueProcess)
-            console.log('?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????')
+            // console.log('?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????')
           } else {
             if(target.affliction[0].active){
               console.log('afflictionEvent')
               afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', false, slowerStatusIcon) 
-              console.log('NWONWOWNOWNONWOONWONWONWNOW')
+              // console.log('NWONWOWNOWNONWOONWONWONWNOW')
             } else if(attackLanded(targetMove.acc)) {
               moveProcess = true
               target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
@@ -2490,7 +2493,7 @@ function attackMove(e) {
           return
         } else if(target.status.name == 'slp'){
 
-          console.log(target.status)
+          // console.log(target.status)
           if(target.status.turns <= 2) {
             console.log('sleep')
             if(attackLanded(0)) {
@@ -2512,7 +2515,7 @@ function attackMove(e) {
               if(target.affliction[0].active){
                 console.log('afflictionEvent')
                 queue.push(() => afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', false, slowerStatusIcon))
-                console.log('NWONWOWNOWNONWOONWONWONWNOW')
+                // console.log('NWONWOWNOWNONWOONWONWONWNOW')
               } else if(attackLanded(targetMove.acc)) {
                 moveProcess = true
     
