@@ -6,7 +6,7 @@ import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
 import { manageBattleState, faintedTriggered } from "./battle.js"
-import { manageStatsState } from "./stats.js"
+import { manageStatsState, switchUnderScoreForSpace } from "./stats.js"
 
 let teamAnimationId
 
@@ -93,7 +93,7 @@ function switchProcessEvent(first, second){
 
   setTimeout(() =>{
     for (let i = 0; i < player.team.length; i++) {
-      pogemonTeamDomArr[i].childNodes[1].childNodes[0].childNodes[0].textContent = player.team[i].name
+      pogemonTeamDomArr[i].childNodes[1].childNodes[0].childNodes[0].textContent = switchUnderScoreForSpace(player.team[i].nickname)
       pogemonTeamDomArr[i].childNodes[1].childNodes[0].childNodes[1].src = `../../../img/${player.team[i].gender}_icon.png`
       pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
       pogemonTeamDomArr[i].childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes[0].width = `${first.pogemon.convertToPercentage(player.team[i].hp, player.team[i].stats.baseHp)}%`
@@ -366,7 +366,7 @@ function printTeamInfo(i, teamMenuContainerDom){
   const infoSection = section.children[0]
   const healthbarSection = section.children[1]
 
-  infoSection.children[0].textContent = player.team[i].name
+  infoSection.children[0].textContent = switchUnderScoreForSpace(player.team[i].nickname)
   infoSection.children[1].src = `../../../img/${player.team[i].gender}_icon.png`
 
   healthbarSection.children[1].textContent = `Lv ${player.team[i].lvl}`

@@ -602,3 +602,268 @@ input[type="range"]::-webkit-slider-thumb {
 } .flashContainerMidSegments:nth-child(even){
   background: radial-gradient(rgba(0, 0, 0, 0.5), 0.1%, black);
 }
+
+#pogemonNamingScene{
+  display: none;
+}
+
+#pogemonNamingSceneContainer{
+  position: absolute;
+  top: 0;
+
+  display: grid;
+
+  grid-template-rows: 70% 30%;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: 14;
+
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#pogemonNamingSceneDisplayContainer{
+  display: grid;
+
+  grid-template-columns: 45% 55%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemonNamingSceneInputChoiceContainer{
+  display: grid;
+
+  grid-template-columns: 50% 50%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#pogemonNamingSceneInputChoiceContainer,
+#pogemonNamingSceneInputNamingContainer{
+  height: 100%;
+  width: 100%;
+}
+
+#pogemonNamingSceneInputNamingContainer{
+  display: grid;
+  grid-template-columns: 55% 45%;
+
+  justify-content: center;
+  align-items: center;
+}
+
+#pogemonNamingSceneInputNamingConfirmationContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  height: 100%;
+
+  justify-content: center;
+  align-items: center;
+}
+
+#pogemonNamingSceneInputNaming{
+  background-color: rgb(85, 85, 85, 0.25);
+  text-align: center;
+}
+
+#pogemonNamingSceneInputChoiceYes,
+#pogemonNamingSceneInputChoiceNo,
+#pogemonNamingSceneInputNamingConfirmationYes,
+#pogemonNamingSceneInputNamingConfirmationNo{
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}#pogemonNamingSceneInputChoiceYes:hover,
+#pogemonNamingSceneInputChoiceNo:hover,
+#pogemonNamingSceneInputNamingConfirmationYes:hover,
+#pogemonNamingSceneInputNamingConfirmationNo:hover{
+  cursor: pointer;
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+#pogemonNamingSceneDisplayTextContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 50;
+  text-align: center;
+
+  line-height: 2;
+}
+
+#pogemonNamingSceneInputNamingCenteringContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#pogemonNamingSceneDisplayImgContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pogemonNamingSceneDisplayImg{
+  max-width: 80%;
+}
+
+#confirmPogemonNameButtonsContainerBackground{
+  display: none;
+
+  position: absolute;
+  top: 0;
+
+  z-index: 15;
+
+  background-color: rgba(0, 0, 0, 0.25);
+  
+  height: 100%;
+  width: 100%;
+}
+
+#confirmPogemonNameContainer{
+  display: grid;
+  grid-template-rows: 65% 35%;
+
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 45%;
+  width: 45%;
+
+  background-color: black;
+}
+
+#confirmPogemonInfoDisplayContainer{
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 45%;
+  width: 45%;
+
+  background-color: black;
+}
+
+#confirmPogemonNameTextDisplayContainer{
+  display: flex;
+  text-align: center;
+  align-items: center;
+
+  line-height: 2;
+
+  padding: 2.5%;
+}
+
+#confirmPogemonNameButtonsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+#confirmPogemonNameYes,
+#confirmPogemonNameNo{
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  
+  height: 100%;
+  width: 100%;
+}
+
+#confirmPogemonNameYes{
+  background-color: rgba(0, 128, 0, 0.25);
+}#confirmPogemonNameYes:hover{
+  cursor: pointer;
+  background-color: rgba(0, 128, 0, 0.5);
+}
+
+#confirmPogemonNameNo{
+  background-color: rgba(128, 0, 0, 0.25);
+}#confirmPogemonNameNo:hover{
+  cursor: pointer;
+  background-color: rgba(128, 0, 0, 0.5);
+}
+
+#confirmPogemonInfoDisplayContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  display: none;
+}
+
+#confirmPogemonInfoDisplayContainer{
+  padding: 5%;
+}
+
+#mapEncounterContainer{
+  display: flex;
+  justify-content: space-evenly;
+
+  flex-wrap: wrap;
+
+  position: absolute;
+  left: 75;
+  top: 25;
+
+  height: 0;
+  width: 500;
+
+  border-radius: 5px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  transition: 1s ease-in-out;
+
+  overflow: hidden;
+}
+
+#manageEncounterStateButton{
+  position: absolute;
+  left: 12.5;
+  top: 25;
+
+  height: 50;
+  width: 50;
+
+  border-radius: 5px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+} #manageEncounterStateButton:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#manageEncounterStateButtonImg{
+  height: 100%;
+  width: 100%;
+}
+
+#encounterDiv{
+  height: 112.5;
+  width: 112.5;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  border-radius: 5px;
+
+  margin-top: 15;
+}
+
+#encounterImg{
+  width: 100%;
+}

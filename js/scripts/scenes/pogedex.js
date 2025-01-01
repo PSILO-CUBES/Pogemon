@@ -44,8 +44,8 @@ function pogedexAnimation(timeSpent){
 function changeTargetPogemonInfo(target){
     targetPogemon = target
 
-    document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = `${target.pogedex}`
-    document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = `${target.name}`
+    document.querySelector('#pogedexSceneTargetSectionDetailNumber').innerText = target.pogedex
+    document.querySelector('#pogedexSceneTargetSectionDetailName').innerText = target.name
 
     let pogemonCaught = false
     let pogemonSeen = false
@@ -79,6 +79,8 @@ function pogedexSectionClickEvent(e){
 }
 
 function showPogemonInfo(){
+    if(pogedexInfoState.type == '') return
+    
     pogedexInfoState.flag = false
     
     document.querySelector('#pogedexSceneContainer').style.display = 'none'
@@ -212,7 +214,7 @@ function createPogedexMenu(){
 
             if(i == 0) pogedexPogemonInfo.textContent = `${currPogemon.pogedexIndex}`
             else {
-                if(currPogemon.seen) pogedexPogemonInfo.textContent = `${currPogemon.name}`
+                if(currPogemon.seen) pogedexPogemonInfo.textContent = currPogemon.name
                 else pogedexPogemonInfo.textContent = `???`
             }
 
@@ -597,6 +599,8 @@ function createInfoMenu(){
                                                 const pogedexInfoMoveHR = document.createElement('hr')
                                                 pogedexInfoMoveContainer.setAttribute('class', 'pogedexInfoMoveContainer')
 
+                                                console.log(move)
+
                                                 if(moveInfo.seen) {
                                                     pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
@@ -814,8 +818,7 @@ function setInfoMenu(){
         }
 
         document.querySelector('#rightInfoSelectionContainer').style.display = 'grid'
-    }
-    else if(pogedexInfoState.type == 'INFO') {
+    } else if(pogedexInfoState.type == 'INFO') {
         document.querySelector('#bottomInfoContainer').innerText = ''
         document.querySelector('#rightInfoSelectionContainer').style.display = 'none'
 

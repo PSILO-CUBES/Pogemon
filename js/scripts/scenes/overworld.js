@@ -2,12 +2,12 @@
 
 import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
-import { currMap, generateMapData, pogecenterReturnInfo, worldEventData } from '../maps.js'
+import { currMap, encounterButtonState, generateMapData, pogecenterReturnInfo, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
-import { manageStatsState } from './stats.js'
+import { manageStatsState, switchSpaceForUnderScore, switchUnderScoreForSpace } from './stats.js'
 import { managePogedexState, pogedexInfoState } from './pogedex.js'
 import { timeObj, manageTrainerState } from './trainer.js'
 import { defaultMapsObj, mapsObj } from '../../data/mapsData.js'
@@ -117,6 +117,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
     duration: 0.4,
     onComplete(){
       player.disabled = false
+      console.log(catchEventObj)
       nextMapSaveInfo = nextMapInfo
       //map changed here
       startOverWorldWeather()
@@ -216,7 +217,7 @@ function overworldMenuClickEvent(e){
     case 'team':
       if(player.team < 1) return
       
-      manageOverWorldState(false)
+      manageOverWorldState(false, 'team')
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
@@ -230,7 +231,7 @@ function overworldMenuClickEvent(e){
     case 'bag':
       if(player.team < 1) return
 
-      manageOverWorldState(false)
+      manageOverWorldState(false, 'bag')
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
@@ -244,7 +245,7 @@ function overworldMenuClickEvent(e){
     case 'pogedex':
       if(player.team < 1) return
 
-      manageOverWorldState(false)
+      manageOverWorldState(false, 'pogedex')
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
@@ -256,7 +257,7 @@ function overworldMenuClickEvent(e){
       })
       break
     case 'trainer':
-      manageOverWorldState(false)
+      manageOverWorldState(false, 'trainer')
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
@@ -556,17 +557,21 @@ export let waitForNextBattle = {
   initiated: false
 }
 
-function transitionScenes(prevScene){
+function transitionScenes(prevScene, exitedScene){
   switch(prevScene){
     case 'overworld':
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
-          manageOverWorldState(true)
+          console.log(prevScene)
+          console.log(exitedScene)
+
+          manageOverWorldState(true, exitedScene)
           gsap.to('#overlapping', {
             opacity: 0,
             onComplete: () =>{
               player.disabled = false
+              console.log(catchEventObj)
             }
           })
         }
@@ -593,6 +598,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
+      console.log(optionMenuState)
       if(optionMenuState) manageOptionMenuState(false)
       if(pogemartInteraction.initiated) {
         pogemartInteraction.initiated = false
@@ -614,6 +620,7 @@ function escapeKeyEventOptions(e) {
         queue.push(() =>{
           disableOWMenu.active = false
           player.disabled = false
+          console.log(catchEventObj)
         })
         return
       }
@@ -638,13 +645,13 @@ function escapeKeyEventOptions(e) {
     if(scenes.get('team').initiated){
       if(faintedTriggered.active) return
       manageTeamState(false, prevScene)
-      transitionScenes(prevScene)
+      transitionScenes(prevScene, 'team')
     }
 
     if(scenes.get('bag').initiated){
       if(itemUsed.used == true) return
       manageBagState(false)
-      transitionScenes(prevScene)
+      transitionScenes(prevScene, 'bag')
     }
 
     if(scenes.get('stats').initiated){
@@ -662,12 +669,12 @@ function escapeKeyEventOptions(e) {
       }
 
       managePogedexState(false)
-      transitionScenes('overworld')
+      transitionScenes('overworld', 'pogedex')
     }
 
     if(scenes.get('trainer').initiated){
       manageTrainerState(false)
-      transitionScenes('overworld')
+      transitionScenes('overworld', 'battle')
     }
 
     if(scenes.get('pc').initiated){
@@ -675,7 +682,7 @@ function escapeKeyEventOptions(e) {
         opacity: 1,
         onComplete: () =>{
           managePcState(false)
-          transitionScenes('overworld')
+          transitionScenes('overworld', 'pc')
           gsap.to('#overlapping',{
             opacity: 0,
           })
@@ -683,7 +690,7 @@ function escapeKeyEventOptions(e) {
       })
     }
   } else if(e.key == '`'){
-    // console.log(player)
+    console.log(player)
     console.log(battleQueue)
   }
 }
@@ -799,6 +806,8 @@ function manageWeatherParticles(weather){
   OWWeatherParticles.arr.push(particle)
 }
 
+let timer = 1
+
 const overWorldAnimation = timeSpent =>{
   animationId = requestAnimationFrame(overWorldAnimation)
   OWAnimationRuning = true
@@ -808,15 +817,24 @@ const overWorldAnimation = timeSpent =>{
 
   if(currMap == undefined) return
 
-  if(currMap.name == 'lab') if(player.disabled) if(document.querySelector('#overworldDialogueContainer').style.display == 'none' && document.querySelector('#overworldMenu').style.display == 'none') player.disabled = false
+  if(currMap.name == 'lab') if(player.disabled) if(document.querySelector('#overworldDialogueContainer').style.display == 'none' && document.querySelector('#overworldMenu').style.display == 'none') {
+    // player.disabled = false
+    timer++
+    if(timer >= 60){
+      if(player.team.length == 0) player.disabled = false
+    }
+  }
 
   manageWeatherParticles(weatherObj[mapsObj[currMap.name].weather])
   printImages(background, FG, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, OWWeatherParticles)
   playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones)
 }
 
-export function manageOverWorldState(state){
+let teamOrder
+
+export function manageOverWorldState(state, previousScene){
   if(state) {
+    player.disabled = true
     if(OWAnimationRuning) return
     document.querySelector('#overworldSceneContainer').style.backgroundColor = 'rgba(0,0,0,0)'
     eventZones.forEach(zone =>{
@@ -837,17 +855,159 @@ export function manageOverWorldState(state){
       else if (!player.badges[1]) player.team[0].dialogue('overworld', "Congratulations, you've earned a second badge!\n\nNo rock will ever be in your way from now on.")
     }
 
+    let teamPlaceHolder = []
+    
+    if(previousScene != 'boot' && previousScene != 'team'){
+      console.log(teamOrder)
+      console.log(player.team)
+
+      teamOrder.forEach((order, i) =>{
+        player.team.forEach((pogemon, j) =>{
+          if(order.id == pogemon.id) {
+            teamPlaceHolder.push(pogemon)
+          }
+        })
+      })
+
+      if(player.team.length <= 6) if(catchEventObj.active) teamPlaceHolder.push(player.team[teamOrder.length])
+
+      player.team = teamPlaceHolder 
+    }
+
     overWorldAnimation()
     startOverWorldWeather()
     scenes.set('overworld', {initiated : true})
-    player.disabled = false
+    if(document.querySelector('#pogemonNamingScene').style.display == 'none') {if(catchEventObj.active == false) player.disabled = false}
+    else setTimeout(() => player.disabled = false, 500)
+    console.log(document.querySelector('#pogemonNamingScene').style.display == 'none')
+    console.log(catchEventObj)
     menu.initiated = false
     overworldMenuDom.replaceChildren()
   }
   else {
+    teamOrder = [...player.team]
+    // console.log(teamOrder)
     cancelAnimationFrame(animationId)
     OWAnimationRuning = false
     document.querySelector('#overworldScene').style.display = 'none'
     scenes.set('overworld', {initiated : false})
   }
 }
+
+document.querySelector('#pogemonNamingSceneInputChoiceYes').addEventListener('click', e =>{
+  document.querySelector('#pogemonNamingSceneInputChoiceContainer').style.display = 'none'
+})
+
+document.querySelector('#pogemonNamingSceneInputNamingConfirmationYes').addEventListener('click', e =>{
+  const pogemonNickname = switchSpaceForUnderScore(document.querySelector('#pogemonNamingSceneInputNaming').value)
+  console.log(pogemonNickname)
+  if(pogemonNickname == '') return
+  // catchEventObj.caughtPogemon.name = document.querySelector('#pogemonNamingSceneInputNaming').textContent
+
+  document.querySelector('#pogemonNamingSceneDisplayContainer').style.display = 'none'
+  document.querySelector('#pogemonNamingSceneInputContainer').style.display = 'none'
+
+  document.querySelector('#confirmPogemonNameButtonsContainerBackground').style.display = 'block'
+  
+  document.querySelector('#confirmPogemonNameTextDisplayContainer').textContent = `Are you sure that " ${switchUnderScoreForSpace(pogemonNickname)} " is the right nickname for this ${catchEventObj.caughtPogemon.pogemon.name}?`
+  // document.querySelector('#pogemonNamingScene').style.display = 'none'
+
+  document.querySelector('#confirmPogemonNameYes').textContent = 'Keep Name'
+  document.querySelector('#confirmPogemonNameNo').textContent = 'Change Name'
+})
+
+document.querySelector('#confirmPogemonNameYes').addEventListener('click', e =>{
+  console.log(e.target.textContent)
+
+  if(e.target.textContent == 'Keep Name'){
+    const pogemonNickname = switchSpaceForUnderScore(document.querySelector('#pogemonNamingSceneInputNaming').value)
+    const confirmPogemonInfoDisplayContainer = document.querySelector('#confirmPogemonInfoDisplayContainer')
+  
+    confirmPogemonInfoDisplayContainer.style.display = 'flex'
+    confirmPogemonInfoDisplayContainer.textContent = `Say hi to your new buddy ${switchUnderScoreForSpace(pogemonNickname)}! :)`
+  
+    catchEventObj.caughtPogemon.nickname = pogemonNickname
+    console.log(catchEventObj)
+    console.log(catchEventObj.caughtPogemon.nickname)
+  
+    setTimeout(() =>{
+      document.querySelector('#pogemonNamingScene').style.display = 'none'
+      player.disabled = false
+      document.querySelector('#overlapping').style.opacity = 0.5
+      gsap.to(document.querySelector('#overlapping').style, {
+        opacity: 0,
+        duration: 1,
+        onComplete: () => player.disabled = false
+      })
+    }, 2500)
+  } else {
+    const confirmPogemonInfoDisplayContainer = document.querySelector('#confirmPogemonInfoDisplayContainer')
+  
+    confirmPogemonInfoDisplayContainer.style.display = 'flex'
+    confirmPogemonInfoDisplayContainer.textContent = `You decided it's best not to give this ${catchEventObj.caughtPogemon.name} a nickname.`
+  
+    setTimeout(() =>{
+      document.querySelector('#pogemonNamingScene').style.display = 'none'
+      player.disabled = false
+      document.querySelector('#overlapping').style.opacity = 0.5
+      gsap.to(document.querySelector('#overlapping').style, {
+        opacity: 0,
+        duration: 1
+      })
+    }, 1250)
+  }
+
+})
+
+document.querySelector('#pogemonNamingSceneInputNamingConfirmationNo').addEventListener('click', e => {
+  // document.querySelector('#pogemonNamingScene').style.display = 'none'
+  catchEventObj.active = false
+  // player.disabled = false
+
+  document.querySelector('#confirmPogemonNameButtonsContainerBackground').style.display = 'block'
+
+  document.querySelector('#confirmPogemonNameTextDisplayContainer').textContent = `Are you sure you want to stop renaming this ${catchEventObj.caughtPogemon.name}?`
+
+  document.querySelector('#pogemonNamingSceneDisplayContainer').style.display = 'none'
+  document.querySelector('#pogemonNamingSceneInputContainer').style.display = 'none'
+
+  document.querySelector('#confirmPogemonNameYes').textContent = 'Stop Renaming'
+  document.querySelector('#confirmPogemonNameNo').textContent = 'Keep Renaming'
+})
+
+document.querySelector('#pogemonNamingSceneInputChoiceNo').addEventListener('click', e => {
+  // document.querySelector('#pogemonNamingScene').style.display = 'none'
+  catchEventObj.active = false
+  // player.disabled = false
+
+  document.querySelector('#confirmPogemonNameButtonsContainerBackground').style.display = 'block'
+
+  document.querySelector('#confirmPogemonNameTextDisplayContainer').textContent = `Are you sure you want to stop renaming this ${catchEventObj.caughtPogemon.name}?`
+
+  document.querySelector('#pogemonNamingSceneDisplayContainer').style.display = 'none'
+  document.querySelector('#pogemonNamingSceneInputContainer').style.display = 'none'
+
+  document.querySelector('#confirmPogemonNameYes').textContent = 'Stop Renaming'
+  document.querySelector('#confirmPogemonNameNo').textContent = 'Keep Renaming'
+})
+
+document.querySelector('#confirmPogemonNameNo').addEventListener('click', e =>{
+  document.querySelector('#confirmPogemonNameButtonsContainerBackground').style.display = 'none'
+
+  document.querySelector('#pogemonNamingSceneDisplayContainer').style.display = 'grid'
+  document.querySelector('#pogemonNamingSceneInputContainer').style.display = 'block'
+})
+
+document.querySelector('#manageEncounterStateButtonImg').addEventListener('click', e =>{
+  if(currMap.encounters.ground == undefined) return
+
+  if(encounterButtonState.active){
+    document.querySelector('#mapEncounterContainer').style.height = 0
+    document.querySelector('#manageEncounterStateButtonImg').src = 'img/downArrow.png'
+  } else {
+    document.querySelector('#mapEncounterContainer').style.height = 275
+    document.querySelector('#manageEncounterStateButtonImg').src = 'img/upArrow.png'
+  }
+
+  encounterButtonState.active = !encounterButtonState.active
+})

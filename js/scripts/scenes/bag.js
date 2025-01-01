@@ -267,7 +267,7 @@ function useItemOnClickEvent(e){
           switch(currItem.effect){
             case 'heal':
               if(targetPogemon.fainted){
-                dialogueInterfaceDom.textContent = `${targetPogemon.name} has fainted and cannot recover HP`
+                dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} has fainted and cannot recover HP`
                 return
               }
               if(targetPogemon.hp < targetPogemon.stats.baseHp){
@@ -281,10 +281,10 @@ function useItemOnClickEvent(e){
   
                 itemUsed.item = currItem
             
-                dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${targetPogemon.name}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
+                dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
               } else {
   
-                dialogueInterfaceDom.textContent = `${targetPogemon.name} doesnt need to be healed.`
+                dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need to be healed.`
                 dialogueInterfaceDom.style.display = 'block'
                 return
               }
@@ -295,7 +295,7 @@ function useItemOnClickEvent(e){
               if(targetPogemon.fainted){
                 if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
                   
-                dialogueInterfaceDom.innerText = `${targetPogemon.name} has been revived.`
+                dialogueInterfaceDom.innerText = `${switchUnderScoreForSpace(targetPogemon.nickname)} has been revived.`
                 targetPogemon.fainted = false
   
                 targetPogemon.hp = Math.floor(targetPogemon.stats.baseHp * currItem.pow)
@@ -305,7 +305,7 @@ function useItemOnClickEvent(e){
                 itemUsed.item = currItem
                 itemUsed.used = true
               } else {
-                dialogueInterfaceDom.innerText = `${targetPogemon.name} doesnt need to be revived.`
+                dialogueInterfaceDom.innerText = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need to be revived.`
                 return
               }
               break
@@ -334,7 +334,7 @@ function useItemOnClickEvent(e){
       }
 
       targetPogemon.heldItem = currItem
-      targetPogemon.dialogue('bag', `You gave ${targetPogemon.name} a ${switchUnderScoreForSpace(currItem.name)}.`)
+      targetPogemon.dialogue('bag', `You gave ${switchUnderScoreForSpace(targetPogemon.nickname)} a ${switchUnderScoreForSpace(currItem.name)}.`)
       e.target.childNodes[0].childNodes[0].src = `img/item_scene/items/${currItem.type}/${currItem.name}.png`
       let bagItem = player.bag.get(`${currItem.name}`)
       player.bag.set(`${currItem.name}`, {item: bagItem.item, quantity: bagItem.quantity - 1})
@@ -532,7 +532,7 @@ function printBagScene(){
         const bagSceneItemSectionDom = document.querySelector('.bagSceneItemListContainer')
         printItems(bagSceneItemSectionDom)
 
-        document.querySelector('.bagSceneItemDialogueContainer').innerText = `You took back a ${switchUnderScoreForSpace(player.team[i].heldItem.name)} from ${player.team[i].name}.`
+        document.querySelector('.bagSceneItemDialogueContainer').innerText = `You took back a ${switchUnderScoreForSpace(player.team[i].heldItem.name)} from ${switchUnderScoreForSpace(player.team[i].nickname)}.`
 
         player.team[i].heldItem = undefined
         bagSceneTeamSectionItemDom.src = `img/item_scene/items/blank.png`
@@ -552,7 +552,7 @@ function printBagScene(){
       bagSceneTeamSectionInfoContainerDom.appendChild(bagSceneTeamSectionInfoTopContainerDom)
   
       const bagSceneTeamSectionInfoNameDom = document.createElement('span')
-      bagSceneTeamSectionInfoNameDom.textContent = `${player.team[i].name}`
+      bagSceneTeamSectionInfoNameDom.textContent = `${switchUnderScoreForSpace(player.team[i].nickname)}`
       bagSceneTeamSectionInfoNameDom.classList.add('bagSceneTeamSectionInfoName')
       bagSceneTeamSectionInfoTopContainerDom.appendChild(bagSceneTeamSectionInfoNameDom)
   

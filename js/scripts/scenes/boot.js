@@ -49,6 +49,10 @@ function printSaveFileInfo(badgeContainer, trainerInfoContainer, trainerTeamCont
 
                 function returnCorrectlyFormatedTime(){
                     let txt
+                    
+                    timeObj.hr = data.timeObj.hr
+                    timeObj.min = data.timeObj.min
+                    timeObj.sec = data.timeObj.sec
 
                     if(data.timeObj.hr < 10) txt = `0${data.timeObj.hr}`
                     else txt = `${data.timeObj.hr}`
@@ -216,7 +220,7 @@ function initNewGameInteractionEvent(e){
 
 function initBootMenuInteractionEvent(e){
     // load data here ???
-    manageOverWorldState(true)
+    manageOverWorldState(true, 'boot')
     gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{

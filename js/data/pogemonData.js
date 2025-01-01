@@ -25,7 +25,7 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 120
+      spd: 1
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
@@ -33,9 +33,9 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.super_power, lvl: 1, seen: false},
-      2: {move: movesObj.hypnosis, lvl: 1, seen: false},
-      3: {move: movesObj.confuse_ray, lvl: 1, seen: false},
-      4: {move: movesObj.thunder_wave, lvl: 1, seen: false},
+      2: {move: movesObj.leech_seed, lvl: 1, seen: false},
+      3: {move: movesObj.trick_room, lvl: 1, seen: false},
+      4: {move: movesObj.heat_wave, lvl: 1, seen: false},
       // 5: {move: movesObj.headbutt, lvl: 50, seen: false},
       // 6: {move: movesObj.frost_wave, lvl: 50, seen: false},
     },
@@ -692,12 +692,12 @@ export let pogemonsObj = {
       2: 'ghost'
     },
     stats: {
-      hp: 120,
-      atk: 70,
-      def: 80,
-      spatk: 110,
-      spdef: 120,
-      spd: 50
+      hp: 110,
+      atk: 80,
+      def: 60,
+      spatk: 120,
+      spdef: 150,
+      spd: 30
     },
     evo: null,
     abilities: [
@@ -1242,12 +1242,12 @@ export let pogemonsObj = {
       2: 'normal'
     },
     stats: {
-      hp: 50,
-      atk: 1,
+      hp: 40,
+      atk: 60,
       def: 40,
-      spatk: 30,
+      spatk: 40,
       spdef: 40,
-      spd: 80
+      spd: 70
     },
     evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
     abilities: [
@@ -1374,7 +1374,7 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 70
     },
-    evo: {name: 'kampgooroo', lvl: 23, type: 'lvl'},
+    evo: {name: 'sophistaves', lvl: 23, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
@@ -2096,7 +2096,7 @@ export let pogemonsObj = {
       pogedex: 35,
       name: 'harmonium',
       element:{
-        1: 'flying',
+        1: 'normal',
         2: 'psychic'
       },
       stats: {
@@ -2526,10 +2526,10 @@ export let pogemonsObj = {
       2: 'electric'
     },
     stats: {
-      hp: 60,
-      atk: 105,
+      hp: 50,
+      atk: 110,
       def: 70,
-      spatk: 105,
+      spatk: 110,
       spdef: 70,
       spd: 130
     },
@@ -2837,9 +2837,9 @@ export let pogemonsObj = {
       hp: 30,
       atk: 40,
       def: 50,
-      spatk: 70,
+      spatk: 60,
       spdef: 40,
-      spd: 40
+      spd: 70
     },
     evo: null,
     abilities: [
@@ -2895,11 +2895,11 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 70,
-      atk: 90,
-      def: 90,
-      spatk: 110,
-      spdef: 110,
-      spd: 70
+      atk: 80,
+      def: 120,
+      spatk: 130,
+      spdef: 90,
+      spd: 50
     },
     evo: null,
     abilities: [
@@ -3930,12 +3930,12 @@ export let pogemonsObj = {
       2: 'dragon'
     },
     stats: {		
-      hp: 100,
+      hp: 70,
       atk: 60,
       def: 120,
       spatk: 140,
       spdef: 70,
-      spd: 80
+      spd: 110
     },
     evo: null,
     abilities: [

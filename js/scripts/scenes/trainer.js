@@ -67,9 +67,9 @@ function printInfo(){
 
 function printTrainerCard(){
 
-    if(data != null){
-        timeObj = data.timeObj
-    }
+    // if(data != null){
+    //     timeObj = data.timeObj
+    // }
 
     // this is kinda wacky
     timeObj.min += Math.floor((new Date().getTime() - player.startTime.getTime()) / 60000)

@@ -11,7 +11,7 @@ import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
-import { manageBattleState } from "./scenes/battle.js"
+import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
 import { changeMap, disableOWMenu, manageOverWorldState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
@@ -87,15 +87,11 @@ export async function generatePlayer(canvas){
           max: 4,
           hold: 10
         }
-      }))
-
-      player.catch(pogemonsObj.loko, true, 'geneTown')
-      player.catch(pogemonsObj.steeli, true, 'geneTown')
-      player.catch(pogemonsObj.maaph, true, 'geneTown')      
+      }))  
 
       player.pogedexInfo.forEach(pogedex =>{
-        pogedex.seen = true
-        pogedex.caught = true
+        // pogedex.seen = true
+        // pogedex.caught = true
       })
 
       player.badges[0] = true
@@ -691,7 +687,7 @@ function playerInteraction(e) {
           opacity: 1,
           onComplete: () =>{
             managePcState(true)
-            manageOverWorldState(false)
+            manageOverWorldState(false, 'pc')
             gsap.to('#overlapping', {
               opacity: 0
             })
@@ -874,6 +870,8 @@ function playerInteraction(e) {
                 OWDialogue.innerText = `Congratulations, ${starter.name} will now be traveling with you!`
   
                 player.catch(starter, true, currMap)
+
+                catchEventObj.caughtPogemon = player.team[0]
   
                 interaction.flags.starter = true
                 player.interaction.info.pickedUp = true
@@ -881,8 +879,15 @@ function playerInteraction(e) {
 
                 // openWindow.style.backgroundColor = 'transparent'
                 // openWindow.replaceChildren()
+
+
   
                 itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+              })
+
+              queue.push(() =>{
+                document.querySelector('#overworldDialogueContainer').style.display = 'none'
+                initRenameEvent(player.team[0])
               })
             })
           }
@@ -902,12 +907,15 @@ function playerInteraction(e) {
           opacity: 0.5
         })
   
-        player.team[0].dialogue('overworld', `You picked up a ${switchUnderScoreForSpace(item.name)}.`)
+        
+        if(player.interaction.info.amount == 1) player.team[0].dialogue('overworld', `You've picked up a ${switchUnderScoreForSpace(item.name)}.`)
+        else player.team[0].dialogue('overworld', `You've picked multiple ${switchUnderScoreForSpace(item.name)}'s.`)
   
         const itemImage = new Image()
         itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
         itemImage.id = 'pickedUpItem'
-  
+        
+        document.querySelector('#openWindow').replaceChildren()
         document.querySelector('#openWindow').appendChild(itemImage)
         
         player.bag.set(player.interaction.info.name, {item: {...itemsObj[player.interaction.info.name]}, quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
@@ -957,6 +965,7 @@ function playerInteraction(e) {
         player.interaction.info.disabled = true
         // console.log(mapsObj[currMap.name].obstaclesInfo)
         player.disabled = false
+        console.log(catchEventObj)
         soundFlag = false
         obstacleSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.obstacleSprite.type) obstacleSpritesArr.splice(i, 1)})
       }, 1450)
@@ -1158,7 +1167,7 @@ function engageBattle(animationId, battleZones) {
     ){
       audioObj.music.map.stop()
       audioObj.SFX.initEncounter.play()
-      manageOverWorldState(false)
+      manageOverWorldState(false, 'battle')
       gsap.to('#overlapping', {
         opacity: 1,
         repeat: 2,
@@ -1532,11 +1541,14 @@ function eventZoneManagement(eventZones){
                       const OWDialogueBox = document.querySelector('#overworldDialogue')
                       OWDialogueBox.style.display = 'block'
                       OWDialogueBox.innerText = eventZonesIndex.info.dialogue
+                      
+                      document.querySelector('#openWindow').style.backgroundColor = 'transparent'
+                      if(document.querySelector('#overworldStarterImg') != undefined) document.querySelector('#overworldStarterImg').src = 'img/blank.png'
             
                       eventZonesIndex.info.createdTrainer.animate = false
             
                       queue.push(() =>{
-                        manageOverWorldState(false)
+                        manageOverWorldState(false, 'battle')
             
                         gsap.to('#overlapping', {
                           opacity: 1,
@@ -1545,6 +1557,7 @@ function eventZoneManagement(eventZones){
                             manageBattleState(true, null, null, eventZonesIndex.info)
                             disableOWMenu.active = false
                             player.disabled = false
+                            console.log(catchEventObj)
                             gsap.to('#overlapping', {
                               opacity: 0,
                               duration: 0.4,
@@ -1593,7 +1606,7 @@ function spendQueue(){
     queue[0]()
     queue.shift()
     return
-  } else {
+  } else { 
     if(!healProcess) {
       if(player.interaction != null){
         if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
@@ -1610,6 +1623,7 @@ function spendQueue(){
       document.querySelector('#overworldDialogueContainer').style.display = 'none'
       openWindow.style.backgroundColor = 'transparent'
       player.disabled = false
+      console.log(catchEventObj)
       disableOWMenu.active = false
       interaction.initiated = false
       document.querySelector('#overworldDialogue').setAttribute('class', '')

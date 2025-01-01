@@ -41,11 +41,13 @@ let evolutionArr
 
 function pogemonTransition(target){
   //might loop here from properties
-  target.pogemon = pogemonsObj[targetEvo.name]
-  target.name = pogemonsObj[targetEvo.name].name
-  target.element = pogemonsObj[targetEvo.name].element
-  target.evo = pogemonsObj[targetEvo.name].evo
-  target.movepool = pogemonsObj[targetEvo.name].movepool
+
+  target.pogemon = targetEvo
+  if(target.nickname == target.name) target.nickname = targetEvo.name
+  target.name = targetEvo.name
+  target.element = targetEvo.element
+  target.evo = targetEvo.evo
+  target.movepool = targetEvo.movepool
   target.stats = target.generateStats()
 
   for(let i = 0; i < player.team.length; i++){
@@ -84,14 +86,14 @@ function letEvolveChoice(state){
         }
       }
 
-      targetMon.dialogue('evolution', `${targetMon.name} is evolving!`)
+      targetMon.dialogue('evolution', `${targetMon.switchUnderScoreForSpace(targetMon.nickname)} is evolving!`)
       if(firstTarget){
         pogemonTransition(targetMon)
         queue[0]()
         queue.shift()
       }
     } else {
-      targetMon.dialogue('evolution', `${targetMon.name} is evolving!`)
+      targetMon.dialogue('evolution', `${targetMon.switchUnderScoreForSpace(targetMon.nickname)} is evolving!`)
       pogemonTransition(targetMon)
       queue[0]()
       queue.shift()
@@ -113,7 +115,7 @@ function letEvolveChoice(state){
       document.querySelector('#evolutionDialogue').style.cursor = 'pointer'
       document.querySelector('#evoConfirmButtonContainer').style.display = 'none'
       queueProcess.disabled = false
-      evolutionArr[0].dialogue('evolution', `${targetMon.name} didint evolve.`)
+      evolutionArr[0].dialogue('evolution', `${targetMon.switchUnderScoreForSpace(targetMon.nickname)} didint evolve.`)
       queue.splice(0, 4)
 
       if(targetMon.id == evolutionArr[evolutionArr.length - 1].id) queue.push(() => manageEvolutionState(false, evolutionArr[evolutionArr.length - 1]))
@@ -121,7 +123,7 @@ function letEvolveChoice(state){
       document.querySelector('#evolutionDialogue').style.cursor = 'pointer'
       document.querySelector('#evoConfirmButtonContainer').style.display = 'none'
       queueProcess.disabled = false
-      evolutionArr[0].dialogue('evolution', `${targetMon.name} didint evolve.`)
+      evolutionArr[0].dialogue('evolution', `${targetMon.switchUnderScoreForSpace(targetMon.nickname)} didint evolve.`)
       queue.splice(0, 4)
     }
   }
@@ -171,7 +173,7 @@ function initEvo(target, i){
   console.log('there')
   document.querySelector('#evolutionDialogue').style.cursor = 'auto'
 
-  target.dialogue('evolution', `${target.name} is about to evolve! \n\n Will you let it?`)
+  target.dialogue('evolution', `${target.switchUnderScoreForSpace(target.nickname)} is about to evolve! \n\n Will you let it?`)
   document.querySelector('#evoConfirmButtonContainer').style.display = 'grid'
 
   // Object.values(targetEvo.movepool).forEach(move =>{
@@ -219,7 +221,7 @@ function clearEvolutionScene(target){
       cancelAnimationFrame(evolutionAnimationId)
       // dont forget to put the audio
       scenes.set('evolution', {initiated : false})
-      manageOverWorldState(true)
+      manageOverWorldState(true, 'evo')
       gsap.to('#overlapping', {
         opacity: 0
       })
@@ -243,7 +245,7 @@ function evoProcess(target, preEvo){
         opacity: 1,
         duration: 0.5,
         onComplete: () =>{
-          target.dialogue('evolution', `Congratulations, ${preEvo.name} evolved into ${target.name}!!`)
+          target.dialogue('evolution', `Congratulations, ${targetMon.switchUnderScoreForSpace(preEvo.nickname)} evolved into ${targetMon.switchUnderScoreForSpace(targetMon.name)}!!`)
           
           queueProcess.disabled = false
         }
@@ -272,7 +274,7 @@ function manageEvolutionChain(evoArr){
       if(i == evoArr.length - 1) {
 
         queue.push(() => {
-          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
+          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].switchUnderScoreForSpace(evoArr[i].nickname)} is about to evolve as well.`))
           queue.push(() => initEvo(evoArr[i], i))
           queue.push(() => {
             evoProcess(evoArr[i], preEvo)
@@ -292,7 +294,7 @@ function manageEvolutionChain(evoArr){
       else if(i != 0) {
 
         queue.push(() => {
-          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].name} is about to evolve as well.`))
+          queue.push(() => evoArr[i].dialogue('evolution', `Hold on... \n\n Seems like ${evoArr[i].switchUnderScoreForSpace(evoArr[i].nickname)} is about to evolve as well.`))
           queue.push(() => initEvo(evoArr[i], i))
           queue.push(() => {
             evoProcess(evoArr[i], preEvo)

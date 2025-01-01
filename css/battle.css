@@ -32,6 +32,8 @@
 
   height: 25;
   width: auto;
+
+  transition: 0.5s ease-in-out;
 }
 
 #allyHealthBarContainer{

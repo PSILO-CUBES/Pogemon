@@ -23,7 +23,9 @@ export let mapsObj = {
     encounters: {
       ground: [
         {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        // {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        // {pogemon: pogemonsObj.disso, lvls: [3, 6], odds: {min:0,max:100}}
+
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -277,7 +279,8 @@ export let mapsObj = {
         {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:1,max:65}}, 
         {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
         {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
-        {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}}
+        {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
+
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [8, 12], odds: {min:1,max:100}}
@@ -339,7 +342,7 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 7, itemsObj.banana]],
+        team: [[pogemonsObj.wallafi, 7, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
@@ -365,7 +368,7 @@ export let mapsObj = {
       },
       {
         name: 'pogeball',
-        amount: 1,
+        amount: 999,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
@@ -520,7 +523,7 @@ export let mapsObj = {
     },
     height: 43,
     width: 53,
-    encounters: {ground: [], water: []},
+    encounters: {},
     trainers: [
       {
         name: 'Rocky', 

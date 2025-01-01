@@ -409,6 +409,38 @@ potion during battle doesnt make opponent move happen x
 
 battle items needs testing x
 
+test switch with confuse and para x
+
+pogemon id changes x
+
+affliction status when i run away x
+
+cut weatherState if succefully ran away x
+
+pogemon confusion after switch happens after weather event x
+
+status lowered goes between trickroom and rain for slower mon x
+
+paralyze turn makes opponent always go last x
+
+sometimes foe hits itself in confused and then enemy x
+
+should test more with trickroom, some end turn stuff seems funky like sleep being animated at the same time as confusion x
+
+slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process x
+
+catch and switch needs testing x
+
+finish pogemon renaming after catch x 
+
+bad time thru saves -- always save new time x
+
+pogemon healing item event doesnt trigger often enought x
+
+put weather event before grided x
+
+overworld display box that shows met encounter in the current map x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -417,25 +449,16 @@ battle items needs testing x
 
 stuffToDo:{
     battle: {
-        test switch with confuse and para
-
-        catch and switch needs testing
-    
-        events still fire after fainting <-- this needs to stop
-
-        pogemon sometimes doesnt faint, lot of testing ahead
-    
-        queue.length = 0 at faint and deal with fainting on queueSpent function
-    
-        should test more with trickroom, some end turn stuff seems funky like sleep being animated at the same time as confusion
+        attempt faint event from 1hp on status events
 
         fix move hit location
 
-        slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process
+        add sound check attribute to moves so they can pass thru sub and be immuned to sound proof
+        put contact attribute on attacks
 
-        pogemon healing item event doesnt trigger often enought
+        change animation selection from name to animaitonType on MovesObj
 
-        paralyze turn makes opponent always go last
+        damage doesnt seem right
     }
     sprites:{
         leech seed move animation is fucky
@@ -461,8 +484,6 @@ stuffToDo:{
     ideas:{
         set level cap if Xth gym isint beaten??? maybe half exp gained after Xth level
 
-        rename pogemon option after catching?
-
         add info to save event
 
         make multiple boxes for pc
@@ -474,6 +495,10 @@ stuffToDo:{
         MUSIC AND MOVE SOUNDS
 
         slide in animations for mons and healthbars
+
+        TMS
+
+        prevent menu when renaming
     }
 }
 

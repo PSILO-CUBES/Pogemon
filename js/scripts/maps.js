@@ -9,6 +9,7 @@ import { loadData } from "../save.js"
 import { switchUnderScoreForSpace } from "./scenes/stats.js"
 import { pogemonsObj } from "../data/pogemonData.js"
 import { itemsObj } from "../data/itemsData.js"
+import { player } from "./player.js"
 
 const data = await loadData("saveFile")
 
@@ -74,7 +75,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = mapsObj.pearly_Path
+      currMap = mapsObj.lab
       currMap.seen = true
     }
   } else {
@@ -1162,6 +1163,63 @@ function flashContainerManagement(type){
   }
 }
 
+export let encounterButtonState = {
+  active : false
+}
+
+function printEncounterBox(map){
+  let encounterArr = []
+
+  document.querySelector('#mapEncounterContainer').replaceChildren()
+
+  console.log(map)
+
+  Object.values(map.encounters).forEach(encounterTypeArr =>{
+    encounterTypeArr.forEach(pogemonInfo =>{
+      if(encounterArr.length > 0){
+        let match = false
+
+        for (let i = 0; i < encounterArr.length; i++) {
+          const compareInfo = encounterArr[i];
+
+          if(compareInfo.name == pogemonInfo.pogemon.name) match = true
+        }
+
+        if(match == false) encounterArr.push(pogemonInfo.pogemon)
+
+      } else encounterArr.push(pogemonInfo.pogemon)
+    })
+  })
+
+  const encounterContainer = document.querySelector('#mapEncounterContainer')
+
+  encounterArr.forEach(pogemon =>{
+    const encounterDiv = document.createElement('div')
+    encounterDiv.id = 'encounterDiv'
+
+    if(player.pogedexInfo[pogemon.pogedex - 1].seen) encounterDiv.style.backgroundColor = 'rgba(0,0,0,0.5)'
+    else encounterDiv.style.backgroundColor = 'black'
+
+    const encounterImg = document.createElement('img')
+    encounterImg.id = 'encounterImg'
+    
+    if(player.pogedexInfo[pogemon.pogedex - 1].caught) encounterImg.style.filter = "brightness(100%)"
+    else encounterImg.style.filter = "brightness(0%)"
+
+    encounterImg.src = pogemon.sprites.classic.sprite
+
+    encounterDiv.appendChild(encounterImg)
+
+    encounterContainer.appendChild(encounterDiv)
+  })
+
+  if(map.encounters.ground == undefined) {
+    encounterButtonState.active = false
+    document.querySelector('#mapEncounterContainer').style.height = 0
+    document.querySelector('#manageEncounterStateButtonImg').src = 'img/downArrow.png'
+  }
+}
+
 export function changeMapInfo(nextMapInfo, currMapInfo){
   // console.log(currMapInfo)
   let info = nextMapInfo
@@ -1187,14 +1245,12 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 export async function generateMapData(nextMapInfo) {
   const [boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr] = await generateBoundaries(nextMapInfo)
 
-  if(nextMapInfo == undefined){
-    mapImg.src = currMap.mapImg
-    FGImg.src = currMap.FGImg
-  } else {
-    currMap = mapsObj[`${nextMapInfo.name}`]
-    mapImg.src = mapsObj[`${nextMapInfo.name}`].mapImg
-    FGImg.src = mapsObj[`${nextMapInfo.name}`].FGImg
-  }
+  if(nextMapInfo != undefined) currMap = mapsObj[`${nextMapInfo.name}`]
+    
+  mapImg.src = currMap.mapImg
+  FGImg.src = currMap.FGImg
+
+  printEncounterBox(currMap)
   
   return [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG]
 }

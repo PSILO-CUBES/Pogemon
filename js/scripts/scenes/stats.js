@@ -245,7 +245,8 @@ function createMenu(){
 						//catch info
 						const statsSceneCatchContainer = document.createElement('div')
 						statsSceneCatchContainer.id = 'statsSceneGridSectionInfoCatch'
-						statsSceneCatchContainer.innerText = `${selectedPogemon.name} was met at ${selectedPogemon.caughtMap} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
+
+						statsSceneCatchContainer.innerText = `${switchUnderScoreForSpace(selectedPogemon.nickname)} was met at ${switchUnderScoreForSpace(selectedPogemon.caughtMap.name)} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 
 						statsSceneGridSectionInfo.appendChild(statsSceneCatchContainer)
 						statsSceneGridSectionInfo.id = 'statsSceneGridSectionInfo'
@@ -341,7 +342,7 @@ function createMenu(){
 								case 1:
 									// pogemon name
 									statsSceneGridSectionPogemonData.setAttribute('id', 'statsSceneGridSectionPogemonDataName')
-									statsSceneGridSectionPogemonData.innerText = `${selectedPogemon.name}`
+									statsSceneGridSectionPogemonData.innerText = `${switchUnderScoreForSpace(selectedPogemon.nickname)}`
 									break
 								case 2:
 									// pogemon gender

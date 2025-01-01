@@ -4,7 +4,7 @@ import { loadData } from "../../save.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { manageOverWorldState } from "./overworld.js"
-import { manageStatsState } from "./stats.js"
+import { manageStatsState, switchUnderScoreForSpace } from "./stats.js"
 
 const data = await loadData()
 
@@ -205,7 +205,7 @@ function hoverEvent(state, DOM, target, i, type){
 
         if(targetPogemon != null && targetPogemon != undefined){
             document.querySelector('#pcSceneSelectedPogemonInfoContentLvl').innerText = `Lv${targetPogemon.lvl}`
-            document.querySelector('#pcSceneSelectedPogemonInfoContentName').innerText = `${targetPogemon.name}`
+            document.querySelector('#pcSceneSelectedPogemonInfoContentName').innerText = `${switchUnderScoreForSpace(targetPogemon.nickname)}`
             pcSceneSelectedPogemonGenderImg.src = `img/${targetPogemon.gender}_icon.png`
         }
 
@@ -253,7 +253,7 @@ function rearrangeTeam(first, second){
                     } else {
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
-                        node.childNodes[1].textContent = `${player.team[i].name}`
+                        node.childNodes[1].textContent = `${switchUnderScoreForSpace(player.team[i].nickname)}`
 
                         if(player.team[i].isShiny) teamSprites[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
                         else teamSprites[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
@@ -284,7 +284,7 @@ function rearrangeTeam(first, second){
                     } else {
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
-                        node.childNodes[1].textContent = `${player.team[i].name}`
+                        node.childNodes[1].textContent = `${switchUnderScoreForSpace(player.team[i].nickname)}`
 
                         if(player.team[i].isShiny) teamSprites[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
                         else teamSprites[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
@@ -319,7 +319,7 @@ function rearrangeTeam(first, second){
         if(second.type.name != 'team') return
         second.DOM.childNodes[0].childNodes[0].textContent = `LV${first.pogemon.lvl}`
         second.DOM.childNodes[0].childNodes[1].src = `img/${first.pogemon.gender}_icon.png`
-        second.DOM.childNodes[1].textContent = `${first.pogemon.name}`
+        second.DOM.childNodes[1].textContent = `${switchUnderScoreForSpace(first.pogemon.nickname)}`
     }
 }
 
@@ -359,13 +359,13 @@ function pcSwitchEvent(first, second){
             if(first.type.name == 'team'){
                 document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[0].childNodes[0].textContent = `Lv${second.pogemon.lvl}`
                 document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[0].childNodes[1].src = `img/${second.pogemon.gender}_icon.png`
-                document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[1].childNodes[0].textContent = second.pogemon.name
+                document.querySelectorAll('.pcScenePogemonContainer')[first.i].childNodes[1].childNodes[0].textContent = switchUnderScoreForSpace(second.pogemon.nickname)
             }
 
             if(second.type.name == 'team'){
                 document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[0].textContent = `Lv${first.pogemon.lvl}`
                 document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[1].src = `img/${first.pogemon.gender}_icon.png`
-                document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[1].childNodes[0].textContent = first.pogemon.name
+                document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[1].childNodes[0].textContent = switchUnderScoreForSpace(second.pogemon.nickname)
             }
         }
 
@@ -527,7 +527,7 @@ function clickPogemonEvent(state, e, DOM, target, i, type){
         document.querySelector('#pcSceneSelectedPogemonSection').style.display = 'block'
         document.querySelector('#pcSceneInteractionButtonContainer').style.display = 'grid'
         document.querySelector('#pcSceneSelectedPogemonInfoContentLvl').innerText = `Lv${selectedEvent.target.lvl}`
-        document.querySelector('#pcSceneSelectedPogemonInfoContentName').innerText = `${selectedEvent.target.name}`
+        document.querySelector('#pcSceneSelectedPogemonInfoContentName').innerText = `${switchUnderScoreForSpace(selectedEvent.target.nickname)}`
 
         DOM.id = 'selected'
 
@@ -677,7 +677,7 @@ function printPcMenu(){
                                 break
                             case 1:
                                 pcSceneTeamPogemonSection.id = 'pcSceneTeamPogemonBottomSection'
-                                if(player.team[i] != undefined) pcSceneTeamPogemonSection.textContent = `${player.team[i].name}`
+                                if(player.team[i] != undefined) pcSceneTeamPogemonSection.textContent = `${switchUnderScoreForSpace(player.team[i].nickname)}`
                                 break
                         }
                         pcSceneTeamContainerSection.appendChild(pcSceneTeamPogemonSection)
@@ -853,13 +853,13 @@ function clearPcMenu(){
     scenes.set('overworld', {initiated: true})
     selectedPogemonImg.src = 'img/Template.png'
     window.cancelAnimationFrame(pcAnimationId)
-    manageOverWorldState(true)
+    manageOverWorldState(true, 'pc')
 }
 
 export function managePcState(state){
     if(state) {
         if(scenes.get('pc').initiated) return
-        manageOverWorldState(false)
+        manageOverWorldState(false, 'pc')
         initPcMenu()
     }
     else {
