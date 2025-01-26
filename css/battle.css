@@ -5,6 +5,8 @@
 
   height: 100;
   width: 40%;
+
+  z-index: 2;
 }
 
 #foeTeamShowcase{
@@ -45,6 +47,8 @@
 
   height: 100;
   width: 40%;
+
+  z-index: 2;
 }
 
 .infoContainer{
@@ -537,15 +541,93 @@
   padding: 8;
 }
 
-#fieldEffectTurnIndicator, #trickRoomTurnIndicator{
+#foeScreenContainer{
+  position: absolute;
+  right: 904px;
+
+  display: flex;
+
+  height: 92px;
+  width: 248px;
+}
+
+#allyScreenContainer{
+  position: absolute;
+  top: 536;
+  right: 0;
+
+  display: flex;
+
+  height: 72px;
+  width: 248px;
+}
+
+#foeReflectIndicatorContainer,
+#allyReflectIndicatorContainer{
+  position: relative;
+
+  display: flex;
+  justify-content: end;
+  align-items: start;
+
+  height: 72px;
+
+  padding: 10;
+
+  z-index: 1;
+
+  transition: 0.5s ease-in-out;
+}
+
+#foeLightScreenIndicatorContainer,
+#allyLightScreenIndicatorContainer{
+  position: relative;
+
+  display: flex;
+  justify-content: end;
+  align-items: start;
+
+  height: 72px;
+
+  padding: 10;
+
+  z-index: 1;
+
+  transition: 0.5s ease-in-out;
+}
+
+#allyReflectIndicatorContainer,
+#allyLightScreenIndicatorContainer{
+  top: 84;
+}
+
+#foeReflectIndicatorContainer,
+#foeLightScreenIndicatorContainer{
+  top: -78;
+}
+
+#fieldEffectTurnIndicator, 
+#trickRoomTurnIndicator, 
+#foeReflectTurnIndicator,
+#allyReflectTurnIndicator,
+#foeLightScreenTurnIndicator,
+#allyLightScreenTurnIndicator{
   align-self: center;
   font-size: x-large;
   padding-right: 8;
   color: black;
 }
 
-#fieldEffectIcon, #trickRoomIcon{
+#fieldEffectIcon, 
+#trickRoomIcon, 
+#reflectIcon, 
+#lightScreenIcon{
   height: 100%;
+}
+
+#reflectIcon, 
+#lightScreenIcon{
+  background-color: rgba(0, 0, 0, 0.075);
 }
 
 #proceedImgContainer{
@@ -572,4 +654,41 @@
 @keyframes fade {
   0%,100% { opacity: 0 }
   50% { opacity: 1 }
+}
+
+.battleCategoryIcon{
+  height: 35;
+}
+
+.hazardContainer{
+  position: absolute;
+
+  height: 160;
+  width: 110;
+
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  justify-items: center;
+}
+
+#allyHazardsContainer{
+  left: 0;
+  top: 585;
+}
+
+#foeHazardsContainer{
+  right: 0;
+  top: 246.5;
+}
+
+.hazardType{
+  height: 92.5%;
+  width: 92.5%;
+
+  background-color: rgba(0, 0, 0, 0.625);
+
+  transition: 1s ease-in-out;
+
+  opacity: 0;
 }

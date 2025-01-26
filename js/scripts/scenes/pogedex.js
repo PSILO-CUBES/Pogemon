@@ -179,7 +179,17 @@ function createPogedexMenu(){
 
     document.querySelector('#pogedexSceneScrollContainer').appendChild(pogedexSceneScroll)
 
+    let lastSeeableIndex = 0
+
     for(let i = 0; i < player.pogedexInfo.length; i++){
+        console.log(player.pogedexInfo[i])
+        if(player.pogedexInfo[i].seen == true) lastSeeableIndex = player.pogedexInfo[i].pogedexIndex
+        if(player.pogedexInfo[i].caught == true) lastSeeableIndex = player.pogedexInfo[i].pogedexIndex
+    }
+
+    console.log(lastSeeableIndex)
+
+    for(let i = 0; i < lastSeeableIndex; i++){
         let currPogemon
 
         if(data != null) currPogemon = data.playerInfo.player.pogedexInfo[i]
@@ -584,8 +594,9 @@ function createInfoMenu(){
                                                                 infoContainerArr[i].appendChild(pogedexEffectsContent)
 
                                                                 pogedexEffectsTitle.innerText = `Effects`
-                                                                pogedexEffectsContent.innerText = `${returnAbilityList()}`
-                                                            } else infoContainerArr[i].innerText = `${infoScequece[i]}\n\n${returnCorrectInfo(infoScequece[i])}`
+                                                                if(targetPogemon.effects != undefined) pogedexEffectsContent.innerText = `${returnAbilityList()}`
+                                                                
+                                                            } else infoContainerArr[i].innerText = `${infoScequece[i]}\n\n${ (infoScequece[i])}`
                                                         } else infoContainerArr[i].childNodes[0].src = `img/moves/category/${move.type}.png`
                                                     }
                                                 }
@@ -599,7 +610,8 @@ function createInfoMenu(){
                                                 const pogedexInfoMoveHR = document.createElement('hr')
                                                 pogedexInfoMoveContainer.setAttribute('class', 'pogedexInfoMoveContainer')
 
-                                                console.log(move)
+
+                                                if(Object.values(targetPogemon.movepool)[i] == undefined) break
 
                                                 if(moveInfo.seen) {
                                                     pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
@@ -609,6 +621,8 @@ function createInfoMenu(){
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo('---'))
                                                     lastMove = true
                                                 }
+
+                                                if(Object.values(targetPogemon.movepool)[i + 1] == undefined) lastMove = true
 
                                                 pogedexInfoMoveContainer.addEventListener('mouseout', e => printMoveInfo('---'))
                                                 

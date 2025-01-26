@@ -6,7 +6,7 @@ import { itemsObj } from "../../data/itemsData.js"
 
 import { Sprite, Pogemon, statsChangeObj } from "../../classes.js"
 
-import { eventZones, manageOverWorldState, prevScene, waitForNextBattle } from "./overworld.js"
+import { eventZones, manageOverWorldState, playerTeamItemsState, prevScene, waitForNextBattle } from "./overworld.js"
 import { currMap, worldEventData } from "../maps.js"
 import { _preventActionSpam } from "../../app.js"
 import { player } from "../player.js"
@@ -84,7 +84,6 @@ function resetStats(type) {
   if(type == 'ally'){
     statsChangeObj.ally = {
       nominator: {
-        hp: 2,
         atk: 2,
         def: 2,
         spatk: 2,
@@ -92,7 +91,6 @@ function resetStats(type) {
         spd: 2,
       },
       denominator: {
-        hp: 2,
         atk: 2,
         def: 2,
         spatk: 2,
@@ -130,7 +128,6 @@ function resetStats(type) {
 
   statsChangeObj.ally = {
     nominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -138,7 +135,6 @@ function resetStats(type) {
       spd: 2,
     },
     denominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -149,7 +145,6 @@ function resetStats(type) {
 
   statsChangeObj.foe = {
     nominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -157,7 +152,6 @@ function resetStats(type) {
       spd: 2,
     },
     denominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -260,6 +254,21 @@ function shinySparklesAnimation(target){
   }
 }
 
+const foeImage = new Image()
+const foeSprite = new Sprite({
+  type: 'pogemon',
+  position:{
+    x:1415,
+    y:15
+  },
+  frames: {
+    max: 4,
+    hold: 50
+  },
+  img: foeImage,
+  animate: true
+})
+
 function initWildEncounter(tileInfo){
   enemyTrainer = undefined
 
@@ -270,22 +279,7 @@ function initWildEncounter(tileInfo){
   
   let foeObj = returnedFoe.pogemon
 
-  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0] + 1)
-
-  const foeImage = new Image()
-  const foeSprite = new Sprite({
-    type: 'pogemon',
-    position:{
-      x:1415,
-      y:15
-    },
-    frames: {
-      max: 4,
-      hold: 100
-    },
-    img: foeImage,
-    animate: true
-  })
+  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
 
   foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, currMap.name, null, null, foeSprite)
 
@@ -304,9 +298,12 @@ function initTrainerEncounter(info){
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
 
-function critLanded(pogemon, recipient){
+function critLanded(pogemon, recipient, move){
   let critHit = false
-  const critRNG = Math.floor(Math.random() * 100)
+  let odds = 100
+  if(move.effects != null) if(Object.entries(move.effects[0])[0][0] == 'crit') odds = 100 - (25 * Object.entries(move.effects[0])[0][1])
+
+  const critRNG = Math.floor(Math.random() * odds)
   const critThreshold = 0
 
   if(critRNG <= critThreshold){
@@ -332,10 +329,13 @@ function changeHPColor(DOM, target){
   DOM.style.width = `${percentHP}%`
   if(percentHP > 51){
     DOM.style.backgroundColor = 'green'
+    foe.frames.hold = 60
   } else if (percentHP < 51 && percentHP > 26){
     DOM.style.backgroundColor = 'yellow'
+    foe.frames.hold = 90
   } else if (percentHP < 26){
     DOM.style.backgroundColor = 'red'
+    foe.frames.hold = 120
   }
 }
 
@@ -355,12 +355,13 @@ function startWeather(type, info){
   startWeatherFlag.turns = 5
 
   if(prevScene != 'overworld') return
+
+  console.log(info)
   
   document.querySelector('#encounterInterface').style.display = 'none'
 
   const fieldContainer = document.querySelector('#fieldEffectContainer')
   fieldContainer.style.display = 'flex'
-
   info.turns = 5
 
   const weatherTurnIndicator = document.querySelector('#fieldEffectTurnIndicator')
@@ -372,14 +373,43 @@ function startWeather(type, info){
   queueProcess.disabled = true
   console.log('there')
 
-  // maybe put this in clearWeather when i make that
-  Object.values(terrainConditions.weather).forEach(weather =>{
+  let prevWeather = {
+    active: false,
+    type: null
+  }
+
+  console.log(terrainConditions)
+  Object.values(terrainConditions.turns.weather).forEach(weather =>{
+    if(weather.active) {
+      prevWeather.active = true
+      switch(weather.element){
+        case 'fire':
+          prevWeather.type = 'sun'
+          break
+        case 'water':
+          prevWeather.type = 'rain'
+          break
+        case 'ice':
+          prevWeather.type = 'snow'
+          break
+        case 'rock':
+          prevWeather.type = 'sand'
+          break
+      }
+    }
+
     weather.active = false
+    console.log(weather)
   })
 
   info.active = true
 
-  ally.dialogue('battle', `The ${type.replace(/_/g, ' ')} now affects the battlefield.`)
+  console.log(info)
+
+  if(!prevWeather.active) ally.dialogue('battle', `The ${type.replace(/_/g, ' ')} now affects the battlefield.`)
+  else setTimeout(() =>{
+    ally.dialogue('battle', `The ${prevWeather.type} was canceled.\n\nThe ${type.replace(/_/g, ' ')} now affects the battlefield.`)
+  }, 1250)
 
   setTimeout(() =>{
     gsap.to(fieldContainer, {
@@ -414,6 +444,18 @@ function clearWeather(activeTerrain){
     activeTerrain.info.active = false
 
     let fieldDom
+
+    let target = true
+    if(activeTerrain.type == 'ally_reflect' || activeTerrain.type == 'ally_light_screen') target = false
+
+    let type = 'reflect'
+    if(activeTerrain.type == 'ally_light_screen' || activeTerrain.type == 'foe_light_screen') type = 'light_screen'
+
+    if(activeTerrain.type == 'ally_reflect' || activeTerrain.type == 'ally_light_screen' ||
+      activeTerrain.type == 'foe_reflect' || activeTerrain.type == 'foe_light_screen') {
+      screenDisplayManagement(false, target, type, 0)
+      return
+    }
 
     if(activeTerrain.type == 'trick_room') {
       fieldDom = document.querySelector('#trickRoomIndicatorContainer')
@@ -453,9 +495,6 @@ function manageTrickRoomState(info){
   // console.log(info)
   trickRoomTurnIndicator.textContent = info.turns
   
-  const trickRoomIcon = document.querySelector('#trickRoomIcon')
-  trickRoomIcon.src = `img/field/trick_room.png`
-  
   queueProcess.disabled = true
   console.log('there')
   
@@ -471,6 +510,8 @@ function manageWeatherState(type, info, timing, activeTerrain){
     else clearWeather(activeTerrain)
     return
   }
+
+  console.log(info)
 
   if(timing == 'init'){
     startWeather(type, info)
@@ -512,6 +553,52 @@ export function initRenameEvent(pogemon){
   document.querySelector('#pogemonNamingSceneDisplayTextContainer').innerText = `Do you want to give a nickname to this ${pogemon.name}?`
 }
 
+function onEnterTerrainAffliction(type, target, recipient){
+  if(terrainConditions.static.stealth_rock.active[type]){
+    queue.unshift(() =>{
+      // do damage based on type
+
+      queueProcess.disabled = true
+      console.log('there')
+
+      let ratio = 8
+
+      if(typesObj['rock'].veryEffective.includes(target.element[0])) ratio = ratio / 2
+      else if(typesObj['rock'].notEffective.includes(target.element[0])) ratio = ratio * 2
+
+      if(typesObj['rock'].veryEffective.includes(target.element[1])) ratio = ratio / 2
+      else if(typesObj['rock'].notEffective.includes(target.element[1])) ratio = ratio * 2
+
+      const chipPercent = 1 / ratio
+      const chip = Math.floor(target.stats.baseHp * chipPercent)
+
+      target.hp -= chip
+
+      if(target.isEnemy) target.dialogue('battle', `${target.name} took damage from the hidden rocks.`)
+      else target.dialogue('battle', `${target.nickname} took damage from the hidden rocks.`)
+
+      target.hpManagement()
+
+      setTimeout(() =>{
+        queueProcess.disabled = false
+        console.log('here')
+      }, 1250)
+    })
+  }
+
+  if(terrainConditions.static.sticky_web.active[type]){
+    queue.unshift(() =>{
+      recipient.statusAnimation('status', [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}], movesObj['sticky_web'], target, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
+    )
+  }
+
+  if(target.abilityInfo.ability.name == 'intimidate' && recipient.abilityInfo.ability.name != 'scrappy'){
+    queue.unshift(() =>{
+      target.statusAnimation('status', target.abilityInfo.ability.effects, {name: 'intimidate'}, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
+    )
+  }
+}
+
 export function initBattle(faintedTriggered, info, tileInfo){
   queueFaintTrigger.initiated = false
 
@@ -526,11 +613,28 @@ export function initBattle(faintedTriggered, info, tileInfo){
     evoArr = []
     lvlUpArr = []
     Object.values(terrainConditions).forEach(category =>{
-      Object.values(category).forEach(type =>{
-        type.active = false
+      Object.entries(category).forEach(type =>{
+        console.log(type)
+        if(type[0] == 'etc' || type[0] == 'weather') Object.values(type[1]).forEach(terrainType =>{
+          console.log(typeof terrainType.active)
+          if(typeof terrainType.active == 'boolean') terrainType.active = false
+          else {
+            terrainType.active.ally = false
+            terrainType.active.foe = false
+          }
+
+          if(typeof terrainType.active == 'boolean') terrainType.turns = 0
+          else {
+            terrainType.turns.ally = 0
+            terrainType.turns.foe = 0
+          }
+        })
+        // type.active = false
         //set turns for terrain effects
-        type.turns = 5
+        // type.turns = 5
       })
+
+      console.log(info)
     })
 
     document.querySelector('#fieldEffectContainer').style.right = '-124px'
@@ -553,12 +657,27 @@ export function initBattle(faintedTriggered, info, tileInfo){
     resetStats('both')
     if(info == undefined) initWildEncounter(tileInfo)
     else initTrainerEncounter(info)
+
+    player.team.forEach(pogemon =>{
+      console.log(pogemon)
+      pogemon.knockedOff = false
+    })
+
+    enemyTrainerInfo.createdTrainer.team.forEach(pogemon =>{
+      pogemon.knockedOff = false
+    })
+
+    // intimidate here
+    pushInitBattleIntimidate(player.team[0], foe)
+    pushInitBattleIntimidate(foe, player.team[0])
   }
 
   foe.position = {
     x: 1415,
     y: 50
   }
+
+  // foe.frames.hold = 60
 
   if(foe.isShiny) {
     foe.img.src = foe.pogemon.sprites.shiny.frontSprite
@@ -605,12 +724,12 @@ export function initBattle(faintedTriggered, info, tileInfo){
   
   // foe.affliction[0].active = true
   // foe.affliction[0].turns = 99
-  foe.hp = 1
+  // foe.hp = 1
 
   // foe.status.name = 'slp'
 
-  // terrainConditions.etc.trick_room.active = true
-  // terrainConditions.etc.trick_room.turns = 5
+  // terrainConditions.turns.etc.trick_room.active = true
+  // terrainConditions.turns.etc.trick_room.turns = 5
 
   if(battlerArr.length != 0){
     if(checkIfSameId()) battlerArr.push(ally)
@@ -622,8 +741,24 @@ export function initBattle(faintedTriggered, info, tileInfo){
     if(prevScene == 'overworld') {
       if(info == null) player.dialogue('battle', `a wild ${switchUnderScoreForSpace(foe.nickname)} appeared!`)
       else player.dialogue('battle', `${info.name} sent out ${switchUnderScoreForSpace(foe.nickname)}!`)
-      
-      setTimeout(() => player.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nso you send out ${switchUnderScoreForSpace(ally.nickname)}.`), 750)
+
+      if(foe.abilityInfo.ability.name == 'frisk'){
+
+        let itemName
+        if(ally.heldItem == null) itemName = 'nothing'
+        if(ally.heldItem != null) itemName = `a ${ally.heldItem.name}`
+
+        setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(foe.nickname)} frisked ${itemName}.`),250)
+      }
+      setTimeout(() => player.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nyou send out ${switchUnderScoreForSpace(ally.nickname)}.`), 500)
+      if(ally.abilityInfo.ability.name == 'frisk'){
+
+        let itemName
+        if(foe.heldItem == null) itemName = 'nothing'
+        if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
+
+        setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`), 750)
+      }
     } else {
       document.querySelector('#encounterInterface').style.display = 'grid'
       console.log('grided')
@@ -678,7 +813,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
           slower = ally
         }
 
-        player.catch(foe, false, currMap, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, queue, faintEvent, pc, queueFaintTrigger, queueProcess, terrainConditions, manageWeatherState, statusEvent, faster, slower, faintSwitch)
+        player.catch(foe, false, currMap, ally, renderedSprites, itemsObj['pogeball'], manageBattleQueue, critLanded, backToOverWorld, queue, faintEvent, pc, queueFaintTrigger, queueProcess, terrainConditions, manageWeatherState, statusEvent, faster, slower, faintSwitch, enemyTrainerInfo, player)
 
         itemUsed.item = null
         itemUsed.used = false
@@ -699,9 +834,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
       document.querySelector('#proceedImgContainer').style.display = 'block'
 
       queue.push(() =>{
-        let rng = Math.floor(Math.random() * foe.move.length)
-        let foeRng = foe.moves[rng]
-        foe.move({move: foeRng, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+        foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
         console.log('YAYA')
 
         let faster = ally
@@ -729,6 +862,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
   }
 
   if(teamEvent.switch && teamEvent.previousScene == 'battle'){
+    // intimidate here
     if(faintedTriggered != undefined) {
       if(faintedTriggered.active) {
         faintedTriggered.active = false
@@ -736,16 +870,27 @@ export function initBattle(faintedTriggered, info, tileInfo){
         // here that is fucked
         foe.checkStatus('#foeHealthBar', document.querySelector('#foeHp'), renderedSprites, queue, queueProcess, faintEvent, ally, ['#allyHealthBar', document.querySelector('#allyHp'), renderedSprites, queue, queueProcess, faintEvent], false, terrainConditions, manageWeatherState, faintSwitch)
         console.log('checkStatus')
-        foe.dialogue('battle', `You sent out ${switchUnderScoreForSpace(ally.nickname)}`)
+        ally.dialogue('battle', `You sent out ${switchUnderScoreForSpace(ally.nickname)}`)
+        if(ally.abilityInfo.ability.name == 'frisk'){
+
+          let itemName
+          if(foe.heldItem == null) itemName = 'nothing'
+          if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
+  
+          setTimeout(() => ally.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`),500)
+        }
   
         document.querySelector('#dialogueInterface').style.display = 'block'
         document.querySelector('#proceedImgContainer').style.display = 'block'
         document.querySelector('#encounterInterface').style.display = 'none'
         return
       }
-  
+
       if(allyId !== player.team[0].id){
         resetStats('ally')
+
+        onEnterTerrainAffliction('ally', ally, foe)
+        console.log('ally webs and rocks')
         
         player.team.forEach(pogemon =>{
           pogemon.affliction.forEach(affliction =>{
@@ -765,17 +910,29 @@ export function initBattle(faintedTriggered, info, tileInfo){
         console.log('here')
   
         ally.dialogue('battle', `${switchUnderScoreForSpace(ally.nickname)} switched in!`)
+
+        if(ally.abilityInfo.ability.name == 'frisk'){
+
+          let itemName
+          if(foe.heldItem == null) itemName = 'nothing'
+          if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
   
-        foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
-  
+          setTimeout(() => ally.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`),500)
+        }
+
+        moveSwitchEvent.ally = false
+
         moveProcess = true
   
         let flag = false
   
-        function proceedWithMove(foeRNGMove){
-          foe.move({move: foeRNGMove, recipient: ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+        function proceedWithMove(){
+          // let rng = Math.floor(Math.random() * foe.moves.length)
+          // let foeRNGAttack = foe.moves[rng]
+
+          foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
           console.log('YAYA')
-  
+    
           moveProcess = true
           manageCheckStatusEvent(foe, ally)
           console.log('manageCheckStatusEvent')
@@ -800,43 +957,38 @@ export function initBattle(faintedTriggered, info, tileInfo){
   
         // here
         console.log(foe)
-        setTimeout(() => statusEvent(foe, foeRNGMove, ally, document.querySelector('#foeStatus'), false, faster, slower), 750 )
+        queue.push(() => statusEvent(foe, foeRNGMove, ally, document.querySelector('#foeStatus'), false, faster, slower))
+
   
         slower = foe
   
         if(foe.affliction[0].active == false && foe.affliction[0].active == false){
-          queue.push(() =>{
-            proceedWithMove(foeRNGMove)
-            // console.log('proceed')
-          })
+          console.log(moveSwitchEvent)
+          console.log(teamEvent.switch)
+          if(!moveSwitchEvent.foe && !teamEvent.switch){
+            queue.push(() =>{
+              proceedWithMove()
+              // console.log('proceed')
+            })
+          } else {
+            queueProcess.disabled = false
+            console.log('here')
+          }
           return
         }
+
+        console.log('switch esti')
   
         //team switch option
         if(!teamEvent.switch){
           manageCheckStatusEvent(foe, ally)
           console.log('manageCheckStatusEvent')
   
-          foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+          foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
           console.log('endOfTurnTerrainManagement')
         } else {
           manageCheckStatusEvent(foe, ally)
           console.log('manageCheckStatusEvent')
-  
-          let checkIfTerrainConditionActive = () =>{
-            let flag = false
-            let terrainArr = []
-            Object.values(terrainConditions).forEach((types, i) =>{
-              Object.values(types).forEach((terrain, j) =>{
-                if(terrain.active) {
-                  flag = true
-                  terrainArr.push({type: Object.keys(terrainConditions[Object.keys(terrainConditions)[i]])[j], info: terrain})
-                }
-              })
-            })
-      
-            return [flag, terrainArr]
-          }
   
           const [flag, terrainArr] = checkIfTerrainConditionActive()
   
@@ -844,22 +996,26 @@ export function initBattle(faintedTriggered, info, tileInfo){
           if(flag) {
             console.log(foe.affliction[0].active)
             if(foe.affliction[0].active || foe.status.name == 'para' || foe.status.name == 'slp'){
-                foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+                foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
                 console.log('endOfTurnTerrainManagement')
             } else {
               queue.push(() =>{
-                foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+                foe.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
                 console.log('endOfTurnTerrainManagement')
               })
             }
           }
   
         }
+
         return
       }
-  
-      foeRNGMove = movesObj[`${foe.moves[Math.floor(Math.random() * foe.moves.length)].name}`]
-      proceedWithMove(foeRNGMove)
+      
+      // console.log(teamEvent.switch)
+
+      // vvv weird decision, proceedWithMove is declared in an if statement above vvv
+      if(!moveSwitchEvent.foe && !teamEvent.switch) proceedWithMove()
+
       // console.log('proceed')
       document.querySelector('#encounterInterface').style.display = 'none'
     }
@@ -907,12 +1063,37 @@ export function initBattle(faintedTriggered, info, tileInfo){
     // }
   }
 
-  if(currMap.weather != undefined){
-    // console.log(info)
-    // console.log(terrainConditions.weather[currMap.weather])
-    if(!ranAway) queue.push(() => manageWeatherState(currMap.weather, terrainConditions.weather[currMap.weather], 'init'))
-    console.log('weather now')
+  let rng = Math.floor(Math.random() * 2)
+
+  let faster = ally
+  let slower = foe
+
+  let allySpeed
+  if(ally.status.name == 'para') allySpeed = Math.floor((ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd) / 2)
+  else allySpeed = Math.floor(ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd)
+
+  let foeSpeed
+  if(foe.status.name == 'para') foeSpeed = Math.floor((foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd) / 2)
+  else foeSpeed = Math.floor(foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd)
+
+  if(allySpeed == foeSpeed){
+    if(rng == 1) {
+      faster = foe
+      slower = ally
+    }
+  } else if(allySpeed < foeSpeed){
+    faster = foe
+    slower = ally
   }
+
+  if(currMap.weather != undefined) 
+    if(!ranAway) queue.push(() => manageWeatherState(currMap.weather, terrainConditions.turns.weather[currMap.weather], 'init'))
+
+  if(faster.abilityInfo.ability.type == 'initWeather') 
+    if(!ranAway) queue.push(() => manageWeatherState(faster.abilityInfo.ability.info, terrainConditions.turns.weather[faster.abilityInfo.ability.info], 'init'))
+
+  if(slower.abilityInfo.ability.type == 'initWeather') 
+    if(!ranAway) queue.push(() => manageWeatherState(slower.abilityInfo.ability.info, terrainConditions.turns.weather[slower.abilityInfo.ability.info], 'init'))
 }
 
 function clearBattleScene(nextScene){
@@ -955,6 +1136,46 @@ function clearBattleScene(nextScene){
           pogemon.opacity = 1
         })
 
+        playerTeamItemsState.team.forEach((pogemon, i) =>{
+          if(Object.entries(pogemon)[i] != undefined)
+            if(player.team[i].id == Object.entries(pogemon)[i][0]) 
+              if(player.team[i].heldItem == null) 
+                player.team[i].heldItem = Object.entries(pogemon)[i][1]
+        })
+  
+        playerTeamItemsState.team = []
+
+        terrainConditions.static.stealth_rock.active.ally = false
+        terrainConditions.static.stealth_rock.active.foe = false
+
+        document.querySelector('#allyRocks').style.opacity = 0
+        document.querySelector('#foeRocks').style.opacity = 0
+      
+        terrainConditions.static.sticky_web.active.ally = false
+        terrainConditions.static.sticky_web.active.foe = false
+
+        document.querySelector('#allyWebs').style.opacity = 0
+        document.querySelector('#foeWebs').style.opacity = 0
+      
+        terrainConditions.turns.weather.sun.active = false
+        terrainConditions.turns.weather.rain.active = false
+        terrainConditions.turns.weather.sand.active = false
+        terrainConditions.turns.weather.snow.active = false
+      
+        terrainConditions.turns.etc.trick_room.active = false
+      
+        terrainConditions.turns.etc.ally_reflect.active = false
+        terrainConditions.turns.etc.ally_light_screen.active = false
+
+        document.querySelector('#allyReflectIndicatorContainer').style.top = 84
+        document.querySelector('#allyLightScreenIndicatorContainer').style.top = 84
+      
+        terrainConditions.turns.etc.foe_reflect.active = false
+        terrainConditions.turns.etc.foe_light_screen.active = false
+
+        document.querySelector('#foeReflectIndicatorContainer').style.top = -78
+        document.querySelector('#foeLightScreenIndicatorContainer').style.top = -78
+
         manageOverWorldState(true, 'battle')
 
         waitForNextBattle.initiated = true
@@ -971,6 +1192,15 @@ function clearBattleScene(nextScene){
 let battleAnimationId
 let arrowDisplayState = false
 let arrowDisplayFlag = false
+
+function pushInitBattleIntimidate(target, recipient){
+  if(target.abilityInfo.ability.name == 'intimidate' && recipient.abilityInfo.ability.name != 'scrappy'){
+    console.log('wttf????')
+    queue.push(() =>{
+      target.statusAnimation('status', target.abilityInfo.ability.effects, {name: 'intimidate'}, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
+    )
+  }
+}
 
 export function battleAnimation(){
   battleAnimationId = window.requestAnimationFrame(battleAnimation)
@@ -1048,6 +1278,12 @@ function optionButtonInteraction(e) {
         movesInterfaceDom.style.display = 'grid'
         break
       case 'pgmn':
+        if(foe.abilityInfo.ability.info == 'trap'){
+          document.querySelector('#textBox').innerText = `${foe.nickname}'s ability prevents you from switching.`
+          setTimeout(() =>{
+            document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+          }, 1250)
+        } else {
           manageBattleState(false, 'team')
           gsap.to('#overlapping', {
             opacity: 1,
@@ -1060,6 +1296,7 @@ function optionButtonInteraction(e) {
               })
             }
           })
+        }
         break
       case 'Item':
         manageBattleState(false, 'bag')
@@ -1080,18 +1317,30 @@ function optionButtonInteraction(e) {
           C + 1
 
           function chanceToEscape(A, B){
-            return (((A * 32) / (B / 4)) + 30 * C)
+            return Math.floor((((A * 32) / (B / 4)) + 30 * C))
           }
+
+          let escapeOdds = chanceToEscape(player.team[0].stats.spd, foe.stats.spd)
+          let runAway = false
+
+          if(player.team[0].abilityInfo.ability.name == 'run_Away') {
+            runAway = true
+            escapeOdds = 100
+          }
+
+          console.log(escapeOdds)
           
-          if(chanceToEscape(player.team[0].stats.spd, foe.stats.spd) < 100) {
+          if(foe.abilityInfo.ability.info == 'trap' && !runAway){
+            document.querySelector('#textBox').innerText = `${foe.nickname}'s ability prevents you from escaping.`
+            setTimeout(() =>{
+              document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+            }, 1250)
+          } else if(escapeOdds < 100) {
             encounterInterfaceDom.style.display = 'none'
             movesInterfaceDom.style.display = 'none'
             dialogueInterfaceDom.style.display = 'block'
             document.querySelector('#proceedImgContainer').style.display = 'block'
             dialogueInterfaceDom.textContent = 'You failed to run away..'
-  
-            let rng = Math.floor(Math.random() * foe.move.length)
-            let foeRng = foe.moves[rng]
   
             queue.push(() => {
               let faster = ally
@@ -1105,11 +1354,11 @@ function optionButtonInteraction(e) {
       
                 if(tieRng == 1) faster = foe
               }
-      
+
               let slower = foe
               if(faster.id == foe.id) slower = ally
               
-              statusEvent(foe, foeRng, ally, document.querySelector('#foeStatus'), false, faster, slower)
+              statusEvent(foe, foeRNGMove, ally, document.querySelector('#foeStatus'), false, faster, slower)
               // foe.move({move: foeRng, recipient: player.team[0], renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
               console.log('YAYA')
 
@@ -1117,38 +1366,38 @@ function optionButtonInteraction(e) {
               console.log('manageCheckStatusEvent')
             })
             return
-          }
+          } else {
+            ranAway = true
 
-          ranAway = true
-
-          encounterInterfaceDom.style.display = 'none'
-          movesInterfaceDom.style.display = 'none'
-          dialogueInterfaceDom.style.display = 'block'
-          document.querySelector('#proceedImgContainer').style.display = 'block'
-          dialogueInterfaceDom.textContent = 'You fleed'
-          audioObj.SFX.flee.play()
-          // need to put rng check based on speed stat
-          queue.push(() =>{
-            manageBattleState(false, 'overworld')
-            //might throw err
-            gsap.to('#overlapping', {
-              opacity: 1,
-              yoyo: true,
-              duration: 1,
-              onComplete(){
-                audioObj.SFX.flee.stop()
-                gsap.to('#overlapping', {
-                  opacity: 0,
-                  duration: 0.4
-                })
-              }
+            encounterInterfaceDom.style.display = 'none'
+            movesInterfaceDom.style.display = 'none'
+            dialogueInterfaceDom.style.display = 'block'
+            document.querySelector('#proceedImgContainer').style.display = 'block'
+            dialogueInterfaceDom.textContent = 'You fleed'
+            audioObj.SFX.flee.play()
+            // need to put rng check based on speed stat`
+            queue.push(() =>{
+              manageBattleState(false, 'overworld')
+              //might throw err
+              gsap.to('#overlapping', {
+                opacity: 1,
+                yoyo: true,
+                duration: 1,
+                onComplete(){
+                  audioObj.SFX.flee.stop()
+                  gsap.to('#overlapping', {
+                    opacity: 0,
+                    duration: 0.4
+                  })
+                }
+              })
             })
-          })
+          }
         } else {
           document.querySelector('#textBox').innerText = "Can't run from a trainer battle!"
           setTimeout(() =>{
             document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
-          }, 1000)
+          }, 1250)
         }
         break
     }
@@ -1192,7 +1441,7 @@ export function movesHoverEvent(e, target, type){
   elementDom.textContent = `${currentMove.element}`
   elementDom.style.color = typesObj[currentMove.element].color
 
-  typeDom.textContent = currentMove.type
+  typeDom.src = `img/moves/category/${currentMove.type}.png`
 }
 
 export function movesAwayEvent(){
@@ -1201,7 +1450,7 @@ export function movesAwayEvent(){
   ppDom.textContent = `PP : --`
   elementDom.textContent = `--`
   elementDom.style.color = 'white'
-  typeDom.textContent = `--`
+  typeDom.src = `img/blank.png`
 }
 
 const foeNameDom = document.querySelector('#foeName')
@@ -1405,6 +1654,8 @@ function chooseMove(e) {
 let faster
 let slower
 
+let allyMove
+
 function checkSpeed(e) {
   const options = [ally, foe]
   const rng = Math.floor(Math.random() * 2)
@@ -1415,6 +1666,19 @@ function checkSpeed(e) {
     foe: foeRNGMove.priority
   }
 
+  if(selectedMove.name == 'sucker_punch' && foeRNGMove.category == 'physical') priority.ally = 2
+  if(foeRNGMove.name == 'sucker_punch' && selectedMove.category == 'physical') priority.foe = 2
+  
+  if(ally.abilityInfo.ability.name == 'prankster' && selectedMove.type == 'status'){
+    if(foe.element[0] != 'dark' || foe.element[1] != 'dark') priority.ally = 1
+  }
+
+  if(foe.abilityInfo.ability.name == 'prankster' && selectedMove.type == 'status'){
+    if(ally.element[0] != 'dark' || ally.element[1] != 'dark') priority.foe = 1
+  }
+
+  console.log(priority)
+
   let allySpeed
   if(ally.status.name == 'para') allySpeed = Math.floor((ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd) / 2)
   else allySpeed = Math.floor(ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd)
@@ -1422,6 +1686,12 @@ function checkSpeed(e) {
   let foeSpeed
   if(foe.status.name == 'para') foeSpeed = Math.floor((foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd) / 2)
   else foeSpeed = Math.floor(foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd)
+
+  if(ally.abilityInfo.ability.type == 'weatherSpeed') if(terrainConditions.turns.weather[ally.abilityInfo.ability.info].active) allySpeed = Math.floor(allySpeed * 2)
+  if(foe.abilityInfo.ability.type == 'weatherSpeed') if(terrainConditions.turns.weather[foe.abilityInfo.ability.info].active) foeSpeed = Math.floor(foeSpeed * 2)
+
+    console.log(allySpeed)
+    console.log(foeSpeed)
 
   if(priority.ally > priority.foe){
     faster = ally
@@ -1449,7 +1719,7 @@ function checkSpeed(e) {
     slowerMove = selectedMove
   }
 
-  if(terrainConditions.etc.trick_room.active){
+  if(terrainConditions.turns.etc.trick_room.active){
     let placeHolder
 
     placeHolder = faster
@@ -1508,7 +1778,7 @@ export function learnMoveOptionEvent(e, move, type, target){
       document.querySelector('#learnMoveDescPP').textContent = `pp : ${move.pp}`
       document.querySelector('#learnMoveDescElement').textContent = move.element
       document.querySelector('#learnMoveDescElement').style.color = typesObj[move.element].color
-      document.querySelector('#learnMoveDescType').textContent = `${move.type}`
+      document.querySelector('#learnMoveDescType').src = `img/moves/category/${move.type}.png`
       document.querySelector('#learnMoveName').textContent = switchUnderScoreForSpace(move.name)
 
       document.querySelector('#learnMoveInfo').style.display = 'grid'
@@ -1527,7 +1797,7 @@ export function learnMoveOptionEvent(e, move, type, target){
       document.querySelector('#evoLearnMoveDescPP').textContent = `pp : ${move.pp}`
       document.querySelector('#evoLearnMoveDescElement').textContent = move.element
       document.querySelector('#evoLearnMoveDescElement').style.color = typesObj[move.element].color
-      document.querySelector('#evoLearnMoveDescType').textContent = `${move.type}`
+      document.querySelector('#evoLearnMoveDescType').src = `img/moves/category/${move.type}.png`
       document.querySelector('#evoLearnMoveName').textContent = switchUnderScoreForSpace(move.name)
 
       document.querySelector('#evoLearnMoveInfo').style.display = 'grid'
@@ -1725,15 +1995,29 @@ function enemyTeamWiped(enemyTrainerInfo){
   return teamFainted
 }
 
-function switchEnemyAfterFaint(){
+function pickRandomPogemonOtherThanLast(){
+  let lastPogemon = foe
+  
+  while(lastPogemon.id == foe.id){
+    let rng = Math.floor(Math.random() * enemyTrainerInfo.createdTrainer.team.length)
+    foe = enemyTrainerInfo.createdTrainer.team[rng]
+  }
+}
+
+function switchEnemyAfterFaint(type){
   if(enemyTrainerInfo == undefined) return
   let currTrainer = enemyTrainerInfo.createdTrainer
-  for(let i = 0; i < currTrainer.team.length; i++){
+
+  if(type == 'move'){
+    pickRandomPogemonOtherThanLast()
+  } else for(let i = 0; i < currTrainer.team.length; i++){
     if(currTrainer.team[i].fainted === false){
       foe = currTrainer.team[i]
       break
     }
   }
+
+  console.log(foe)
 
   document.querySelector('#movesBox').replaceChildren()
 
@@ -1750,8 +2034,19 @@ function switchEnemyAfterFaint(){
     document.querySelector('#movesBox').appendChild(newAttackBox)
   }
 
-  enemyTrainerInfo.createdTrainer.team[0].dialogue('battle', `${enemyTrainerInfo.name} is sending out ${switchUnderScoreForSpace(foe.nickname)}`)
+  enemyTrainerInfo.createdTrainer.team[0].dialogue('battle', `${enemyTrainerInfo.name} is sending out ${switchUnderScoreForSpace(foe.name)}.`)
   enemyTrainerInfo.createdTrainer.team[0].hpManagement(foe, '#foeHealthBar', document.querySelector('#foeHp'))
+
+  // moveSwitchEvent.foe = false
+
+  if(foe.abilityInfo.ability.name == 'frisk'){
+
+    let itemName
+    if(ally.heldItem == null) itemName = 'nothing'
+    if(ally.heldItem != null) itemName = `a ${ally.heldItem.name}`
+
+    setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(foe.nickname)} frisked ${itemName}.`),500)
+  }
 
   foe.opacity = 1
   foe.position = {
@@ -1774,6 +2069,19 @@ function switchEnemyAfterFaint(){
   foe.hpManagement()
   
   // maybe ask if want to switch before next pogemon comes out?
+
+  onEnterTerrainAffliction('foe', foe, ally)
+
+  // check for sticky webs
+
+  // check for stealth rocks
+
+  setTimeout(() =>{
+    gsap.to(foe, {
+      opacity: 1,
+      duration: 0.5,
+    })
+  }, 1250)
 }
 
 export let evoArr = []
@@ -2109,10 +2417,12 @@ function faintEvent(target){
   inBattleCharacters.ally = ally
   inBattleCharacters.foe = foe
 
-  target.useBattleItem(queueProcess, queue, faintEvent, fasterHpBeforeMove, slowerHpBeforeMove, moves, inBattleCharacters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState)
+  target.useBattleItem(queueProcess, queue, faintEvent, fasterHpBeforeMove, slowerHpBeforeMove, moves, inBattleCharacters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState, foeRNGMove)
   if(target.hp > 0) return
 
-  queue.push(() =>{
+  // commenting out this queue.push might break things
+
+  if(target.isEnemy){
     if(target.fainted) return
     target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
     target.faint(queueFaintTrigger)
@@ -2144,7 +2454,42 @@ function faintEvent(target){
         console.log('here')
       }
     })
-  })
+  } else {
+    queue.push(() =>{
+      if(target.fainted) return
+      target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
+      target.faint(queueFaintTrigger)
+  
+      setTimeout(() =>{
+        queueProcess.disabled = false
+      }, 750)
+  
+      queue.push(() => {
+        if(target.isEnemy){
+          manageFaintingEvent(target)
+        } else if(checkIfTeamWipedOut()){
+          document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
+          document.querySelector('#overlapping').textContent = 'Git Gud'
+          gsap.to('#overlapping', {
+            opacity: 1,
+          })
+          //here
+          document.querySelector('#overlapping').addEventListener('click', spendQueue)
+          document.querySelector('#overlapping').style.cursor = 'pointer'
+          document.querySelector('#overlapping').style.pointerEvents = 'auto'
+          queue.push(() =>{
+            location.reload()
+          })
+        } else {
+          if(!target.fainted) return
+          faintedTriggered.active = true
+          manageBattleState(false, 'team', {active : true})
+          console.log('here')
+        }
+      })
+    })
+  }
+
 }
 
 // pogemon status turn event
@@ -2187,43 +2532,110 @@ function checkIfFainted(target){
 }
 
 const terrainConditions = {
-  etc: {
-    trick_room: {
-      active: false,
-      element: 'psychic',
-      color: typesObj['psychic'].color
+  turns:{
+    etc: {
+      trick_room: {
+        active: false,
+        element: 'psychic',
+        color: typesObj['psychic'].color
+      },
+      ally_reflect: {
+        active: false,
+        turns: 0,
+        element: 'psychic',
+        color: typesObj['psychic'].color
+      },
+      ally_light_screen: {
+        active: false,
+        turns: 0,
+        element: 'psychic',
+        color: typesObj['psychic'].color
+      },
+      foe_reflect: {
+        active: false,
+        turns: 0,
+        element: 'psychic',
+        color: typesObj['psychic'].color
+      },
+      foe_light_screen: {
+        active: false,
+        turns: 0,
+        element: 'psychic',
+        color: typesObj['psychic'].color
+      },
+    },
+    weather: {
+      sun: {
+        active: false,
+        element: 'fire',
+        resistance: 'water',
+        color: typesObj['fire'].color
+      },
+      rain: {
+        active: false,
+        element: 'water',
+        resistance: 'fire',
+        color: typesObj['water'].color
+      },
+      snow: {
+        active: false,
+        element: 'ice',
+        color: typesObj['ice'].color
+      },
+      sand: {
+        active: false,
+        element: 'rock',
+        color: typesObj['rock'].color
+      },
     },
   },
-  weather: {
-    sun: {
-      active: false,
-      element: 'fire',
-      resistance: 'water',
-      color: typesObj['fire'].color
+  static:{
+    sticky_web:{
+      active: {
+        ally: false,
+        foe: false
+      },
+      element: 'bug',
     },
-    rain: {
-      active: false,
-      element: 'water',
-      resistance: 'fire',
-      color: typesObj['water'].color
-    },
-    snow: {
-      active: false,
-      element: 'ice',
-      color: typesObj['ice'].color
-    },
-    sand: {
-      active: false,
+    stealth_rock:{
+      active: {
+        ally: false,
+        foe: false
+      },
       element: 'rock',
-      color: typesObj['rock'].color
-    },
+    }
   },
-  weatherSpent: false
+  weatherSpent: false,
+
 }
 
-function attackLanded(odds){
+function attackLanded(odds, move){
   let accRNG
+
+  if(typeof odds == 'string') return true
+
+  if(move != undefined) if(move.rain != undefined) {
+    if(terrainConditions.turns.weather.rain.active) return true
+    else if(
+      terrainConditions.turns.weather.sun.active ||
+      terrainConditions.turns.weather.snow.active ||
+      terrainConditions.turns.weather.sand.active
+    ) accRNG = accRNG / 2
+  }
+
+  if(move != undefined) if(move.snow != undefined) {
+    if(terrainConditions.turns.weather.snow.active) return true
+    else if(
+      terrainConditions.turns.weather.sun.active ||
+      terrainConditions.turns.weather.rain.active ||
+      terrainConditions.turns.weather.sand.active
+    ) accRNG = accRNG / 2
+  }
+
   accRNG = Math.floor(Math.random() * 100)
+
+  if(ally.abilityInfo.ability.name == 'no_Guard') return true
+  if(foe.abilityInfo.ability.name == 'no_Guard') return true
   if(accRNG <= odds) return true
 }
 
@@ -2281,7 +2693,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
     if(check == 'fasterCheck') fasterCheck = true
     else slowerCheck = true
 
-    // console.log('juste icitte')
+    console.log('juste icitte')
     target.statusEffectAnimation('confusion', renderedSprites, queueProcess, confusionProcess)
     target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} is confused...`)
 
@@ -2292,10 +2704,17 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
       queueProcess.disabled = true
       if(target.affliction[0].turns == 0){
         target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} snapped out of confusion!`)
-        if(target.isEnemy) confusionProcess.foe = false
-        else confusionProcess.ally = false
+        if(target.isEnemy) {
+          confusionProcess.foe = false
+          document.querySelector('#foeConfused').style.opacity = 0
+        }
+        else {
+          confusionProcess.ally = false
+          document.querySelector('#allyConfused').style.opacity = 0
+        }
 
         target.affliction[0].active = false
+
 
         setTimeout(() =>{
           // queueProcess.disabled = true
@@ -2318,15 +2737,16 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         return
       }
 
-      if(attackLanded(50)) {
+      if(attackLanded(25)) {
         // console.log('confused')
         queueProcess.disabled = true
         // console.log('there')
         if(target.isEnemy) confusionProcess.foe = true
         else confusionProcess.ally = true
 
-        if(doubleConfuse) target.miss('confusion', renderedSprites, queueProcess)
+        if(!doubleConfuse) target.miss('confusion', renderedSprites, queueProcess)
 
+        console.log(doubleConfuse)
         doubleConfuse = true
 
         console.log('confuse check now')
@@ -2341,9 +2761,13 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         if(battleType != 'trainer') if(target.hp <= 0) faintEvent(target)
 
         // check para and sleep here
+        let recipientMove
+
+        if(target.isEnemy) recipientMove = allyMove
+        else recipientMove = foeRNGMove
 
         if(target.status.name != 'para' || target.status.name != 'slp') {
-          target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
           console.log('YAYA')
         }
       }
@@ -2373,17 +2797,17 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
         manageCheckStatusEvent(faster, slower)
         console.log('manageCheckStatusEvent')
-        // console.log(faster.status.name != null && terrainConditions.etc.trick_room.active)
+        // console.log(faster.status.name != null && terrainConditions.turns.etc.trick_room.active)
 
-        if(faster.status.name != null && terrainConditions.etc.trick_room.active){
-          if(target.isEnemy) target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-          else target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-          console.log('endOfTurnTerrainManagement')
+        if(faster.status.name != null && terrainConditions.turns.etc.trick_room.active){
+          // if(target.isEnemy) target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+          // else target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+          // console.log('endOfTurnTerrainManagement')
           return
         }
 
-        target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-        console.log('endOfTurnTerrainManagement')
+        // target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+        // console.log('endOfTurnTerrainManagement')
       } else if(recipient.id == slower.id) {
         if(doublePass == true) return
         // let RNG = Math.floor(Math.random() * recipient.moves.length)
@@ -2395,9 +2819,21 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         console.log(catchEvent)
         if(!recipient.affliction[0].active || recipient.status.name != 'para' || recipient.status.name != 'slp') {
           if(catchEvent == false) if(!doubleFoeConfusedAttack) queue.push(() => {
-            recipient.move({move: playerMove, recipient: target, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
-            target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-            console.log('endOfTurnTerrainManagement')
+            let recipientMove
+            let targetMove
+
+            if(recipient.isEnemy) {
+              recipientMove = foeRNGMove
+              targetMove = allyMove
+            } else {
+              recipientMove = allyMove
+              targetMove = foeRNGMove
+            }
+
+            recipient.move({move: recipientMove, recipient: target, recipientMove: targetMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
+            console.log('YAYA')
+            // target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+            // console.log('endOfTurnTerrainManagement')
           })
           doubleFoeConfusedAttack = true
         } else {
@@ -2411,8 +2847,8 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
             console.log('afflictionsEvent')
           }
 
-          target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-          console.log('endOfTurnTerrainManagement')
+          // target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+          // console.log('endOfTurnTerrainManagement')
         }
       }
 
@@ -2525,7 +2961,151 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
 let slowerDontPass = false
 
+export const moveSwitchEvent = {
+  ally: false,
+  foe: false
+}
+
+function screenDisplayManagement(type, isEnemy, screenType, turns){
+  let indicatorContainer
+  let turnIndicator
+  let top
+  let opacity
+
+  const indicatorArr = []
+
+  if(type){
+    opacity = 1
+    top = 0
+
+    const typeArr = []
+
+    if(isEnemy){
+      if(screenType == 'reflect') {
+        indicatorContainer = document.querySelector('#foeReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#foeReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+
+        console.log(typeArr)
+      } else if (screenType == 'light_screen') {
+        indicatorContainer = document.querySelector('#foeLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#foeLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      }
+    } else {
+      if(screenType == 'reflect') {
+        indicatorContainer = document.querySelector('#allyReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#allyReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+      } else if (screenType == 'light_screen') {
+        indicatorContainer = document.querySelector('#allyLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#allyLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      }
+    }
+
+    indicatorArr.push(typeArr)
+  } else {
+    opacity = 0
+
+    if(isEnemy){
+      top = -78
+
+      const typeArr = []
+
+      if(screenType == 'reflect') {
+        indicatorContainer = document.querySelector('#foeReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#foeReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+      } else if (screenType == 'light_screen') {
+        indicatorContainer = document.querySelector('#foeLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+        
+        turnIndicator = document.querySelector('#foeLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      } else {
+        indicatorContainer = document.querySelector('#foeReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#foeReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+
+        indicatorArr.push(typeArr)
+
+        indicatorContainer = document.querySelector('#foeLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+        
+        turnIndicator = document.querySelector('#foeLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      }
+
+      indicatorArr.push(typeArr)
+    } else {
+      top = 84
+
+      const typeArr = []
+
+      if(screenType == 'reflect') {
+        indicatorContainer = document.querySelector('#allyReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#allyReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+      } else if (screenType == 'light_screen') {
+        indicatorContainer = document.querySelector('#allyLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#allyLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      } else {
+        indicatorContainer = document.querySelector('#allyReflectIndicatorContainer')
+        typeArr.push(indicatorContainer)
+
+        turnIndicator = document.querySelector('#allyReflectTurnIndicator')
+        typeArr.push(turnIndicator)
+
+        indicatorArr.push(typeArr)
+
+        indicatorContainer = document.querySelector('#allyLightScreenIndicatorContainer')
+        typeArr.push(indicatorContainer)
+        
+        turnIndicator = document.querySelector('#allyLightScreenTurnIndicator')
+        typeArr.push(turnIndicator)
+      }
+
+      indicatorArr.push(typeArr)
+    }
+  }
+  
+  for(let i = 0; i < indicatorArr.length; i++){
+    if(indicatorArr[i] == []) continue
+
+    console.log(indicatorArr[i])
+    indicatorArr[i][0].style.top = top
+    indicatorArr[i][0].style.opacity = opacity
+    indicatorArr[i][1].innerText = turns
+
+    gsap.to(indicatorArr[i][0], {
+      opacity,
+      duration: 1
+    })
+  }
+}
+
 function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, faster, slower){
+
+  // if(target.affliction[2].active) return
+
   let confusionCheck = false
 
   console.log('callise')
@@ -2538,12 +3118,12 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       console.log('manageCheckStatusEvent')
       manageCheckStatusEvent(faster, slower)
       console.log(faster.status.name)
-      // console.log(faster.status.name != null && terrainConditions.etc.trick_room.active)
-      if(terrainConditions.etc.trick_room.active){
+      // console.log(faster.status.name != null && terrainConditions.turns.etc.trick_room.active)
+      if(terrainConditions.turns.etc.trick_room.active){
         if(faster.status.name != null && slower.status == null){
           console.log('trickroom + status special event weather trigger')
-          if(target.isEnemy) target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-          else target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+          if(target.isEnemy) target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
+          else target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
           console.log('endOfTurnTerrainManagement')
         }
       } else {
@@ -2558,7 +3138,9 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
   }
 
   function normalMoveEvent() {
-    if(attackLanded(targetMove.acc)) {
+    console.log('fired')
+    if(target.isEnemy && targetMove == undefined) targetMove = foeRNGMove
+    if(attackLanded(targetMove.acc, targetMove)) {
       moveProcess = true
 
       if(confusionCheck) {
@@ -2568,14 +3150,46 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       }
 
       // vvvvvvvvvv HERE IS NORMAL MOVE vvvvvvvv
-      if(target.status.name == 'para') return
-      if(target.status.name == 'slp') return
+      // if(target.status.name == 'para') return.
+      // if(target.status.name == 'slp') return
       
-      if(recipient.status.name == 'para') return
-      if(recipient.status.name == 'slp') return
+      // if(recipient.status.name == 'para') return
+      // if(recipient.status.name == 'slp') return
 
-      target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
-      
+      // vv why tf do i have to do this?????? vv
+      if(target.flinched) {
+        if(target.hp <= 0) return
+        if(faster.id != target.id) target.miss('flinched', renderedSprites, queueProcess, recipient)
+        else target.flinched = false
+        return
+      }
+
+      let recipientMove
+      let targetMove
+
+      if(!recipient.isEnemy) {
+        recipientMove = allyMove
+        targetMove = foeRNGMove
+      } else {
+        recipientMove = foeRNGMove
+        targetMove = allyMove
+      }
+
+      console.log(allyMove)
+      console.log(foeRNGMove)
+
+      if(targetMove.name == 'dream_eater' && recipient.status.name != 'slp') {
+        target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} used ${switchUnderScoreForSpace(targetMove.name)}!\n\n${recipient.name} isin't asleep, so the move failed..`)
+        return
+      }
+
+      if(target.id == foe.id && moveSwitchEvent.foe) {
+        queueProcess.disabled = false
+        console.log('here')
+        return
+      }
+
+      target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
       console.log('YAYA')
     } else {
       if(target.hp <= 0) return
@@ -2605,7 +3219,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
 
   let check = 'slowerCheck'
   
-  console.log(faster)
+  // console.log(faster)
 
   if(target.id == faster.id) {
     check = 'fasterCheck'
@@ -2617,7 +3231,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
     if(target.status.name == 'para') {
       skipLastAttack = true
       // console.log('now 2')
-      if(attackLanded(100)) {
+      if(attackLanded(25)) {
         if(target.isEnemy) {
           paraState.foe = true
         } else if(target.isEnemy) {
@@ -2629,12 +3243,12 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
         queueProcess.disabled = true
         console.log('there')
 
-        setTimeout(() => queue.push(() => {
-          recipient.move({move: playerMove, recipient: target, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
+        // setTimeout(() => queue.push(() => {
+        //   recipient.move({move: playerMove, recipient: target, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
           
-          queueProcess.disabled = false
-          console.log('here')
-        }), 200)
+        //   queueProcess.disabled = false
+        //   console.log('here')
+        // }), 200)
 
       } else {
         if(target.affliction[0].active){
@@ -2643,7 +3257,19 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
           // console.log('NWONWOWNOWNONWOONWONWONWNOW')
         } else if(attackLanded(targetMove.acc)) {
           moveProcess = true
-          target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
+
+          let recipientMove
+          let targetMove
+    
+          if(recipient.isEnemy) {
+            recipientMove = foeRNGMove
+            targetMove = allyMove
+          } else {
+            recipientMove = allyMove
+            targetMove = foeRNGMove
+          }
+
+          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
           console.log('YAYA')
         } else {
           if(target.hp <= 0) return
@@ -2668,10 +3294,24 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
           console.log('sleep 2')
           target.miss('slp', renderedSprites, queueProcess)
 
-          if(!teamEvent.switch) queue.push(() => recipient.move({move: playerMove, recipient: target, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}))
+          let recipientMove
+          let targetMove
+    
+          if(recipient.isEnemy) {
+            recipientMove = foeRNGMove
+            targetMove = allyMove
+          } else {
+            recipientMove = allyMove
+            targetMove = foeRNGMove
+          }
+
+          // if(!teamEvent.switch) queue.push(() => {
+          //   recipient.move({move: recipientMove, recipient: target, recipientMove: targetMove, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+          //   console.log('YAYA')
+          // })
         } else {
           console.log('wakeup')
-          target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} woke up!`)
+          setTimeout(() => target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} woke up!`), 50)
           justWokeUp = true
           target.status.name = null
           target.status.turns = 0
@@ -2692,23 +3332,34 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
                 queue.disabled = false
                 console.log('here')
               }, 1250)
-            }, 1250)
+            })
             // queue.push(() => afflictionsEvent(target, targetMove, recipient, check, false, statusIcon))
             // console.log('NWONWOWNOWNONWOONWONWONWNOW')
           } else if(attackLanded(targetMove.acc)) {
             moveProcess = true
 
-            setTimeout(() =>{
-              target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
-              console.log('YAYA')
-            }, 1250)
+            let recipientMove
+            let targetMove
+      
+            if(recipient.isEnemy) {
+              recipientMove = foeRNGMove
+              targetMove = allyMove
+            } else {
+              recipientMove = allyMove
+              targetMove = foeRNGMove
+            }
+
+            // setTimeout(() =>{
+            //   target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+            //   console.log('YAYA')
+            // }, 1250)
           } else {
             if(target.hp > 0) queue.push(() => target.miss('missed', renderedSprites, queueProcess))
           } 
         }
       } else {
         console.log('forced wakeup')
-        target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} woke up!`)
+        setTimeout(() => target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} woke up!`), 50)
         justWokeUp = true
         skipLastAttack = true
         target.status.name = null
@@ -2722,8 +3373,19 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
         } else if(attackLanded(targetMove.acc)) {
           moveProcess = true
 
+          let recipientMove
+          let targetMove
+    
+          if(recipient.isEnemy) {
+            recipientMove = foeRNGMove
+            targetMove = allyMove
+          } else {
+            recipientMove = allyMove
+            targetMove = foeRNGMove
+          }
+
           setTimeout(() =>{
-            target.move({move: targetMove, recipient, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+            target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
             console.log('YAYA')
 
             manageCheckStatusEvent(faster, slower)
@@ -2748,7 +3410,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
         queue.push(() => manageCheckStatusEvent(faster, slower))
       }
 
-      target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+      target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
       console.log('manageCheckStatusEvent')
     } else if(target.affliction[0].active){
       console.log('afflictionEvent')
@@ -2778,9 +3440,460 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       return
     }
   // }
+
+  const moveSwitchInteraction = (target, team) =>{
+    console.log(target.isEnemy, moveSwitchEvent.foe)
+    console.log(!target.isEnemy, moveSwitchEvent.ally)
+
+    if(target.isEnemy && moveSwitchEvent.foe) return
+    else if(!target.isEnemy && moveSwitchEvent.ally) return
+
+    queueProcess.disabled = true
+    console.log('there')
+
+    let rng = Math.floor(Math.random() * foe.moves.length)
+    let foeRNGAttack = foe.moves[rng]
+
+    // target.dialogue('battle', `${target.switchUnderScoreForSpace(target.nickname)} used ${target.switchUnderScoreForSpace(move.name)}!`)
+    console.log(foeRNGAttack)
+    target.move({move: foeRNGAttack, recipient, recipientMove: null, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+    console.log('YAYA')
+
+    if(target.isEnemy){
+      if(target.id != slower.id) {
+        skipLastAttack = false
+        moveSwitchEvent.foe = true
+        console.log(moveSwitchEvent.foe)
+      }
+      if(battleType != 'trainer') return
+      if(team.length == 1) return
+
+      console.log(enemyTrainerInfo)
+      moveSwitchEvent.foe = true
+      console.log(moveSwitchEvent.foe)
+
+      setTimeout(() =>{
+        target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}!\n\nIt gets ready to switch out.`)        
+        gsap.to(target, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () =>{
+            if(target.abilityInfo.ability.name == 'regenerator'){
+              const healAmount = Math.floor(target.stats.baseHp * 0.33)
+              target.hp += healAmount
+            } else if (target.abilityInfo.ability.name == 'natural_Cure'){
+              target.status = {
+                name: null,
+                turns: 0
+              }
+            }
+
+            switchEnemyAfterFaint('move')
+          }
+        })
+      }, 1250)
+    } else {
+      queueProcess.disabled = true
+      console.log('there')
+      moveSwitchEvent.ally = true
+
+      if(team.length == 1) return
+
+      setTimeout(() =>{
+        target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}!\n\nIt gets ready to switch out.`)
+        teamEvent.switch = true
+        setTimeout(() =>{
+          queueProcess.disabled = true
+          console.log('there')
+
+          manageBattleState(false, 'team')
+
+          gsap.to('#overlapping', {
+            opacity: 1,
+            yoyo: true,
+            duration: 1,
+            onComplete(){
+              queueProcess.disabled = true
+              console.log('there')
+              gsap.to('#overlapping', {
+                opacity: 0,
+                duration: 0.4
+              })
+            }
+          })
+        }, 1250)
+      }, 1250)
+    }
+    return
+  }
+
+  function specialMoveEffect(target, targetName, targetMove, recipient, recipientName, team, moveSwitchEvent){
+    if(target.affliction[2].active && targetMove.type == 'status') return
+
+    let move = targetMove
+
+    if(move == null || move == undefined){
+      const rng = Math.floor(Math.random() * target.moves.length)
+      move = target.moves[rng]
+      foeRNGMove = move
+    }
+
+    switch(move.name){
+      case 'sucker_punch':
+        if(target.id == slower.id) {
+          skipLastAttack = true
+          target.dialogue('battle', `${targetName} used Sucker Punch!\n\nIt didin't seem to work for some reason..`)
+        }
+        break
+      case 'u_turn':
+      case 'volt_switch':
+        if(moveSwitchEvent == false){
+          skipLastAttack = true
+          moveSwitchInteraction(target, team)
+        }
+        break
+      case 'theif':
+        console.log(recipient)
+        if(target.heldItem == null) 
+          if(recipient.heldItem != null) {
+            if(recipient.knockedOff) return
+
+            queueProcess.disabled = true
+            console.log('here')
+
+            setTimeout(() => {
+              const prevText = document.querySelector('#dialogueInterface').innerText
+
+              console.log(prevText)
+              const missedText = `${targetName} missed!`
+              if(prevText == missedText.toUpperCase()) return
+
+              target.dialogue('battle', `${prevText}\n\n${targetName} stole ${recipientName}'s ${recipient.heldItem.name}!`)
+
+              target.heldItem = recipient.heldItem
+              recipient.heldItem = null
+              setTimeout(() => {
+                queueProcess.disabled = false
+                console.log('there')
+              }, 1250)
+            }, 1250)
+          }
+        break
+      case 'knock_off':
+        console.log(recipient.heldItem)
+        if(recipient.heldItem != null) {
+          recipient.knockedOff = true
+
+          queueProcess.disabled = true
+          console.log('here')
+
+          setTimeout(() => {
+            const prevText = document.querySelector('#dialogueInterface').innerText
+
+            console.log(prevText)
+            const missedText = `${targetName} missed!`
+            if(prevText == missedText.toUpperCase()) return
+
+            target.dialogue('battle', `${prevText}\n\n${targetName} knocked off ${recipientName}'s ${recipient.heldItem.name}!`)
+
+            recipient.heldItem = null
+            setTimeout(() => {
+              queueProcess.disabled = false
+              console.log('there')
+            }, 1250)
+          }, 1250)
+        }
+        break
+      case 'psychic_fang':
+        // remove screens on enemy side
+
+        if(target.isEnemy){
+          if(terrainConditions.turns.etc.ally_reflect.active || terrainConditions.turns.etc.ally_light_screen.active)
+            setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${target.name} broke the screens!`), 750)
+          
+          terrainConditions.turns.etc.ally_reflect.active = false
+          terrainConditions.turns.etc.ally_light_screen.active = false
+        } else {
+          if(terrainConditions.turns.etc.foe_reflect.active || terrainConditions.turns.etc.foe_light_screen.active)
+            setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${target.nickname} broke the screens!`), 750)
+
+          terrainConditions.turns.etc.foe_reflect.active = false
+          terrainConditions.turns.etc.foe_light_screen.active = false
+        }
+
+        // make screen indicators go away
+        screenDisplayManagement(false, target.isEnemy, 'both', 0)
+        break
+      case 'clear_smog':
+        if(target.isEnemy) resetStats('foe')
+        else resetStats('ally')
+
+        setTimeout(() => {
+          const prevText = document.querySelector('#dialogueInterface').innerText
+
+          target.dialogue('battle', `${prevText}\n\n${recipientName}'s stats were reset.`)
+          setTimeout(() => {
+            queueProcess.disabled = false
+            console.log('there')
+          }, 1250)
+        }, 1250)
+        break
+      case 'sticky_web':
+        if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+          recipient.magicBounce(target, queue, queueProcess, terrainConditions, () =>{
+
+            console.log(' hehe')
+            if(recipient.isEnemy) {
+              if(!terrainConditions.static.sticky_web.active.ally) {
+                setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThat applied a sticky web on your side of the battlefield!`), 750)
+                terrainConditions.static.sticky_web.active.ally = true
+                document.querySelector('#allyWebs').style.opacity = 1
+              } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the sticky web is already on the field..`), 750)
+            } else if(!terrainConditions.static.sticky_web.active.foe) {
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThat applied a sticky web on the enemy's side of the battlefield!`), 750)
+              terrainConditions.static.sticky_web.active.foe = true
+              document.querySelector('#foeWebs').style.opacity = 1
+            } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the sticky web is already on the field..`), 750)
+
+          })
+        } else {
+          if(target.isEnemy) {
+            if(!terrainConditions.static.sticky_web.active.ally) {
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} applied a sticky web on your side of the battlefield!`), 750)
+              terrainConditions.static.sticky_web.active.ally = true
+              document.querySelector('#allyWebs').style.opacity = 1
+            } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the sticky web is already on the field..`), 750)
+          } else if(!terrainConditions.static.sticky_web.active.foe) {
+            setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} applied a sticky web on the enemy's side of the battlefield!`), 750)
+            terrainConditions.static.sticky_web.active.foe = true
+            document.querySelector('#foeWebs').style.opacity = 1
+          } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the sticky web is already on the field..`), 750)
+        }
+        break
+      case 'stealth_rock':
+        if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+          recipient.magicBounce(target, queue, queueProcess, terrainConditions, () =>{
+
+            if(recipient.isEnemy) {
+              if(!terrainConditions.static.stealth_rock.active.ally) {
+                setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThat applied stealthy rocks on your side of the battlefield!`), 750)
+                terrainConditions.static.stealth_rock.active.ally = true
+                document.querySelector('#allyRocks').style.opacity = 1
+              } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the rocks are already on..`), 750)
+            } else if(!terrainConditions.static.stealth_rock.active.foe) {
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThat applied stealthy rocks on the enemy's side of the battlefield!`), 750)
+              terrainConditions.static.stealth_rock.active.foe = true
+              document.querySelector('#foeRocks').style.opacity = 1
+            } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the rocks are already on..`), 750)
+
+          })
+        } else {
+          if(target.isEnemy) {
+            if(!terrainConditions.static.stealth_rock.active.ally) {
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} applied stealthy rocks on your side of the battlefield!`), 750)
+              terrainConditions.static.stealth_rock.active.ally = true
+              document.querySelector('#allyRocks').style.opacity = 1
+            } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the rocks are already on..`), 750)
+          } else if(!terrainConditions.static.stealth_rock.active.foe) {
+            setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} applied stealthy rocks on the enemy's side of the battlefield!`), 750)
+            terrainConditions.static.stealth_rock.active.foe = true
+            document.querySelector('#foeRocks').style.opacity = 1
+          } else setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut the rocks are already on..`), 750)
+        }
+        break
+      case 'taunt':
+        if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+          recipient.magicBounce(target, queue, queueProcess, terrainConditions, () =>{
+            if(!target.affliction[2].active){
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipientName} taunted ${targetName}.`), 750)
+    
+              target.affliction[2].active = true
+    
+              if(recipient.isEnemy) document.querySelector('#allyTaunt').style.opacity = 1
+              else document.querySelector('#foeTaunt').style.opacity = 1
+              
+              if(recipient.id == faster.id) target.affliction[2].turns = 4
+              else target.affliction[2].turns = 3
+              
+    
+              console.log('taunted')
+            } else {
+              setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} is already taunted...`), 750)
+            }
+          })
+        } else {
+          if(!recipient.affliction[2].active){
+            setTimeout(() => recipient.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} taunted ${recipientName}.`), 750)
   
+            recipient.affliction[2].active = true
+  
+            if(target.isEnemy) document.querySelector('#allyTaunt').style.opacity = 1
+            else document.querySelector('#foeTaunt').style.opacity = 1
+            
+            if(target.id == faster.id) recipient.affliction[2].turns = 4
+            else recipient.affliction[2].turns = 3
+            
+  
+            console.log('taunted')
+          } else {
+            setTimeout(() => recipient.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipientName} is already taunted...`), 750)
+          }
+        }
+
+        break
+      case 'rapid_spin':
+        queueProcess.disabled = true
+        console.log('there')
+
+        target.affliction[1].active = false
+
+        if(target.isEnemy){
+          terrainConditions.static.sticky_web.active.foe = false
+          document.querySelector('#foeWebs').style.opacity = 0
+
+          terrainConditions.static.stealth_rock.active.foe = false
+          document.querySelector('#foeRocks').style.opacity = 0
+
+          document.querySelector('#foeSeeds').style.opacity = 0
+        } else {
+          terrainConditions.static.sticky_web.active.ally = false
+          document.querySelector('#allyWebs').style.opacity = 0
+
+          terrainConditions.static.stealth_rock.active.ally = false
+          document.querySelector('#allyRocks').style.opacity = 0
+
+          document.querySelector('#allySeeds').style.opacity = 0
+        }
+
+        break
+      case 'reflect':
+      case 'light_screen':
+        let targetType = 'ally'
+        if(target.isEnemy) targetType = 'foe'
+
+        const screenType = `${targetType}_${move.name}`
+
+        console.log(targetType)
+        console.log(terrainConditions.turns.etc[screenType].active)
+        
+        if(!terrainConditions.turns.etc[screenType].active){
+
+          terrainConditions.turns.etc[screenType].active = true
+
+          terrainConditions.turns.etc[screenType].turns = 5
+          if(target.heldItem != undefined) if(target.heldItem.name == 'light_clay') terrainConditions.turns.etc[screenType].turns = 8
+
+          setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} put up a ${switchUnderScoreForSpace(move.name)}.`), 750)
+
+          screenDisplayManagement(true, target.isEnemy, move.name, terrainConditions.turns.etc[screenType].turns)
+        } else {
+          // light sreen / reflect already active!!!
+
+          setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThis side of the battlefield already has a ${switchUnderScoreForSpace(move.name)}.`), 750)
+        }
+        
+        break
+      case 'defog':
+        if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+          recipient.magicBounce(target, queue, queueProcess, terrainConditions, () =>{
+
+            setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThat defogged the battlefield.`), 750)
+
+            // remove stealth rocks and sticky webs on both sides
+            terrainConditions.static.sticky_web.active.ally = false
+            terrainConditions.static.sticky_web.active.foe = false
+    
+            document.querySelector('#allyWebs').style.opacity = 0
+            document.querySelector('#foeWebs').style.opacity = 0
+    
+            terrainConditions.static.stealth_rock.active.ally = false
+            terrainConditions.static.stealth_rock.active.foe = false
+    
+            document.querySelector('#allyRocks').style.opacity = 0
+            document.querySelector('#foeRocks').style.opacity = 0
+    
+            // remove screens on enemy side
+            console.log(recipient.isEnemy)
+            if(recipient.isEnemy){
+              terrainConditions.turns.etc.ally_reflect.active = false
+              terrainConditions.turns.etc.ally_light_screen.active = false
+            } else {
+              terrainConditions.turns.etc.foe_reflect.active = false
+              terrainConditions.turns.etc.foe_light_screen.active = false
+            }
+
+            // make screen indicators go away
+            screenDisplayManagement(false, target.isEnemy, 'both', 0)
+          })
+        } else {
+          setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} defogged the battlefield.`), 750)
+
+          // remove stealth rocks and sticky webs on both sides
+          terrainConditions.static.sticky_web.active.ally = false
+          terrainConditions.static.sticky_web.active.foe = false
+  
+          document.querySelector('#allyWebs').style.opacity = 0
+          document.querySelector('#foeWebs').style.opacity = 0
+  
+          terrainConditions.static.stealth_rock.active.ally = false
+          terrainConditions.static.stealth_rock.active.foe = false
+  
+          document.querySelector('#allyRocks').style.opacity = 0
+          document.querySelector('#foeRocks').style.opacity = 0
+  
+          // remove screens on enemy side
+          if(target.isEnemy){
+            terrainConditions.turns.etc.ally_reflect.active = false
+            terrainConditions.turns.etc.ally_light_screen.active = false
+          } else {
+            terrainConditions.turns.etc.foe_reflect.active = false
+            terrainConditions.turns.etc.foe_light_screen.active = false
+          }
+  
+          // make screen indicators go away
+          screenDisplayManagement(false, target.isEnemy, 'both', 0)
+        }
+        break
+      case 'rest':
+        setTimeout(() => {
+          target.dialogue('battle', `${target.nickname} used rest!`)
+          setTimeout(() => 
+            target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${target.nickname} takes a nap.. zZzZz`), 
+          750)
+        }, 250)
+        
+
+        target.status.name = 'slp'
+        target.status.turns = 3
+
+        target.hp = target.stats.baseHp
+        target.hpManagement()
+
+        // target.statusEffectAnimation('slp', renderedSprites, queueProcess)
+
+        let recipientStatus
+
+        if(target.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+        else recipientStatus = document.querySelector('#allyStatus')
+
+        recipientStatus.style.display = 'block'
+        recipientStatus.src = 'img/status/slp.png'
+
+        break
+    }
+  }
+
+  let enemyTeam = [1]
+  if(battleType == 'trainer') enemyTeam = enemyTrainerInfo.team
+
+  console.log(moveSwitchEvent.foe)
+  if(target.id == ally.id) specialMoveEffect(ally, ally.switchUnderScoreForSpace(ally.nickname), allyMove, foe, foe.name, player.team, moveSwitchEvent.ally)
+  else if(target.id == foe.id) specialMoveEffect(foe, foe.name, foeRNGMove, ally, ally.switchUnderScoreForSpace(ally.nickname), enemyTeam, moveSwitchEvent.foe)
+
   console.log(skipLastAttack)
+
   if(!skipLastAttack) normalMoveEvent()
+  else skipLastAttack = false
 
   lastMoveStatusEvent()
   // console.log('last move check')
@@ -2822,7 +3935,11 @@ function pushRecipientEndOfTurnBattleItemEvent(target, targetHpBeforeMove, recip
   } else if(turnItemEvent.ally) return
 
   if(target.heldItem != null) if(target.heldItem.heldType != undefined) if(target.checkBattleItemRng()) {
-    if(target.heldItem.heldThreshHold != undefined && target.heldItem.heldThreshHold <= target.convertToPercentage(target.hp, target.stats.baseHp)) return
+
+    let threshold = target.heldItem.heldThreshHold
+    if(target.abilityInfo.ability.name == 'gluttony' && target.heldItem.type == 'berry') threshold += 25
+
+    if(target.heldItem.heldThreshHold != undefined && threshold <= target.convertToPercentage(target.hp, target.stats.baseHp)) return
     if(target.fainted) return
     if(target.hp <= 0) return
 
@@ -2845,11 +3962,17 @@ function attackMove(e) {
     }
   }
 
-  terrainConditions.weatherSpent = false
-
-  // console.log('YOYO')
-
+  allyMove = currMove
+  
   if(currMove.pp === 0){
+    let outOfPP = true
+    for(let i = 0; i < ally.moves.length; i++){
+      if(ally.moves[i].pp > 0) outOfPP == false
+    }
+
+    if(outOfPP) currMove = movesObj.struggle
+    else return
+    // prevent attacking on this attack
     // change pp digits for red
   }
 
@@ -2921,8 +4044,8 @@ function attackMove(e) {
     if(itemEvent) flippedQueue = queue.splice(1, queue.length)
     else flippedQueue = queue.splice(0, queue.length)
 
-    queueProcess.disabled = true
-    console.log('there')
+    // queueProcess.disabled = true
+    // console.log('there')
 
     console.log('nwowowowawa')
     
@@ -3011,6 +4134,67 @@ function checkForEvoAfterFaint(){
   }
 }
 
+function checkIfTerrainConditionActive(){
+  let flag = false
+  let terrainArr = []
+  
+  Object.values(terrainConditions).forEach((types, i) =>{
+    Object.entries(types).forEach((terrainType, j) =>{
+      if(terrainType[0] == 'etc' || terrainType[0] == 'weather') 
+        Object.values(terrainType[1]).forEach((terrain) =>{
+        // terrain.active = false
+        // terrain.turns = 5
+
+        console.log(terrain)
+
+        if(typeof terrain.active == 'boolean'){
+          if(terrain.active) {
+            flag = true
+            terrainArr.push({type: Object.keys(terrainConditions[Object.keys(terrainConditions)[i]])[j], info: terrain})
+          }
+        } else {
+          if(terrain.active.ally || terrain.active.foe){
+            terrainArr.push({type: Object.keys(terrainConditions[Object.keys(terrainConditions)[i]])[j], info: terrain})
+          }
+        }
+      })
+    })
+  })
+
+  return [flag, terrainArr]
+}
+
+function spendTauntTurns(target){
+  let name
+  
+  if(target.isEnemy) name = target.name
+  else name = target.nickname
+
+  if(target.affliction[2].active){
+    if(target.affliction[2].turns > 0){
+      console.log(`taunt turns : ${target.affliction[2].turns}`)
+      target.affliction[2].turns--
+    } else {
+      console.log(`no more taunt`)
+      target.affliction[2].active = false
+
+      if(target.isEnemy) document.querySelector('#foeTaunt').style.opacity = 0
+      else document.querySelector('#allyTaunt').style.opacity = 0
+
+      queueProcess.disabled = true
+      console.log('there')
+
+      queue.push(() =>{
+        target.dialogue('battle', `${name} isin't taunted by the opponent anymore.`)
+        setTimeout(() =>{
+          queueProcess.disabled = false
+          console.log('here')
+        }, 1250)
+      })
+    }
+  }
+}
+
 function spendQueue(){
   if(queueProcess.disabled) {
     document.querySelector('#proceedImgContainer').style.display = 'none'
@@ -3059,14 +4243,46 @@ function spendQueue(){
       console.log('waddafuk')
       pushRecipientEndOfTurnBattleItemEvent(faster, fasterHpBeforeMove, slowerHpBeforeMove)
       pushRecipientEndOfTurnBattleItemEvent(slower, slowerHpBeforeMove, fasterHpBeforeMove)
+
+      // queueProcess.disabled = false
+      // console.log('here')
     }
 
     return
   } else if(queueFaintTrigger.initiated){
     checkForEvoAfterFaint()
   } else {
-    if(!terrainConditions.weatherSpent) ally.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
-    else {
+    const [flag, terrainArr] = checkIfTerrainConditionActive()
+
+    spendTauntTurns(ally)
+    spendTauntTurns(foe)
+
+    let rng = Math.floor(Math.random() * 2)
+
+    let faster = ally
+    let slower = foe
+  
+    let allySpeed
+    if(ally.status.name == 'para') allySpeed = Math.floor((ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd) / 2)
+    else allySpeed = Math.floor(ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd)
+  
+    let foeSpeed
+    if(foe.status.name == 'para') foeSpeed = Math.floor((foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd) / 2)
+    else foeSpeed = Math.floor(foe.stats.spd * statsChangeObj.foe.nominator.spd / statsChangeObj.foe.denominator.spd)
+  
+    if(allySpeed == foeSpeed){
+      if(rng == 1) {
+        faster = foe
+        slower = ally
+      }
+    } else if(allySpeed < foeSpeed){
+      faster = foe
+      slower = ally
+    }
+    
+    if(!terrainConditions.weatherSpent && flag) {
+      ally.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
+    } else {
       setTimeout(() =>{
         if(queue.length > 0) return
         terrainConditions.weatherSpent = false
@@ -3086,7 +4302,6 @@ function spendQueue(){
         console.log('grided')
         moveProcess = false
       }, 50)
-      terrainConditions.weatherSpent = false
     }
   }
 }

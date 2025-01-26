@@ -276,10 +276,12 @@ export let mapsObj = {
     width: 64,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:1,max:65}}, 
-        {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
-        {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
-        {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
+        {pogemon: pogemonsObj.loko, lvls: [7, 7], odds: {min:1,max:100}}, 
+
+        // {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:1,max:65}}, 
+        // {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
+        // {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
 
       ], 
       water: [
@@ -342,7 +344,7 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 7, null]],
+        team: [[pogemonsObj.wallafi, 6, itemsObj.banana], [pogemonsObj.steeli, 6, null], [pogemonsObj.maaph, 6, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
@@ -387,7 +389,7 @@ export let mapsObj = {
         },
       },
     ],
-    weather: 'rain'
+    weather: 'sun'
   },
 
   //slither_Road
@@ -2224,20 +2226,20 @@ if(data != null) {
   // mapsObj = data.mapsObjState
 
   // mapsObj[data.currMapName] = defaultMapsObj[data.currMapName]
-
   Object.values(mapsObj).forEach((map, i) =>{
     if(map.trainers != undefined){
       if(map.trainers.length != 0) {
         map.trainers.forEach((trainer, j) =>{
-          if(trainer.team.length != 0) 
+          if(trainer.team.length != 0)
             trainer.team.forEach((pogemon, i2) =>{
-              if(defaultMapsObj[map.name].trainers != undefined)
+              if(defaultMapsObj[map.name].trainers != undefined) 
                 if(defaultMapsObj[map.name].trainers.length != 0)
-                  defaultMapsObj[map.name].trainers.forEach(trainer =>{
-                    trainer.team.forEach(pogemonInfo =>{
-                      pogemon[0] = pogemonInfo[0]
-                    })
-                  })
+                  pogemon = Object.values(defaultMapsObj[map.name].trainers)[j].team[i2]
+                  // defaultMapsObj[map.name].trainers.forEach(trainer =>{
+                  //   trainer.team.forEach(pogemonInfo =>{
+                  //     pogemon[0] = pogemonInfo[0]
+                  //   })
+                  // })
             })
         })
       }

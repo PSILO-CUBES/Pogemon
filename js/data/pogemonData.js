@@ -8,6 +8,64 @@ import { movesObj } from "./movesData.js"
 // third stage : 180 ~ 250
 // legendary/high exp yeilders : 250 ~ 400
 
+
+const animationPositionObj = {
+  smallAnimationPos: {
+    ally:{
+      launch:{
+        x: 250, y: 250
+      },
+      receive:{
+        x: -100, y: -350
+      }
+    },
+    foe:{
+      launch:{
+        x: -200, y: 125
+      },
+      receive:{
+        x: 100, y: -50
+      }
+    }
+  },
+  medAnimationPos: {
+    ally:{
+      launch:{
+        x: 250, y: 150
+      },
+      receive:{
+        x: -250, y:-225
+      }
+    },
+    foe:{
+      launch:{
+        x: -100, y: 25
+      },
+      receive:{
+        x: 100, y: 25
+      }
+    }
+  },
+  largeAnimationPos: {
+    ally:{
+      launch:{
+        x: 250, y: 50
+      },
+      receive:{
+        x: -200, y: -55
+      }
+    },
+    foe:{
+      launch:{
+        x: -200, y: -50
+      },
+      receive:{
+        x: 75, y: 75
+      }
+    }
+  },
+}
+
 const data = await loadData('saveFile')
 
 export let pogemonsObj = {
@@ -25,18 +83,17 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 1
+      spd: 9999
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
+      {ability : abilitiesObj.synchronize, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.super_power, lvl: 1, seen: false},
-      2: {move: movesObj.leech_seed, lvl: 1, seen: false},
-      3: {move: movesObj.trick_room, lvl: 1, seen: false},
-      4: {move: movesObj.heat_wave, lvl: 1, seen: false},
-      // 5: {move: movesObj.headbutt, lvl: 50, seen: false},
+      1: {move: movesObj.rest, lvl: 1, seen: false},
+      // 2: {move: movesObj.defog, lvl: 1, seen: false},
+      // 3: {move: movesObj.stealth_rock, lvl: 1, seen: false},
+      // 4: {move: movesObj.sticky_web, lvl: 1, seen: false},
       // 6: {move: movesObj.frost_wave, lvl: 50, seen: false},
     },
     sprites: {
@@ -55,24 +112,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/001_Loko/Loko_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     description: `It's dopamine receptors never build a tolerence, so it's always dopey and active.\n\nRegardless of how aloof it is, it never fails to be by it's friend's side.`,
     yeild: 500,
     catchRate: 75,
@@ -116,24 +156,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/002_Lokol/Lokol_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -176,24 +199,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/003_lokump/lokump_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -238,24 +244,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/004_Steeli/Steeli_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 500,
     catchRate: 75,
     surfable: false
@@ -298,24 +287,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/005_Steeler/Steeler_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -358,24 +330,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/006_Steevil/Steevil_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -420,24 +375,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/007_maaph/maaph_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -480,24 +418,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/008_maaphett/maaphett_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -540,24 +461,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/009_maapheeno/maapheeno_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 1000,
     catchRate: 75,
     surfable: false
@@ -602,24 +506,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/010_Piny/Piny_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 65,
     catchRate: 200,
     surfable: false
@@ -662,24 +549,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/011_fruity/fruity_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -693,8 +563,8 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 110,
-      atk: 80,
-      def: 60,
+      atk: 70,
+      def: 70,
       spatk: 120,
       spdef: 150,
       spd: 30
@@ -722,24 +592,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/012_moldy/moldy_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -766,7 +619,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -784,24 +637,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/013_Tadtoxic/Tadtoxic_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: true
@@ -844,24 +680,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/014_Venophibian/Venophibian_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: true
@@ -906,24 +725,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/015_Contamitoad/Contamitoad_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: true
@@ -968,24 +770,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/016_formal/formal_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -1028,24 +813,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/017_antber/antber_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -1088,24 +856,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/018_regaligyne/regaligyne_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -1150,24 +901,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/019_Allingua/Allingua_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -1210,24 +944,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/020_Sterra/Sterra_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -1251,11 +968,11 @@ export let pogemonsObj = {
     },
     evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: false},
     ],
     movepool: {
-      // 1: {move: movesObj.thunder_wave, lvl: 1, seen: false},
-      2: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.rest, lvl: 1, seen: false},
+      // 2: {move: movesObj.water_gun, lvl: 1, seen: false},
       // 3: {move: movesObj.super_power, lvl: 1, seen: false},
       // 4: {move: movesObj.heat_wave, lvl: 1, seen: false},
     },
@@ -1275,24 +992,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/021_Wallafi/Wallafi_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 999,
     catchRate: 200,
     surfable: false
@@ -1317,7 +1017,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1335,24 +1035,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/022_Kampgooroo/Kampgooroo_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 45,
     catchRate: 200,
     surfable: false
@@ -1397,24 +1080,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/023_Flailegant/Flailegant_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 45,
     catchRate: 200,
     surfable: false
@@ -1457,24 +1123,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/024_Sophistaves/Sophistaves_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 45,
     catchRate: 200,
     surfable: false
@@ -1519,24 +1168,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/025_Nahass/Nahass_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 45,
     catchRate: 200,
     surfable: false
@@ -1561,7 +1193,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1579,24 +1211,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/026_Ouroboross/Ouroboross_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 45,
     catchRate: 200,
     surfable: false
@@ -1648,24 +1263,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/027_Slimie/Slimie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -1690,7 +1288,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1708,24 +1306,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/028_Flamie/Flamie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -1768,24 +1349,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/029_Wettie/Wettie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: true
@@ -1828,24 +1392,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/030_Grassie/Grassie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -1888,24 +1435,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/031_Statikie/Statikie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -1930,7 +1460,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1948,24 +1478,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/032_Pukie/Pukie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -2008,24 +1521,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/033_Godlie/Godlie_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 5000,
     catchRate: 200,
     surfable: false
@@ -2070,24 +1566,7 @@ export let pogemonsObj = {
           bagSprite: 'img/pogemon/034_Balancia/Balancia_Bag_Animation_Shiny.png',
         }
       },
-      animationPositions:{
-        ally:{
-          launch:{
-            x: 50, y: 250
-          },
-          receive:{
-            x: -50, y:-250
-          }
-        },
-        foe:{
-          launch:{
-            x: -200, y: 165
-          },
-          receive:{
-            x: -100, y: -50
-          }
-        }
-      },
+      animationPositions: animationPositionObj.medAnimationPos,
       yeild: 85,
       catchRate: 200,
       surfable: false
@@ -2130,24 +1609,7 @@ export let pogemonsObj = {
           bagSprite: 'img/pogemon/035_Harmonium/Harmonium_Bag_Animation_Shiny.png',
         }
       },
-      animationPositions:{
-        ally:{
-          launch:{
-            x: 50, y: 250
-          },
-          receive:{
-            x: -50, y:-250
-          }
-        },
-        foe:{
-          launch:{
-            x: -200, y: 165
-          },
-          receive:{
-            x: -100, y: -50
-          }
-        }
-      },
+      animationPositions: animationPositionObj.largeAnimationPos,
       yeild: 85,
       catchRate: 200,
       surfable: false
@@ -2164,10 +1626,10 @@ export let pogemonsObj = {
     stats: {
       hp: 30,
       atk: 60,
-      def: 90,
+      def: 80,
       spatk: 35,
       spdef: 35,
-      spd: 40
+      spd: 50
     },
     evo: null,
     abilities: [
@@ -2192,24 +1654,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/036_Sturdle/Sturdle_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 100,
     catchRate: 200,
     surfable: false
@@ -2252,24 +1697,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/037_Punbreakable/Punbreakable_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2282,9 +1710,9 @@ export let pogemonsObj = {
       2: 'ice'
     },
     stats: {
-      hp: 120,
-      atk: 110,
-      def: 160,
+      hp: 100,
+      atk: 100,
+      def: 200,
       spatk: 60,
       spdef: 60,
       spd: 40
@@ -2312,24 +1740,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/038_Infragice/Infragice_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2344,11 +1755,11 @@ export let pogemonsObj = {
       2: 'normal'
     },
     stats: {
-      hp: 80,
+      hp: 70,
       atk: 40,
       def: 30,
       spatk: 50,
-      spdef: 50,
+      spdef: 60,
       spd: 40
     },
     evo: null,
@@ -2374,24 +1785,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/039_Grazzer/Grazzer_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2404,11 +1798,11 @@ export let pogemonsObj = {
       2: 'ground'
     },
     stats: {
-      hp: 140,
+      hp: 120,
       atk: 100,
       def: 110,
       spatk: 70,
-      spdef: 60,
+      spdef: 90,
       spd: 70
     },
     evo: null,
@@ -2434,24 +1828,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/040_Mower/Mower_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2496,24 +1873,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/041_Sparkust/Sparkust_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2556,24 +1916,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/042_ThunderHopper/ThunderHopper_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2588,11 +1931,11 @@ export let pogemonsObj = {
       2: 'fighting'
     },
     stats: {
-      hp: 110,
+      hp: 100,
       atk: 110,
       def: 120,
       spatk: 80,
-      spdef: 60,
+      spdef: 70,
       spd: 80
     },
     evo: null,
@@ -2618,24 +1961,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/043_Baull/Baull_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2680,24 +2006,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/044_Duney/Duney_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 55,
     catchRate: 200,
     surfable: false
@@ -2712,12 +2021,12 @@ export let pogemonsObj = {
       2: 'rock'
     },
     stats: {
-      hp: 60,
+      hp: 50,
       atk: 60,
-      def: 60,
+      def: 70,
       spatk: 30,
-      spdef: 50,
-      spd: 30
+      spdef: 40,
+      spd: 40
     },
     evo: {name: 'Rokwil', type: 'lvl', lvl: 30},
     abilities: [
@@ -2742,24 +2051,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/045_Cobbird/Cobbird_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -2772,9 +2064,9 @@ export let pogemonsObj = {
       2: 'rock'
     },
     stats: {
-      hp: 110,
+      hp: 100,
       atk: 110,
-      def: 110,
+      def: 120,
       spatk: 60,
       spdef: 70,
       spd: 80
@@ -2784,7 +2076,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.roost, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -2802,24 +2094,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/046_Rockwil/Rockwil_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -2864,24 +2139,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/047_Spidathia/Spidathia_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -2924,24 +2182,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/048_Psyranea/Psyranea_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -2986,24 +2227,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/049_Cheeto/Cheeto_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3046,24 +2270,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/050_Purdustus/Purdustus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3106,24 +2313,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/051_Soleo/Soleo_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3168,24 +2358,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/052_Squiurus/Squiurus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3228,24 +2401,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/053_Volaticus/Volaticus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3260,12 +2416,12 @@ export let pogemonsObj = {
       2: 'normal'
     },
     stats: {
-      hp: 70,
+      hp: 60,
       atk: 30,
       def: 30,
       spatk: 60,
       spdef: 70,
-      spd: 30
+      spd: 40
     },
     evo: null,
     abilities: [
@@ -3290,24 +2446,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/054_Adibis/Adibis_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3320,12 +2459,12 @@ export let pogemonsObj = {
       2: 'flying'
     },
     stats: {
-      hp: 110,
+      hp: 100,
       atk: 60,
       def: 60,
       spatk: 110,
       spdef: 120,
-      spd: 80
+      spd: 90
     },
     evo: null,
     abilities: [
@@ -3350,24 +2489,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/055_Avorago/Avorago_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3382,7 +2504,7 @@ export let pogemonsObj = {
       2: 'electric'
     },
     stats: {
-      hp: 40,
+      hp: 30,
       atk: 50,
       def: 30,
       spatk: 60,
@@ -3412,24 +2534,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/056_Furriticus/Furriticus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3455,6 +2560,11 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.swift, lvl: 1, seen: false},
+      3: {move: movesObj.nuzzle, lvl: 1, seen: false},
+      4: {move: movesObj.ice_punch, lvl: 1, seen: false},
+      5: {move: movesObj.stare, lvl: 1, seen: false},
+
     },
     sprites: {
       classic:{
@@ -3472,24 +2582,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/057_Tonifurr/Tonifurr_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3504,12 +2597,12 @@ export let pogemonsObj = {
       2: 'psychic'
     },
     stats: {
-      hp: 30,
+      hp: 40,
       atk: 30,
       def: 30,
       spatk: 70,
       spdef: 70,
-      spd: 70
+      spd: 60
     },
     evo: null,
     abilities: [
@@ -3534,24 +2627,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/058_Salvulpis/Salvulpis_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3576,7 +2652,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3594,24 +2670,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/059_Gelidatis/Gelidatis_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3656,24 +2715,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/060_Earthsa/Earthsa_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3686,9 +2728,9 @@ export let pogemonsObj = {
       2: 'dark'
     },
     stats: {
-      hp: 120,
-      atk: 110,
-      def: 70,
+      hp: 100,
+      atk: 120,
+      def: 80,
       spatk: 70,
       spdef: 120,
       spd: 70
@@ -3716,24 +2758,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/061_Ferusand/Ferusand_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3778,24 +2803,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/062_Aquario/Aquario_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3838,24 +2846,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3900,24 +2891,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/064_Skopt/Skopt_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -3960,24 +2934,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/065_Yaldabaoth/Yaldabaoth_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 85,
     catchRate: 200,
     surfable: false
@@ -4022,24 +2979,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/066_Jlissue/Jlissue_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: false
@@ -4082,24 +3022,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/067_Jleech/Jleech_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: false
@@ -4142,24 +3065,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/068_Jlorox/Jlorox_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: false
@@ -4184,7 +3090,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4202,24 +3108,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/069_Jleenex/Jleenex_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: false
@@ -4264,24 +3153,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/070_Vignus/Vignus_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4297,10 +3169,10 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 100,
-      atk: 80,
+      atk: 120,
       def: 140,
-      spatk: 120,
-      spdef: 110,
+      spatk: 110,
+      spdef: 80,
       spd: 70,
     },
     evo: null,
@@ -4326,24 +3198,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/071_Mortdux/Mortdux_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4388,24 +3243,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/072_Caera/Caera_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4450,24 +3288,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/073_Papiens/Papiens_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4484,10 +3305,10 @@ export let pogemonsObj = {
     stats: {
       hp: 150,
       atk: 90,
-      def: 150,
-      spatk: 90,
-      spdef: 90,
-      spd: 90,
+      def: 110,
+      spatk: 110,
+      spdef: 150,
+      spd: 60,
     },
     evo: null,
     abilities: [
@@ -4512,24 +3333,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/074_Sustiris/Sustiris_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4545,10 +3349,10 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 90,
-      atk: 90,
-      def: 90,
+      atk: 110,
+      def: 60,
       spatk: 150,
-      spdef: 90,
+      spdef: 110,
       spd: 150,
     },
     evo: null,
@@ -4574,24 +3378,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/075_Beeasis/Beeasis_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4606,11 +3393,11 @@ export let pogemonsObj = {
       2: 'dark'
     },
     stats: {
-      hp: 90,
+      hp: 110,
       atk: 150,
-      def: 90,
-      spatk: 90,
-      spdef: 150,
+      def: 150,
+      spatk: 60,
+      spdef: 110,
       spd: 90,
     },
     evo: null,
@@ -4618,7 +3405,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.swift, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -4636,24 +3423,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/076_Malumtehk/Malumtehk_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4698,24 +3468,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/077_Dahgua/Dahgua_Bag_Animation_Shiny.png',
       }
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
     surfable: true
@@ -4760,24 +3513,7 @@ export let pogemonsObj = {
         bagSprite: 'img/pogemon/143_Disso/Disso_Bag_Animation_Shiny.png',
       },
     },
-    animationPositions:{
-      ally:{
-        launch:{
-          x: 50, y: 250
-        },
-        receive:{
-          x: -50, y:-250
-        }
-      },
-      foe:{
-        launch:{
-          x: -200, y: 165
-        },
-        receive:{
-          x: -100, y: -50
-        }
-      }
-    },
+    animationPositions: animationPositionObj.medAnimationPos,
     yeild: 50000,
     catchRate: 200,
     surfable: false

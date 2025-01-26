@@ -4,7 +4,7 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
 import { currMap, encounterButtonState, generateMapData, pogecenterReturnInfo, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState, switchSpaceForUnderScore, switchUnderScoreForSpace } from './stats.js'
@@ -422,7 +422,7 @@ function overworldMenuClickEvent(e){
                   //   if(typeof indivInfo == 'boolean') console.log('miam')
                   //   console.log(currMapSaveObj[Object.keys(currMap)[i]])
                   // })
-                  console.log(currMapSaveObj)
+                  // console.log(currMapSaveObj)
                 })
               }
             }
@@ -557,6 +557,10 @@ export let waitForNextBattle = {
   initiated: false
 }
 
+export const playerTeamItemsState = {
+  team : []
+}
+
 function transitionScenes(prevScene, exitedScene){
   switch(prevScene){
     case 'overworld':
@@ -644,6 +648,7 @@ function escapeKeyEventOptions(e) {
 
     if(scenes.get('team').initiated){
       if(faintedTriggered.active) return
+      if(moveSwitchEvent.ally) return
       manageTeamState(false, prevScene)
       transitionScenes(prevScene, 'team')
     }
@@ -868,6 +873,14 @@ export function manageOverWorldState(state, previousScene){
           }
         })
       })
+
+      playerTeamItemsState.team.forEach((pogemon, i) =>{
+        if(player.team[i].id == Object.entries(pogemon)[i][0]) 
+          if(player.team[i].heldItem == null) 
+            player.team[i].heldItem = Object.entries(pogemon)[i][1]
+      })
+
+      playerTeamItemsState.team = []
 
       if(player.team.length <= 6) if(catchEventObj.active) teamPlaceHolder.push(player.team[teamOrder.length])
 

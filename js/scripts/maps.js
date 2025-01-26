@@ -75,7 +75,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = mapsObj.lab
+      currMap = mapsObj.pearly_Path
       currMap.seen = true
     }
   } else {
@@ -1197,13 +1197,13 @@ function printEncounterBox(map){
     const encounterDiv = document.createElement('div')
     encounterDiv.id = 'encounterDiv'
 
-    if(player.pogedexInfo[pogemon.pogedex - 1].seen) encounterDiv.style.backgroundColor = 'rgba(0,0,0,0.5)'
-    else encounterDiv.style.backgroundColor = 'black'
+    encounterDiv.style.backgroundColor = 'rgba(0,0,0,0.5)'
 
     const encounterImg = document.createElement('img')
     encounterImg.id = 'encounterImg'
     
     if(player.pogedexInfo[pogemon.pogedex - 1].caught) encounterImg.style.filter = "brightness(100%)"
+    else if(player.pogedexInfo[pogemon.pogedex - 1].seen) encounterImg.style.filter = "brightness(15%)"
     else encounterImg.style.filter = "brightness(0%)"
 
     encounterImg.src = pogemon.sprites.classic.sprite

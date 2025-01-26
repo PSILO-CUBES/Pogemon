@@ -91,7 +91,7 @@ export const typesObj = {
     },
     dark:{
         veryEffective: 'psychic ghost',
-        notEffective: 'dark fairy',
+        notEffective: 'dark fairy fighting',
         immuned: '',
         color: '434343',
     },

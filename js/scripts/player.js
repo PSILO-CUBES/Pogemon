@@ -12,7 +12,7 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
-import { changeMap, disableOWMenu, manageOverWorldState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
+import { changeMap, disableOWMenu, manageOverWorldState, playerTeamItemsState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
@@ -89,6 +89,12 @@ export async function generatePlayer(canvas){
         }
       }))  
 
+      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+
       player.pogedexInfo.forEach(pogedex =>{
         // pogedex.seen = true
         // pogedex.caught = true
@@ -124,7 +130,7 @@ export async function generatePlayer(canvas){
           img: pogemonImg,
           frames: {
             max: 4,
-            hold: 100
+            hold: 60
           },
           animate: true
         })
@@ -909,7 +915,9 @@ function playerInteraction(e) {
   
         
         if(player.interaction.info.amount == 1) player.team[0].dialogue('overworld', `You've picked up a ${switchUnderScoreForSpace(item.name)}.`)
-        else player.team[0].dialogue('overworld', `You've picked multiple ${switchUnderScoreForSpace(item.name)}'s.`)
+        else player.team[0].dialogue('overworld', `You've picked ${player.interaction.info.amount} ${switchUnderScoreForSpace(item.name)}'s.`)
+
+        console.log(player.interaction.info)
   
         const itemImage = new Image()
         itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
@@ -1179,6 +1187,12 @@ function engageBattle(animationId, battleZones) {
             duration: 0.4
           })
           // audioObj.music.battle.play()
+          player.team.forEach(pogemon =>{
+            let pogemonInfo = {[`${pogemon.id}`]: pogemon.heldItem}
+            playerTeamItemsState.team.push(pogemonInfo)
+          })
+          
+
           manageBattleState(animationId, null, null, null, battleZone.name)
         }
       })
@@ -1554,6 +1568,11 @@ function eventZoneManagement(eventZones){
                           opacity: 1,
                           duration: 0.4,
                           onComplete(){
+                            player.team.forEach(pogemon =>{
+                              let pogemonInfo = {[`${pogemon.id}`]: pogemon.heldItem}
+                              playerTeamItemsState.team.push(pogemonInfo)
+                            })
+                            console.log(playerTeamItemsState)
                             manageBattleState(true, null, null, eventZonesIndex.info)
                             disableOWMenu.active = false
                             player.disabled = false

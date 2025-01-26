@@ -246,6 +246,9 @@ function createMenu(){
 						const statsSceneCatchContainer = document.createElement('div')
 						statsSceneCatchContainer.id = 'statsSceneGridSectionInfoCatch'
 
+						console.log(selectedPogemon.nature.name)
+						console.log(selectedPogemon.caughtMap)
+
 						statsSceneCatchContainer.innerText = `${switchUnderScoreForSpace(selectedPogemon.nickname)} was met at ${switchUnderScoreForSpace(selectedPogemon.caughtMap.name)} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 
 						statsSceneGridSectionInfo.appendChild(statsSceneCatchContainer)

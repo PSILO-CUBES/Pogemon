@@ -441,6 +441,88 @@ put weather event before grided x
 
 overworld display box that shows met encounter in the current map x
 
+prevent menu when renaming x
+
+set level cap if Xth gym isint beaten??? maybe half exp gained after Xth level -- only 3 gym, level difference should make it challenging enought
+
+reduce hold when health is low x
+
+change animation selection from name to animaitonType on MovesObj x
+
+change animation for priority moves x
+
+fix move hit location x
+
+self debuff should happen right after user attack and not after foe attack -- just unshift unto the queue
+
+when both are frozen only ally takes frozen dmg x
+
+add sound check attribute to moves so they can pass thru sub and be immuned to sound proof x
+
+if(sprite.name != sub) dont remove it !!!! -- should be good
+
+prevent queue proceed during u-turn event x
+
+check if crit chance bonus on attack is coded in x
+
+quiver dance only boosts 1 stat x
+
+hold isint set back after quiver dance animation x
+
+setTimeout buff instead of queuing it -- think i tried this and fucked it up x
+
+acient power increases infinitly x
+
+trainer team wrong after save -- only last mon is saved and made first, the rest become null x
+
+html indicators for sticky web and rocks x
+
+stealth rock / sticky web interaction x
+
+fix status sprite position x
+
+screens x
+
+defog screens away x
+
+psychic fang screens away x
+
+weatherSpent changed and is fucked again, need to work on it a tad bit so its not as fucky x
+
+weather doesnt change when using weather move x
+
+specialMoveEffects breaks when trying to run away -- recipientMove is set as null so it broky x
+
+u-turn is fucked -- after my u-turn, enemy u-turn's twice, once with animation hitting itself x
+
+make scrappy immuned to intimidate x
+
+make more moves x
+
+magicBounce:{
+    afflictions :{
+     confused x
+     seed x
+     taunt x
+    }
+    stats : {
+     debuff x
+     recipentBuff ???
+    }
+    status : {
+     burn x
+     para x
+     psn x
+     slp x
+     frz x
+    }
+    terrain : {
+     webs x
+     rocks x
+     defog x
+    }
+} x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -449,21 +531,26 @@ overworld display box that shows met encounter in the current map x
 
 stuffToDo:{
     battle: {
-        attempt faint event from 1hp on status events
+        set exp yeild for each pogemon correctly
 
-        fix move hit location
+        make berry usable in bag scene
 
-        add sound check attribute to moves so they can pass thru sub and be immuned to sound proof
-        put contact attribute on attacks
+        not sure if stat change actualy happens tbh
 
-        change animation selection from name to animaitonType on MovesObj
+        didint test unaware but 80% sure it works
 
-        damage doesnt seem right
+        80% sure magic bounce / synchronize interaction works properly
+
+        ally screens and foe screen turn spent wont both show
+
+        screens turns doesnt flow well at all
     }
     sprites:{
         leech seed move animation is fucky
 
         make npc get to me slower relative to how far away i am from them
+
+        heal animation when weather healing
     }
     data: {
         add event zones and wild mon objects to : {
@@ -482,29 +569,26 @@ stuffToDo:{
         scribble town houses
     }
     ideas:{
-        set level cap if Xth gym isint beaten??? maybe half exp gained after Xth level
-
-        add info to save event
-
-        make multiple boxes for pc
-
-        make more moves
 
         make more items
 
-        MUSIC AND MOVE SOUNDS
+        TMS
+
+        make multiple boxes for pc
+
+        add info to save event
 
         slide in animations for mons and healthbars
 
-        TMS
-
-        prevent menu when renaming
+        eat berry sprite
     }
 }
 
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-print battle info in chrome console and fresh it when battle ends
+MUSIC AND MOVE SOUNDS
+
+print battle info in chrome console and refresh it when battle ends
 
 at least 1 overworld encounter?
 

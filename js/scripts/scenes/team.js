@@ -137,6 +137,8 @@ function switchProcessEvent(first, second){
       opacity: 1,
       duration
     })
+
+    console.log(second)
     gsap.to(second.pogemon,{
       opacity: 1,
       duration,
@@ -145,6 +147,16 @@ function switchProcessEvent(first, second){
         switchEvent = false
         teamEvent.switch = true
         disableOWMenu.active = false
+
+        if(second.pogemon.abilityInfo.ability.name == 'regenerator'){
+          const healAmount = Math.floor(second.pogemon.stats.baseHp * 0.33)
+          second.pogemon.hp += healAmount
+        } else if (second.pogemon.abilityInfo.ability.name == 'natural_Cure'){
+          second.pogemon.status = {
+            name: null,
+            turns: 0
+          }
+        }
 
         if(prevScene == 'battle') {
           if(player.team[0].fainted == true) return

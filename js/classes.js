@@ -153,7 +153,6 @@ if(data != undefined) id = data.currId
 export const statsChangeObj = {
   ally :{
     nominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -161,7 +160,6 @@ export const statsChangeObj = {
       spd: 2,
     },
     denominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -171,7 +169,6 @@ export const statsChangeObj = {
   },
   foe:{
     nominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -179,7 +176,6 @@ export const statsChangeObj = {
       spd: 2,
     },
     denominator: {
-      hp: 2,
       atk: 2,
       def: 2,
       spatk: 2,
@@ -221,6 +217,9 @@ export class Pogemon extends Sprite{
     this.name = this.pogemon.name
     this.nickname = this.pogemon.name
     this.isEnemy = isEnemy
+    this.knockedOff = false
+    this.roosted = false
+    this.sturdy = false
     this.preBuilt = preBuilt
     this.element = {
       1: this.pogemon.element[1],
@@ -244,6 +243,7 @@ export class Pogemon extends Sprite{
       this.affliction = [
         {name: 'confusion', turns: 0, active: false},
         {name: 'seeded', active: false},
+        {name: 'taunt', turns: 0, active: false}
       ]
       this.flinched = false
       this.fainted = false
@@ -463,6 +463,18 @@ export class Pogemon extends Sprite{
     }
   }
 
+  setCorrectHold(){
+    const hpToPercent = this.convertToPercentage(this.hp, this.stats.baseHp)
+
+    if(hpToPercent >= 50) this.frames.hold = 60
+    else if(hpToPercent < 50 && hpToPercent >= 25) this.frames.hold = 90
+    else if(hpToPercent < 25 && hpToPercent > 0) this.frames.hold = 120
+    else if(hpToPercent <= 0){
+      this.frames.hold = 0
+      this.frames.val = 0
+    } 
+  }
+
   hpManagement(){
     const hpToPercent = this.convertToPercentage(this.hp, this.stats.baseHp)
 
@@ -480,16 +492,13 @@ export class Pogemon extends Sprite{
 
     let hpColor
 
-    if(hpToPercent >= 50){
-      hpColor = 'green'
-    } else if(hpToPercent < 50 && hpToPercent >= 25){
-      hpColor = 'yellow'
-    } else if(hpToPercent < 25 && hpToPercent > 0){
-      hpColor = 'red'
-    } else if(hpToPercent <= 0){
-      hpColor = 'black'
-    } 
+    if(hpToPercent >= 50) hpColor = 'green'
+    else if(hpToPercent < 50 && hpToPercent >= 25) hpColor = 'yellow'
+    else if(hpToPercent < 25 && hpToPercent > 0) hpColor = 'red'
+    else if(hpToPercent <= 0) hpColor = 'black'
+    
 
+    // vv not sure why i check for this.hp >= 0 here vv
     if(this.hp >= 0) hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
     else hpDom.textContent = `0/${this.stats.baseHp}`
 
@@ -517,11 +526,1210 @@ export class Pogemon extends Sprite{
     return text.replace(' ', '_')
   }
 
+  statusAnimation(type, effect, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess){
+    if(this.fainted) return
+    queueProcess.disabled = true
+    console.log('there')
+
+    const statusImg = new Image()
+    if(move.type != undefined) statusImg.src = move.sprite
+
+
+    const statusSprite = new Sprite({
+      type: 'attack',
+      position: {
+        x: this.position.x + this.width / 6,
+        y: this.position.y + this.height * 1.5
+      },
+      img: statusImg,
+      frames: {
+        max: 4,
+        hold: 50
+      },
+      animate: true,
+    })
+
+    if(this.isEnemy){
+      // statusSprite.position = {
+      //   x: this.position.x - this.width / 4,
+      //   y: this.position.y - this.height / 2
+      // }
+
+      if(move.rotation != undefined) statusSprite.rotation = move.rotation.foe
+    } else {
+      if(move.rotation != undefined) statusSprite.rotation = move.rotation.ally
+    }
+
+    let webInteraction = false
+
+    let chooseAnimation = (type, effect, move, i, effectArr) =>{
+      if(!this.isEnemy){
+        statusSprite.position = {
+          x: recipient.position.x - recipient.width / 8,
+          y: recipient.position.y - recipient.height / 2
+        }
+      } else {
+        statusSprite.position = {
+          x: recipient.position.x + recipient.width / 8,
+          y: recipient.position.y + recipient.height 
+        }
+      }
+
+      queueProcess.disabled = true
+      console.log('there')
+
+      let effectType = false
+      if(effect != undefined) if(effect.type != undefined) if(effect.type == 'stats') effectType = true
+
+
+      if(type == 'heal'){
+        if(this.isEnemy){
+          statusSprite.position = {
+            x: this.position.x - this.width / 8,
+            y: this.position.y - this.height
+          }
+        } else {
+          statusSprite.position = {
+            x: this.position.x + this.width / 8,
+            y: this.position.y + this.height * 1.15
+          }
+        }
+
+        if(move.type != 'heal'){
+          if(move.effects != null) if(Object.keys(move.effects[0]) == 'leech') statusSprite.img.src = 'img/moves/heal.png'
+          else statusSprite.img.src = move.sprite
+        }
+      
+        renderedSprites.push(statusSprite)
+
+        setTimeout(() =>{
+          queueProcess.disabled = false
+          console.log('here')
+          renderedSprites.pop()
+        }, 1000)
+      } else if (effectType || move.animationType == 'stats' || move.animationType == 'statsSelf') {
+
+        if(move.type != undefined){
+          if(move.name == 'sticky_web') {
+            webInteraction = true
+          } else if(move.type == 'status'){
+            
+            let rotation
+  
+            if(movesObj[move.name].rotation != undefined) 
+              if(this.isEnemy) rotation = movesObj[move.name].rotation.foe
+              else rotation = movesObj[move.name].rotation.ally
+  
+            const statsAnimationImage = new Image()
+            statsAnimationImage.src = move.sprite
+            const statsAnimationSprite = new Sprite({
+              type: 'moveSprite',
+              position: {
+                x: recipient.position.x,
+                y: recipient.position.y
+              },
+              img: statsAnimationImage,
+              frames:{
+                max: 4,
+                hold: 50
+              },
+              animate: true,
+              rotation
+            })
+  
+            if(move.animationType == 'statsSelf'){
+              if(this.isEnemy){
+                statsAnimationSprite.position = {
+                  x: this.position.x - this.width / 8,
+                  y: this.position.y + this.height / 4
+                }
+              } else {
+                statsAnimationSprite.position = {
+                  x: this.position.x + this.width / 4,
+                  y: this.position.y + this.height / 0.65
+                }
+              }
+            } else {
+              if(this.isEnemy){
+                statsAnimationSprite.position = {
+                  x: recipient.position.x,
+                  y: recipient.position.y
+                }
+              } else {
+                statsAnimationSprite.position = {
+                  x: recipient.position.x,
+                  y: recipient.position.y
+                }
+              }
+            }
+  
+            renderedSprites.splice(2,0,statsAnimationSprite)
+            console.log('remove sprite')
+          }
+        }
+
+        let tier = 'tiers'
+        if(effect.pow == 1) tier = 'tier' 
+
+        // let recipientStatus = document.querySelector('#foeStatus')
+
+        let userStatsChangeContainer = 'allyStatusEffectContainer' 
+        let recipientStatsChangeContainer = 'foeStatusEffectContainer'
+    
+        let movementDistance = 20
+  
+        let rotation
+        if(move.rotation != undefined) rotation = move.rotation.ally
+    
+        let duration
+        if(move.duration != undefined) duration = move.duration
+        
+        let launcPos = this.pogemon.animationPositions.ally.launch
+        let receivePos = recipient.pogemon.animationPositions.foe.receive
+    
+        if(this.isEnemy){
+          // recipientStatus = document.querySelector('#allyStatus')
+    
+          userStatsChangeContainer = 'foeStatusEffectContainer'
+          recipientStatsChangeContainer = 'allyStatusEffectContainer'
+    
+          movementDistance = -20
+          
+          if(move.type != undefined) if(movesObj[move.name].rotation != undefined) rotation = movesObj[move.name].rotation.foe
+          launcPos = this.pogemon.animationPositions.foe.launch
+    
+          receivePos = recipient.pogemon.animationPositions.ally.receive
+        }
+
+        const spinAwayBool = target =>{
+          let pass = false
+
+          if(this.affliction[1].active) pass = true
+
+          if(terrainConditions.static.stealth_rock.active[target]) pass = true
+
+          if(terrainConditions.static.sticky_web.active[target]) pass = true
+
+          return pass
+        }
+        
+        setTimeout(() =>{
+          console.log('remove sprite')
+
+          //check status here
+          let pass = false
+          let rng = Math.floor(Math.random() * 99) + 1
+
+          if(effect.rng >= rng) pass = true
+          else if(effect.rng == undefined) pass = true
+
+          if(pass){
+            queueProcess.disabled = true
+            console.log('there')
+
+            setTimeout(() =>{
+              queueProcess.disabled = true
+              console.log('there')
+
+              if(document.querySelector('#scene').childNodes.length > 3) document.querySelector('#scene').removeChild(document.querySelector('#scene').childNodes[document.querySelector('#scene').childNodes.length - 1])
+
+              const buffDiv = document.createElement('div')
+
+              document.querySelector('#scene').appendChild(buffDiv)
+
+
+              let effectName = effect.name
+
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                if(this.abilityInfo.ability.name != 'mold_Breaker') {
+                  switch(effect.name){
+                    case 'recipientBuff':
+                      effectName = 'buff'
+                      break
+                    case 'debuff':
+                      effectName = 'selfDebuff'
+                      break
+                  }
+                }
+              }
+
+              if(this.abilityInfo.ability.name == 'contrary'){
+                switch(effect.name){
+                  case 'buff':
+                    effectName = 'selfDebuff'
+                    break
+                  case 'selfDebuff':
+                    effectName = 'buff'
+                    break
+
+                  case 'recipientBuff':
+                    if(this.abilityInfo.ability.name != 'mold_Breaker') effectName = 'debuff'
+                    break
+                  case 'debuff':
+                    if(this.abilityInfo.ability.name != 'mold_Breaker') effectName = 'recipientBuff'
+                    break
+                }
+              }
+
+              const statsChanceAnimationEvent = () =>{
+                if(effectName == 'buff'){
+  
+                  if(!this.isEnemy){
+                    if(statsChangeObj.ally.nominator[effect.target] > 8) {
+                      statsChangeObj.ally.nominator[effect.target] = 8
+                      // queueProcess.disabled = false
+                      // console.log('here')
+                      return
+                    }
+  
+                    let statState = 'null'
+                    let qnty = 0
+  
+                    if(effect.target == 'all'){
+                      statState = 'all'
+  
+                      for(let i = 0 ; i < Object.values(statsChangeObj.ally.nominator).length; i ++){
+                        const stat = Object.values(statsChangeObj.ally.nominator)[i]
+                        console.log(stat)
+                        if(stat > 8) {
+                          Object.values(statsChangeObj.ally.nominator)[i] == 8
+  
+                          statState = 'some'
+                          qnty = qnty + 1
+                        }
+                      }
+  
+                      if(qnty == 5) statState = 'none'
+  
+                      switch(statState){
+                        case 'all':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nAll of it's stats went up!.`)
+                          break
+                        case 'some':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nSome of it's stats went up!.`)
+                          break
+                        case 'none':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut none of it's stats went up...`)
+                          return
+                      }
+                    }
+  
+                    if(statsChangeObj.ally.nominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up anymore.`)
+                      return
+                    }
+                  
+                    // ally buff
+                    if(move.name == 'rapid_spin') {
+                      this.dialogue(
+                        'battle', 
+                        `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                      )
+  
+                      if(spinAwayBool('ally')){
+                        this.affliction[1].active = false
+  
+                        terrainConditions.static.stealth_rock.ally = false
+                        terrainConditions.static.sticky_web.ally = false
+  
+                        setTimeout(() =>{
+                          this.dialogue(
+                            'battle', 
+                            `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.name)} spun all the hazards away on it's side of the battlefield.`
+                          )
+                        }, 1250)
+                      }
+                    } else if(effect.target != 'all') 
+                      this.dialogue(
+                        'battle', 
+                        `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                      )
+  
+                    buffDiv.setAttribute('class', `${effectName}Div ${userStatsChangeContainer}`)
+                    buffDiv.style.top = -250
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                    
+                    gsap.to(buffDiv, {
+                      top: -650,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        // queueProcess.disabled = false
+                        // console.log('here')
+                      }
+                    }) 
+                  } else {
+                    if(statsChangeObj.foe.nominator[effect.target] > 8) {
+                      statsChangeObj.foe.nominator[effect.target] = 8
+                      // queueProcess.disabled = false
+                      // console.log('here')
+                      return
+                    }
+  
+                    let statState = 'null'
+                    let qnty = 0
+  
+                    if(effect.target == 'all'){
+                      statState = 'all'
+  
+                      for(let i = 0 ; i < Object.values(statsChangeObj.foe.nominator).length; i ++){
+                        const stat = Object.values(statsChangeObj.foe.nominator)[i]
+                        if(stat > 8) {
+                          Object.values(statsChangeObj.foe.nominator)[i] = 8
+  
+                          statState = 'some'
+                          qnty = qnty + 1
+                        }
+                      }
+  
+                      if(qnty == 5) statState = 'none'
+  
+                      switch(statState){
+                        case 'all':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nAll of it's stats went up!.`)
+                          break
+                        case 'some':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nSome of it's stats went up!.`)
+                          break
+                        case 'none':
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut none of it's stats went up...`)
+                          return
+                      }
+                    }
+  
+                    // if(statsChangeObj.foe.nominator[effect.target] == 8) return
+                    if(statsChangeObj.foe.nominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up anymore.`)
+                      return
+                    }
+                  
+                    // foe buff
+                    if(move.name == 'rapid_spin') {
+                      this.dialogue(
+                        'battle', 
+                        `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                      )
+  
+                      if(spinAwayBool('foe')){
+                        this.affliction[1].active = false
+  
+                        terrainConditions.static.stealth_rock.foe = false
+                        terrainConditions.static.sticky_web.foe = false
+  
+                        setTimeout(() =>{
+                          this.dialogue(
+                            'battle', 
+                            `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.name)} spun all the hazards away on it's side of the battlefield.`
+                          )
+                        }, 1250)
+                      }
+                    }  else if(effect.target != 'all') 
+                      this.dialogue(
+                        'battle', 
+                        `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                      )
+  
+                    buffDiv.setAttribute('class', `${effectName}Div ${userStatsChangeContainer}`)
+                    buffDiv.style.top = -500
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                  
+                    gsap.to(buffDiv, {
+                      top: -700,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        // queueProcess.disabled = false
+                        // console.log('here')
+                      }
+                    }) 
+                  }
+                } else if(effectName == 'recipientBuff'){
+                  // recipientBuff
+                  if(!this.isEnemy){
+                    if(statsChangeObj.foe.denominator[effect.target] > 8) {
+                      statsChangeObj.foe.denominator[effect.target] = 8
+                      queueProcess.disabled = false
+                      console.log('here')
+                      return
+                    }
+                  
+                    buffDiv.setAttribute('class', `buffDiv ${recipientStatsChangeContainer}`)
+                    buffDiv.style.top = -500
+                  
+                    gsap.to(buffDiv, {
+                      top: -700,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        queueProcess.disabled = false
+                      console.log('here')
+                      }
+                    }) 
+                  } else {
+                    if(statsChangeObj.ally.denominator[effect.target] > 8) {
+                      statsChangeObj.ally.denominator[effect.target] = 8
+                      queueProcess.disabled = false
+                      console.log('here')
+                      return
+                    }
+                  
+                    // foe debuff
+                    buffDiv.setAttribute('class', `buffDiv ${recipientStatsChangeContainer}`)
+                    buffDiv.style.top = -300
+                  
+                    gsap.to(buffDiv, {
+                      top: -500,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }
+                    }) 
+                  }
+                } else if(effectName == 'debuff'){
+                  // debuff
+                  if(recipient.abilityInfo.ability.name == 'big_Pecks') {
+                    if(this.abilityInfo.ability.name != 'mold_Breaker') {
+                      recipient.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s ability prevented it's ${effect.target} from going down.`)
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                        this.setCorrectHold()
+                      }, 250)
+                      return
+                    }
+                  }
+  
+                  let defiant = false
+                  if(recipient.abilityInfo.ability.name == 'defiant') {
+                    recipient.statusAnimation('status', recipient.abilityInfo.ability.effects, {name: 'defiant'}, this, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+                    defiant = true
+                  }
+                    
+  
+                  if(!this.isEnemy){
+                    if(statsChangeObj.foe.denominator[effect.target] > 8) {
+                      statsChangeObj.foe.denominator[effect.target] = 8
+                      queueProcess.disabled = false
+                      console.log('here')
+                      return
+                    }
+  
+                    if(statsChangeObj.foe.denominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      return
+                    }
+  
+                    // ally debuff
+                    if(move.name == 'sticky_web') this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.name)} got stuck in the sticky web!\n\n${this.switchUnderScoreForSpace(recipient.name)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+                    else this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.name)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+  
+                    buffDiv.setAttribute('class', `${effectName}Div ${recipientStatsChangeContainer}`)
+                    buffDiv.style.top = -800
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                  
+                    gsap.to(buffDiv, {
+                      top: -600,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        if(!defiant){
+                          queueProcess.disabled = false
+                          console.log('here')
+                        }
+                      }
+                    }) 
+                  } else {
+                    if(statsChangeObj.ally.denominator[effect.target] > 8) {
+                      statsChangeObj.ally.denominator[effect.target] = 8
+                      queueProcess.disabled = false
+                        console.log('here')
+                      return
+                    }
+  
+                    if(statsChangeObj.ally.denominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      return
+                    }
+  
+                    // foe debuff
+                    if(move.name == 'sticky_web') this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} got stuck in the sticky web!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+                    else this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+  
+                    buffDiv.setAttribute('class', `${effectName}Div ${recipientStatsChangeContainer}`)
+                    buffDiv.style.top = -850
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                  
+                    gsap.to(buffDiv, {
+                      top: -450,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        if(!defiant){
+                          queueProcess.disabled = false
+                          console.log('here')
+                        }
+                      }
+                    }) 
+                  }
+  
+                } else if(effectName == 'selfDebuff'){
+                  let defiant = false
+                  console.log(this)
+                  if(this.abilityInfo.ability.name == 'defiant') {
+                    this.statusAnimation('status', target.abilityInfo.ability.effects, {name: 'defiant'}, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+                    defiant = true
+                  }
+  
+                  if(!this.isEnemy){
+                    if(statsChangeObj.ally.nominator[effect.target] > 8) {
+                      statsChangeObj.ally.nominator[effect.target] = 8
+                      queueProcess.disabled = false
+                      console.log('here')
+                      return
+                    }
+  
+                    if(statsChangeObj.ally.nominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      return
+                    }
+  
+                    if(statsChangeObj.ally.nominator[effect.target] == 8) return
+                  
+
+                    // ally buff
+                    if(recipient.abilityInfo.ability.name == 'magic_Bounce') 
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ability made ${this.switchUnderScoreForSpace(recipient.nickname)}'s move bounce back!\n\n${this.switchUnderScoreForSpace(recipient.name)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+                    else
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+    
+                    buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
+                    buffDiv.style.top = -850
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                  
+                    gsap.to(buffDiv, {
+                      top: -450,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        if(!defiant){
+                          queueProcess.disabled = false
+                          console.log('here')
+                        }
+                      }
+                    }) 
+                  } else {
+                    if(statsChangeObj.foe.nominator[effect.target] > 8) {
+                      statsChangeObj.foe.nominator[effect.target] = 8
+                      queueProcess.disabled = false
+                      console.log('here')
+                      return
+                    }
+  
+                    if(statsChangeObj.foe.nominator[effect.target] == 8) {
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      return
+                    }
+  
+                    if(statsChangeObj.foe.nominator[effect.target] == 8) return
+                  
+                    // foe buff
+                    if(recipient.abilityInfo.ability.name == 'magic_Bounce') 
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ability made ${this.switchUnderScoreForSpace(recipient.nickname)}'s move bounce back!\n\n${this.switchUnderScoreForSpace(recipient.name)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+                    else
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+  
+                    buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
+                    buffDiv.style.top = -800
+  
+                    queueProcess.disabled = true
+                    console.log('there')
+                  
+                    gsap.to(buffDiv, {
+                      top: -600,
+                      duration: 0.5,
+                      onComplete: () =>{
+                        document.querySelector('#scene').removeChild(buffDiv)
+                        if(!defiant){
+                          if(this.abilityInfo.ability.name != 'weak_Armor'){
+                            queueProcess.disabled = false
+                            console.log('here')
+                          }
+                        }
+                      }
+                    }) 
+                  }
+                }
+              }
+              
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                if(this.fainted) return
+                if(recipient.fainted) return
+                queueProcess.disabled = true
+                console.log('there')
+
+                setTimeout(() =>{
+
+                  this.dialogue('battle', `${recipient.nickname}'s ability made ${this.nickname}'s move bounce back!`)
+                }, 1250)
+
+                setTimeout(() =>{
+                  statsChanceAnimationEvent()
+                }, 2500)
+              } else {
+                if(this.fainted) return
+                if(recipient.fainted) return
+                statsChanceAnimationEvent()
+              }
+
+
+              if(i + 1 == effectArr.length) setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
+                this.setCorrectHold()
+              }, 250)
+            }, 1250 * (i + 1))
+          }
+
+          //probably fucky here
+          
+          if(move.effects != null) if(i == Object.values(move.effects).length - 1){
+            if(Object.values(move.effects).length > 1) {
+              // queue.splice(1,1)[0]()
+            }
+            
+            // queue.push(queue.splice(0,1)[0])
+
+            if(this.fainted || recipient.fainted) queueFaintTrigger.initiated = true
+          }
+
+          setTimeout(() =>{
+            if(move.type == 'status') renderedSprites.splice(2,1)
+              setTimeout(() =>{
+                // queueProcess.disabled = false
+                // console.log('here')
+              }, 500)
+          }, 1250)
+        }, 0)
+      } else if (move.animationType == 'status' || move.animationType == 'statusSelf') {
+        switch(move.name) {
+          case 'rainy_day':
+            if(terrainConditions.turns.weather.rain.active) queueProcess.disabled = false
+            else {
+              terrainConditions.turns.weather.rain.active = true
+              terrainConditions.turns.weather.rain.turns = 5
+            }
+            break
+          case 'sunny_day':
+            if(terrainConditions.turns.weather.sun.active) queueProcess.disabled = false
+            else {
+              terrainConditions.turns.weather.sun.active = true
+              terrainConditions.turns.weather.sun.turns = 5
+            }
+            break
+          case 'sand_storm':
+            if(terrainConditions.turns.weather.sand.active) queueProcess.disabled = false
+            else {
+              terrainConditions.turns.weather.sand.active = true
+              terrainConditions.turns.weather.sand.turns = 5
+            }
+            break
+          case 'snow_storm':
+            if(terrainConditions.turns.weather.snow.active) queueProcess.disabled = false
+            else {
+              terrainConditions.turns.weather.snow.active = true
+              terrainConditions.turns.weather.snow.turns = 5
+            }
+            break
+          case 'heat_wave':
+          case 'hypnosis':
+          case 'frost_wave':
+          case 'trick_room':
+            const color = typesObj[move.element].color
+
+            const tl1 = gsap.timeline()
+            const tl2 = gsap.timeline()
+
+            let trickroomActive = false
+
+            if(move.name == 'trick_room'){
+              if(terrainConditions.turns.etc.trick_room.active) {
+                trickroomActive = true
+                return
+              }
+
+              const fieldEffect = document.querySelector('#fieldEffect')
+
+              // const fieldEffectContent = document.createElement('div')
+              // fieldEffectContent.id = 'trickroom'
+
+              // for(let i = 0; i < 15; i++){
+              //   const trickRoomCells = document.createElement('div')
+              //   trickRoomCells.id = 'trickroomCells'
+
+              //   fieldEffectContent.appendChild(trickRoomCells)
+              // }
+
+              // fieldEffect.appendChild(fieldEffectContent)
+
+              // console.log(trickroomActive)
+
+              terrainConditions.turns.etc.trick_room.active = true
+              terrainConditions.turns.etc.trick_room.turns = 5
+              queueProcess.disabled = false
+              console.log('here')
+              fieldEffect.opacity = 1
+              document.querySelector('#trickRoomIndicatorContainer').style.display = 'flex'
+
+              setTimeout(() =>{
+                document.querySelector('#trickRoomIndicatorContainer').style.right = '0px'
+                document.querySelector('#trickRoomTurnIndicator').innerText = terrainConditions.turns.etc.trick_room.turns
+              }, 250)
+
+            }
+
+            if(trickroomActive) return
+
+            const scene = document.querySelector('#scene')
+            tl2.to(scene, {
+              backgroundColor: `#${color}40`,
+              duration: 0.25
+            }).to(scene, {
+              backgroundColor: `#${color}00`,
+              duration: 0.25
+            }).to(scene, {
+              backgroundColor: `#${color}40`,
+              duration: 0.25
+            }).to(scene, {
+              backgroundColor: `#${color}00`,
+              duration: 0.25,
+              onComplete: () =>{
+                queueProcess.disabled = false
+                console.log('here')
+              }
+            })
+            break
+          case 'thunder_wave':
+          case 'fart':
+          case 'confuse_ray':
+          case 'leech_seed':
+          case 'poison_powder':
+          case 'stun_spore':
+          case 'sleep_powder':
+          case 'spore':
+          case 'sticky_web':
+          case 'stealth_rock':
+          case 'taunt':
+          case 'defog':
+          case 'reflect':
+          case 'light_screen':
+
+          if(move.animationType == 'status'){
+            if(this.isEnemy){
+              statusSprite.position = {
+                x: recipient.position.x - recipient.width / 4,
+                y: recipient.position.y + recipient.height / 0.65
+              }
+            } else {
+              statusSprite.position = {
+                x: recipient.position.x - recipient.width / 8,
+                y: recipient.position.y - recipient.height / 2
+              }
+            }
+          } else {
+            if(this.isEnemy){
+              statusSprite.position = {
+                x: this.position.x - this.width / 8,
+                y: this.position.y + this.height / 4
+              }
+            } else {
+              statusSprite.position = {
+                x: this.position.x + this.width / 4,
+                y: this.position.y + this.height / 0.65
+              }
+            }
+          }
+
+            renderedSprites.push(statusSprite)
+
+            // if(move.name == 'sticky_web') webInteraction = true
+
+            setTimeout(() =>{
+              queueProcess.disabled = false
+              console.log('here')
+              statusSprite.frames.hold = 10
+              renderedSprites.pop()
+            }, 1000)
+            break
+          case 'substitute':
+            let subHealth = Math.floor(this.stats.baseHp * 0.25)
+
+            if(this.hp - subHealth <= 0){
+              setTimeout(() =>{
+                this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut since it's so weak, it failed to make a substitute..`)
+                setTimeout(() =>{
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 1250)
+              }, 1250)
+              return
+            }
+
+            if(this.subHp > 0){
+              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}`)
+              setTimeout(() =>{
+                this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(this.nickname)} already has a substitute protecting it..`)
+                setTimeout(() =>{
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 1250)
+              }, 1250)
+              return
+            }
+
+            this.opacity = 0.5
+
+            let subType
+
+            if(this.isEnemy) subType = 'foeSub' 
+            else subType = 'allySub'
+
+            let substituteImg = new Image()
+            let substituteSprite = new Sprite({
+              type: subType,
+              position: {
+                x: this.position.x,
+                y: this.position.y
+              },
+              img: substituteImg,
+              frames: {
+                max: 1,
+                hold: 50
+              },
+              animate: false,
+            })
+
+            if(this.isEnemy) {
+              substituteSprite.position = {
+                x: this.position.x - 15,
+                y: this.position.y + 150
+              }
+
+              gsap.to(this.position, {
+                x: this.position.x + 25,
+                y: this.position.y - 15
+              })
+
+              substituteImg.src = 'img/moves/sub.png'
+            } else {
+              substituteSprite.position = {
+                x: this.position.x + 325,
+                y: this.position.y + 375
+              }
+
+              gsap.to(this.position, {
+                x: this.position.x - 100,
+                y: this.position.y + 15
+              })
+
+              substituteImg.src = 'img/moves/sub_back.png'
+            }
+
+            this.hp -= subHealth
+            this.hpManagement()
+            this.subHp = subHealth
+
+            renderedSprites.splice(1, 0, substituteSprite)
+            console.log('remove sprite')
+          
+            queueProcess.disabled = false
+            console.log('here')
+            break
+          case 'protect':
+            const rng = Math.floor(Math.random() * move.effects.protect)
+
+            const protectAnimation = () => {
+              let protectImg = new Image()
+
+              let protectSprite = new Sprite({
+                type: 'protect',
+                img: protectImg,
+                frames: {
+                  max: 1,
+                  hold: 0,
+                },
+                animate: false
+              })
+
+              if(this.isEnemy){
+                protectImg.src = 'img/moves/foe_protect.png'
+                protectSprite.position = {
+                  x: this.position.x + 35,
+                  y: this.position.y + 100
+                }
+              } else {
+                protectImg.src = 'img/moves/protect.png'
+                protectSprite.position = {
+                  x: this.position.x + 150,
+                  y: this.position.y + 275
+                }
+              }
+              
+
+              renderedSprites.splice(renderedSprites.length, 0, protectSprite)
+              console.log('remove sprite')
+              queueProcess.disabled = true
+              console.log('there')
+              protectSprite.opacity = 0
+
+              gsap.to(protectSprite, {
+                opacity: 1,
+                duration: 0.5,
+                onComplete: () =>{
+                  gsap.to(protectSprite, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () =>{
+                      renderedSprites.forEach((sprite, i) =>{
+                        if(sprite.type == 'protect') renderedSprites.splice(i, 1)
+                          console.log('remove sprite')
+                      })
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }
+                  })
+                }
+              })
+            }
+
+            if(recipient.protected.active == true || rng > move.effects.protect / this.protected.turns){
+              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} failed to protect itself..`)
+              this.protected.turns = 0
+              this.protected.active = false
+              queueProcess.disabled = false
+              console.log('here')
+              return
+            }
+
+            protectAnimation()
+            this.protected.turns += 1
+            this.protected.active = true
+            break
+        }
+      }
+
+      if(webInteraction) return
+
+      let movementDistance = 20
+
+      if(move.type != 'status') this.pogemonShakeAnimation(move.type, move, recipient, movementDistance, renderedSprites, queueProcess)
+    }
+
+    if(webInteraction) return
+
+    queueProcess.disabled = true
+    console.log('there')
+
+    if(effect == null) chooseAnimation(move.type, null, move, 0, null) 
+    else effect.forEach((effectInfo, i) => {
+      chooseAnimation(effectInfo.type, effectInfo, move, i, effect)
+      if(i == effect.length){
+        setTimeout(() =>{
+          queueProcess.disabled = false
+          console.log('here')
+        }, 1250)
+      }
+    })
+  }
+
+  pogemonShakeAnimation(type, move, recipient, movementDistance, renderedSprites, queueProcess){
+    const tl = gsap.timeline()
+    
+    let rememberX = this.position.x
+    
+    if(move.priority > 0){
+      this.frames.hold = 0
+      tl.to(this.position, {
+        x: this.position.x - movementDistance, 
+        onComplete: () =>{
+          gsap.to(this, {
+            opacity: 0,
+            duration: 0.01,
+            onComplete: () =>{
+              tl.to(this.position, {
+                x: this.position.x + movementDistance * 2,
+                duration: 0.05,
+                onComplete: () =>{
+        
+                  audioObj.SFX.tackleHit.play()
+        
+                  recipient.hpManagement()
+          
+                  gsap.to(recipient.position, {
+                    x: recipient.position.x + 10,
+                    yoyo: true,
+                    repeat: 5,
+                    duration: 0.08
+                  })
+          
+                  gsap.to(recipient.sprite, {
+                    opacity: 0,
+                    yoyo: true,
+                    repeat: 5,
+                    duration: 0.08,
+                    onComplete: () =>{
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 1250)
+                      if(move.sprite != undefined) renderedSprites.splice(1,1)
+                        console.log('remove sprite')
+                    }
+                  })
+      
+                  gsap.to(this, {
+                    opacity: 1
+                  })
+                }
+              }).to(this.position, {
+                x: rememberX,
+                onComplete: () =>{
+                  this.setCorrectHold()
+                }
+              })
+            }
+          })
+        },
+      })
+    } else {
+      switch(type){
+        case 'hit':
+          setTimeout(() => this.frames.hold = 0, 50)
+          tl.to(this.position, {
+            x: this.position.x - movementDistance
+          }).to(this.position, {
+            x: this.position.x + movementDistance * 2,
+            duration: 0.1,
+            onComplete: () =>{
+    
+              audioObj.SFX.tackleHit.play()
+    
+              recipient.hpManagement()
+      
+              gsap.to(recipient.position, {
+                x: recipient.position.x + 10,
+                yoyo: true,
+                repeat: 5,
+                duration: 0.08
+              })
+      
+              gsap.to(recipient.sprite, {
+                opacity: 0,
+                yoyo: true,
+                repeat: 5,
+                duration: 0.08,
+                onComplete: () =>{
+                  setTimeout(() =>{
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 1250)
+                  if(move.sprite != undefined) renderedSprites.splice(1,1)
+                    console.log('remove sprite')
+                }
+              })
+            }
+          }).to(this.position, {
+            x: rememberX,
+            onComplete: () =>{
+              this.setCorrectHold()
+            }
+          })
+          break
+        case 'projectile':
+          setTimeout(() => this.frames.hold = 0, 50)
+          tl.to(this.position, {
+            x: this.position.x + movementDistance,
+          }).to(this.position, {
+            x: this.position.x - movementDistance * 2
+          }).to(this.position, {
+            x: rememberX,
+            onComplete: () =>{
+              this.setCorrectHold()
+            }
+          })
+          break
+        case 'status':
+          tl.to(this.position, {
+            x: this.position.x + movementDistance,
+            duration: 0.25,
+            onComplete: () =>{
+              this.frames.hold = 0
+            }
+          }).to(this.position, {
+            x: this.position.x - movementDistance,
+            duration: 0.25
+          }).to(this.position, {
+            x: this.position.x + movementDistance,
+            duration: 0.25
+          }).to(this.position, {
+            x: rememberX,
+            duration: 0.25,
+            onComplete: () =>{
+              this.setCorrectHold()
+            }
+          })
+          break
+      }
+    }
+  }
+
+  magicBounce(recipient, queue, queueProcess, terrainConditions, afterBounceFunction){
+    queueProcess.disabled = true
+    console.log('there')
+
+    setTimeout(() =>{
+      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ability made ${this.switchUnderScoreForSpace(recipient.nickname)}'s move bounce back!`)
+
+      afterBounceFunction()
+    }, 1250)
+  }
+
   //doesnt make anything move, its the method to use moves during combat
-  move({move, recipient, renderedSprites, critHit, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}){
+  move({move, recipient, recipientMove, renderedSprites, critHit, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}){
     if(this.hp <= 0) return
 
     console.log(`${this.nickname} move start`)
+
+    if(move.type == 'status' && this.affliction[2].active){
+      if(this.isEnemy){
+        const attackingMovesArr = []
+
+        this.moves.forEach(move =>{
+          if(move.type != 'status') attackingMovesArr.push(move)
+        })
+
+        if(attackingMovesArr.length > 0){
+          const rng = Math.floor(Math.random() * attackingMovesArr.length)
+          move = this.moves[rng]
+        } else {
+          move = movesObj.struggle
+        }
+      } else this.dialogue('battle', `${this.name} is taunted into a rage and can only use attacking moves...`)
+      
+      return
+    }
 
     // let confusionCancel = false
 
@@ -529,8 +1737,6 @@ export class Pogemon extends Sprite{
     //   let affliction = this.affliction[i]
     //   if(affliction.name == 'confusion') confusionCancel = true
     // }
-
-    // console.log(confusionCancel)
 
     // if(confusionCancel) return
 
@@ -540,7 +1746,13 @@ export class Pogemon extends Sprite{
 
     this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!`)
 
+    if(move.name == 'sucker_punch' && recipientMove.type != 'physical'){
+      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nIt didin't seem to work for some reason..`)
+      return
+    }
+    
     if(move.pp == 0) move = movesObj['struggle']
+    else move.pp--
 
     let recipientStatus = document.querySelector('#foeStatus')
 
@@ -558,7 +1770,7 @@ export class Pogemon extends Sprite{
     let launcPos = this.pogemon.animationPositions.ally.launch
     let receivePos = recipient.pogemon.animationPositions.foe.receive
 
-    let crit
+    let crit = 1
 
     if(this.isEnemy){
       recipientStatus = document.querySelector('#allyStatus')
@@ -590,15 +1802,25 @@ export class Pogemon extends Sprite{
       }
       const roll = Math.floor(Math.random() * (rollRatio.max - rollRatio.min) + rollRatio.min) * 0.01
 
+      let moveElement = move.element
+      if(this.abilityInfo.ability.type == 'typeChange') {
+        if(this.abilityInfo.ability.name == 'normalize')
+          moveElement = this.abilityInfo.ability.info
+        
+        if(move.type != 'status')
+          if(move.element == 'normal') 
+            moveElement = this.abilityInfo.ability.info
+      } 
+
       // determins stab
       let stab = 1
-      if(move.element === this.element[1] || move.element === this.element[2]) stab += 0.5
+      if(moveElement === this.element[1] || moveElement === this.element[2]) stab += 0.5
+      if(stab == 1.5 && this.abilityInfo.ability.name == 'adaptability') stab += 0.5
 
       let typeEffectivness = 1
 
-      let allyStatChange
-
-      let foeStatChange
+      let userStatChange
+      let recipientStatChange
 
       let burn = 1
       let frozen = 1
@@ -606,23 +1828,72 @@ export class Pogemon extends Sprite{
       // determins stab
       if(this.status.name == 'burn') burn = 0.5
       if(this.status.name == 'frz') frozen = 0.5
+
+      let factor
       
       // determins type effectiveness
       for(let i = 0; i < 2; i++){
         if(Object.values(recipient.element)[i] == null) break
+        if(typeEffectivness == 0) break
         
-        let factor
-
         if(typeEffectivness >= 1) {
           factor = 0.5
         } else {
           factor = 0.25
         }
 
-        if(Object.values(typesObj[`${move.element}`])[0].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = typeEffectivness + factor
-        if(Object.values(typesObj[`${move.element}`])[1].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = typeEffectivness - factor
-        if(Object.values(typesObj[`${move.element}`])[2].includes(`${Object.values(recipient.element)[i]}`)) typeEffectivness = 0
+        if(Object.values(recipient.element)[i] == 'flying' && recipient.roosted) {
+          recipient.roosted = false
+          continue
+        }
+
+        if(Object.values(typesObj[`${moveElement}`])[0].includes(`${Object.values(recipient.element)[i]}`)) {
+          typeEffectivness = typeEffectivness + factor
+        }
+        else if(Object.values(recipient.element)[i] == 'water' && move.name == 'freeze_dry') 
+          typeEffectivness = typeEffectivness + factor
+
+        if(Object.values(typesObj[`${moveElement}`])[1].includes(`${Object.values(recipient.element)[i]}`)){
+          if(Object.values(recipient.element)[i] == 'water' && move.name != 'freeze_dry') 
+            typeEffectivness = typeEffectivness - factor
+        }
+
+        let scrappy = false
+        if(Object.values(typesObj[`${moveElement}`])[2].includes(`${Object.values(recipient.element)[i]}`)) {
+          if(this.abilityInfo.ability.name == 'scrappy') if(`${Object.values(recipient.element)[i]}` == 'ghost')
+            if(moveElement == 'normal' || moveElement == 'fighting') scrappy = true
+
+          if(!scrappy) 
+            typeEffectivness = 0
+        }
+
+        if(recipient.abilityInfo.ability.type == 'immuned' && recipient.abilityInfo.ability.info.type == moveElement) if(this.abilityInfo.ability.name != 'mold_Breaker')
+          typeEffectivness = 0
       }
+
+      if(recipient.abilityInfo.ability.name == 'thicc_Fat'){
+        if(this.abilityInfo.ability.name != 'mold_Breaker') {
+          if(typeEffectivness >= 1) {
+            factor = 0.5
+          } else {
+            factor = 0.25
+          }
+  
+          if(moveElement == 'ice' || moveElement == 'fire') typeEffectivness = typeEffectivness - factor
+        }
+      } 
+
+      if(recipient.abilityInfo.ability.name == 'fluffy_Coat'){
+        if(this.abilityInfo.ability.name != 'mold_Breaker') {
+          if(typeEffectivness >= 1) {
+            factor = 0.5
+          } else {
+            factor = 0.25
+          }
+  
+          if(moveElement == 'fire') typeEffectivness = typeEffectivness + factor
+        }
+      } 
 
       queueProcess.disabled = true
       console.log('there')
@@ -632,6 +1903,27 @@ export class Pogemon extends Sprite{
         case 0:
           this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)} on ${this.switchUnderScoreForSpace(recipient.nickname)}! \n\n It didint affect ${this.switchUnderScoreForSpace(recipient.nickname)} whatsoever...`)
           immuned = true
+
+          if(recipient.abilityInfo.ability.info != null) 
+            if(recipient.abilityInfo.ability.info.type == moveElement) 
+              if(recipient.abilityInfo.ability.type == 'immuned') 
+                if(recipient.abilityInfo.ability.effects != undefined) 
+                  if(this.abilityInfo.ability.name != 'mold_Breaker')
+                    if(recipient.abilityInfo.ability.info.statusType == 'statsSelf') 
+                      recipient.statusAnimation(recipient.abilityInfo.ability.info.statusType, recipient.abilityInfo.ability.effects, {name: recipient.abilityInfo.ability.name, rotation:{ally:0, foe:0}, animationType: recipient.abilityInfo.ability.info.statusType}, this, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+                    else if(recipient.abilityInfo.ability.info.statusType == 'heal'){
+
+                      let healAmount = Math.floor(recipient.stats.baseHp * (recipient.abilityInfo.ability.effects / 100))
+
+                      recipient.hp += healAmount
+
+                      if(recipient.hp > recipient.stats.baseHp) 
+                        recipient.hp = recipient.stats.baseHp
+                    
+                      recipient.hpManagement()
+
+                      recipient.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} absorbed the water!`)
+                    }
           break
         case 0.25:
           this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)} on ${this.switchUnderScoreForSpace(recipient.nickname)}! \n\n It was not effective at all...`)
@@ -651,29 +1943,41 @@ export class Pogemon extends Sprite{
       }
 
       // determins crit
-      crit = 1
-      if(typeEffectivness != 0) if(critHit(this, recipient)) crit = 1.5
+      if(typeEffectivness != 0) if(critHit(this, recipient, move)) if(this.abilityInfo.ability.name != 'sheer_Force') crit = 1.5
 
       // determins held item damage
       let heldItemDmg = 1
-      if(this.heldItem != null) if(this.heldItem.heldType = 'elemental') if(move.element == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
+      if(this.heldItem != null) if(this.heldItem.heldType = 'elemental') if(moveElement == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
 
       // determins weather damage
       let weatherDamage = 1
-      Object.values(terrainConditions.weather).forEach(weather =>{
-        if(move.element != 'fire' && move.element != 'water') return
+      Object.values(terrainConditions.turns.weather).forEach(weather =>{
+        if(moveElement != 'fire' && moveElement != 'water') return
         if(!weather.active) return
         
-        if(weather.element == move.element){
+        if(weather.element == moveElement){
           weatherDamage = 1.5
-        } else if(weather.resistance != null) if(weather.resistance == move.element){
+        } else if(weather.resistance != null) if(weather.resistance == moveElement){
           weatherDamage = 0.5
         }
       })
 
+      let reflect = 1
+      let lightScreen = 1
+
+      if(this.abilityInfo.ability.name != 'infiltrator'){
+        if(!this.isEnemy){
+          if(terrainConditions.turns.etc.foe_reflect.active) reflect = 0.5
+          else if(terrainConditions.turns.etc.foe_light_screen.active) lightScreen = 0.5
+        } else {
+          if(terrainConditions.turns.etc.ally_reflect.active) reflect = 0.5
+          else if(terrainConditions.turns.etc.ally_light_screen.active) lightScreen = 0.5
+        }
+      }
+
       // determins weather resistance
       let weatherResistance = 1
-      Object.values(terrainConditions.weather).forEach(weather =>{
+      Object.values(terrainConditions.turns.weather).forEach(weather =>{
         if(recipient.element[1] != 'rock' && recipient.element[2] != 'rock' && recipient.element[1] != 'ice' && recipient.element[2] != 'ice') return
         if(!weather.active) return
         
@@ -685,209 +1989,453 @@ export class Pogemon extends Sprite{
 
       // determins damage from ability
       let abilityDamage = 1
-      if(this.abilityInfo.ability.type == 'lowHpDamageBoost') if(this.abilityInfo.ability == move.element) if(this.convertToPercentage(this.hp, this.stats.baseHp) <= 30) abilityDamage = 1.5
+      if(this.abilityInfo.ability.type == 'lowHpDamageBoost') if(this.abilityInfo.ability == moveElement) if(this.convertToPercentage(this.hp, this.stats.baseHp) <= 30) abilityDamage = 1.5
 
       // calc the damage
       let damage
+      let movePow = move.pow
+      if(move.name == 'hex' && recipient.status.name != null) movePow = move.pow * 2
+      if(move.name == 'knock_off' && recipient.heldItem != null) movePow = move.pow * 2
+
+      let solarPower = 1
+
+      switch(this.abilityInfo.ability.name){
+        case 'solar_Power':
+          if(terrainConditions.turns.weather.sun.active){
+            solarPower = 1.5
+
+            let chipDmg = Math.floor(this.stats.baseHp / 8)
+            this.hp -= chipDmg
+          }
+          break
+        case 'sand_Force':
+          if(
+            move.element == 'rock' 
+            || move.element == 'ground' 
+            || move.element == 'steel'
+          ) {
+            abilityDamage = 1.3
+          }
+          break
+        case 'iron_Fist':
+          if(move.name.includes('punch')) abilityDamage = 1.2
+          break
+        case 'sheer_Force':
+            abilityDamage = 1.3
+          break
+        case 'guts':
+          if(this.status.name == null) break
+          burn = 1
+          abilityDamage = 1.5
+          break
+        case 'technician':
+          if(movePow <= 60) movePow = movePow * 1.5
+          break
+        case 'tripped_Out':
+          if(recipient.affliction[0].active) abilityDamage = 1.3
+          break
+      }
+
+      let sturdy = false
+      if(recipient.hp == recipient.stats.baseHp) if(recipient.abilityInfo.ability.name == 'sturdy') if(this.abilityInfo.ability.name != 'mold_Breaker') sturdy = true
       if(move.type === 'physical'){
         if(typeEffectivness !== 0){
-          allyStatChange = statsChangeObj[userId].nominator.atk / statsChangeObj[userId].denominator.atk
-          foeStatChange = statsChangeObj[foeId].nominator.def / statsChangeObj[foeId].denominator.def
+          let userAtkNum = statsChangeObj[userId].nominator.atk
+          if(userAtkNum > 8) userAtkNum = 8
+          if(recipient.abilityInfo.ability.name == 'unaware') if(this.abilityInfo.ability.name != 'mold_Breaker') userAtkNum = 2
           
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.atk * allyStatChange) / (recipient.stats.def * weatherResistance * foeStatChange) / 50 + 2) * burn) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
+          let userAtkDenum = statsChangeObj[userId].denominator.atk
+          if(userAtkDenum < 2) userAtkDenum = 2
+
+          let recipientDefNum = statsChangeObj[userId].nominator.def
+          if(recipientDefNum > 8) recipientDefNum = 8
+          if(this.abilityInfo.ability.name == 'unaware') if(this.abilityInfo.ability.name != 'mold_Breaker') recipientDefNum = 2
+
+          let recipientDefDenum = statsChangeObj[userId].denominator.def
+          if(recipientDefDenum < 2) userAtkDenum = 2
+
+          userStatChange = userAtkNum / userAtkDenum
+          recipientStatChange = recipientDefNum / recipientDefDenum
+
+          let fluffyCoat = 1
+          if(recipient.abilityInfo.ability.name == 'fluffy_Coat') if(this.abilityInfo.ability.name != 'mold_Breaker') fluffyCoat = 2
+          if(recipient.abilityInfo.ability.name == 'weak_Armor') queue.unshift(() =>{
+            recipient.statusAnimation('status', recipient.abilityInfo.ability.effects, {name: 'weak_Armor'}, this, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
+          )
+
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * (this.stats.atk * userStatChange) / ((recipient.stats.def * fluffyCoat) * weatherResistance * recipientStatChange) / 50 + 2) * burn * reflect) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
         }
       } else if(move.type === 'special'){
         if(typeEffectivness !== 0){
-          allyStatChange = statsChangeObj[userId].nominator.spatk / statsChangeObj[userId].denominator.spatk
-          foeStatChange = statsChangeObj[foeId].nominator.spdef / statsChangeObj[foeId].denominator.spdef
+          let userSpatkNum = statsChangeObj[userId].nominator.spatk
+          if(userSpatkNum > 8) userSpatkNum = 8 
+          if(recipient.abilityInfo.ability.name == 'unaware') if(this.abilityInfo.ability.name != 'mold_Breaker') userSpatkNum = 2
 
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * move.pow * (this.stats.spatk * allyStatChange) / (recipient.stats.spdef * weatherResistance * foeStatChange) / 50 + 2) * frozen) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
+          let userSpatkDenum = statsChangeObj[userId].denominator.spatk
+          if(userSpatkDenum < 2) userSpatkDenum = 2
+
+          let recipientSpdefNum = statsChangeObj[userId].nominator.spdef
+          if(recipientSpdefNum > 8) recipientSpdefNum = 8
+          if(this.abilityInfo.ability.name == 'unaware') if(this.abilityInfo.ability.name != 'mold_Breaker') recipientSpdefNum = 2
+
+          let recipientSpdefDenum = statsChangeObj[userId].denominator.spdef
+          if(recipientSpdefDenum < 2) recipientSpdefDenum = 2
+
+          userStatChange = userSpatkNum / userSpatkDenum
+          recipientStatChange = recipientSpdefNum / recipientSpdefDenum
+
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * ((this.stats.spatk * solarPower) * userStatChange) / (recipient.stats.spdef * weatherResistance * recipientStatChange) / 50 + 2) * frozen * lightScreen) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
         }
       }
+
+      // check sturdy here
 
       // console.log(recipient)
 
       if(immuned || damage < 0) damage = 0
 
-      console.log(damage)
+      let infiltratorCheck = false
+      if(this.abilityInfo.ability.name == "infiltrator") infiltratorCheck = true
 
-      if(recipient.protected.active){
+      if(recipient.protected.active && !infiltratorCheck){
         queue.push(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} protected itself.`))
-      } else if(recipient.subHp > 0){
-        this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)}'s substitute took damage.`)
-        recipient.subHp -= damage
-        if(recipient.subHp <= 0){
-          queueProcess.disabled = true
-          console.log('there')
-          queue.push(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)}'s substitute was destroyed.`))
-          //sub faints
-          gsap.to(recipient, {
-            opacity: 1
-          })
-
-          let recipientSub
-          let recipientSubIndex
-
-          renderedSprites.forEach((sprite, i) =>{
-            if(this.isEnemy){
-              if(sprite.type == 'allySub'){
-                recipientSub = sprite
-                recipientSubIndex = i
+      } else if(recipient.subHp > 0 && !infiltratorCheck){
+        if(move.sound == undefined){
+          this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)}'s substitute took damage.`)
+          recipient.subHp -= damage
+          if(recipient.subHp <= 0){
+            queueProcess.disabled = true
+            console.log('there')
+            queue.push(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)}'s substitute was destroyed.`))
+            //sub faints
+            gsap.to(recipient, {
+              opacity: 1
+            })
+  
+            let recipientSub
+            let recipientSubIndex
+  
+            renderedSprites.forEach((sprite, i) =>{
+              if(this.isEnemy){
+                if(sprite.type == 'allySub'){
+                  recipientSub = sprite
+                  recipientSubIndex = i
+                }
+              } else {
+                if(sprite.type == 'foeSub'){
+                  recipientSub = sprite
+                  recipientSubIndex = i
+                }
               }
+            })
+            
+            if(recipientSub != undefined){
+              gsap.to(recipientSub.position, {
+                y: recipientSub.position.y + 15
+              })
+    
+              gsap.to(recipientSub, {
+                opacity: 0,
+                onComplete: () =>{
+                  recipient.subHp = 0
+                  renderedSprites.splice(recipientSubIndex, 1)
+                  console.log('remove sprite')
+                  setTimeout(() =>{
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 500)
+                }
+              })
             } else {
-              if(sprite.type == 'foeSub'){
-                recipientSub = sprite
-                recipientSubIndex = i
-              }
-            }
-          })
-          
-          gsap.to(recipientSub.position, {
-            y: recipientSub.position.y + 15
-          })
-
-          gsap.to(recipientSub, {
-            opacity: 0,
-            onComplete: () =>{
-              recipient.subHp = 0
-              renderedSprites.splice(recipientSubIndex, 1)
               setTimeout(() =>{
                 queueProcess.disabled = false
                 console.log('here')
               }, 500)
             }
-          })
 
-          // gsap.to(this.position,{
-          //   x: this.position.x - 25,
-          //   y: this.position.y + 15
-          // })
-
-          if(recipient.isEnemy) {
-            gsap.to(recipient.position,{
-              x: recipient.position.x - 25,
-              y: recipient.position.y + 15
-            })
-          } else {
-            gsap.to(recipient.position, {
-              x: recipient.position.x + 100,
-              y: recipient.position.y - 15
-            })
-          }
-        }
+            // gsap.to(this.position,{
+            //   x: this.position.x - 25,
+            //   y: this.position.y + 15
+            // })
+  
+            if(recipient.isEnemy) {
+              gsap.to(recipient.position,{
+                x: recipient.position.x - 25,
+                y: recipient.position.y + 15
+              })
+            } else {
+              gsap.to(recipient.position, {
+                x: recipient.position.x + 100,
+                y: recipient.position.y - 15
+              })
+            }
+          } 
+        } else recipient.hp -= damage
       } else recipient.hp -= damage
-      
+
+      if(move.effects != undefined){
+        if(Object.keys(move.effects[0])[0] == 'recoil'){
+          if(this.abilityInfo.ability.name == 'rock_Head') {
+            setTimeout(() =>{
+              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was protected from taking recoil damage.`)
+            }, 750)
+            return
+          }
+
+          let recoilDamage = Math.floor(damage * (Object.values(move.effects[0])[0] / 100))
+  
+          this.hp -= recoilDamage
+  
+          this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} took recoil damage.`)
+        } else if(Object.keys(move.effects[0])[0] == 'leech') {
+          let leechedDamage = Math.floor(damage * (Object.values(move.effects[0])[0] / 100))
+  
+          this.hp += leechedDamage
+
+          if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+  
+          this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} leeched some hp.`)
+          this.statusAnimation('heal', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+        }
+      }
+
+      if(recipient.hp <= 0 && sturdy){
+
+        recipient.sturdy = false
+        recipient.hp = 1
+
+        if(recipient.abilityInfo.ability.name == 'sturdy') if(this.abilityInfo.ability.name != 'mold_Breaker') recipient.sturdy = true
+
+        setTimeout(() =>{
+          queueProcess.disabled = true
+          console.log('there')
+          this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.nickname} hung on thanks to it's ability.`)
+          setTimeout(() =>{
+            // queueProcess.disabled = false
+            // console.log('here')
+          }, 750)
+        }, 1500)
+      }
+
       this.hpManagement()
 
       if(recipient.hp <= 0) {
         recipient.hp = 0
-        // console.log('calisse')
         queue.push(() => faintEvent(recipient))
       } 
+    }
+
+    let raiseAllStats = (target, pow) =>{
+      if(statsChangeObj[target].denominator.atk > 2) statsChangeObj[target].denominator.atk -= pow
+      else if(statsChangeObj[target].nominator.atk <= 8) statsChangeObj[target].nominator.atk += pow
+
+      if(statsChangeObj[target].denominator.def > 2) statsChangeObj[target].denominator.def -= pow
+      else if(statsChangeObj[target].nominator.def <= 8) statsChangeObj[target].nominator.def += pow
+
+      if(statsChangeObj[target].denominator.spatk > 2) statsChangeObj[target].denominator.spatk -= pow
+      else if(statsChangeObj[target].nominator.spatk <= 8) statsChangeObj[target].nominator.spatk += pow
+
+      if(statsChangeObj[target].denominator.spdef > 2) statsChangeObj[target].denominator.spdef -= pow
+      else if(statsChangeObj[target].nominator.spdef <= 8) statsChangeObj[target].nominator.spdef += pow
+
+      if(statsChangeObj[target].denominator.spd > 2) statsChangeObj[target].denominator.spd -= pow
+      else if(statsChangeObj[target].nominator.spd <= 8) statsChangeObj[target].nominator.spd += pow
     }
 
     // this and statusRng are very similar in purpous, maybe should fuse them
     let statusCalculation = () =>{
       move.effects.forEach((effect, i) => {
         if(i == 0){
-          if(effect.name == 'buff'){
-              if(!this.isEnemy){
+          let effectName = effect.name
 
-                if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
-                else if(statsChangeObj.ally.nominator[effect.target] < 8) statsChangeObj.ally.nominator[effect.target] += effect.pow
-                else {
-                  // statsChangeObj.ally.nominator[effect.target] = 8
-                  // queue.push(() => this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`))
-                  return
-                }
-              } else {
-    
-                if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
-                else if(statsChangeObj.foe.nominator[effect.target] < 8) statsChangeObj.foe.nominator[effect.target] += effect.pow
-                else {
-                  // statsChangeObj.foe.nominator[effect.target] = 8
-                  // this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
-                  return
-                }
-              }
-          } else if(effect.name == 'recipientbuff'){
+          if(this.abilityInfo.ability.name == 'contrary'){
+            switch(effect.name){
+              case 'buff':
+                effectName = 'selfDebuff'
+                break
+              case 'selfDebuff':
+                effectName = 'buff'
+                break
+
+              case 'recipientBuff':
+                if(recipient.abilityInfo.ability.name != 'mold_Breaker') effectName = 'debuff'
+                break
+              case 'debuff':
+                if(recipient.abilityInfo.ability.name != 'mold_Breaker') effectName = 'recipientBuff'
+                break
+            }
+          }
+
+          if(effectName == 'buff'){
               if(!this.isEnemy){
-                //this is ally
-                if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
-                else if(statsChangeObj.foe.nominator[effect.target] < 8) statsChangeObj.foe.nominator[effect.target] += effect.pow
-                else {
-                  // statsChangeObj.foe.nominator[effect.target] = 8
-                  // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
-                  return
-                }
+                  if(effect.target == 'all') raiseAllStats('ally', effect.pow) 
+                  else {
+                    if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
+                    else if(statsChangeObj.ally.nominator[effect.target] <= 8) statsChangeObj.ally.nominator[effect.target] += effect.pow
+                    else {
+                      // statsChangeObj.ally.nominator[effect.target] = 8
+                      // queue.push(() => this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`))
+                      return
+                    }
+                  }
               } else {
-                //this is foe
-                if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
-                else if(statsChangeObj.ally.nominator[effect.target] < 8) statsChangeObj.ally.nominator[effect.target] += effect.pow
+                if(effect.target == 'all') raiseAllStats('foe', effect.pow) 
                 else {
-                  // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
-                  return
+                  if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.foe.nominator[effect.target] <= 8) statsChangeObj.foe.nominator[effect.target] += effect.pow
+                  else {
+                    // statsChangeObj.foe.nominator[effect.target] = 8
+                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                    return
+                  }
                 }
               }
-          } else if(effect.name == 'debuff') {
+          } else if(effectName == 'recipientbuff'){
               if(!this.isEnemy){
-                if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
-                else if(statsChangeObj.foe.denominator[effect.target] < 8) statsChangeObj.foe.denominator[effect.target] += effect.pow
-                else {
-                  // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
-                  return
-                }
+                  //this is ally
+                  if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.foe.nominator[effect.target] <= 8) statsChangeObj.foe.nominator[effect.target] += effect.pow
+                  else {
+                    // statsChangeObj.foe.nominator[effect.target] = 8
+                    // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
+                    return
+                  }
               } else {
-                if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
-                else if(statsChangeObj.ally.denominator[effect.target] < 8) statsChangeObj.ally.denominator[effect.target] += effect.pow
-                else {
-                  // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
-                  return
-                }
+                  //this is foe
+                  if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.ally.nominator[effect.target] <= 8) statsChangeObj.ally.nominator[effect.target] += effect.pow
+                  else {
+                    // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
+                    return
+                  }
               }
-          } else if(effect.name == 'selfDebuff'){
+          } else if(effectName == 'debuff') {
               if(!this.isEnemy){
-                if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
-                else if(statsChangeObj.ally.denominator[effect.target] < 8) statsChangeObj.ally.denominator[effect.target] += effect.pow
-                else {
-                  // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
-                  return
-                }
+                  if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.foe.denominator[effect.target] <= 8) statsChangeObj.foe.denominator[effect.target] += effect.pow
+                  else {
+                    // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
+                    return
+                  }
               } else {
-                if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
-                else if(statsChangeObj.foe.denominator[effect.target] < 8) statsChangeObj.foe.denominator[effect.target] += effect.pow
-                else {
-                  // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
-                  return
-                }
+                  if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.ally.denominator[effect.target] <= 8) statsChangeObj.ally.denominator[effect.target] += effect.pow
+                  else {
+                    // this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
+                    return
+                  }
               }
-          } else if(Object.keys(Object.values(move.effects)[0])[0] == 'heal'){
-              this.hp = Math.floor(this.hp + this.stats.baseHp * ( Object.values(Object.values(move.effects)[0])[0] / 100 ))
-              if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
-      
+          } else if(effectName == 'selfDebuff'){
+              if(!this.isEnemy){
+                  if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.ally.denominator[effect.target] <= 8) statsChangeObj.ally.denominator[effect.target] += effect.pow
+                  else {
+                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                    return
+                  }
+              } else {
+                  if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
+                  else if(statsChangeObj.foe.denominator[effect.target] <= 8) statsChangeObj.foe.denominator[effect.target] += effect.pow
+                  else {
+                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                    return
+                  }
+              }
+
+          } else if(move.type == 'heal'){
+              switch(move.element){
+                case 'normal':
+                case 'fairy':
+                  this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                  if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  break
+                case 'water':
+                  if(terrainConditions.turns.weather.rain.active){
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[2]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else if(
+                    terrainConditions.turns.weather.sun.active ||
+                    terrainConditions.turns.weather.sand.active ||
+                    terrainConditions.turns.weather.snow.active
+                  ) {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[1]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  }
+                  break
+                case 'fire':
+                  if(terrainConditions.turns.weather.sun.active){
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[2]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else if(
+                    terrainConditions.turns.weather.rain.active ||
+                    terrainConditions.turns.weather.sand.active ||
+                    terrainConditions.turns.weather.snow.active
+                  ) {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[1]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  }
+                  break  
+                case 'ground':
+                  if(terrainConditions.turns.weather.sand.active){
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[2]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else if(
+                    terrainConditions.turns.weather.rain.active ||
+                    terrainConditions.turns.weather.sun.active ||
+                    terrainConditions.turns.weather.snow.active
+                  ) {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[1]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  }
+                  break 
+                case 'ice':
+                  if(terrainConditions.turns.weather.snow.active){
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[2]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else if(
+                    terrainConditions.turns.weather.rain.active ||
+                    terrainConditions.turns.weather.sand.active ||
+                    terrainConditions.turns.weather.sun.active
+                  ) {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  } else {
+                    this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[1]) / 100 )
+                    if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  }
+                  break 
+                case 'flying':
+                  this.hp = Math.floor(this.hp + this.stats.baseHp * (move.effects[0]) / 100 )
+                  if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+                  
+                  this.roosted = true
+                  break   
+              }
+        
               this.hpManagement()
-              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
+              setTimeout(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt healed some hp.`), 750)
           } else {
-            document.querySelector('#movesInterface').style.display = 'none'
-            if(move.type != 'status') return
-            this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
-            if(recipient.subHp > 0) {
-              switch(move.name){
-                case 'protect':
-                case 'substitute':
-                case 'trick_room':
-                case 'heal':
-                case 'growl':
-                case 'sharpen':
-                case 'feather_weight':
-                case 'stare':
+              document.querySelector('#movesInterface').style.display = 'none'
+              if(move.type != 'status') return
+              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
+              if(recipient.subHp > 0) {
+                if(move.animationType == 'status'){
                   setTimeout(() =>{
                     queueProcess.disabled = false
                     console.log('here')
                   }, 1250)
                   return
-              }
-
+                }
+  
                 setTimeout(() =>{
                   this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(recipient.nickname)} was protected by its substitute.`)
                   setTimeout(() =>{
@@ -895,7 +2443,7 @@ export class Pogemon extends Sprite{
                     console.log('here')
                   }, 1250)
                 }, 1250)
-    
+      
                 // queue.push(() => {
                 //   this.dialogue('battle', `${recipient.name} was protected by its substitute.`)
                 //   queueProcess.disabled = false
@@ -903,113 +2451,119 @@ export class Pogemon extends Sprite{
                 // })
               } else {
                 // queueProcess.disabled = false
-                // console.log('here')
+                console.log('here')
               }
           }
         } else {
-          if(effect.name == 'buff'){
-              if(!this.isEnemy){
-                if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= 1
-                else statsChangeObj.ally.nominator[effect.target] += 1
-      
-                // if(statsChangeObj.ally.nominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
-                //   return
-                // }
-              } else {
-      
-                if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
-                else statsChangeObj.foe.nominator[effect.target] += effect.pow
-      
-                // if(statsChangeObj.foe.nominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
-                //   return
-                // }
-              }
-              // queue.splice(0,1)[0]()
-          } else if(effect.name == 'recipientbuff'){
-              if(!this.isEnemy){
-                //this is ally
-                if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= 1
-                else statsChangeObj.foe.nominator[effect.target] += 1
-      
-                // if(statsChangeObj.foe.nominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
-                //   return
-                // }
-              } else {
-                //this is foe
-                if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
-                else statsChangeObj.ally.nominator[effect.target] += effect.pow
-      
-                // if(statsChangeObj.ally.nominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
-                //   return
-                // }
-              }
-              // queue.splice(0,1)[0]()
-          } else if(effect.name == 'debuff') {
-              if(!this.isEnemy){
-                if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
-                else statsChangeObj.foe.denominator[effect.target] += effect.pow
-      
-                // if(statsChangeObj.foe.denominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
-                //   return
-                // }
-              } else {
-                if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
-                else statsChangeObj.ally.denominator[effect.target] += effect.pow
-                  
-                // if(statsChangeObj.ally.denominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
-                //   return
-                // }
-              }
-              // queue.splice(0,1)[0]()
-          } else if(effect.name == 'selfDebuff'){
-              if(!this.isEnemy){
-                if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
-                else statsChangeObj.ally.denominator[effect.target] += effect.pow
-      
-                // if(statsChangeObj.ally.denominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
-                //   return
-                // }
-              } else {
-                if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
-                else statsChangeObj.foe.denominator[effect.target] += effect.pow
-                  
-                // if(statsChangeObj.foe.denominator[effect.target] > 8) {
-                //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
-                //   return
-                // }
-              }
-              // queue.splice(0,1)[0]()
-          } else if(Object.keys(Object.values(move.effects)[0])[0] == 'heal'){
-              this.hp = Math.floor(this.hp + this.stats.baseHp * ( Object.values(Object.values(move.effects)[0])[0] / 100 ))
-              if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
-        
-              this.hpManagement()
-              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
-          } else {
-            document.querySelector('#movesInterface').style.display = 'none'
-            this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
-            if(recipient.subHp > 0) {
-              switch(move.name){
-                case 'protect':
-                case 'substitute':
-                case 'trick_room':
-                case 'heal':
-                case 'growl':
-                case 'sharpen':
-                case 'feather_weight':
-                case 'stare':
-                  return
-              }
-      
-            queue.push(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} was protected by its substitute.`))
+          let effectName = effect.name
+
+          if(this.abilityInfo.ability.name == 'contrary'){
+            switch(effect.name){
+              case 'buff':
+                effectName = 'selfDebuff'
+                break
+              case 'selfDebuff':
+                effectName = 'buff'
+                break
+
+              case 'recipientBuff':
+                if(recipient.abilityInfo.ability.name != 'mold_Breaker') effectName = 'debuff'
+                break
+              case 'debuff':
+                if(recipient.abilityInfo.ability.name != 'mold_Breaker') effectName = 'recipientBuff'
+                break
             }
+          }
+
+          if(effectName == 'buff'){
+                if(!this.isEnemy){
+                  if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= 1
+                  else statsChangeObj.ally.nominator[effect.target] += 1
+        
+                  // if(statsChangeObj.ally.nominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                  //   return
+                  // }
+                } else {
+        
+                  if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= effect.pow
+                  else statsChangeObj.foe.nominator[effect.target] += effect.pow
+        
+                  // if(statsChangeObj.foe.nominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                  //   return
+                  // }
+                }
+                // queue.splice(0,1)[0]()
+          } else if(effectName == 'recipientbuff'){
+                if(!this.isEnemy){
+                  //this is ally
+                  if(statsChangeObj.foe.denominator[effect.target] > 2) statsChangeObj.foe.denominator[effect.target] -= 1
+                  else statsChangeObj.foe.nominator[effect.target] += 1
+        
+                  // if(statsChangeObj.foe.nominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
+                  //   return
+                  // }
+                } else {
+                  //this is foe
+                  if(statsChangeObj.ally.denominator[effect.target] > 2) statsChangeObj.ally.denominator[effect.target] -= effect.pow
+                  else statsChangeObj.ally.nominator[effect.target] += effect.pow
+        
+                  // if(statsChangeObj.ally.nominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go up any further.`)
+                  //   return
+                  // }
+                }
+                // queue.splice(0,1)[0]()
+          } else if(effectName == 'debuff') {
+                if(!this.isEnemy){
+                  if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
+                  else statsChangeObj.foe.denominator[effect.target] += effect.pow
+        
+                  // if(statsChangeObj.foe.denominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
+                  //   return
+                  // }
+                } else {
+                  if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
+                  else statsChangeObj.ally.denominator[effect.target] += effect.pow
+                    
+                  // if(statsChangeObj.ally.denominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${recipient.name}'s ${effect.target} won't go down any further.`)
+                  //   return
+                  // }
+                }
+                // queue.splice(0,1)[0]()
+          } else if(effectName == 'selfDebuff'){
+                if(!this.isEnemy){
+                  if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
+                  else statsChangeObj.ally.denominator[effect.target] += effect.pow
+        
+                  // if(statsChangeObj.ally.denominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                  //   return
+                  // }
+                } else {
+                  if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
+                  else statsChangeObj.foe.denominator[effect.target] += effect.pow
+                    
+                  // if(statsChangeObj.foe.denominator[effect.target] > 8) {
+                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                  //   return
+                  // }
+                }
+                // queue.splice(0,1)[0]()
+          } else if(Object.keys(Object.values(move.effects)[0])[0] == 'heal'){
+                this.hp = Math.floor(this.hp + this.stats.baseHp * ( Object.values(Object.values(move.effects)[0])[0] / 100 ))
+                if(this.hp > this.stats.baseHp) this.hp = this.stats.baseHp
+          
+                this.hpManagement()
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
+          } else {
+              document.querySelector('#movesInterface').style.display = 'none'
+              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
+              if(recipient.subHp > 0 && move.name != 'status') queue.push(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} was protected by its substitute.`))
           }
         }
       })
@@ -1019,739 +2573,6 @@ export class Pogemon extends Sprite{
     let isSubActive = false
 
     if(recipient.subHp > 0) isSubActive = true
-
-    let statusAnimation = (type, effect) =>{
-      if(this.fainted) return
-      queueProcess.disabled = true
-      console.log('there')
-      if(this.isEnemy) rotation = 135
-      const statusImg = new Image()
-      statusImg.src = move.sprite
-
-      const statusSprite = new Sprite({
-        type: 'attack',
-        position: {
-          x: this.position.x + launcPos.x,
-          y: this.position.y + launcPos.y
-        },
-        img: statusImg,
-        frames: {
-          max: 4,
-          hold: 50
-        },
-        animate: true,
-        rotation
-      })
-
-      let chooseAnimation = (type, effect, move, i) =>{
-        queueProcess.disabled = true
-        console.log('there')
-        if(type == 'heal'){
-          renderedSprites.push(statusSprite)
-  
-          gsap.to(statusSprite.position, {
-            x: this.position.x + ( this.width / 4.5 ),
-            y: -10,
-            duration: 1,
-            onComplete: () =>{
-              queueProcess.disabled = false
-              console.log('here')
-              renderedSprites.pop()
-            }
-          })
-        } else if (type == 'stats') {
-          let timer = 0
-          let posX = 0
-          let posY = 0
-
-          if(move.type == 'status'){
-            timer = 1000
-            if(move.position != undefined){
-              if(this.isEnemy){
-                posX = -move.position.x + 150
-                posY = -move.position.y + 450
-              } else {
-                posX = move.position.x
-                posY = move.position.y
-              }
-            }
-            const statsAnimationImage = new Image()
-            statsAnimationImage.src = move.sprite
-            const statsAnimationSprite = new Sprite({
-              type: 'moveSprite',
-              position: {
-                x: this.position.x + posX,
-                y: this.position.y + posY
-              },
-              img: statsAnimationImage,
-              frames:{
-                max: 4,
-                hold: 50
-              },
-              animate: true,
-              rotation
-            })
-            renderedSprites.splice(2,0,statsAnimationSprite)
-          }
-
-          let tier = 'tiers'
-          if(effect.pow == 1) tier = 'tier' 
-          
-          setTimeout(() =>{
-            if(move.type == 'status') renderedSprites.splice(2,1)
-
-            queue.push(() =>{
-              if(document.querySelector('#scene').childNodes.length > 3) document.querySelector('#scene').removeChild(document.querySelector('#scene').childNodes[document.querySelector('#scene').childNodes.length - 1])
-
-              const buffDiv = document.createElement('div')
-
-              document.querySelector('#scene').appendChild(buffDiv)
-
-              if(effect.name == 'buff'){
-                if(this.fainted) return
-                if(!this.isEnemy){
-                  if(statsChangeObj.ally.nominator[effect.target] > 8) {
-                    statsChangeObj.ally.nominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    // console.log('maxed')
-                    return
-                  }
-
-                  if(statsChangeObj.ally.nominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up anymore.`)
-                    return
-                  }
-                
-                  // ally buff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`)
-
-                  buffDiv.setAttribute('class', `${effect.name}Div ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -250
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                  
-                  gsap.to(buffDiv, {
-                    top: -650,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                } else {
-                  if(statsChangeObj.foe.nominator[effect.target] > 8) {
-                    statsChangeObj.foe.nominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    // console.log('maxed')
-                    return
-                  }
-
-                  // if(statsChangeObj.foe.nominator[effect.target] == 8) return
-                  if(statsChangeObj.foe.nominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up any.`)
-                    return
-                  }
-                
-                  // foe buff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`)
-
-                  buffDiv.setAttribute('class', `${effect.name}Div ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -500
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                
-                  gsap.to(buffDiv, {
-                    top: -700,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                }
-              } else if(effect.name == 'recipientBuff'){
-                // recipientBuff
-                if(recipient.fainted) return
-                if(!this.isEnemy){
-                  if(statsChangeObj.foe.denominator[effect.target] > 8) {
-                    statsChangeObj.foe.denominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    console.log('here')
-                    return
-                  }
-                
-                  buffDiv.setAttribute('class', `buffDiv ${recipientStatsChangeContainer}`)
-                  buffDiv.style.top = -500
-                
-                  gsap.to(buffDiv, {
-                    top: -700,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                    console.log('here')
-                    }
-                  }) 
-                } else {
-                  if(statsChangeObj.ally.denominator[effect.target] > 8) {
-                    statsChangeObj.ally.denominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    console.log('here')
-                    return
-                  }
-                
-                  // foe debuff
-                  buffDiv.setAttribute('class', `buffDiv ${recipientStatsChangeContainer}`)
-                  buffDiv.style.top = -300
-                
-                  gsap.to(buffDiv, {
-                    top: -500,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                }
-              } else if(effect.name == 'debuff'){
-                // debuff
-                if(recipient.fainted) return
-                if(!this.isEnemy){
-                  if(statsChangeObj.foe.denominator[effect.target] > 8) {
-                    statsChangeObj.foe.denominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    console.log('here')
-                    return
-                  }
-
-                  if(statsChangeObj.foe.denominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
-                    return
-                  }
-
-                  // ally debuff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
-
-                  buffDiv.setAttribute('class', `${effect.name}Div ${recipientStatsChangeContainer}`)
-                  buffDiv.style.top = -800
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                
-                  gsap.to(buffDiv, {
-                    top: -600,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                } else {
-                  if(statsChangeObj.ally.denominator[effect.target] > 8) {
-                    statsChangeObj.ally.denominator[effect.target] = 8
-                    queueProcess.disabled = false
-                      console.log('here')
-                    return
-                  }
-
-                  if(statsChangeObj.ally.denominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
-                    return
-                  }
-
-                  // foe debuff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
-
-                  buffDiv.setAttribute('class', `${effect.name}Div ${recipientStatsChangeContainer}`)
-                  buffDiv.style.top = -850
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                
-                  gsap.to(buffDiv, {
-                    top: -450,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                }
-              } else if(effect.name == 'selfDebuff'){
-                if(this.fainted) return
-                if(!this.isEnemy){
-                  if(statsChangeObj.ally.nominator[effect.target] > 8) {
-                    statsChangeObj.ally.nominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    console.log('here')
-                    return
-                  }
-
-                  if(statsChangeObj.ally.nominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
-                    return
-                  }
-
-                  if(statsChangeObj.ally.nominator[effect.target] == 8) return
-                
-                  // ally buff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
-  
-                  buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -850
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                
-                  gsap.to(buffDiv, {
-                    top: -450,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                } else {
-                  if(statsChangeObj.foe.nominator[effect.target] > 8) {
-                    statsChangeObj.foe.nominator[effect.target] = 8
-                    queueProcess.disabled = false
-                    console.log('here')
-                    return
-                  }
-
-                  if(statsChangeObj.foe.nominator[effect.target] == 8) {
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up any.`)
-                    return
-                  }
-
-                  if(statsChangeObj.foe.nominator[effect.target] == 8) return
-                
-                  // foe buff
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
-
-                  buffDiv.setAttribute('class', `debuffDiv ${userStatsChangeContainer}`)
-                  buffDiv.style.top = -800
-
-                  queueProcess.disabled = true
-                  console.log('there')
-                
-                  gsap.to(buffDiv, {
-                    top: -600,
-                    duration: 0.5,
-                    onComplete: () =>{
-                      document.querySelector('#scene').removeChild(buffDiv)
-                      queueProcess.disabled = false
-                      console.log('here')
-                    }
-                  }) 
-                }
-              }
-            })
-
-            queue.splice(0,2).forEach(func =>{
-              queue.push(func)
-            })
-
-            //probably fucky here
-            
-            if(i == Object.values(move.effects).length - 1){
-              if(Object.values(move.effects).length > 1) {
-                // queue.splice(1,1)[0]()
-              }
-              
-              queue.push(queue.splice(0,1)[0])
-
-              if(this.fainted || recipient.fainted) queueFaintTrigger.initiated = true
-            }
-
-            setTimeout(() =>{
-              queueProcess.disabled = false
-              console.log('here')
-            }, 500)
-          }, 0)
-        } else if (type == 'status') {
-          switch(move.name) {
-            case 'rainy_day':
-              if(terrainConditions.weather.rain.active) queueProcess.disabled = false
-              else {
-                terrainConditions.weather.rain.active = true
-                terrainConditions.weather.rain.turns = 5
-              }
-              break
-            case 'sunny_day':
-              if(terrainConditions.weather.sun.active) queueProcess.disabled = false
-              else {
-                terrainConditions.weather.sun.active = true
-                terrainConditions.weather.sun.turns = 5
-              }
-              break
-            case 'sand_storm':
-              if(terrainConditions.weather.sand.active) queueProcess.disabled = false
-              else {
-                terrainConditions.weather.sand.active = true
-                terrainConditions.weather.sand.turns = 5
-              }
-              break
-            case 'snow_storm':
-              if(terrainConditions.weather.snow.active) queueProcess.disabled = false
-              else {
-                terrainConditions.weather.snow.active = true
-                terrainConditions.weather.snow.turns = 5
-              }
-              break
-            case 'heat_wave':
-            case 'hypnosis':
-            case 'frost_wave':
-            case 'trick_room':
-              const color = typesObj[move.element].color
-  
-              const tl1 = gsap.timeline()
-              const tl2 = gsap.timeline()
-
-              let trickroomActive = false
-
-              if(move.name == 'trick_room'){
-                if(terrainConditions.etc.trick_room.active) {
-                  trickroomActive = true
-                  return
-                }
-
-                const fieldEffect = document.querySelector('#fieldEffect')
-  
-                // const fieldEffectContent = document.createElement('div')
-                // fieldEffectContent.id = 'trickroom'
-  
-                // for(let i = 0; i < 15; i++){
-                //   const trickRoomCells = document.createElement('div')
-                //   trickRoomCells.id = 'trickroomCells'
-  
-                //   fieldEffectContent.appendChild(trickRoomCells)
-                // }
-  
-                // fieldEffect.appendChild(fieldEffectContent)
-
-                // console.log(trickroomActive)
-
-                terrainConditions.etc.trick_room.active = true
-                terrainConditions.etc.trick_room.turns = 5
-                queueProcess.disabled = false
-                console.log('here')
-                fieldEffect.opacity = 1
-                document.querySelector('#trickRoomIndicatorContainer').style.display = 'flex'
-
-                setTimeout(() =>{
-                  document.querySelector('#trickRoomIndicatorContainer').style.right = '0px'
-                  document.querySelector('#trickRoomIcon').src = 'img/field/trick_room.png'
-                  document.querySelector('#trickRoomTurnIndicator').innerText = terrainConditions.etc.trick_room.turns
-                }, 250)
-
-              }
-
-              if(trickroomActive) return
-  
-              const scene = document.querySelector('#scene')
-              tl2.to(scene, {
-                backgroundColor: `#${color}40`,
-                duration: 0.25
-              }).to(scene, {
-                backgroundColor: `#${color}00`,
-                duration: 0.25
-              }).to(scene, {
-                backgroundColor: `#${color}40`,
-                duration: 0.25
-              }).to(scene, {
-                backgroundColor: `#${color}00`,
-                duration: 0.25,
-                onComplete: () =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }
-              })
-              break
-            case 'thunder_wave':
-              if(this.isEnemy){
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width / 4,
-                  y: recipient.position.y + recipient.height / 0.75
-                }
-              } else {
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width - 375,
-                  y: recipient.position.y + recipient.height - 75
-                }
-              }
-  
-              statusSprite.frames.hold = 60
-              renderedSprites.push(statusSprite)
-  
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-                statusSprite.frames.hold = 10
-                renderedSprites.pop()
-              }, 1000)
-              break
-            case 'fart':
-              if(this.isEnemy){
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width / 4,
-                  y: recipient.position.y + recipient.height / 0.75
-                }
-              } else {
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width - 375,
-                  y: recipient.position.y + recipient.height - 75
-                }
-              }
-  
-              statusSprite.frames.hold = 60
-              renderedSprites.push(statusSprite)
-  
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-                statusSprite.frames.hold = 10
-                renderedSprites.pop()
-              }, 1000)
-              break
-            case 'confuse_ray':
-              if(this.isEnemy){
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width / 4,
-                  y: recipient.position.y + recipient.height / 0.75
-                }
-              } else {
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width - 375,
-                  y: recipient.position.y + recipient.height - 75
-                }
-              }
-  
-              statusSprite.frames.hold = 60
-              renderedSprites.push(statusSprite)
-  
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-                statusSprite.frames.hold = 10
-                renderedSprites.pop()
-              }, 1000)
-              break
-            case 'leech_seed':
-              //change all this later
-              if(this.isEnemy){
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width / 4,
-                  y: recipient.position.y + recipient.height / 0.75
-                }
-              } else {
-                statusSprite.position = {
-                  x: recipient.position.x + recipient.width - 375,
-                  y: recipient.position.y + recipient.height - 75
-                }
-              }
-  
-              statusSprite.frames.hold = 60
-              renderedSprites.push(statusSprite)
-  
-              setTimeout(() =>{
-                // queueProcess.disabled = false
-                // console.log('here')
-                statusSprite.frames.hold = 10
-                renderedSprites.pop()
-              }, 1000)
-              break
-            case 'substitute':
-              let subHealth = Math.floor(this.stats.baseHp * 0.25)
-  
-              if(this.hp - subHealth <= 0){
-                setTimeout(() =>{
-                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut since it's so weak, it failed to make a substitute..`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                }, 1250)
-                return
-              }
-  
-              if(this.subHp > 0){
-                this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}`)
-                setTimeout(() =>{
-                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(this.nickname)} already has a substitute protecting it..`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                }, 1250)
-                return
-              }
-  
-              this.opacity = 0.5
-
-              let subType
-  
-              if(this.isEnemy) subType = 'foeSub' 
-              else subType = 'allySub'
-  
-              let substituteImg = new Image()
-              let substituteSprite = new Sprite({
-                type: subType,
-                position: {
-                  x: this.position.x,
-                  y: this.position.y
-                },
-                img: substituteImg,
-                frames: {
-                  max: 1,
-                  hold: 50
-                },
-                animate: false,
-              })
-  
-              if(this.isEnemy) {
-                substituteSprite.position = {
-                  x: this.position.x - 15,
-                  y: this.position.y + 150
-                }
-  
-                gsap.to(this.position, {
-                  x: this.position.x + 25,
-                  y: this.position.y - 15
-                })
-  
-                substituteImg.src = 'img/moves/sub.png'
-              } else {
-                substituteSprite.position = {
-                  x: this.position.x + 325,
-                  y: this.position.y + 375
-                }
-  
-                gsap.to(this.position, {
-                  x: this.position.x - 100,
-                  y: this.position.y + 15
-                })
-  
-                substituteImg.src = 'img/moves/sub_back.png'
-              }
-  
-              this.hp -= subHealth
-              this.hpManagement()
-              this.subHp = subHealth
-  
-              renderedSprites.splice(1, 0, substituteSprite)
-            
-              queueProcess.disabled = false
-              console.log('here')
-              break
-            case 'protect':
-              const rng = Math.floor(Math.random() * move.effects.protect)
-  
-              const protectAnimation = () => {
-                let protectImg = new Image()
-  
-                let protectSprite = new Sprite({
-                  type: 'protect',
-                  img: protectImg,
-                  frames: {
-                    max: 1,
-                    hold: 0,
-                  },
-                  animate: false
-                })
-  
-                if(this.isEnemy){
-                  protectImg.src = 'img/moves/foe_protect.png'
-                  protectSprite.position = {
-                    x: this.position.x + 35,
-                    y: this.position.y + 100
-                  }
-                } else {
-                  protectImg.src = 'img/moves/protect.png'
-                  protectSprite.position = {
-                    x: this.position.x + 150,
-                    y: this.position.y + 275
-                  }
-                }
-                
-
-                renderedSprites.splice(renderedSprites.length, 0, protectSprite)
-                queueProcess.disabled = true
-                console.log('there')
-                protectSprite.opacity = 0
-  
-                gsap.to(protectSprite, {
-                  opacity: 1,
-                  duration: 0.5,
-                  onComplete: () =>{
-                    gsap.to(protectSprite, {
-                      opacity: 0,
-                      duration: 0.5,
-                      onComplete: () =>{
-                        renderedSprites.forEach((sprite, i) =>{
-                          if(sprite.type == 'protect') renderedSprites.splice(i, 1)
-                        })
-                        queueProcess.disabled = false
-                        console.log('here')
-                      }
-                    })
-                  }
-                })
-              }
-  
-              if(recipient.protected.active == true || rng > move.effects.protect / this.protected.turns){
-                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} failed to protect itself..`)
-                this.protected.turns = 0
-                this.protected.active = false
-                queueProcess.disabled = false
-                console.log('here')
-                return
-              }
-  
-              protectAnimation()
-              this.protected.turns += 1
-              this.protected.active = true
-              break
-          }
-        }
-
-        const tl = gsap.timeline()
-        tl.to(this.position, {
-          x: this.position.x + movementDistance,
-          duration: 0.25
-        }).to(this.position, {
-          x: this.position.x - movementDistance,
-          duration: 0.25
-        }).to(this.position, {
-          x: this.position.x + movementDistance,
-          duration: 0.25
-        }).to(this.position, {
-          x: this.position.x,
-          duration: 0.25
-        })
-      }
-
-      // console.log(type)
-
-      if(type != 'array') {
-        // queueProcess.disabled = false
-        // console.log('here')
-        chooseAnimation(type, effect[0], move, 0)
-      } else {
-        queueProcess.disabled = false
-        console.log('here')
-        console.log('status debuff')
-        effect.forEach((effect, i) => chooseAnimation(effect.type, effect, move, i))
-      }
-    }
 
     let hitAnimation = type => {
       queueProcess.disabled = true
@@ -1763,8 +2584,8 @@ export class Pogemon extends Sprite{
         const hitSprite = new Sprite({
           type: 'move',
           position: {
-            x: recipient.position.x,
-            y: recipient.position.y
+            x: recipient.position.x - recipient.width / 4,
+            y: recipient.position.y - recipient.height
           },
           img: hitImg,
           frames: {
@@ -1775,52 +2596,23 @@ export class Pogemon extends Sprite{
           rotation
         })
 
+        if(this.isEnemy){
+          hitSprite.position = {
+            x: recipient.position.x + recipient.width / 4,
+            y: recipient.position.y + recipient.height
+          }
+        }
+
         renderedSprites.splice(1, 0, hitSprite)
+        console.log('remove sprite')
       }
 
-      const tl = gsap.timeline()
-      tl.to(this.position, {
-        x: this.position.x - movementDistance
-      }).to(this.position, {
-        x: this.position.x + movementDistance * 2,
-        duration: 0.1,
-        onComplete: () =>{
-
-          audioObj.SFX.tackleHit.play()
-
-          recipient.hpManagement()
-  
-          gsap.to(recipient.position, {
-            x: recipient.position.x + 10,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08
-          })
-  
-          gsap.to(recipient.sprite, {
-            opacity: 0,
-            yoyo: true,
-            repeat: 5,
-            duration: 0.08,
-            onComplete: () =>{
-              if(crit == 1) setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 50)
-              if(type) renderedSprites.splice(1,1)
-            }
-          })
-        }
-      }).to(this.position, {
-        x: this.position.x
-      })
+      this.pogemonShakeAnimation('hit', move, recipient, movementDistance, renderedSprites, queueProcess)
     }
     
     let projectileAnimation = () => {
       queueProcess.disabled = true
       console.log('there')
-      // console.log(rotation)
-      // console.log(move.name != 'fire_ball' || move.name != 'water_gun')
       const projectileImg = new Image()
       projectileImg.src = move.sprite
       const projectileSprite = new Sprite({
@@ -1839,30 +2631,28 @@ export class Pogemon extends Sprite{
       })
 
       renderedSprites.splice(1, 0, projectileSprite)
+      console.log('add sprite')
 
-      move.initAudio.play()
+      if(move.initAudio != undefined) move.initAudio.play()
 
-      const tl = gsap.timeline()
-      tl.to(this.position, {
-        x: this.position.x + movementDistance
-      }).to(this.position, {
-        x: this.position.x - movementDistance * 2
-      }).to(this.position, {
-        x: this.position.x
-      })
+      this.pogemonShakeAnimation('projectile', move, recipient, movementDistance, renderedSprites, queueProcess)
 
       gsap.to(projectileSprite.position, {
         x: recipient.position.x - receivePos.x,
         y: recipient.position.y - receivePos.y,
-        duration,
+        duration: 1,
         onComplete: () =>{
 
           renderedSprites.splice(1,1)
+          console.log('remove sprite')
 
-          move.hitAudio.play()
+          if(move.hitAudio != undefined) move.hitAudio.play()
 
           recipient.hpManagement()
-    
+
+          queueProcess.disabled = true
+          console.log('there')
+
           setTimeout(() =>{
             if(recipient.status.name != null) queueProcess.disabled = false
             if(!statusApplied) queueProcess.disabled = false
@@ -1886,17 +2676,15 @@ export class Pogemon extends Sprite{
       })
     }
 
-    if(move.type == 'status') {
+    if(move.type == 'status' || move.type == 'heal') {
       // statusAnimation(move.type, move.effects)
       if(immuned) return
-      statusCalculation()
-    }
-    else damageCalculation()
+      if(move.effects != null) statusCalculation()
+    } else damageCalculation()
 
     let statusApplied = false
 
     let statusRNG = () =>{
-      // console.log('statusRng')
       statusApplied = false
       if(recipient.hp <= 0) return
       if(isSubActive) return
@@ -1908,74 +2696,156 @@ export class Pogemon extends Sprite{
 
       let applyAffliction = type =>{
         if(this.hp <= 0) return
-        if(rng <= Object.values(move.effects)[0][type]){
-          statusApplied = true
-          // console.log(statusApplied)
 
-          // console.log(type)
+        let threshold = Object.values(move.effects)[0][type]
+        if(this.abilityInfo.ability.name == 'serene_Grace') threshold = threshold * 2
+
+        if(rng <= threshold){
+          statusApplied = true
           switch(type){
             case 'flinched':
+                if(this.abilityInfo.ability.name == 'sheer_Force') return
                 if(recipient.element[1] == 'rock' || recipient.element[2] == 'rock') return
                 if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') return
           
                 recipient.flinched = true
+
+                queueProcess.disabled = false
+                console.log('here')
               break
             case 'confusion':
-              if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
-                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
-                return
-              } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost'){
-                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
-                return
-              }
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
+                  if(this.element[1] == 'psychic' || this.element[2] == 'psychic') {
+                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
+                    return
+                  } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost'){
+                    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
+                    return
+                  }
+    
+                  if(this.affliction[0].active == true){
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(this.nickname)} is already confused....`)
+                  } else {
+                    queueProcess.disabled = true
+                    console.log('there')
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} is now confused.`)
+                    this.affliction[0].turns = Math.floor((Math.random() * 3) + 1)
+                    this.affliction[0].active = true
+                    if(recipient.isEnemy){
+                      document.querySelector('#allyConfused').style.opacity = 1
+                    } else {
+                      document.querySelector('#foeConfused').style.opacity = 1
+                    }
+                  }
 
-              // console.log(recipient.affliction)
-
-              if(recipient.affliction[0].active == true){
-                this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(recipient.nickname)} is already confused....`)
+                  setTimeout(() =>{
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 1250)
+                })
               } else {
-                queueProcess.disabled = true
-                console.log('there')
-                this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} is now confused.`)
-                recipient.affliction[0].turns = Math.floor((Math.random() * 99) + 1)
-                recipient.affliction[0].active = true
-                // console.log(recipient.affliction)
-              }
-              break
-            case 'seeded':
-              queueProcess.disabled = true
-              console.log('there')
-
-              // console.log('salope')
-
-              let justGotSeeded = false
-
-              if(recipient.affliction[1].active == false) {
-                justGotSeeded = true
-                recipient.affliction[1].active = true
-              }
-
-              setTimeout(() =>{
-                if(recipient.element[1] == 'grass' || recipient.element[2] == 'grass'){
-                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} cannot be seeded...`)
+                if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
+                  this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
+                  return
+                } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost'){
+                  this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
                   return
                 }
   
-                if(recipient.affliction[1].active == true && justGotSeeded == false) {
-                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} is already seeded....`)
+                if(recipient.affliction[0].active == true){
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nBut ${this.switchUnderScoreForSpace(recipient.nickname)} is already confused....`)
                 } else {
-                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was seeded.`)
-                  recipient.affliction[1].active = true
-                  // console.log(recipient.name, recipient.affliction[1])
-                  // console.log(this.name, this.affliction[1])
+                  queueProcess.disabled = true
+                  console.log('there')
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} is now confused.`)
+                  recipient.affliction[0].turns = Math.floor((Math.random() * 3) + 1)
+                  recipient.affliction[0].active = true
+                  if(this.isEnemy){
+                    document.querySelector('#allyConfused').style.opacity = 1
+                  } else {
+                    document.querySelector('#foeConfused').style.opacity = 1
+                  }
                 }
 
                 setTimeout(() =>{
                   queueProcess.disabled = false
                   console.log('here')
-                }, 750)
+                }, 1250)
+              }
 
-              }, 1250)
+
+              break
+            case 'seeded':
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
+                  queueProcess.disabled = true
+                  console.log('there')
+  
+                  let justGotSeeded = false
+  
+                  if(this.affliction[1].active == false) {
+                    justGotSeeded = true
+                    this.affliction[1].active = true
+  
+                    if(recipient.isEnemy) document.querySelector('#allySeeds').style.opacity = 1
+                    else document.querySelector('#foeSeeds').style.opacity = 1
+                  }
+  
+                  setTimeout(() =>{
+                    if(this.element[1] == 'grass' || this.element[2] == 'grass'){
+                      this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} cannot be seeded...`)
+                      return
+                    }
+                  
+                    if(this.affliction[1].active == true && justGotSeeded == false) {
+                      this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} is already seeded....`)
+                    } else {
+                      this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} was seeded.`)
+                      this.affliction[1].active = true
+                    }
+  
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 750)
+  
+                  }, 1250)
+                })
+              } else {
+                queueProcess.disabled = true
+                console.log('there')
+
+                let justGotSeeded = false
+
+                if(recipient.affliction[1].active == false) {
+                  justGotSeeded = true
+                  recipient.affliction[1].active = true
+
+                  if(target.isEnemy) document.querySelector('#allySeeds').style.opacity = 1
+                  else document.querySelector('#foeSeeds').style.opacity = 1
+                }
+
+                setTimeout(() =>{
+                  if(recipient.element[1] == 'grass' || recipient.element[2] == 'grass'){
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} cannot be seeded...`)
+                    return
+                  }
+                
+                  if(recipient.affliction[1].active == true && justGotSeeded == false) {
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} is already seeded....`)
+                  } else {
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was seeded.`)
+                    recipient.affliction[1].active = true
+                  }
+
+                  setTimeout(() =>{
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 750)
+
+                }, 1250)
+              }
               break
           }
         } 
@@ -1989,79 +2859,103 @@ export class Pogemon extends Sprite{
         // applyAffliction(Object.keys(Object.values(move.effects)[0])[0])
 
         let prevText = document.querySelector('#dialogueInterface').innerText
-        // console.log(Object.keys(Object.values(move.effects)[0])[0])
+
+        switch(Object.keys(Object.values(move.effects)[0])[0]){
+          case 'sun':
+            if(terrainConditions.turns.weather.sun.active){
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the sun is already active...`)
+                setTimeout(() =>{
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 1250)
+              }, 750)
+            } else {
+              manageWeatherState('sun', terrainConditions.turns.weather.sun, 'init')
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt intensified the sun!`)
+              }, 750)
+            }
+            break
+          case 'rain':
+            if(terrainConditions.turns.weather.rain.active){
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the rain is already active...`)
+                setTimeout(() =>{
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 1250)
+              }, 750)
+            } else {
+              manageWeatherState('rain', terrainConditions.turns.weather.rain, 'init')
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned intense rain!`)
+              }, 750)
+            }
+            break
+          case 'sand':
+            if(terrainConditions.turns.weather.sand.active){
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the sand is already active...`)
+                setTimeout(() =>{
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 1250)
+              }, 750)
+            } else {
+              manageWeatherState('sand', terrainConditions.turns.weather.sand, 'init')
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a strong sand storm!`)
+              }, 750)
+            }
+            break
+          case 'snow':
+            if(terrainConditions.turns.weather.snow.active){
+              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the snow is already active...`)
+              setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
+              }, 1250)
+            } else {
+              manageWeatherState('snow', terrainConditions.turns.weather.snow, 'init')
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a frigid snow storm!`)
+              }, 750)
+            }
+            break
+          case 'trick_room':
+            if(terrainConditions.turns.etc.trick_room.active){
+              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut trick room is already active...`)
+              setTimeout(() =>{
+                queueProcess.disabled = false
+                console.log('here')
+              }, 1250)
+            } else {
+              manageWeatherState('trick_room', terrainConditions.turns.etc.trick_room, 'init')
+              setTimeout(() =>{
+                this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
+              }, 750)
+            }
+            break 
+        }
+
+        const statusAlreadyAppliedMessage = (type, affliction) =>{
+          if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+            this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)}'s ability made the move useless..`)
+          } else {
+            if(recipient.status.name == type) 
+              this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already ${affliction}...`)
+            else if(recipient.status.name != null) 
+              this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already suffers from another status affliction...`)
+          }
+        }
+
         if(recipient.status.name != null){
-          switch(Object.keys(Object.values(move.effects)[0])[0]){
-            case 'sun':
-                if(terrainConditions.weather.sun.active){
-                  this.dialogue('battle', `The sun is already active...`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                } else {
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the sun is already active...`)
-                  manageWeatherState('sun', terrainConditions.weather.sun, 'init')
-                }
-                break
-            case 'rain':
-                if(terrainConditions.weather.rain.active){
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the rain is already active...`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                } else {
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned intense rain!`)
-                  manageWeatherState('rain', terrainConditions.weather.rain, 'init')
-                }
-                break
-            case 'sand':
-                if(terrainConditions.weather.sand.active){
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the sand is already active...`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                } else {
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a strong sand storm!`)
-                  manageWeatherState('sand', terrainConditions.weather.sand, 'init')
-                }
-                break
-            case 'snow':
-                if(terrainConditions.weather.snow.active){
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut the snow is already active...`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                } else {
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a frigid snow storm!`)
-                  manageWeatherState('snow', terrainConditions.weather.snow, 'init')
-                }
-                break
-            case 'trick_room':
-                if(terrainConditions.etc.trick_room.active){
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}\n\nBut trick room is already active...`)
-                  setTimeout(() =>{
-                    queueProcess.disabled = false
-                    console.log('here')
-                  }, 1250)
-                } else {
-                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
-                  manageWeatherState('trick_room', terrainConditions.etc.trick_room, 'init')
-                }
-                break  
+          switch(Object.keys(Object.values(move.effects)[0])[0]){ 
             case 'burn':
               // console.log('now')
               setTimeout(() =>{
-                if(recipient.status.name == 'burn') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already burnt...`)
-                  return
-                } else if(recipient.status.name != null){
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already has another status affliction...`)
-                  return
-                }
+                statusAlreadyAppliedMessage(Object.keys(Object.values(move.effects)[0])[0], 'burnt')
     
                 setTimeout(() =>{
                   queueProcess.disabled = false
@@ -2070,13 +2964,7 @@ export class Pogemon extends Sprite{
               }, 1250)
               break
             case 'para':
-              if(recipient.status.name == 'para') {
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already paralyzed...`)
-                return
-              } else if(recipient.status.name != null){
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already has another status affliction...`)
-                return
-              }
+              statusAlreadyAppliedMessage(Object.keys(Object.values(move.effects)[0])[0], 'paralyzed')
   
               setTimeout(() =>{
                 queueProcess.disabled = false
@@ -2084,13 +2972,7 @@ export class Pogemon extends Sprite{
               }, 1250)
               break
             case 'psn':
-              if(recipient.status.name == 'psn') {
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already poisoned...`)
-                return
-              } else if(recipient.status.name != null){
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already has another status affliction...`)
-                return
-              }
+              statusAlreadyAppliedMessage(Object.keys(Object.values(move.effects)[0])[0], 'poisoned')
   
               setTimeout(() =>{
                 queueProcess.disabled = false
@@ -2098,13 +2980,7 @@ export class Pogemon extends Sprite{
               }, 1250)
               break
             case 'slp':
-              if(recipient.status.name == 'slp') {
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already asleep...`)
-                return
-              } else if(recipient.status.name != null){
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already has another status affliction...`)
-                return
-              }
+              statusAlreadyAppliedMessage(Object.keys(Object.values(move.effects)[0])[0], 'asleep')
   
               setTimeout(() =>{
                 queueProcess.disabled = false
@@ -2112,13 +2988,7 @@ export class Pogemon extends Sprite{
               }, 2000)
               break
             case 'frz':
-              if(recipient.status.name == 'frz') {
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} is already frozen...`)
-                return
-              } else if(recipient.status.name != null){
-                this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} already has another status affliction...`)
-                return
-              }
+              statusAlreadyAppliedMessage(Object.keys(Object.values(move.effects)[0])[0], 'frozen')
   
               setTimeout(() =>{
                 queueProcess.disabled = false
@@ -2139,9 +3009,25 @@ export class Pogemon extends Sprite{
 
       if(move.effects != null){
         // working here
+        if(move.type == 'heal') return
         queueProcess.disabled = true
         console.log('there')
+
         let statusOdd = Object.values(Object.values(move.effects)[0])[0]
+
+        if(this.abilityInfo.ability.info != null) 
+          if(this.abilityInfo.ability.info.type != undefined) {
+            if(Object.keys(Object.values(move.effects)[0])[0] == this.abilityInfo.ability.info.type) {
+              statusOdd += this.abilityInfo.ability.info.pow
+            }
+          }
+
+        if(this.abilityInfo.ability.name == 'serene_Grace'){
+          statusOdd = statusOdd * 2
+        } 
+
+        if(this.abilityInfo.ability.name == 'sheer_Force') return
+
         applyAffliction(Object.keys(Object.values(move.effects)[0])[0])
 
         if(rng <= statusOdd){
@@ -2150,96 +3036,544 @@ export class Pogemon extends Sprite{
           switch(Object.keys(Object.values(move.effects)[0])[0]){
             case 'burn':
               // console.log('now')
-              if(recipient.status.name == null){
-                if(recipient.element[1] == 'fire' || recipient.element[2] == 'fire'){
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
-                  return
-                } else if(recipient.element[1] == 'water' || recipient.element[2] == 'water'){
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
-                  return
-                }
-              }
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
 
-              recipient.status.name = 'burn'
-              recipient.statusEffectAnimation('burn', renderedSprites, queueProcess)
-              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was burnt!`)
-              recipientStatus.style.display = 'block'
-              recipientStatus.src = 'img/status/burn.png'
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
-              // console.log(queueProcess)
+                  if(this.element[1] == 'fire' || this.element[2] == 'fire'){
+                    this.dialogue('battle', `${prevText}\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be burnt...`)
+                    return
+                  } else if(this.element[1] == 'water' || this.element[2] == 'water'){
+                    this.dialogue('battle', `${prevText}\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be burnt...`)
+                    return
+                  }
+  
+                  this.status.name = 'burn'
+                  this.statusEffectAnimation('burn', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was burnt!`)
+
+                  if(recipient.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+                  else recipientStatus = document.querySelector('#foeStatus')
+
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/burn.png'
+  
+                  if(this.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(recipient.status.name == null){
+                        if(recipient.element[1] == 'fire' || recipient.element[2] == 'fire'){
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
+                          return
+                        } else if(recipient.element[1] == 'water' || this.element[2] == 'water'){
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
+                          return
+                        }
+                      }
+                    
+                      recipient.status.name = 'burn'
+                      recipient.statusEffectAnimation('burn', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was burnt!`)
+                    
+                      if(recipient.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+                    
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/burn.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+
+                })
+              } else if(recipient.status.name == null) {
+                  if(recipient.element[1] == 'fire' || recipient.element[2] == 'fire'){
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
+                    return
+                  } else if(recipient.element[1] == 'water' || recipient.element[2] == 'water'){
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be burnt...`)
+                    return
+                  }
+  
+                  recipient.status.name = 'burn'
+                  recipient.statusEffectAnimation('burn', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was burnt!`)
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/burn.png'
+  
+                  if(recipient.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(this.status.name == null){
+                        if(this.element[1] == 'fire' || this.element[2] == 'fire'){
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be burnt...`)
+                          return
+                        } else if(recipient.element[1] == 'water' || this.element[2] == 'water'){
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be burnt...`)
+                          return
+                        }
+                      }
+                    
+                      this.status.name = 'burn'
+                      this.statusEffectAnimation('burn', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(this.nickname)} was burnt!`)
+                    
+                      if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+                    
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/burn.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+                // console.log(queueProcess)
+              }
               break
             case 'para':
-              if(recipient.status.name == null) {
-                if(recipient.element[1] == 'electric' || recipient.element[2] == 'electric') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
-                  return
-                } else if(recipient.element[1] == 'ground' || recipient.element[2] == 'ground') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
-                  return
-                } else if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
-                  return
-                }
-              }
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
 
-              recipient.status.name = 'para'
-              // recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
-              this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was paralyzed!`)
-              recipientStatus.style.display = 'block'
-              recipientStatus.src = 'img/status/para.png'
+                  if(this.element[1] == 'electric' || this.element[2] == 'electric') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
+                    return
+                  } else if(this.element[1] == 'ground' || this.element[2] == 'ground') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
+                    return
+                  } 
+                  
+                  // else if(this.element[1] == 'steel' || this.element[2] == 'steel') {
+                  //   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
+                  //   return
+                  // }
   
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
+                  this.status.name = 'para'
+                  this.statusEffectAnimation('para', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was paralyzed!`)
+
+                  if(recipient.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+                  else recipientStatus = document.querySelector('#foeStatus')
+
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/para.png'
+                  
+                  if(this.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(recipient.status.name == null) {
+                        if(recipient.element[1] == 'electric' || recipient.element[2] == 'electric') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                          return
+                        } else if(recipient.element[1] == 'ground' || recipient.element[2] == 'ground') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                          return
+                        } 
+  
+                        // else if(this.element[1] == 'steel' || this.element[2] == 'steel') {
+                        //   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
+                        //   return
+                        // }
+                      }
+                    
+                      recipient.status.name = 'para'
+                      recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was paralyzed!`)
+  
+                      if(recipient.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/para.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  } 
+
+                })
+              } else if(recipient.status.name == null) {
+                  if(recipient.element[1] == 'electric' || recipient.element[2] == 'electric') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                    return
+                  } else if(recipient.element[1] == 'ground' || recipient.element[2] == 'ground') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                    return
+                  } 
+                  
+                  // else if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') {
+                  //   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                  //   return
+                  // }
+  
+                  recipient.status.name = 'para'
+                  // recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was paralyzed!`)
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/para.png'
+                  
+                  if(recipient.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(this.status.name == null) {
+                        if(this.element[1] == 'electric' || this.element[2] == 'electric') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                          return
+                        } else if(this.element[1] == 'ground' || this.element[2] == 'ground') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be paralyzed...`)
+                          return
+                        } 
+  
+                        // else if(this.element[1] == 'steel' || this.element[2] == 'steel') {
+                        //   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be paralyzed...`)
+                        //   return
+                        // }
+                      }
+                    
+                      this.status.name = 'para'
+                      // recipient.statusEffectAnimation('para', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was paralyzed!`)
+  
+                      if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/para.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  } 
+              }
               break
             case 'psn':
-              if(recipient.status.name == null) {
-                if(recipient.element[1] == 'poison' || recipient.element[2] == 'poison') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
-                  return
-                } else if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
-                  return
-                }
-              }
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
 
-              recipient.status.name = 'psn'
-              recipient.statusEffectAnimation('psn', renderedSprites, queueProcess)
-              this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} was poisoned!`)
-              recipientStatus.style.display = 'block'
-              recipientStatus.src = 'img/status/psn.png'
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
+                  if(this.element[1] == 'poison' || this.element[2] == 'poison') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be poisoned..`)
+                    return
+                  } else if(this.element[1] == 'steel' || this.element[2] == 'steel') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be poisoned..`)
+                    return
+                  }
+  
+                  this.status.name = 'psn'
+                  this.statusEffectAnimation('psn', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was poisoned!`)
+
+                  if(recipient.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+                  else recipientStatus = document.querySelector('#foeStatus')
+
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/psn.png'
+  
+                  if(this.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(recipient.status.name == null) {
+                        if(recipient.element[1] == 'poison' || recipient.element[2] == 'poison') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
+                          return
+                        } else if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
+                          return
+                        }
+                      }
+                    
+                      recipient.status.name = 'psn'
+                      recipient.statusEffectAnimation('psn', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was poisoned!`)
+  
+                      if(recipient.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/psn.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+
+                })
+              } else if(recipient.status.name == null) {
+                  if(recipient.element[1] == 'poison' || recipient.element[2] == 'poison') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
+                    return
+                  } else if(recipient.element[1] == 'steel' || recipient.element[2] == 'steel') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be poisoned..`)
+                    return
+                  }
+  
+                  recipient.status.name = 'psn'
+                  recipient.statusEffectAnimation('psn', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was poisoned!`)
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/psn.png'
+  
+                  if(recipient.abilityInfo.ability.name == 'synchronize'){
+                    setTimeout(() =>{
+                      if(this.status.name == null) {
+                        if(this.element[1] == 'poison' || this.element[2] == 'poison') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be poisoned..`)
+                          return
+                        } else if(this.element[1] == 'steel' || this.element[2] == 'steel') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be poisoned..`)
+                          return
+                        }
+                      }
+                    
+                      this.status.name = 'psn'
+                      this.statusEffectAnimation('psn', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(this.nickname)} was poisoned!`)
+  
+                      if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/psn.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+              }
               break
             case 'slp':
-              if(recipient.status.name == null){
-                if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
-                  return
-                } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost') {
-                  this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
-                  return
-                }
-              }
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
 
-              recipient.status.name = 'slp'
-              recipient.statusEffectAnimation('slp', renderedSprites, queueProcess)
-              this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${move.name} on ${this.switchUnderScoreForSpace(recipient.nickname)}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} fell asleep!`)
-              recipientStatus.style.display = 'block'
-              recipientStatus.src = 'img/status/slp.png'
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
+                  if(this.element[1] == 'psychic' || this.element[2] == 'psychic') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be forced to sleep...`)
+                    return
+                  } else if(this.element[1] == 'ghost' || this.element[2] == 'ghost') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be forced to sleep...`)
+                    return
+                  }
+  
+                  if(this.abilityInfo.ability.name == 'sweet_veil') if(recipient.abilityInfo.ability.name != 'mold_Breaker') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be forced to sleep...`)
+                    return
+                  }
+  
+                  this.status.name = 'slp'
+                  this.statusEffectAnimation('slp', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} fell asleep!`)
+                  
+                  if(recipient.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+                  else recipientStatus = document.querySelector('#foeStatus')
+
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/slp.png'
+  
+                  if(this.abilityInfo.ability.name == 'synchronize'){
+  
+                    setTimeout(() =>{
+                      if(recipient.status.name == null){
+                        if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!n\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                          return
+                        } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                          return
+                        }
+                      }
+                    
+                      if(recipient.abilityInfo.ability.name == 'sweet_veil') if(this.abilityInfo.ability.name != 'mold_Breaker') {
+                        this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                        return
+                      }
+                    
+                      recipient.status.name = 'slp'
+                      recipient.statusEffectAnimation('slp', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} fell asleep!`)
+  
+                      if(recipient.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/slp.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+
+                })
+              } else if(recipient.status.name == null){
+
+                  if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                    return
+                  } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                    return
+                  }
+  
+                  if(recipient.abilityInfo.ability.name == 'sweet_veil') if(this.abilityInfo.ability.name != 'mold_Breaker') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                    return
+                  }
+  
+                  recipient.status.name = 'slp'
+                  recipient.statusEffectAnimation('slp', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${move.name} on ${this.switchUnderScoreForSpace(recipient.nickname)}\n\n${this.switchUnderScoreForSpace(this.nickname)} fell asleep!`)
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/slp.png'
+  
+                  if(recipient.abilityInfo.ability.name == 'synchronize'){
+  
+                    setTimeout(() =>{
+                      if(this.status.name == null){
+                        if(this.element[1] == 'psychic' || this.element[2] == 'psychic') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!n\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be forced to sleep...`)
+                          return
+                        } else if(this.element[1] == 'ghost' || this.element[2] == 'ghost') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be forced to sleep...`)
+                          return
+                        }
+                      }
+                    
+                      if(this.abilityInfo.ability.name == 'sweet_veil') if(this.abilityInfo.ability.name != 'mold_Breaker') {
+                        this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be forced to sleep...`)
+                        return
+                      }
+                    
+                      this.status.name = 'slp'
+                      this.statusEffectAnimation('slp', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)} used ${move.name} on ${this.switchUnderScoreForSpace(this.nickname)}\n\n${this.switchUnderScoreForSpace(this.nickname)} fell asleep!`)
+  
+                      if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+  
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/slp.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+  
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+              }
               break
             case 'frz':
-              if(recipient.status.name == null) {
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+                recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
+
+                  if(this.element[1] == 'ice' || this.element[2] == 'ice') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be frozen...`)
+                    return
+                  } else if(this.element[1] == 'fire' || this.element[2] == 'fire') {
+                    this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(this.nickname)} cannot be frozen...`)
+                    return
+                  }
+                
+                  this.status.name = 'frz'
+                  this.statusEffectAnimation('frz', renderedSprites, queueProcess)
+                  this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was frozen!`)
+
+                  if(recipient.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+                  else recipientStatus = document.querySelector('#foeStatus')
+
+                  recipientStatus.style.display = 'block'
+                  recipientStatus.src = 'img/status/frz.png'
+  
+                  if(this.abilityInfo.ability.name == 'synchronize'){
+  
+                    setTimeout(() =>{
+                      if(recipient.status.name == null) {
+                        if(recipient.element[1] == 'ice' || recipient.element[2] == 'ice') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be frozen...`)
+                          return
+                        } else if(recipient.element[1] == 'fire' || recipient.element[2] == 'fire') {
+                          this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be frozen...`)
+                          return
+                        }
+                      }
+  
+                      recipient.status.name = 'frz'
+                      recipient.statusEffectAnimation('frz', renderedSprites, queueProcess)
+                      this.dialogue('battle', `${recipient.switchUnderScoreForSpace(this.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was frozen!`)
+                    
+                      if(recipient.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                      else recipientStatus = document.querySelector('#allyStatus')
+                    
+                      recipientStatus.style.display = 'block'
+                      recipientStatus.src = 'img/status/frz.png'
+  
+                      setTimeout(() =>{
+                        queueProcess.disabled = false
+                        console.log('here')
+                      }, 750)
+                    }, 1250)
+                  } else {
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 1250)
+                  }
+
+                })
+              } else if(recipient.status.name == null) {
                 if(recipient.element[1] == 'ice' || recipient.element[2] == 'ice') {
                   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be frozen...`)
                   return
@@ -2247,20 +3581,48 @@ export class Pogemon extends Sprite{
                   this.dialogue('battle', `${prevText} \n\n but ${this.switchUnderScoreForSpace(recipient.nickname)} cannot be frozen...`)
                   return
                 }
-              }
-
               
+                recipient.status.name = 'frz'
+                recipient.statusEffectAnimation('frz', renderedSprites, queueProcess)
+                this.dialogue('battle', `${prevText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was frozen!`)
+                recipientStatus.style.display = 'block'
+                recipientStatus.src = 'img/status/frz.png'
 
-              recipient.status.name = 'frz'
-              recipient.statusEffectAnimation('frz', renderedSprites, queueProcess)
-              this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} was frozen!`)
-              recipientStatus.style.display = 'block'
-              recipientStatus.src = 'img/status/frz.png'
+                if(recipient.abilityInfo.ability.name == 'synchronize'){
 
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
+                  setTimeout(() =>{
+                    if(this.status.name == null) {
+                      if(this.element[1] == 'ice' || this.element[2] == 'ice') {
+                        this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be frozen...`)
+                        return
+                      } else if(this.element[1] == 'fire' || this.element[2] == 'fire') {
+                        this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\nbut ${this.switchUnderScoreForSpace(this.nickname)} cannot be frozen...`)
+                        return
+                      }
+                    }
+
+                    this.status.name = 'frz'
+                    this.statusEffectAnimation('frz', renderedSprites, queueProcess)
+                    this.dialogue('battle', `${recipient.switchUnderScoreForSpace(recipient.nickname)}'s synchronize affected it's enemy!\n\n${this.switchUnderScoreForSpace(this.nickname)} was frozen!`)
+                  
+                    if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+                    else recipientStatus = document.querySelector('#allyStatus')
+                  
+                    recipientStatus.style.display = 'block'
+                    recipientStatus.src = 'img/status/frz.png'
+
+                    setTimeout(() =>{
+                      queueProcess.disabled = false
+                      console.log('here')
+                    }, 750)
+                  }, 1250)
+                } else {
+                  setTimeout(() =>{
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 1250)
+                }
+              }
               break
             }
         }
@@ -2273,85 +3635,42 @@ export class Pogemon extends Sprite{
     if(recipient.protected.active && recipient.protected.turns == 0) recipient.protected.turns = 1
 
     // if(move.name != 'fire_ball') rotation = 0
-
     // should find a way to manage moves better or this will become a cluster fuck very quickly
-    switch(move.name){
+    switch(move.animationType){
     //physical
-
-    //normal
-      case 'tackle': 
-      case 'quick_attack':
-      case 'headbutt':
-      case 'struggle':
-        //should put struggle apart
+      case 'physical':
         hitAnimation(false)
         break
-      case 'slash':
-      case 'super_power':
+
+      case 'physicalSprite':
         hitAnimation(true)
         break
 
     // special
-      //water
-      case 'water_gun':
-      // fire
-      case 'fire_ball':
-      // ghost
-      case 'shadow_ball':
+      case 'specialSprite':
         projectileAnimation()
         break
       
     // status
-
-      // heal
-      case 'heal':
-        statusAnimation('heal')
-        break
-      
-      // boost
-      case 'sharpen':
-      case 'feather_weight':
-      // debuff
-      case 'growl':
-      case 'stare':
-        statusAnimation('stats', move.effects)
+      case 'healing':
+        this.statusAnimation('heal', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
         break
 
-    // status effect
-
-      // normal
-      case 'substitute':
-      case 'protect':
-
-      // grass
-      case 'leech_seed':
-
-      // water
-      case 'rainy_day':
-
-      // fire
-      case 'heat_wave':
-      case 'sunny_day':
-
-      // rock
-      case 'sand_storm':
-
-      // electric
-      case 'thunder_wave':
-      
-      // poison
-      case 'fart':
-
-      // ice
-      case 'frost_wave':
-      case 'snow_storm':
-      //psychic
-      case 'hypnosis':
-      case 'confuse_ray':
-      case 'trick_room':
-        // should change to statusAnimation manye
-        statusAnimation('status', move.effects)
+      case 'statsSelf':
+        this.statusAnimation('statsSelf', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
         break  
+      case 'stats':
+        this.statusAnimation('stats', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+        break
+
+      // status effect
+      case 'status':
+        this.statusAnimation('status', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+        break
+      case 'statusSelf':
+        this.statusAnimation('statusSelf', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
+        break
+
     }
 
     // stats effect after attack
@@ -2359,12 +3678,10 @@ export class Pogemon extends Sprite{
       // console.log(immuned)
       // queue.push(() => {
         if(immuned) return
-        statusAnimation('array', move.effects)
         statusCalculation()
+        this.statusAnimation('array', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
       // })
     }
-
-    console.log('move end')
   }
 
   statusEffectAnimation(type, renderedSprites, queueProcess, confusionProcess){
@@ -2426,13 +3743,13 @@ export class Pogemon extends Sprite{
 
         if(this.isEnemy){
           statusEffectSprite.position = {
-            x: this.position.x + this.width / 4.5,
-            y: this.position.y + this.height / 1
+            x: this.position.x - this.width / 8,
+            y: this.position.y - this.height / 1.25
           }
         } else {
           statusEffectSprite.position = {
-            x: this.position.x + this.width / 2.5,
-            y: this.position.y + this.height / 0.65
+            x: this.position.x + this.width / 8,
+            y: this.position.y + this.height * 1.15
           }
         }
 
@@ -2585,7 +3902,7 @@ export class Pogemon extends Sprite{
     }
   }
 
-  endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower){
+  endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player){
     console.log(terrainConditions.weatherSpent)
 
     console.log('wawawiiiii')
@@ -2593,16 +3910,24 @@ export class Pogemon extends Sprite{
     
     if(info == null){
       let checkIfTerrainConditionActive = () =>{
+        console.log(terrainConditions)
         let flag = false
         let terrainArr = []
         Object.values(terrainConditions).forEach((types, i) =>{
-          Object.values(types).forEach((terrain, j) =>{
-            if(terrain.active) {
-              flag = true
-              terrainArr.push({type: Object.keys(terrainConditions[Object.keys(terrainConditions)[i]])[j], info: terrain})
-            }
+          Object.entries(types).forEach((terrainType, j) =>{
+            if(terrainType[0] == 'etc' || terrainType[0] == 'weather') 
+              Object.entries(terrainType[1]).forEach((terrain) =>{
+                // terrain.active = false
+                // terrain.turns = 5
+                if(terrain[1].active){
+                  flag = true
+                  terrainArr.push({type: terrain[0], info: terrain[1]})
+                }
+              })
           })
         })
+
+        console.log(flag)
   
         return [flag, terrainArr]
       }
@@ -2656,7 +3981,7 @@ export class Pogemon extends Sprite{
               //   duration: 0.01,
               //   onComplete: () =>{
               //     // document.querySelector('#trickroom').parentNode.removeChild(document.querySelector('#trickroom'))
-              //     terrainConditions.etc.trick_room.active = true
+              //     terrainConditions.turns.etc.trick_room.active = true
               //     queueProcess.disabled = false
                     // console.log('here')
               //   }
@@ -2684,57 +4009,65 @@ export class Pogemon extends Sprite{
           })
         }
 
+        const weatherHeal = (target, weatherName) =>{
+          queue.push(() =>{
+            target.dialogue('battle', `${target.nickname} was healed by the ${weatherName}.`)
+
+            const healAmount = Math.floor(target.stats.baseHp / 16)
+            target.hp += healAmount
+            if(target.hp > target.stats.baseHp) target.hp = target.stats.baseHp
+
+            target.hpManagement()
+          })
+        }
+
+        const dispatchWeatherHeal = () =>{
+          if(slower.abilityInfo.ability.type == 'weatherHeal') if(terrainConditions.turns.weather[slower.abilityInfo.ability.info].active) weatherHeal(slower, slower.abilityInfo.ability.info)
+
+          if(faster.abilityInfo.ability.type == 'weatherHeal') if(terrainConditions.turns.weather[faster.abilityInfo.ability.info].active) weatherHeal(faster, faster.abilityInfo.ability.info)
+        }
+
+        const spendWeatherTurn = activeTerrain =>{
+          terrainAnimation(activeTerrain.type, activeTerrain.info.element)
+          activeTerrain.info.turns--
+
+          if(activeTerrain.type == 'trick_room') document.querySelector('#trickRoomTurnIndicator').textContent = activeTerrain.info.turns
+          else if(activeTerrain.type == 'ally_reflect') document.querySelector('#allyReflectTurnIndicator').textContent = activeTerrain.info.turns
+          else if(activeTerrain.type == 'ally_light_screen') document.querySelector('#allyLightScreenTurnIndicator').textContent = activeTerrain.info.turns
+          else if(activeTerrain.type == 'foe_reflect') document.querySelector('#foeReflectTurnIndicator').textContent = activeTerrain.info.turns
+          else if(activeTerrain.type == 'foe_light_screen') document.querySelector('#foeLightScreenTurnIndicator').textContent = activeTerrain.info.turns
+          else document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
+
+          document.querySelector('#fieldEffect').opacity = 1
+
+          this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
+
+          setTimeout(() =>{
+            queueProcess.disabled = false
+            console.log('here')
+          }, 1250)
+        }
+
         terrainArr.forEach((activeTerrain, i) =>{
-          console.log(activeTerrain)
-          if(activeTerrain.info.turns == 1){
-            // console.log(activeTerrain.info)
+          if(activeTerrain.info.turns <= 1){
             manageWeatherState(null, null, 'endOfTurn', activeTerrain)
             return
           }
 
           if(terrainConditions.weatherSpent) return
-          console.log('nmow')
 
           if(i == 0){
-            if(terrainConditions.weatherSpent) return
-            if(terrainArr.length <= 1) terrainConditions.weatherSpent = true
-            console.log('nmow2')
-
-            // console.log('terrain now')
-            terrainAnimation(activeTerrain.type, activeTerrain.info.element)
-            activeTerrain.info.turns--
-
-            if(activeTerrain.type == 'trick_room') document.querySelector('#trickRoomTurnIndicator').textContent = activeTerrain.info.turns
-            else document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
-
-            document.querySelector('#fieldEffect').opacity = 1
-            this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
-
-            setTimeout(() =>{
-              queueProcess.disabled = false
-              console.log('here')
-            }, 1250)
+            if(terrainArr.length = 1) terrainConditions.weatherSpent = true
+            dispatchWeatherHeal()
+            spendWeatherTurn(activeTerrain)
+          } else if(i < terrainArr.length - 1) {
+            dispatchWeatherHeal()
+            queue.push(() => spendWeatherTurn(activeTerrain))
           } else {
-            console.log('wtfg????')
+            dispatchWeatherHeal()
             queue.push(() =>{
-              if(terrainConditions.weatherSpent) return
               terrainConditions.weatherSpent = true
-              console.log('nmow2')
-  
-              // console.log('terrain now')
-              terrainAnimation(activeTerrain.type, activeTerrain.info.element)
-              activeTerrain.info.turns--
-  
-              if(activeTerrain.type == 'trick_room') document.querySelector('#trickRoomTurnIndicator').textContent = activeTerrain.info.turns
-              else document.querySelector('#fieldEffectTurnIndicator').textContent = activeTerrain.info.turns
-  
-              document.querySelector('#fieldEffect').opacity = 1
-              this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
-  
-              setTimeout(() =>{
-                queueProcess.disabled = false
-                console.log('here')
-              }, 1250)
+              spendWeatherTurn(activeTerrain)
             })
           }
 
@@ -2755,6 +4088,50 @@ export class Pogemon extends Sprite{
         })
       }
     }
+
+    const endOfTurnRegenAbility = target =>{
+      if(target.hp == target.stats.baseHp) return
+
+      if(target.abilityInfo.ability.name == 'slimie_regeneration'){
+        queue.push(() =>{
+          target.dialogue('battle', `${target.nickname}'s ability allowed it to heal a bit.`)
+
+          let healAmount = Math.floor(target.stats.baseHp / 16)
+          target.hp += healAmount
+
+          target.hpManagement()
+        })
+      } else if(target.abilityInfo.ability.name == 'queen_Lair'){
+        queue.push(() =>{
+          let targetTeam = player.team
+          if(target.isEnemy) targetTeam = enemyTrainerInfo
+
+          target.dialogue('battle', `${target.nickname}'s ability allowed it to heal.`)
+
+          let x = 1
+
+          for(let i = 1; i < targetTeam.length; i++){
+            const targetPogemonPogedexNum = targetTeam[i].pogemon.pogedex
+            if(
+              targetPogemonPogedexNum == 16 ||
+              targetPogemonPogedexNum == 17 ||
+              targetPogemonPogedexNum == 18
+            ){
+              x += 1
+            }
+          }
+
+          let healAmount = Math.floor((x * this.stats.baseHp) / 16)
+          this.hp += healAmount
+
+          this.hpManagement()
+        })
+      }
+    }
+
+    // maybe put regen here???????
+    endOfTurnRegenAbility(slower)
+    endOfTurnRegenAbility(faster)
   }
 
   // should pass foe instead of slower
@@ -2839,7 +4216,6 @@ export class Pogemon extends Sprite{
     }
 
     let endTurnStatusEvent = statusInfo =>{
-      console.log(statusInfo)
       if(this.status.name == 'para' || this.status.name == 'slp') {
         if(statusInfo != null || statusInfo != undefined) opponent.checkStatus(statusInfo[0], statusInfo[1], statusInfo[2], statusInfo[3], statusInfo[4], statusInfo[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch)
       } else {
@@ -2872,11 +4248,9 @@ export class Pogemon extends Sprite{
               else if(this.status.name == 'frz') this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} was hurt by the frost.`)
               
               thisFaints()
-    
-              // console.log(opponent)
-              if(opponent != null && opponent.status.name == null) {
+
+              if(opponent != null) {    
                 if(!debounce) opponent.checkStatus(opponentHealthBar, opponentHealthBar, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
-                console.log('checkStatus')
               }
               
               this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
@@ -2905,7 +4279,6 @@ export class Pogemon extends Sprite{
     
               if(opponent.status.name != null && info != null) {
                 opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, false, terrainConditions, manageWeatherState, faintSwitch)
-                console.log('checkStatus')
               }
               
               this.statusEffectAnimation(this.status.name, renderedSprites, queueProcess)
@@ -2932,7 +4305,6 @@ export class Pogemon extends Sprite{
 
         // console.log(opponent)
         if(!opponent.affliction[0].active == false && opponent.affliction[1].active == false) {
-          console.log('no status nor afflictions')
           // this.endOfTurnTerrainManagement(info, queue, terrainConditions, faintSwitch, queueProcess)
         }
 
@@ -2941,22 +4313,19 @@ export class Pogemon extends Sprite{
         // // thisFaints()
         if(info != undefined && !debounce){
           // if(info[0] == '#foeHealthBar') return
-          console.log(`no status but affliction on ${this.switchUnderScoreForSpace(opponent.nickname)}`)
           opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch) 
-          console.log('checkStatus')
+
         }
       } else {
         console.log(`status on ${this.switchUnderScoreForSpace(opponent.nickname)}`)
         // thisFaints()
         if(info != undefined && !debounce){
           opponent.checkStatus(info[0], info[1], info[2], info[3], info[4], info[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch)
-          console.log('checkStatus')
         }
       }
     } else {
       endTurnStatusEvent(info)
       if(opponent.status.name != null){
-        console.log('status on both')
         if(!debounce){
           // thisFaints()
           // opponent.checkStatus(opponentHealthBar, opponentHealthAmount, renderedSprites, queue, queueProcess, faintEvent, this, null, true, terrainConditions, manageWeatherState, faintSwitch)
@@ -2964,7 +4333,6 @@ export class Pogemon extends Sprite{
         }
       } else {
         // here makes the weather skip a turn
-        console.log(`status on ${this.switchUnderScoreForSpace(this.nickname)}`)
       }
     }
 
@@ -2982,6 +4350,7 @@ export class Pogemon extends Sprite{
     switch(type){
       case 'missed':
       case 'flinched':
+
         this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} ${type}!`)
 
         gsap.to(this.position, {
@@ -2993,6 +4362,7 @@ export class Pogemon extends Sprite{
           onComplete: () =>{
             queueProcess.disabled = false
             console.log('here')
+            this.flinched = false
             // if(opponent != undefined) this.checkStatus()
           }
         })
@@ -3004,7 +4374,6 @@ export class Pogemon extends Sprite{
         this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} couldnt move because it's paralyzed.`)
         // if(!this.affliction[0].active) this.statusEffectAnimation('para', renderedSprites, queueProcess)
         this.statusEffectAnimation('para', renderedSprites, queueProcess)
-        console.log('does this happen?')
         break
       case 'slp':
         this.status.turns += 1
@@ -3303,30 +4672,31 @@ export class Pogemon extends Sprite{
 
   checkBattleItemRng() {
     let rng = Math.floor(Math.random() * 99) + 1
+    let odds = this.heldItem.odds
 
-    if(this.heldItem.odds == undefined){
+    if(odds == undefined) 
       return true
-    } else if(rng <= this.heldItem.odds){
+    else if(rng <= odds) 
       return true
-    } else return false
+    else 
+      return false
   }
 
-  useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, characters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState){
+  useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, characters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState, foeMove){
     const item = this.heldItem
 
     if(item == undefined) return
 
     switch(item.effect){
       case 'heal':
-
         if(item.heldEffect == undefined) return
 
-        if(this.hp <= 0) {
-          faintEvent(this)
+        if(this.hp <= 0 && this.fainted == false) {
+          // faintEvent(this)
           return
         }
 
-        if(this.convertToPercentage(this.hp, this.stats.baseHp) > item.heldThreshHold) return
+        // if(this.convertToPercentage(this.hp, this.stats.baseHp) > item.heldThreshHold) return
         
         let healedAmount = item.pow
         
@@ -3337,8 +4707,17 @@ export class Pogemon extends Sprite{
           this.hp += healedAmount
         }
 
+        if(this.abilityInfo.ability.name == 'cheeck_Pouch'){
+          let cheeckPouchHealAmount = Math.floor(this.stats.baseHp * 0.33)
+          this.hp += cheeckPouchHealAmount
+
+          healedAmount += cheeckPouchHealAmount
+        }
+
         if(this.hp > this.stats.baseHp) {
-          healedAmount = this.hp - this.stats.baseHp
+          let removeFromHealedAmount = this.hp - this.stats.baseHp
+          healedAmount -= removeFromHealedAmount
+
           this.hp = this.stats.baseHp
         }
 
@@ -3351,13 +4730,6 @@ export class Pogemon extends Sprite{
         if(item.name == 'focusSash') if(targetHpBeforeMove !== 100) return
 
         const rng = Math.floor(Math.random() * 99) + 1
-
-        // console.log(rng)
-        // console.log(this.heldItem.odds)
-
-        // console.log(rng > this.heldItem.odds)
-
-        // console.log(this)
         
         if(rng > this.heldItem.odds) return
 
@@ -3372,8 +4744,8 @@ export class Pogemon extends Sprite{
           //change stuff here for sure
   
           queue.push(() => {
-            if(this.isEnemy) this.move({move: moves.foe, recipient: characters.ally, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
-            else this.move({move: moves.ally, recipient: characters.foe, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+            if(this.isEnemy) this.move({move: moves.foe, recipient: characters.ally, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+            else this.move({move: moves.ally, recipient: characters.foe, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
             console.log('YAYA')
           })
   
@@ -3537,7 +4909,7 @@ export class Character extends Sprite{
     }
   }
 
-  catch(pogemon, starter, currMap, ally, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, queue, faintEvent, pc, queueFaintTrigger, queueProcess, terrainConditions, manageWeatherState, statusEvent, faster, slower, faintSwitch){
+  catch(pogemon, starter, currMap, ally, renderedSprites, ball, manageQueue, critLanded, backToOverWorld, queue, faintEvent, pc, queueFaintTrigger, queueProcess, terrainConditions, manageWeatherState, statusEvent, faster, slower, faintSwitch, enemyTrainerInfo, player){
     let newPogemon
 
     if(ball != undefined) this.dialogue('battle', `You throw a ${ball.name} at ${pogemon.switchUnderScoreForSpace(pogemon.nickname)}.`)
@@ -3560,12 +4932,11 @@ export class Character extends Sprite{
 
     const catchEvent = ballSprite => {
       const {rng, rate} = catchCalc(ball)
-      console.log(rng)
-      console.log(rate)
       // rng <= rate
       if(rng <= rate){
         pogemon.dialogue('battle', `${pogemon.switchUnderScoreForSpace(pogemon.nickname)} decided to become your companion! :D`)
         renderedSprites.splice(1,1)
+        console.log('remove sprite')
         newPogemon.isEnemy = false
 
         setTimeout(() =>{
@@ -3608,14 +4979,32 @@ export class Character extends Sprite{
                 queue.push(() =>{
                   let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
 
-                  console.log(ally)
-                  console.log(pogemon)
-  
-                  console.log(faster)
+                  // let rng = Math.floor(Math.random() * 2)
+
+                  // let faster = ally
+                  // let slower = pogemon
+                
+                  // let allySpeed
+                  // if(ally.status.name == 'para') allySpeed = Math.floor((ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd) / 2)
+                  // else allySpeed = Math.floor(ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd)
+                
+                  // let foeSpeed
+                  // if(pogemon.status.name == 'para') foeSpeed = Math.floor((pogemon.stats.spd * statsChangeObj.pogemon.nominator.spd / statsChangeObj.pogemon.denominator.spd) / 2)
+                  // else foeSpeed = Math.floor(pogemon.stats.spd * statsChangeObj.pogemon.nominator.spd / statsChangeObj.pogemon.denominator.spd)
+                
+                  // if(allySpeed == foeSpeed){
+                  //   if(rng == 1) {
+                  //     faster = pogemon
+                  //     slower = ally
+                  //   }
+                  // } else if(allySpeed < foeSpeed){
+                  //   faster = pogemon
+                  //   slower = ally
+                  // }
   
                   statusEvent(pogemon, foeRNGMove, ally, document.querySelector('#foeStatus'), true, faster, slower)
                   if(pogemon.status.name != 'para' || pogemon.status.name != 'slp' || !pogemon.affliction[0].active) 
-                    pogemon.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
+                    pogemon.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
   
                   // pogemon.move({move: foeRNGMove, recipient: inUse, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
                   // console.log('YAYA')
@@ -3648,6 +5037,7 @@ export class Character extends Sprite{
 
     function ballAnimation(ballSprite){
       renderedSprites.splice(1, 0, ballSprite)
+      console.log('remove sprite')
   
       TweenMax.to(ballSprite.position, {
         x: pogemon.position.x + pogemon.width / 3,
@@ -3698,7 +5088,7 @@ export class Character extends Sprite{
         img: pogemonImg,
         frames:{
           max: 4,
-          hold: 100
+          hold: 60
         },
         animate: true
       })

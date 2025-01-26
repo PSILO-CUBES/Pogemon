@@ -10,9 +10,10 @@ export const movesObj = {
     element: 'normal',
     pow: 50,
     acc: 95,
-    pp: 50,
+    pp: 48,
     effects: null,
-    priority: 0
+    priority: 0,
+    animationType: 'physical'
   },
   quick_attack:{
     name: 'quick_attack',
@@ -20,19 +21,21 @@ export const movesObj = {
     element: 'normal',
     pow: 45,
     acc: 100,
-    pp: 32,
+    pp: 36,
     effects: null,
-    priority: 1
+    priority: 1,
+    animationType: 'physical'
   },
-  headbutt:{
-    name: 'headbutt',
+  rapid_spin:{
+    name: 'rapid_spin',
     type: 'physical',
     element: 'normal',
-    pow: 80,
-    acc: 90,
-    pp: 24,
-    effects: [{flinched: 30}],
-    priority: 0
+    pow: 50,
+    acc: 100,
+    pp: 64,
+    effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    animationType: 'physical'
   },
   slash:{
     name: 'slash',
@@ -43,34 +46,167 @@ export const movesObj = {
     pp: 32,
     effects: [{crit: 1}],
     priority: 0,
-    sprite: '../../img/moves/slash.png'
+    sprite: '../../img/moves/slash.png',
+    animationType: 'physicalSprite'
+  },
+  headbutt:{
+    name: 'headbutt',
+    type: 'physical',
+    element: 'normal',
+    pow: 1,
+    acc: 90,
+    pp: 24,
+    effects: [{flinched: 30}],
+    priority: 0,
+    animationType: 'physical'
+  },
+  extreme_speed:{
+    name: 'extreme_speed',
+    type: 'physical',
+    element: 'normal',
+    pow: 80,
+    acc: 700,
+    pp: 16,
+    effects: null,
+    priority: 2,
+    animationType: 'physical'
   },
   struggle:{
     name: 'struggle',
     type: 'physical',
     element: 'normal',
-    pow: 1,
-    acc: 50,
-    pp: 100,
-    effects: null,
-    priority: 0
+    pow: 50,
+    acc: 100,
+    pp: 56,
+    effects: [{recoil: 50}],
+    priority: 0,
+    animationType: 'physical'
   },
 
-  // fighting
-  super_power: {
-    name: 'super_power',
+  // grass
+  razor_leaf:{
+    name: 'razor_leaf',
     type: 'physical',
-    element: 'fighting',
-    pow: 1,
-    acc: 100,
-    pp: 30,
-    effects: [{name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}],
+    element: 'grass',
+    pow: 60,
+    acc: 95,
+    pp: 32,
+    effects: [{crit: 1}],
     priority: 0,
-    rotation: {ally: 1, foe: -2},
-    duration: 0.5,
-    sprite: '../../img/moves/superpower.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    sprite: '../../img/moves/green_slash.png',
+    animationType: 'physicalSprite'
+  },
+  horn_leech:{
+    name: 'horn_leech',
+    type: 'physical',
+    element: 'grass',
+    pow: 75,
+    acc: 100,
+    pp: 16,
+    effects: [{leech: 50}],
+    priority: 0,
+    sprite: '../../img/moves/horn_leech.png',
+    animationType: 'physicalSprite'
+  },
+  leaf_blade:{
+    name: 'leaf_blade',
+    type: 'physical',
+    element: 'grass',
+    pow: 90,
+    acc: 100,
+    pp: 24,
+    effects: [{crit: 1}],
+    priority: 0,
+    sprite: '../../img/moves/green_slash.png',
+    animationType: 'physicalSprite'
+  },
+
+  // water
+  aqua_jet:{
+    name: 'aqua_jet',
+    type: 'physical',
+    element: 'water',
+    pow: 40,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 1,
+    sprite: '../../img/moves/water_hit.png',
+    animationType: 'physicalSprite'
+  },
+  waterfall:{
+    name: 'waterfall',
+    type: 'physical',
+    element: 'water',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{flinched: 20}],
+    priority: 1,
+    sprite: '../../img/moves/waterfall.png',
+    animationType: 'physicalSprite'
+  },
+  wave_crash:{
+    name: 'wave_crash',
+    type: 'physical',
+    element: 'water',
+    pow: 120,
+    acc: 100,
+    pp: 8,
+    effects: [{recoil: 33}],
+    priority: 1,
+    sprite: '../../img/moves/waterfall.png',
+    animationType: 'physicalSprite'
+  },
+
+  //fire
+  flame_charge:{
+    name: 'flame_charge',
+    type: 'physical',
+    element: 'fire',
+    pow: 50,
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/fire_hit.png',
+    animationType: 'physicalSprite'
+  },
+  fire_punch:{
+    name: 'fire_punch',
+    type: 'physical',
+    element: 'fire',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{burn: 20}],
+    priority: 0,
+    sprite: '../../img/moves/red_punch.png',
+    animationType: 'physicalSprite'
+  },
+  fire_lash:{
+    name: 'fire_lash',
+    type: 'physical',
+    element: 'fire',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/fire_hit.png',
+    animationType: 'physicalSprite'
+  },
+  flare_blitz:{
+    name: 'flare_blitz',
+    type: 'physical',
+    element: 'fire',
+    pow: 1,
+    acc: 90,
+    pp: 8,
+    effects: [{recoil: 33}],
+    priority: 0,
+    sprite: '../../img/moves/red_punch.png',
+    animationType: 'physicalSprite'
   },
 
   // electric
@@ -82,10 +218,769 @@ export const movesObj = {
     acc: 100,
     pp: 32,
     effects: [{para: 100, type: 'status'}],
-    priority: 0
+    priority: 0,
+    sprite: '../../img/moves/para.png',
+    animationType: 'physicalSprite'
+  },
+  thunder_punch:{
+    name: 'thunder_punch',
+    type: 'physical',
+    element: 'electric',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: [{para: 10}],
+    priority: 0,
+    sprite: '../../img/moves/yellow_punch.png',
+    animationType: 'physicalSprite'
+  },
+  volt_tackle:{
+    name: 'volt_tackle',
+    type: 'physical',
+    element: 'electric',
+    pow: 120,
+    acc: 100,
+    pp: 8,
+    effects: [{recoil: 33}],
+    priority: 0,
+    sprite: '../../img/moves/yellow_punch.png',
+    animationType: 'physicalSprite'
+  },
+
+  // bug
+  pounce:{
+    name: 'pounce',
+    type: 'physical',
+    element: 'bug',
+    pow: 50,
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/bug.png',
+    animationType: 'physicalSprite'
+  },
+  u_turn:{
+    name: 'u_turn',
+    type: 'physical',
+    element: 'bug',
+    pow: 70,
+    acc: 100,
+    pp: 16,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/u_turn.png',
+    animationType: 'physicalSprite'
+  },
+  x_scissor:{
+    name: 'x_scissor',
+    type: 'physical',
+    element: 'bug',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: [{crit: 1}],
+    priority: 0,
+    sprite: '../../img/moves/bug.png',
+    animationType: 'physicalSprite'
+  },
+  megahorn:{
+    name: 'megahorn',
+    type: 'physical',
+    element: 'bug',
+    pow: 120,
+    acc: 85,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/megahorn.png',
+    animationType: 'physicalSprite'
+  },
+
+  // flying
+  wing_attack:{
+    name: 'wing_attack',
+    type: 'physical',
+    element: 'flying',
+    pow: 60,
+    acc: 100,
+    pp: 56,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/gust.png',
+    animationType: 'physicalSprite'
+  },
+  drill_peck:{
+    name: 'drill_peck',
+    type: 'physical',
+    element: 'flying',
+    pow: 80,
+    acc: 95,
+    pp: 24,
+    effects: [{crit: 1}],
+    priority: 0,
+    sprite: '../../img/moves/gust.png',
+    animationType: 'physicalSprite'
+  },
+  brave_bird:{
+    name: 'brave_bird',
+    type: 'physical',
+    element: 'flying',
+    pow: 120,
+    acc: 100,
+    pp: 8,
+    effects: [{recoil: 33}],
+    priority: 0,
+    sprite: '../../img/moves/brave_bird.png',
+    animationType: 'physicalSprite'
+  },
+
+  // dark
+  theif:{
+    name: 'theif',
+    type: 'physical',
+    element: 'dark',
+    pow: 50,
+    acc: 90,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/theif.png',
+    animationType: 'physicalSprite'
+  },
+  brutal_swing:{
+    name: 'brutal_swing',
+    type: 'physical',
+    element: 'dark',
+    pow: 60,
+    acc: 90,
+    pp: 48,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/dark.png',
+    animationType: 'physicalSprite'
+  },
+  knock_off:{
+    name: 'knock_off',
+    type: 'physical',
+    element: 'dark',
+    pow: 65,
+    acc: 100,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/knock_off.png',
+    animationType: 'physicalSprite'
+  },
+  sucker_punch:{
+    name: 'sucker_punch',
+    type: 'physical',
+    element: 'dark',
+    pow: 70,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/punch.png',
+    animationType: 'specialSprite'
+  },
+  crunch:{
+    name: 'crunch',
+    type: 'physical',
+    element: 'dark',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 20}],
+    priority: 0,
+    sprite: '../../img/moves/crunch.png',
+    animationType: 'physicalSprite'
+  },
+
+  // rock
+  accelerock:{
+    name: 'accelerock',
+    type: 'physical',
+    element: 'rock',
+    pow: 40,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 1,
+    sprite: '../../img/moves/rock.png',
+    animationType: 'physicalSprite'
+  },
+  rock_slide:{
+    name: 'rock_slide',
+    type: 'physical',
+    element: 'rock',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/rock_slide.png',
+    animationType: 'physicalSprite'
+  },
+  stone_miss:{
+    name: 'stone_miss',
+    type: 'physical',
+    element: 'rock',
+    pow: 130,
+    acc: 65,
+    pp: 16,
+    effects: [{crit: 2}],
+    priority: 0,
+    sprite: '../../img/moves/stone_miss.png',
+    animationType: 'physicalSprite'
+  },
+  head_smash:{
+    name: 'head_smash',
+    type: 'physical',
+    element: 'rock',
+    pow: 150,
+    acc: 80,
+    pp: 8,
+    effects: [{recoil: 50}],
+    priority: 0,
+    sprite: '../../img/moves/head_smash.png',
+    animationType: 'physicalSprite'
+  },
+
+  // fighting
+  mach_punch:{
+    name: 'mach_punch',
+    type: 'physical',
+    element: 'fighting',
+    pow: 40,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 1,
+    sprite: '../../img/moves/punch.png',
+    animationType: 'physicalSprite'
+  },
+  rock_smash:{
+    name: 'rock_smash',
+    type: 'physical',
+    element: 'fighting',
+    pow: 50,
+    acc: 100,
+    pp: 48,
+    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 50}],
+    priority: 0,
+    sprite: '../../img/moves/rock_smash.png',
+    animationType: 'physicalSprite'
+  },
+  drain_punch:{
+    name: 'drain_punch',
+    type: 'physical',
+    element: 'fighting',
+    pow: 70,
+    acc: 95,
+    pp: 24,
+    effects: [{leech: 50}],
+    priority: 0,
+    sprite: '../../img/moves/punch.png',
+    animationType: 'physicalSprite'
+  },
+  lokick:{
+    name: 'lokick',
+    type: 'physical',
+    element: 'fighting',
+    pow: 175,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats',}],
+    priority: 0,
+    sprite: '../../img/moves/lokick.png',
+    animationType: 'physicalSprite'
+  },
+  thunderous_kick:{
+    name: 'thunderous_kick',
+    type: 'physical',
+    element: 'fighting',
+    pow: 90,
+    acc: 90,
+    pp: 16,
+    effects: [{name: 'buff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/lokick.png',
+    animationType: 'physicalSprite'
+  },
+  super_power: {
+    name: 'super_power',
+    type: 'physical',
+    element: 'fighting',
+    pow: 120,
+    acc: 90,
+    pp: 30,
+    effects: [{name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/superpower.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'physicalSprite'
+  },
+
+  // ground
+  bulldoze:{
+    name: 'bulldoze',
+    type: 'physical',
+    element: 'ground',
+    pow: 60,
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/earth.png',
+    animationType: 'physicalSprite'
+  },
+  drill_run:{
+    name: 'drill_run',
+    type: 'physical',
+    element: 'ground',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{crit: 1}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/earth.png',
+    animationType: 'physicalSprite'
+  },
+  earthquake:{
+    name: 'earthquake',
+    type: 'physical',
+    element: 'ground',
+    pow: 100,
+    acc: 100,
+    pp: 16,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/earth.png',
+    animationType: 'physicalSprite'
+  },
+
+  // ghost
+  shadow_sneak:{
+    name: 'shadow_sneak',
+    type: 'physical',
+    element: 'ghost',
+    pow: 40,
+    acc: '---',
+    pp: 48,
+    effects: null,
+    priority: 1,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/shadow_sneak.png',
+    animationType: 'physicalSprite'
+  },
+  shadow_punch:{
+    name: 'shadow_punch',
+    type: 'physical',
+    element: 'ghost',
+    pow: 60,
+    acc: '---',
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/shadow_punch.png',
+    animationType: 'physicalSprite'
+  },
+  shadow_claw:{
+    name: 'shadow_claw',
+    type: 'physical',
+    element: 'ghost',
+    pow: 70,
+    acc: '---',
+    pp: 24,
+    effects: [{crit: 2}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/shadow_claw.png',
+    animationType: 'physicalSprite'
+  },
+  
+  // poison
+  poison_fang:{
+    name: 'poison_fang',
+    type: 'physical',
+    element: 'poison',
+    pow: 50,
+    acc: 100,
+    pp: 32,
+    effects: [{psn: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/poison_fang.png',
+    animationType: 'physicalSprite'
+  },
+  poison_jab:{
+    name: 'poison_jab',
+    type: 'physical',
+    element: 'poison',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{psn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/poison_jab.png',
+    animationType: 'physicalSprite'
+  },
+  gunk_shot:{
+    name: 'gunk_shot',
+    type: 'physical',
+    element: 'poison',
+    pow: 120,
+    acc: 80,
+    pp: 8,
+    effects: [{psn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/poison_jab.png',
+    animationType: 'physicalSprite'
+  },
+
+  // steel
+  bullet_punch:{
+    name: 'bullet_punch',
+    type: 'physical',
+    element: 'steel',
+    pow: 40,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 1,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/bullet_punch.png',
+    animationType: 'physicalSprite'
+  },
+  metal_claw:{
+    name: 'metal_claw',
+    type: 'physical',
+    element: 'steel',
+    pow: 50,
+    acc: 95,
+    pp: 56,
+    effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats', rng: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/metal_claw.png',
+    animationType: 'physicalSprite'
+  },
+  iron_head:{
+    name: 'iron_head',
+    type: 'physical',
+    element: 'steel',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{flinched: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/iron_head.png',
+    animationType: 'physicalSprite'
+  },
+
+  // psychic
+  psycho_cut:{
+    name: 'psycho_cut',
+    type: 'physical',
+    element: 'psychic',
+    pow: 70,
+    acc: 100,
+    pp: 24,
+    effects: [{crit: 1}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/psycho_cut.png',
+    animationType: 'physicalSprite'
+  },
+  psychic_fang:{
+    name: 'psychic_fang',
+    type: 'physical',
+    element: 'psychic',
+    pow: 85,
+    acc: 95,
+    pp: 24,
+    effects: [{flinched: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/psychic_fang.png',
+    animationType: 'physicalSprite'
+  },
+
+  // ice
+  ice_shard:{
+    name: 'ice_shard',
+    type: 'physical',
+    element: 'ice',
+    pow: 40,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 1,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/ice_shard.png',
+    animationType: 'specialSprite'
+  },
+  ice_punch:{
+    name: 'ice_punch',
+    type: 'physical',
+    element: 'ice',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: [{frz: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/blue_punch.png',
+    animationType: 'physicalSprite'
+  },
+  icicle_crash:{
+    name: 'icicle_crash',
+    type: 'physical',
+    element: 'ice',
+    pow: 85,
+    acc: 90,
+    pp: 24,
+    effects: [{flinched: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/icicle_crash.png',
+    animationType: 'physicalSprite'
+  },
+  ice_hammer:{
+    name: 'ice_hammer',
+    type: 'physical',
+    element: 'ice',
+    pow: 100,
+    acc: 85,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/blue_punch.png',
+    animationType: 'physicalSprite'
+  },
+
+  // fairy
+  spirit_break:{
+    name: 'spirit_break',
+    type: 'physical',
+    element: 'fairy',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'debuff', target:'spatk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/spirit_break.png',
+    animationType: 'physicalSprite'
+  },
+  play_rought:{
+    name: 'play_rought',
+    type: 'physical',
+    element: 'fairy',
+    pow: 90,
+    acc: 90,
+    pp: 16,
+    effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats', rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/spirit_break.png',
+    animationType: 'physicalSprite'
+  },
+
+  // dragon
+  breaking_swipe:{
+    name: 'breaking_swipe',
+    type: 'physical',
+    element: 'dragon',
+    pow: 60,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats', rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/breaking_swipe.png',
+    animationType: 'physicalSprite'
+  },
+  dragon_claw:{
+    name: 'dragon_claw',
+    type: 'physical',
+    element: 'dragon',
+    pow: 80,
+    acc: 95,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/dragon_claw.png',
+    animationType: 'physicalSprite'
+  },
+  dragon_rush:{
+    name: 'dragon_rush',
+    type: 'physical',
+    element: 'dragon',
+    pow: 110,
+    acc: 85,
+    pp: 16,
+    effects: [{flinched: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/breaking_swipe.png',
+    animationType: 'physicalSprite'
   },
 
                               // special
+
+  // normal
+  swift: {
+    name: 'swift',
+    type: 'special',
+    element: 'normal',
+    pow: 70,
+    acc: '---',
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/swift.png',
+    animationType: 'specialSprite'
+  },
+  boomburst: {
+    name: 'boomburst',
+    type: 'special',
+    element: 'normal',
+    pow: 140,
+    acc: 100,
+    pp: 16,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/boomburst.png',
+    animationType: 'specialSprite',
+    sound: true
+  },
+
+  // grass
+  absorb: {
+    name: 'absorb',
+    type: 'special',
+    element: 'grass',
+    pow: 30,
+    acc: 100,
+    pp: 40,
+    effects: [{leech: 50}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/drain.png',
+    animationType: 'specialSprite',
+  },
+  mega_drain: {
+    name: 'mega_drain',
+    type: 'special',
+    element: 'grass',
+    pow: 30,
+    acc: 100,
+    pp: 24,
+    effects: [{leech: 50}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/drain2.png',
+    animationType: 'specialSprite',
+  },
+  magical_leaf: {
+    name: 'magical_leaf',
+    type: 'special',
+    element: 'grass',
+    pow: 60,
+    acc: '---',
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/magical_leaf.png',
+    animationType: 'specialSprite',
+  },
+  giga_drain: {
+    name: 'giga_drain',
+    type: 'special',
+    element: 'grass',
+    pow: 75,
+    acc: 100,
+    pp: 16,
+    effects: [{leech: 50}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/drain3.png',
+    animationType: 'specialSprite',
+  },
+  energy_ball: {
+    name: 'energy_ball',
+    type: 'special',
+    element: 'grass',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, type: 'stats', rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/energy_ball.png',
+    animationType: 'specialSprite',
+  },
+  leaf_tornado: {
+    name: 'leaf_tornado',
+    type: 'special',
+    element: 'grass',
+    pow: 130,
+    acc: 90,
+    pp: 8,
+    effects: [{name: 'selfDebuff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/leaf_tornado.png',
+    animationType: 'specialSprite',
+  },
 
   // water
   water_gun:{
@@ -100,8 +995,49 @@ export const movesObj = {
     rotation: {ally: -2, foe: 1},
     duration: 0.5,
     sprite: '../../img/moves/watergun.png',
-    initAudio: audioObj.SFX.watergunLaunch,
-    hitAudio: audioObj.SFX.watergunHit
+    animationType: 'specialSprite'
+  },
+  scald:{
+    name: 'scald',
+    type: 'special',
+    element: 'water',
+    pow: 75,
+    acc: 100,
+    pp: 16,
+    effects: [{burn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/scald.png',
+    animationType: 'specialSprite'
+  },
+  surf:{
+    name: 'surf',
+    type: 'special',
+    element: 'water',
+    pow: 90,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/surf.png',
+    animationType: 'specialSprite'
+  },
+  hydro_pump:{
+    name: 'hydro_pump',
+    type: 'special',
+    element: 'water',
+    pow: 110,
+    acc: 80,
+    pp: 8,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/surf.png',
+    animationType: 'specialSprite'
   },
 
   // fire
@@ -112,16 +1048,381 @@ export const movesObj = {
     pow: 50,
     acc: 100,
     pp: 30,
-    effects: [{burn: 30}],
+    effects: [{burn: 100}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 0.5,
     sprite: '../../img/moves/fireball.png',
     initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'specialSprite'
+  },
+  mystical_fire:{
+    name: 'mystical_fire',
+    type: 'special',
+    element: 'fire',
+    pow: 75,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spatk', pow: 1, type: 'stats',}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/mystical_fire.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'specialSprite'
+  },
+  flamethrower:{
+    name: 'flamethrower',
+    type: 'special',
+    element: 'fire',
+    pow: 90,
+    acc: 100,
+    pp: 24,
+    effects: [{burn: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/flamethrower.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'specialSprite'
+  },
+  overheat:{
+    name: 'overheat',
+    type: 'special',
+    element: 'fire',
+    pow: 130,
+    acc: 90,
+    pp: 8,
+    effects: [{name: 'selfDebuff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/overheat.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'specialSprite'
+  },
+  fire_miss:{
+    name: 'fire_miss',
+    type: 'special',
+    element: 'fire',
+    pow: 140,
+    acc: 65,
+    pp: 8,
+    effects: [{burn: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/fire_blast.png',
+    initAudio: audioObj.SFX.initFireBall,
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'specialSprite'
   },
 
-  //ghost
+  // electric
+  charge_beam:{
+    name: 'charge_beam',
+    type: 'special',
+    element: 'electric',
+    pow: 50,
+    acc: 90,
+    pp: 16,
+    effects: [{name: 'buff', target:'spatk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/charge_beam.png',
+    animationType: 'specialSprite'
+  },
+  shock_wave:{
+    name: 'shock_wave',
+    type: 'special',
+    element: 'electric',
+    pow: 60,
+    acc: '---',
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/charge_beam.png',
+    animationType: 'specialSprite'
+  },
+  volt_switch:{
+    name: 'volt_switch',
+    type: 'special',
+    element: 'electric',
+    pow: 70,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/charge_beam.png',
+    animationType: 'specialSprite'
+  },
+  thunderbolt:{
+    name: 'thunderbolt',
+    type: 'special',
+    element: 'electric',
+    pow: 90,
+    acc: 100,
+    pp: 24,
+    effects: [{para: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/thunderbolt.png',
+    animationType: 'physicalSprite'
+  },
+  thunder:{
+    name: 'thunder',
+    type: 'special',
+    element: 'electric',
+    pow: 110,
+    acc: 70,
+    pp: 16,
+    effects: [{para: 30}],
+    rain: true,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/thunder.png',
+    animationType: 'physicalSprite'
+  },
+
+  // bug
+  struggle_bug:{
+    name: 'struggle_bug',
+    type: 'special',
+    element: 'bug',
+    pow: 50,
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'spatk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/struggle_bug.png',
+    animationType: 'specialSprite'
+  },
+  bug_buzz:{
+    name: 'bug_buzz',
+    type: 'special',
+    element: 'bug',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, type: 'stats', rng: 10}],
+    sound: true,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/bug_buzz.png',
+    animationType: 'specialSprite'
+  },
+
+  // flying
+  gust:{
+    name: 'gust',
+    type: 'special',
+    element: 'flying',
+    pow: 50,
+    acc: 100,
+    pp: 56,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/gust.png',
+    animationType: 'specialSprite'
+  },
+  air_slash:{
+    name: 'air_slash',
+    type: 'special',
+    element: 'flying',
+    pow: 75,
+    acc: 100,
+    pp: 24,
+    effects: [{flinched: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/air_slash.png',
+    animationType: 'specialSprite'
+  },
+  aeroblast:{
+    name: 'aeroblast',
+    type: 'special',
+    element: 'flying',
+    pow: 100,
+    acc: 95,
+    pp: 8,
+    effects: [{crit: 1}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/boomburst.png',
+    animationType: 'specialSprite'
+  },
+  hurricane:{
+    name: 'hurricane',
+    type: 'special',
+    element: 'flying',
+    pow: 110,
+    acc: 70,
+    pp: 8,
+    effects: [{confusion: 30}],
+    rain: true,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/hurricane.png',
+    animationType: 'specialSprite'
+  },
+
+  // dark
+  snarl:{
+    name: 'snarl',
+    type: 'special',
+    element: 'dark',
+    pow: 50,
+    acc: 95,
+    pp: 24,
+    effects: [{name: 'debuff', target:'spatk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/snarl.png',
+    animationType: 'specialSprite'
+  },
+  dark_pulse:{
+    name: 'dark_pulse',
+    type: 'special',
+    element: 'dark',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: [{flinched: 20}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/snarl.png',
+    animationType: 'specialSprite'
+  },
+
+  // rock
+  ancient_power:{
+    name: 'ancient_power',
+    type: 'special',
+    element: 'rock',
+    pow: 0,
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'buff', target:'all', pow: 6, type: 'stats', rng: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/ancient_power.png',
+    animationType: 'specialSprite'
+  },
+  power_gem:{
+    name: 'power_gem',
+    type: 'special',
+    element: 'rock',
+    pow: 80,
+    acc: 100,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/ancient_power.png',
+    animationType: 'specialSprite'
+  },
+
+  // fighting
+  vacuum_wave: {
+    name: 'vacuum_wave',
+    type: 'special',
+    element: 'fighting',
+    pow: 40,
+    acc: 100,
+    pp: 48,
+    effects: null,
+    priority: 1,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/vacuum_wave.png',
+    animationType: 'specialSprite'
+  },
+  aura_sphere: {
+    name: 'aura_sphere',
+    type: 'special',
+    element: 'fighting',
+    pow: 80,
+    acc: '---',
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/aura_sphere.png',
+    animationType: 'specialSprite'
+  },
+  focus_miss: {
+    name: 'focus_miss',
+    type: 'special',
+    element: 'fighting',
+    pow: 140,
+    acc: 65,
+    pp: 8,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, type: 'stats', rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/aura_sphere.png',
+    animationType: 'specialSprite'
+  },
+
+  // ground
+  mud_shot: {
+    name: 'mud_shot',
+    type: 'special',
+    element: 'ground',
+    pow: 55,
+    acc: 95,
+    pp: 24,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/mud_shot.png',
+    animationType: 'specialSprite'
+  },
+  scorching_sands: {
+    name: 'scorching_sands',
+    type: 'special',
+    element: 'ground',
+    pow: 70,
+    acc: 100,
+    pp: 16,
+    effects: [{burn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/scorching_sands.png',
+    animationType: 'specialSprite'
+  },
+  earth_power: {
+    name: 'earth_power',
+    type: 'special',
+    element: 'ground',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, type: 'stats', rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/mud_shot.png',
+    animationType: 'specialSprite'
+  },
+
+  // ghost
+  ghastly_whisper:{
+    name: 'ghastly_whisper',
+    type: 'special',
+    element: 'ghost',
+    pow: 50,
+    acc: 100,
+    pp: 48,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, rng: 50}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/ghastly_whisper.png',
+    animationType: 'specialSprite'
+  },
   shadow_ball:{
     name: 'shadow_ball',
     type: 'special',
@@ -129,76 +1430,317 @@ export const movesObj = {
     pow: 80,
     acc: 100,
     pp: 24,
-    effects: [{name: 'debuff', target:'spdef', pow: 1}],
+    effects: [{name: 'debuff', target:'spdef', pow: 1, rng: 30}],
     priority: 0,
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/shadowball.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'specialSprite'
+  },
+  hex:{
+    name: 'hex',
+    type: 'special',
+    element: 'ghost',
+    pow: 65,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/hex.png',
+    animationType: 'specialSprite'
+  },
+
+  // poison
+  clear_smog:{
+    name: 'clear_smog',
+    type: 'special',
+    element: 'poison',
+    pow: 50,
+    acc: '---',
+    pp: 24,
+    effects: null,
+    clearStats: true,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/clear_smog.png',
+    animationType: 'specialSprite'
+  },
+  sludge:{
+    name: 'sludge',
+    type: 'special',
+    element: 'poison',
+    pow: 65,
+    acc: 100,
+    pp: 32,
+    effects: [{psn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/sludge.png',
+    animationType: 'specialSprite'
+  },
+  sludge_bomb:{
+    name: 'sludge_bomb',
+    type: 'special',
+    element: 'poison',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{psn: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/sludge.png',
+    animationType: 'specialSprite'
+  },
+
+  // steel
+  flash_cannon:{
+    name: 'flash_cannon',
+    type: 'special',
+    element: 'steel',
+    pow: 80,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/flash_cannon.png',
+    animationType: 'specialSprite'
+  },
+
+  // psychic
+  confusion: {
+    name: 'confusion',
+    type: 'special',
+    element: 'psychic',
+    pow: 50,
+    acc: 100,
+    pp: 48,
+    effects: [{confusion: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/psy_beam.png',
+    animationType: 'specialSprite'
+  },
+  mystical_power: {
+    name: 'mystical_power',
+    type: 'special',
+    element: 'psychic',
+    pow: 70,
+    acc: 90,
+    pp: 16,
+    effects: [{name: 'buff', target:'spatk', pow: 1, rng: 70}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/psy_strike.png',
+    animationType: 'specialSprite'
+  },
+  psychic: {
+    name: 'psychic',
+    type: 'special',
+    element: 'psychic',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spdef', pow: 1, rng: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/psy_strike.png',
+    animationType: 'specialSprite'
+  },
+  dream_eater: {
+    name: 'dream_eater',
+    type: 'special',
+    element: 'psychic',
+    pow: 100,
+    acc: 100,
+    pp: 24,
+    effects: [{leech: 50}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/dream_eater.png',
+    animationType: 'specialSprite'
+  },
+  psycho_boost: {
+    name: 'psycho_boost',
+    type: 'special',
+    element: 'psychic',
+    pow: 120,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'selfDebuff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/psycho_boost.png',
+    animationType: 'specialSprite'
+  },
+
+  // ice
+  icy_wind: {
+    name: 'icy_wind',
+    type: 'special',
+    element: 'ice',
+    pow: 55,
+    acc: 95,
+    pp: 24,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/frost_breath.png',
+    animationType: 'specialSprite'
+  },
+  frost_breath: {
+    name: 'frost_breath',
+    type: 'special',
+    element: 'ice',
+    pow: 60,
+    acc: 90,
+    pp: 16,
+    effects: [{crit: 4}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/frost_breath.png',
+    animationType: 'specialSprite'
+  },
+  freeze_dry: {
+    name: 'freeze_dry',
+    type: 'special',
+    element: 'ice',
+    pow: 70,
+    acc: 100,
+    pp: 32,
+    effects: [{frz: 10}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/freeze_dry.png',
+    animationType: 'physicalSprite'
+  },
+  ice_beam: {
+    name: 'ice_beam',
+    type: 'special',
+    element: 'ice',
+    pow: 90,
+    acc: 100,
+    pp: 16,
+    effects: [{frz: 10}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    sprite: '../../img/moves/ice_beam.png',
+    animationType: 'specialSprite'
+  },
+  blizzard: {
+    name: 'blizzard',
+    type: 'special',
+    element: 'ice',
+    pow: 110,
+    acc: 70,
+    pp: 8,
+    effects: [{frz: 10}],
+    priority: 0,
+    snow: true,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/blizzard.png',
+    animationType: 'physicalSprite'
+  },
+
+  // fairy
+  draining_kiss: {
+    name: 'draining_kiss',
+    type: 'special',
+    element: 'fairy',
+    pow: 50,
+    acc: 100,
+    pp: 24,
+    effects: [{leech: 75}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/draining_kiss.png',
+    animationType: 'specialSprite'
+  },
+  dazzling_gleam: {
+    name: 'dazzling_gleam',
+    type: 'special',
+    element: 'fairy',
+    pow: 70,
+    acc: 100,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/dazzling_gleam.png',
+    animationType: 'specialSprite'
+  },
+  moonblast: {
+    name: 'moonblast',
+    type: 'special',
+    element: 'fairy',
+    pow: 95,
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'debuff', target:'spatk', pow: 1, type: 'stats', rng: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/moonblast.png',
+    animationType: 'specialSprite'
+  },
+  puppet_realm: {
+    name: 'puppet_realm',
+    type: 'special',
+    element: 'fairy',
+    pow: 130,
+    acc: 85,
+    pp: 8,
+    effects: [{slp: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/puppet_realm.png',
+    animationType: 'specialSprite'
+  },
+
+  // dragon
+  dragon_breath: {
+    name: 'dragon_breath',
+    type: 'special',
+    element: 'dragon',
+    pow: 60,
+    acc: 100,
+    pp: 24,
+    effects: [{para: 30}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/dragon_breath.png',
+    animationType: 'specialSprite'
+  },
+  dragon_pulse: {
+    name: 'dragon_pulse',
+    type: 'special',
+    element: 'dragon',
+    pow: 80,
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/dragon_pulse.png',
+    animationType: 'specialSprite'
+  },
+  draco_meteor: {
+    name: 'draco_meteor',
+    type: 'special',
+    element: 'dragon',
+    pow: 130,
+    acc: 90,
+    pp: 24,
+    effects: [{name: 'selfDebuff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/draco_meteor.png',
+    animationType: 'physicalSprite'
   },
 
                               // status
 
-  // buff
-  sharpen:{
-    name: 'sharpen',
-    type: 'status',
-    element: 'steel',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}],
-    priority: 0,
-    sprite: '../../img/moves/sharpen.png',
-  },
-  feather_weight:{
-    name: 'feather_weight',
-    type: 'status',
-    element: 'flying',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{name: 'buff', target:'spd', pow: 2, type: 'stats'}],
-    priority: 0,
-    rotation: {ally: 0, foe: 0},
-    sprite: '../../img/moves/feather_weight.png',
-    position:{
-      x: 200,
-      y: 250
-    }
-  },
-
-  // debuff
-  growl:{
-    name: 'growl',
-    type: 'status',
-    element: 'dark',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats'}],
-    priority: 0,
-    rotation: {ally: 0, foe: -2},
-    duration: 1,
-    sprite: '../../img/moves/growl.png',
-    position:{
-      x: 450,
-      y: 175
-    }
-  },
-  stare:{
-    name: 'stare',
-    type: 'status',
-    element: 'dark',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats'}],
-    priority: 0,
-  },
-
-  //normal
+  // normal
   protect: {
     name: 'protect',
     type: 'status',
@@ -214,7 +1756,8 @@ export const movesObj = {
     //sprite set to blank because animation is done with css so no sprite is used
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'status'
   },
   substitute: {
     name: 'substitute',
@@ -231,10 +1774,158 @@ export const movesObj = {
     //sprite set to blank because animation is done with css so no sprite is used
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'status'
+  },  
+  milk_drink:{
+    name: 'milk_drink',
+    type: 'heal',
+    element: 'normal',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [50],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/heal.png',
+    animationType: 'healng'
+  },
+  recover:{
+    name: 'recover',
+    type: 'heal',
+    element: 'normal',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [50],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/heal.png',
+    animationType: 'healing'
+  },
+  rest:{
+    name: 'rest',
+    type: 'heal',
+    element: 'normal',
+    pow: '---',
+    acc: 100,
+    pp: 8,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/slp.png',
+    animationType: 'healing'
   },
 
-  //fire
+  // grass
+  leech_seed:{
+    name: 'leech_seed',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{seeded: 100, type: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    sprite: '../../img/moves/seed.png',
+    animationType: 'status'
+  },
+  poison_powder:{
+    name: 'poison_powder',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 75,
+    pp: 56,
+    effects: [{psn: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/poison_powder.png',
+    animationType: 'status'
+  },
+  stun_spore:{
+    name: 'stun_spore',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 75,
+    pp: 48,
+    effects: [{para: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/stun_spore.png',
+    animationType: 'status'
+  },
+  sleep_powder:{
+    name: 'sleep_powder',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 75,
+    pp: 24,
+    effects: [{slp: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/sleep_powder.png',
+    animationType: 'status'
+  },
+  spore:{
+    name: 'spore',
+    type: 'status',
+    element: 'grass',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [{slp: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/spore.png',
+    animationType: 'status'
+  },
+
+  // water
+  rainy_day:{
+    name: 'rainy_day',
+    type: 'status',
+    element: 'water',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{rain: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
+    animationType: 'status'
+  },
+  withdraw:{
+    name: 'withdraw',
+    type: 'status',
+    element: 'water',
+    pow: '---',
+    acc: 100,
+    pp: 64,
+    effects: [{name: 'buff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/withdraw.png',
+    animationType: 'statsSelf'
+  },
+  rain_dish:{
+    name: 'rain_dish',
+    type: 'heal',
+    element: 'water',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [25,50,75],
+    priority: 0,
+    sprite: '../../img/moves/rain_dish.png',
+    animationType: 'healing'
+  },
+
+  // fire
   heat_wave:{
     name: 'heat_wave',
     type: 'status',
@@ -250,7 +1941,8 @@ export const movesObj = {
     //sprite set to blank because animation is done with css so no sprite is used
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'status'
   },
   sunny_day:{
     name: 'sunny_day',
@@ -263,52 +1955,23 @@ export const movesObj = {
     priority: 0,
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    hitAudio: audioObj.SFX.hitFireBall,
+    animationType: 'status'
   },
-
-  //water
-  rainy_day:{
-    name: 'rainy_day',
-    type: 'status',
-    element: 'water',
+  morning_sun:{
+    name: 'morning_sun',
+    type: 'heal',
+    element: 'fire',
     pow: '---',
     acc: 100,
-    pp: 32,
-    effects: [{rain: 100, type: 'weather'}],
+    pp: 16,
+    effects: [25,50,75],
     priority: 0,
-    sprite: '../../img/moves/blank.png',
+    sprite: '../../img/moves/morning_sun.png',
+    animationType: 'healing'
   },
 
-  //grass
-  leech_seed:{
-    name: 'leech_seed',
-    type: 'status',
-    element: 'grass',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{seeded: 100, type: 'status'}],
-    priority: 0,
-    rotation: {ally: 1, foe: -2},
-    sprite: '../../img/moves/seed.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
-  },
-
-  //rock
-  sand_storm:{
-    name: 'sand_storm',
-    type: 'status',
-    element: 'rock',
-    pow: '---',
-    acc: 100,
-    pp: 32,
-    effects: [{sand: 100, type: 'weather'}],
-    priority: 0,
-    sprite: '../../img/moves/blank.png',
-  },
-
-  //electric
+  // electric
   thunder_wave:{
     name: 'thunder_wave',
     type: 'status',
@@ -321,11 +1984,256 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/thunderwave.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
+  },
+  eerie_impulse:{
+    name: 'eerie_impulse',
+    type: 'status',
+    element: 'electric',
+    pow: '---',
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'debuff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/eerie_impulse.png',
+    animationType: 'stats'
   },
 
-  //poison
+  // bug
+  string_shot:{
+    name: 'string_shot',
+    type: 'status',
+    element: 'bug',
+    pow: '---',
+    acc: 90,
+    pp: 64,
+    effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/string_shot.png',
+    animationType: 'stats'
+  },
+  sticky_web:{
+    name: 'sticky_web',
+    type: 'status',
+    element: 'bug',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/sticky_web.png',
+    animationType: 'status'
+  },
+  quiver_dance:{
+    name: 'quiver_dance',
+    type: 'status',
+    element: 'bug',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'buff', target:'spatk', pow: 1, type: 'stats'}, {name: 'buff', target:'spdef', pow: 1, type: 'stats'}, {name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/quiver_dance.png',
+    animationType: 'statsSelf'
+  },
+  tail_glow:{
+    name: 'tail_glow',
+    type: 'status',
+    element: 'bug',
+    pow: '---',
+    acc: 100,
+    pp: 8,
+    effects: [{name: 'buff', target:'spatk', pow: 3, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/tail_glow.png',
+    animationType: 'statsSelf'
+  },
+
+  // flying
+  feather_weight:{
+    name: 'feather_weight',
+    type: 'status',
+    element: 'flying',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/feather_weight.png',
+    position:{
+      x: 200,
+      y: 250
+    },
+    animationType: 'statsSelf'
+  },
+  roost:{
+    name: 'roost',
+    type: 'heal',
+    element: 'flying',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [50],
+    priority: 0,
+    sprite: '../../img/moves/feather_weight.png',
+    animationType: 'healing'
+  },
+  defog:{
+    name: 'defog',
+    type: 'heal',
+    element: 'flying',
+    pow: '---',
+    acc: 100,
+    pp: 56,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/defog.png',
+    animationType: 'statusSelf'
+  },
+
+  // dark
+  growl:{
+    name: 'growl',
+    type: 'status',
+    element: 'dark',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: -4.25},
+    duration: 1,
+    sprite: '../../img/moves/growl.png',
+    position:{
+      x: 450,
+      y: 175
+    },
+    animationType: 'statsSelf'
+  },
+  stare:{
+    name: 'stare',
+    type: 'status',
+    element: 'dark',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    animationType: 'statsSelf',
+    sprite: '../../img/moves/stare.png',
+  },
+  nasty_plot:{
+    name: 'nasty_plot',
+    type: 'status',
+    element: 'dark',
+    pow: '---',
+    acc: 100,
+    pp: 8,
+    effects: [{name: 'buff', target:'spatk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/nasty_plot.png',
+    animationType: 'statsSelf'
+  },
+  taunt:{
+    name: 'taunt',
+    type: 'status',
+    element: 'dark',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/taunt.png',
+    animationType: 'status'
+  },
+
+  // rock
+  sand_storm:{
+    name: 'sand_storm',
+    type: 'status',
+    element: 'rock',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{sand: 100, type: 'weather'}],
+    priority: 0,
+    sprite: '../../img/moves/blank.png',
+    animationType: 'status'
+  },
+  rock_polish:{
+    name: 'rock_polish',
+    type: 'status',
+    element: 'rock',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'spd', pow: 2, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/rock_polish.png',
+    animationType: 'statsSelf'
+  },
+  stealth_rock:{
+    name: 'stealth_rock',
+    type: 'status',
+    element: 'rock',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: null,
+    priority: 0,
+    sprite: '../../img/moves/stealth_rock.png',
+    animationType: 'status'
+  },
+  shell_smash:{
+    name: 'shell_smash',
+    type: 'status',
+    element: 'rock',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'atk', pow: 2, type: 'stats'}, {name: 'buff', target:'spatk', pow: 2, type: 'stats'}, {name: 'buff', target:'spd', pow: 2, type: 'stats'}, {name: 'selfDebuff', target:'def', pow: 2, type: 'stats'}, {name: 'selfDebuff', target:'spdef', pow: 2, type: 'stats'},],
+    priority: 0,
+    sprite: '../../img/moves/shell_smash.png',
+    animationType: 'statsSelf'
+  },
+
+  // fighting
+  bulk_up:{
+    name: 'bulk_up',
+    type: 'status',
+    element: 'fighting',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}, {name: 'buff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/bulk_up.png',
+    animationType: 'statsSelf'
+  },
+
+  // ground
+  shore_up:{
+    name: 'shore_up',
+    type: 'heal',
+    element: 'ground',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [25,50,75],
+    priority: 0,
+    sprite: '../../img/moves/shore_up.png',
+    animationType: 'healing'
+  },
+
+  // poison
   fart:{
     name: 'fart',
     type: 'status',
@@ -338,25 +2246,75 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/fart.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
   },
 
-  //psychic
+  // steel
+  sharpen:{
+    name: 'sharpen',
+    type: 'status',
+    element: 'steel',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/sharpen.png',
+    animationType: 'statsSelf'
+  },
+  swords_dance:{
+    name: 'sharpen',
+    type: 'status',
+    element: 'steel',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [{name: 'buff', target:'atk', pow: 2, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/sharpen.png',
+    animationType: 'statsSelf'
+  },
+  iron_defence:{
+    name: 'iron_defence',
+    type: 'status',
+    element: 'steel',
+    pow: '---',
+    acc: 100,
+    pp: 24,
+    effects: [{name: 'buff', target:'def', pow: 2, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/iron_defence.png',
+    animationType: 'statsSelf'
+  },
+  shift_gear:{
+    name: 'shift_gear',
+    type: 'status',
+    element: 'steel',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}, {name: 'buff', target:'spd', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/shift_gear.png',
+    animationType: 'statsSelf'
+  },
+
+  // psychic
   hypnosis:{
     name: 'hypnosis',
     type: 'status',
     element: 'psychic',
     pow: '---',
-    acc: 65,
+    acc: 100,
     pp: 24,
     effects: [{slp: 100, type: 'status'}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
   },
   confuse_ray:{
     name: 'confuse_ray',
@@ -370,8 +2328,7 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/confusion.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
   },
   trick_room:{
     name: 'trick_room',
@@ -381,15 +2338,42 @@ export const movesObj = {
     acc: 100,
     pp: 12,
     effects: [{trick_room: 100, type: 'status'}],
-    priority: 0, // <------ needs to be -7 
+    priority: -7, // <------ needs to be -7 
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
+  },
+  reflect:{
+    name: 'reflect',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 1.5,
+    sprite: '../../img/moves/reflect.png',
+    animationType: 'statusSelf'
+  },
+  light_screen:{
+    name: 'light_screen',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 24,
+    effects: null,
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 1.5,
+    sprite: '../../img/moves/light_screen.png',
+    animationType: 'statusSelf'
   },
 
-  //ice
+  // ice
   frost_wave:{
     name: 'frost_wave',
     type: 'status',
@@ -402,8 +2386,7 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall
+    animationType: 'status'
   },
   snow_storm:{
     name: 'snow_storm',
@@ -415,5 +2398,77 @@ export const movesObj = {
     effects: [{snow: 100, type: 'weather'}],
     priority: 0,
     sprite: '../../img/moves/blank.png',
+    animationType: 'status'
+  },
+  freeze_over:{
+    name: 'freeze_over',
+    type: 'heal',
+    element: 'ice',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [25,50,75],
+    priority: 0,
+    sprite: '../../img/moves/freeze_over.png',
+    animationType: 'healing'
+  },
+
+  // fairy
+  charm:{
+    name: 'charm',
+    type: 'status',
+    element: 'fairy',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'debuff', target:'atk', pow: 2, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    sprite: '../../img/moves/draining_kiss.png',
+    animationType: 'status'
+  },
+  sweet_kiss:{
+    name: 'sweet_kiss',
+    type: 'status',
+    element: 'fairy',
+    pow: '---',
+    acc: 75,
+    pp: 16,
+    effects: [{confusion: 100}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 1.5,
+    sprite: '../../img/moves/moonlight.png',
+    animationType: 'status'
+  },
+  moonlight:{
+    name: 'moonlight',
+    type: 'heal',
+    element: 'fairy',
+    pow: '---',
+    acc: 100,
+    pp: 16,
+    effects: [50],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/moonlight.png',
+    animationType: 'healing'
+  },
+
+  // dragon
+  dragon_dance:{
+    name: 'dragon_dance',
+    type: 'status',
+    element: 'dragon',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}, {name: 'buff', target:'spd', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 2,
+    sprite: '../../img/moves/dragon_dance.png',
+    animationType: 'statsSelf'
   },
 }

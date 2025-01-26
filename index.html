@@ -185,6 +185,28 @@
           </div>
         </div>
 
+        <div id="foeScreenContainer">
+          <div id="foeReflectIndicatorContainer">
+            <span id="foeReflectTurnIndicator">5</span>
+            <img src="img/field/reflect.png" alt="" id="reflectIcon">
+          </div>
+          <div id="foeLightScreenIndicatorContainer">
+            <span id="foeLightScreenTurnIndicator">5</span>
+            <img src="img/field/light_screen.png" alt="" id="lightScreenIcon">
+          </div>
+        </div>
+
+        <div id="allyScreenContainer">
+          <div id="allyReflectIndicatorContainer">
+            <span id="allyReflectTurnIndicator">5</span>
+            <img src="img/field/reflect.png" alt="" id="reflectIcon">
+          </div>
+          <div id="allyLightScreenIndicatorContainer">
+            <span id="allyLightScreenTurnIndicator">5</span>
+            <img src="img/field/light_screen.png" alt="" id="lightScreenIcon">
+          </div>
+        </div>
+
         <div id="fieldEffect">
           <div id="fieldEffectContainer">
             <span id="fieldEffectTurnIndicator"></span>
@@ -192,8 +214,24 @@
           </div>
           <div id="trickRoomIndicatorContainer">
             <span id="trickRoomTurnIndicator"></span>
-            <img src="" alt="" id="trickRoomIcon">
+            <img src="img/field/trick_room.png" alt="" id="trickRoomIcon">
           </div>
+        </div>
+
+        <div id="allyHazardsContainer" class="hazardContainer">
+          <div class="hazardType" id="allyTaunt"><img src="img/field/taunt.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyWebs"><img src="img/field/webs.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyConfused"><img src="img/field/confused.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyRocks"><img src="img/field/rocks.png" id="hazardImg"></div>
+          <div class="hazardType" id="allySeeds"><img src="img/field/seeds.png" id="hazardImg"></div>
+        </div>
+
+        <div id="foeHazardsContainer" class="hazardContainer">
+          <div class="hazardType" id="foeTaunt"><img src="img/field/taunt.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeWebs"><img src="img/field/webs.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeConfused"><img src="img/field/confused.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeRocks"><img src="img/field/rocks.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeSeeds"><img src="img/field/seeds.png" id="hazardImg"></div>
         </div>
         
       </div>
@@ -219,7 +257,9 @@
           <div class="movesDescContainer">
             <div class="descContainer">
               <div id="moveDescElement">--</div>
-              <div id="moveDescType">--</div>
+              <div id="moveDescTypeContainer">
+                <img id="moveDescType" class="battleCategoryIcon"/>
+              </div>
             </div>
           </div>
         </div>
@@ -237,7 +277,9 @@
           <div class="movesDescContainer">
             <div class="descContainer">
               <div id="learnMoveDescElement">--</div>
-              <div id="learnMoveDescType">--</div>
+              <div id="learnMoveDescTypeContainer">
+                <img id="learnMoveDescType" class="battleCategoryIcon"/>
+              </div>
             </div>
           </div>
         </div>
@@ -279,7 +321,9 @@
         <div class="movesDescContainer">
           <div class="descContainer">
             <div id="evoMoveDescElement">--</div>
-            <div id="evoMoveDescType">--</div>
+            <div id="evoMoveDescTypeContainer">
+              <img id="evoMoveDescType" class="battleCategoryIcon"/>
+            </div>
           </div>
         </div>
       </div>
@@ -303,7 +347,9 @@
         <div class="movesDescContainer">
           <div class="descContainer">
             <div id="evoLearnMoveDescElement">--</div>
-            <div id="evoLearnMoveDescType">--</div>
+            <div id="evoLearnMoveDescTypeContainer">
+              <img id="evoLearnMoveDescType" class="battleCategoryIcon"/>
+            </div>
           </div>
         </div>
       </div>
