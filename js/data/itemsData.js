@@ -1,3 +1,5 @@
+import { movesObj } from "./movesData.js"
+
 export const itemsObj = {
   // misc
   leaf_Stone:{
@@ -8,8 +10,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/misc/leaf_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
     consume: true,
-    price: 1,
-    value: 1
+    price: 2100,
+    value: 650
   },
   water_Stone:{
     name:'water_Stone',
@@ -19,8 +21,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/misc/water_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
     consume: true,
-    price: 1,
-    value: 1
+    price: 2100,
+    value: 650
   },
   fire_Stone:{
     name:'fire_Stone',
@@ -30,8 +32,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/misc/fire_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
     consume: true,
-    price: 1,
-    value: 1
+    price: 2100,
+    value: 650
   },
   thunder_Stone:{
     name:'thunder_Stone',
@@ -41,8 +43,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/misc/thunder_Stone.png',
     desc: "Can trigger certain pogemon's evolution.",
     consume: true,
-    price: 1,
-    value: 1
+    price: 2100,
+    value: 650
   },
   royal_Jelly:{
     name:'royal_Jelly',
@@ -53,53 +55,123 @@ export const itemsObj = {
     desc: "Can trigger certain pogemon's evolution, also quite tasty.",
     consume: true,
     price: 1,
-    value: 1
+    value: null
   },
+
   // med
   potion: {
     name: 'potion',
     type: 'med',
     effect: 'heal',
-    pow: '20',
+    pow: 20,
     img: 'img/item_scene/items/med/potion.png',
     desc: 'Standard Heal',
     friendliness: 1,
-    price: 1,
-    value: 1
+    price: 300,
+    value: 75
   },
   super_Potion: {
     name: 'super_Potion',
     type: 'med',
     effect: 'heal',
-    pow: '50',
+    pow: 50,
     img: 'img/item_scene/items/med/super_Potion.png',
     desc: 'Good Heal',
     friendliness: 2,
-    price: 1,
-    value: 1
+    price: 700,
+    value: 150
   },
   mega_Potion: {
     name: 'mega_Potion',
     type: 'med',
     effect: 'heal',
-    pow: '200',
-    img: 'img/item_scene/items/med/heal.png',
-    desc: 'Crazy Heal',
+    pow: 200,
+    img: 'img/item_scene/items/med/mega_potion.png',
+    desc: 'Mega Heal',
+    friendliness: 3,
+    price: 1200,
+    value: 300
+  },
+  full_Potion: {
+    name: 'full_Potion',
+    type: 'med',
+    effect: 'heal',
+    pow: 999,
+    img: 'img/item_scene/items/med/full_Potion.png',
+    desc: 'Full Heal',
+    friendliness: 3,
+    price: 3000,
+    value: 725
+  },
+
+  ether: {
+    name: 'ether',
+    type: 'med',
+    effect: 'pp',
+    pow: 10,
+    img: 'img/item_scene/items/med/ether.png',
+    desc: 'Restores the PP of the selected move by 10.',
+    friendliness: 1,
+    price: 1,
+    value: 600
+  },
+  super_Ether: {
+    name: 'super_Ether',
+    type: 'med',
+    effect: 'pp',
+    pow: 999,
+    img: 'img/item_scene/items/med/super_Ether.png',
+    desc: 'Fully restores the PP of the selected move.',
     friendliness: 3,
     price: 1,
-    value: 1
+    value: 1000
   },
+  elixir: {
+    name: 'elixir',
+    type: 'med',
+    effect: 'ppAll',
+    pow: 10,
+    img: 'img/item_scene/items/med/elixir.png',
+    desc: `Restores the PP of all the selected Pokémon's moves by 10.`,
+    friendliness: 1,
+    price: 1,
+    value: 1500
+  },
+  super_Elixir: {
+    name: 'super_Elixir',
+    type: 'med',
+    effect: 'ppAll',
+    pow: 999,
+    img: 'img/item_scene/items/med/super_Elixir.png',
+    desc: `Fully restores the PP of all the selected Pokémon's moves.`,
+    friendliness: 3,
+    price: 1,
+    value: 2250
+  },
+
   revive: {
     name: 'revive',
     type: 'med',
     effect: 'revive',
-    pow: '0.25',
+    pow: '0.5',
     img: 'img/item_scene/items/med/revive.png',
-    desc: "Revivifies a fainted pogemon and heals it by 25% of it's max HP.",
+    desc: "Revivifies a fainted pogemon and heals it by 50% of it's max HP.",
+    friendliness: 4,
+    price: 1500,
+    value: 450
+  },
+  super_Revive: {
+    name: 'super_Revive',
+    type: 'med',
+    effect: 'revive',
+    pow: '1',
+    img: 'img/item_scene/items/med/super_revive.png',
+    desc: "Revivifies a fainted pogemon and heals it to it's max HP.",
     friendliness: 4,
     price: 1,
-    value: 1
+    value: 1250
   },
+
   // balls
   pogeball: {
     name: 'pogeball',
@@ -107,35 +179,86 @@ export const itemsObj = {
     pow: '1',
     img: 'img/item_scene/items/ball/pogeball.png',
     animation: 'img/item_scene/items/ball/pogeball_Animation.png',
-    desc: "Catches pogemons",
-    price: 1,
-    value: 1
+    desc: "Catches pogemons.",
+    price: 200,
+    value: 50
+  },
+  midball: {
+    name: 'midball',
+    type: 'ball',
+    pow: '1.5',
+    img: 'img/item_scene/items/ball/midball.png',
+    animation: 'img/item_scene/items/ball/midball_Animation.png',
+    desc: "Catches pogemons.",
+    price: 600,
+    value: 200
   },
   megaball: {
     name: 'megaball',
     type: 'ball',
-    pow: '999999999999',
-    img: 'img/item_scene/items/ball/pogeball.png',
-    animation: 'img/item_scene/items/ball/pogeball_Animation.png',
-    desc: "Resurrect, revivifies a fainted pogemon and heals it by 25% of it's max HP.",
-    price: 1,
-    value: 1
+    pow: '2',
+    img: 'img/item_scene/items/ball/megaball.png',
+    animation: 'img/item_scene/items/ball/megaball_Animation.png',
+    desc: "Catches pogemons.",
+    price: 1200,
+    value: 400
   },
+  ultimball: {
+    name: 'ultimball',
+    type: 'ball',
+    pow: '100',
+    img: 'img/item_scene/items/ball/ultimball.png',
+    animation: 'img/item_scene/items/ball/ultimball_Animation.png',
+    desc: "Catches pogemons.",
+    price: 1,
+    value: 10000
+  },
+
   // berry
-  banana: {
-    name: 'banana',
+  old_Banana: {
+    name: 'old_Banana',
     type: 'berry',
     effect: 'heal',
     pow: 10,
-    img: 'img/item_scene/items/berry/banana.png',
-    desc: 'A very ordinary banana.',
+    img: 'img/item_scene/items/berry/old_Banana.png',
+    desc: 'A old and soggy banana.\n\nRestores Hp when help in battle.',
     heldType: 'after',
     heldEffect: 'flatHealing',
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
     price: 1,
-    value: 1
+    value: 50
+  },
+  banana: {
+    name: 'banana',
+    type: 'berry',
+    effect: 'heal',
+    pow: 35,
+    img: 'img/item_scene/items/berry/banana.png',
+    desc: 'A very ordinary banana.\n\nRestores Hp when help in battle.',
+    heldType: 'after',
+    heldEffect: 'flatHealing',
+    heldThreshHold: 50,
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 50
+  },
+  golden_banana: {
+    name: 'golden_banana',
+    type: 'berry',
+    effect: 'heal',
+    pow: 150,
+    img: 'img/item_scene/items/berry/golden_banana.png',
+    desc: 'WOW!!! GOLDEN LEGENDARY!! :D.',
+    heldType: 'after',
+    heldEffect: 'flatHealing',
+    heldThreshHold: 50,
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 50
   },
   yellow_Berry: {
     name: 'yellow_Berry',
@@ -143,16 +266,102 @@ export const itemsObj = {
     effect: 'heal',
     pow: 25,
     img: 'img/item_scene/items/berry/yellow_Berry.png',
-    desc: 'A very sour yellow berry.',
+    desc: 'A very sour yellow berry.\n\nRestores Hp when help in battle.',
     heldType: 'after',
     heldEffect: 'percentHealing',
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
     price: 1,
-    value: 1
+    value: 125
   },
+  wakeo_Berry: {
+    name: 'wakeo_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'slp',
+    img: 'img/item_scene/items/berry/wakeo_Berry.png',
+    desc: 'A very pungeant berry.\n\nWakes up from sleep when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },  
+  milky_Berry: {
+    name: 'milky_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'burn',
+    img: 'img/item_scene/items/berry/milky_Berry.png',
+    desc: 'A very milky berry.\n\nCures burns when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
+  net_Berry: {
+    name: 'net_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'psn',
+    img: 'img/item_scene/items/berry/net_Berry.png',
+    desc: 'A soapy tasting berry.\n\nCures poison when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
+  spicy_Berry: {
+    name: 'spicy_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'psn',
+    img: 'img/item_scene/items/berry/spicy_Berry.png',
+    desc: 'A spicy tasting berry.\n\nCures freeze when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
+  libra_Berry: {
+    name: 'libra_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'para',
+    img: 'img/item_scene/items/berry/libra_Berry.png',
+    desc: 'A very liberating tasting berry.\n\nCures from paralysis when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
+  energy_Berry: {
+    name: 'energy_Berry',
+    type: 'berry',
+    effect: 'pp',
+    pow: 10,
+    img: 'img/item_scene/items/berry/energy_Berry.png',
+    desc: "Restores 10 PP to the first of the holder's moves to reach 0 PP. Single use.",
+    heldType: 'after',
+    heldEffect: 'healPP',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
+
   // tm
+
   // battleItm
     
   // elemental items
@@ -166,7 +375,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   charcoal:{
     name: 'charcoal',
@@ -178,7 +387,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   mystic_Water:{
     name: 'mystic_Water',
@@ -190,7 +399,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   miracle_Seed:{
     name: 'miracle_Seed',
@@ -202,7 +411,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   magnet:{
     name: 'magnet',
@@ -214,7 +423,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   sharp_Beak:{
     name: 'sharp_Beak',
@@ -226,7 +435,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   hard_Stone:{
     name: 'hard_Stone',
@@ -238,7 +447,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   soft_Sand:{
     name: 'soft_Sand',
@@ -250,7 +459,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   silver_Powder:{
     name: 'silver_Powder',
@@ -262,7 +471,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   poison_Barb:{
     name: 'poison_Barb',
@@ -274,7 +483,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   black_Glasses:{
     name: 'black_Glasses',
@@ -298,7 +507,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   twisted_Spoon:{
     name: 'twisted_Spoon',
@@ -310,7 +519,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   black_Belt:{
     name: 'black_Belt',
@@ -322,7 +531,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   dragon_Fang:{
     name: 'dragon_Fang',
@@ -334,7 +543,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   fairy_Feather:{
     name: 'fairy_Feather',
@@ -346,7 +555,7 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
   metal_Coat:{
     name: 'metal_Coat',
@@ -358,21 +567,82 @@ export const itemsObj = {
     heldType: 'elemental',
     consume: false,
     price: 1,
-    value: 1
+    value: 725
   },
 
   // battle item
-  // NEED TO ADD EFFECTS ON THESE
+  assault_Vest:{
+    name: 'assault_Vest',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/assault_Vest.png',
+    desc: 'When held, boosts spdef by 50%, but cannot use status moves.',
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  heavy_Duty_Boots:{
+    name: 'heavy_Duty_Boots',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/heavy_Duty_Boots.png',
+    desc: 'Makes the wearer immuned to field hazards.',
+    heldType: 'elemental',
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  leftovers:{
+    name: 'leftovers',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/leftovers.png',
+    desc: "If held, the holder will heal 1/16th of it's max HP per turn.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
   black_Sludge:{
     name: 'black_Sludge',
     type: 'battle',
-    effect: 'poison',
     img: 'img/item_scene/items/battle/black_Sludge.png',
-    desc: "If held, holder will loose 1/16th or it's max HP per turn.",
-    heldType: 'after',
+    desc: "If held, the holder will loose 1/16th of it's max HP per turn.\n\nHeals if the holder is poison type.",
     consume: false,
     price: 1,
-    value: 1
+    value: 725
+  },
+  life_Orb:{
+    name: 'life_Orb',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/life_Orb.png',
+    desc: "Holder's attacks do 1.3x damage, and it loses 1/10th of its max HP after the attack.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  rocky_Helmet:{
+    name: 'rocky_Helmet',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/rocky_Helmet.png',
+    desc: "If holder is hit by a physical move, the attacker loses 1/16 of its max HP.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  eviolite:{
+    name: 'eviolite',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/eviolite.png',
+    desc: "If holder can evolve, its Defense and Sp. Def are 1.5x.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  expert_Belt:{
+    name: 'expert_Belt',
+    type: 'battle',
+    img: 'img/item_scene/items/battle/expert_Belt.png',
+    desc: "Holder's attacks that are super effective against the target do 1.2x damage.",
+    consume: false,
+    price: 1,
+    value: 725
   },
   focus_Band:{
     name: 'focus_Band',
@@ -385,7 +655,7 @@ export const itemsObj = {
     consume: false,
     odds: 10,
     price: 1,
-    value: 1
+    value: 725
   },
   focus_Sash:{
     name: 'focus_Sash',
@@ -398,7 +668,37 @@ export const itemsObj = {
     consume: true,
     odds: 100,
     price: 1,
-    value: 1
+    value: 725
+  },
+  choice_Band:{
+    name: 'choice_Band',
+    type: 'battle',
+    effect: 'choice',
+    img: 'img/item_scene/items/battle/choice_Band.png',
+    desc: "Holder's Attack is 1.5x, but it can only select the first move it executes.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  choice_Specs:{
+    name: 'choice_Specs',
+    type: 'battle',
+    effect: 'choice',
+    img: 'img/item_scene/items/battle/choice_Specs.png',
+    desc: "Holder's Sp. Atk is 1.5x, but it can only select the first move it executes.",
+    consume: false,
+    price: 1,
+    value: 725
+  },
+  choice_Scarf:{
+    name: 'choice_Scarf',
+    type: 'battle',
+    effect: 'choice',
+    img: 'img/item_scene/items/battle/choice_Scarf.png',
+    desc: "Holder's Speed is 1.5x, but it can only select the first move it executes.",
+    consume: false,
+    price: 1,
+    value: 725
   },
   
   // vals
@@ -415,5 +715,28 @@ export const itemsObj = {
     odds: 0,
     price: 1,
     value: null
-  }
+  },
 }
+
+Object.values(movesObj).forEach((move, i) =>{
+  let TMNum
+
+  if(i < 10) TMNum = `00${i}`
+  else if(i < 100) TMNum = `0${i}`
+  else TMNum = i
+
+  console.log(TMNum)
+
+  const TMObj = {
+    name: `TM${TMNum}`,
+    type: 'tm',
+    TMName: move.name,
+    img: `img/item_scene/items/tms/${movesObj[move.name].element}.png`,
+    desc: `This Tm contains ${move.name.replace(/_/g, ' ')}`,
+    consume: true,
+    price: 1,
+    value: 2250
+  }
+
+  itemsObj[`TM${TMNum}`] = TMObj
+})

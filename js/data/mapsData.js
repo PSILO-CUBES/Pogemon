@@ -344,7 +344,7 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 6, itemsObj.banana], [pogemonsObj.steeli, 6, null], [pogemonsObj.maaph, 6, null]],
+        team: [[pogemonsObj.wallafi, 6, itemsObj.energy_Berry], [pogemonsObj.steeli, 6, null], [pogemonsObj.maaph, 6, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
@@ -369,8 +369,8 @@ export let mapsObj = {
         hidden: false
       },
       {
-        name: 'pogeball',
-        amount: 999,
+        name: 'TM018',
+        amount: 1,
         direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
         pickedUp: false,
         hidden: true
@@ -389,7 +389,7 @@ export let mapsObj = {
         },
       },
     ],
-    weather: 'sun'
+    weather: null
   },
 
   //slither_Road

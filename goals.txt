@@ -499,6 +499,8 @@ make scrappy immuned to intimidate x
 
 make more moves x
 
+terrainArr always return with only one entry -- if(terrainArr.length = 1) instead of if(terrainArr.length == 1)
+
 magicBounce:{
     afflictions :{
      confused x
@@ -523,6 +525,22 @@ magicBounce:{
     }
 } x
 
+eat berry sprite x
+
+slide in animations for mons and healthbars x
+
+recover pp when move drops to 0pp holding berry in battle x
+
+move takes 2 pp x
+
+make more items x
+
+TMS -- make opacity menu in the middle of bag scene to change one of your pogemon's moves with the selected tm's move x
+
+tms for everyone? x
+
+add move description somewhere x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -531,26 +549,16 @@ magicBounce:{
 
 stuffToDo:{
     battle: {
-        set exp yeild for each pogemon correctly
-
-        make berry usable in bag scene
-
-        not sure if stat change actualy happens tbh
-
         didint test unaware but 80% sure it works
 
         80% sure magic bounce / synchronize interaction works properly
 
-        ally screens and foe screen turn spent wont both show
+        didint test black sludge
 
-        screens turns doesnt flow well at all
+        reduce hold when status afflicted
     }
     sprites:{
-        leech seed move animation is fucky
-
         make npc get to me slower relative to how far away i am from them
-
-        heal animation when weather healing
     }
     data: {
         add event zones and wild mon objects to : {
@@ -567,20 +575,16 @@ stuffToDo:{
         }
 
         scribble town houses
+
+        set exp yeild for each pogemon correctly
     }
     ideas:{
-
-        make more items
-
-        TMS
-
         make multiple boxes for pc
 
-        add info to save event
-
-        slide in animations for mons and healthbars
-
-        eat berry sprite
+        somehow remember moves
+    }
+    bugs:{
+        remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
     }
 }
 
@@ -597,6 +601,7 @@ heabutt for trees?
 sand and ice should damage????
 
 Infinite EV's??????
+if i add EVS i need to add ev reducing berries
 
 stats menu number tags to see how much EVS have been collected
 

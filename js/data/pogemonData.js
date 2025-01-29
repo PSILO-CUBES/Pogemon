@@ -83,18 +83,17 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 9999
+      spd: 10
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.synchronize, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.rest, lvl: 1, seen: false},
-      // 2: {move: movesObj.defog, lvl: 1, seen: false},
-      // 3: {move: movesObj.stealth_rock, lvl: 1, seen: false},
-      // 4: {move: movesObj.sticky_web, lvl: 1, seen: false},
-      // 6: {move: movesObj.frost_wave, lvl: 50, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.reflect, lvl: 1, seen: false},
+      3: {move: movesObj.lokick, lvl: 1, seen: false},
+      4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -964,16 +963,16 @@ export let pogemonsObj = {
       def: 40,
       spatk: 40,
       spdef: 40,
-      spd: 70
+      spd: 10
     },
     evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.rest, lvl: 1, seen: false},
+      1: {move: movesObj.quick_attack, lvl: 1, seen: false},
       // 2: {move: movesObj.water_gun, lvl: 1, seen: false},
-      // 3: {move: movesObj.super_power, lvl: 1, seen: false},
+      // 3: {move: movesObj.close_Combat, lvl: 1, seen: false},
       // 4: {move: movesObj.heat_wave, lvl: 1, seen: false},
     },
     sprites: {

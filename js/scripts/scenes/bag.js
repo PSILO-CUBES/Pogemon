@@ -8,6 +8,7 @@ import { manageBattleState } from "./battle.js"
 import { mapsObj } from "../../data/mapsData.js"
 import { manageEvolutionState } from "./evolution.js"
 import { switchUnderScoreForSpace } from "./stats.js"
+import { movesObj } from "../../data/movesData.js"
 
 const bagMenuButtonOption = ['use', 'give', 'discard']
 let nodeArr = ['bagSceneItem','bagSceneMenuButton']
@@ -141,12 +142,20 @@ function bagSceneSectionOnClickEvent(e, state){
   if(returnToBattle) return
   if(e.target.classList[0] == 'bagSceneTeamSectionItem') return
 
-  if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
+  // if(itemChosen == false) document.querySelector('.bagSceneItemDialogueContainer').style.display = 'none'
 
-  if(e.target.classList[0] == 'bagSceneItem') itemChosen = true
+  let flag = false
 
-  currItem = {...itemsObj[`${e.target.childNodes[1].childNodes[0].textContent.replace(/ /g, "_")}`]}
-  currItemDom = document.querySelector(`.${e.target.classList[1]}`)
+  if(e.target.classList[0] == 'bagSceneItem') {
+    currItem = {...itemsObj[`${e.target.childNodes[1].childNodes[0].textContent.replace(/ /g, "_")}`]}
+    currItemDom = document.querySelector(`.${e.target.classList[1]}`)
+
+    if(player.bag.get(currItem.name).quantity < 1) flag = true
+
+    if(!flag) itemChosen = true
+  }
+
+  if(flag) return
 
   document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
     node.style.backgroundColor = 'transparent'
@@ -207,11 +216,16 @@ function useItemOnClickEvent(e){
   let index = e.target.classList[1].substr(-1, 1)
   let targetPogemon = player.team[index]
 
-  const currQuantity = player.bag.get(`${currItem.name}`).quantity
+  const currQuantity = player.bag.get(currItem.name).quantity
   if(currQuantity < 1) return
 
   const dialogueInterfaceDom = document.querySelector('.bagSceneItemDialogueContainer')
   dialogueInterfaceDom.style.display = 'block'
+
+  const bagSceneItemDialogueContainer = document.querySelector('.bagSceneItemDialogueContainer')
+  bagSceneItemDialogueContainer.innerText = `Which move should this ${currItem.name} be used on?`
+
+  const bagScene = document.querySelector('#bagScene')
 
   switch(selectedMenuOption){
     case 'use':
@@ -264,30 +278,57 @@ function useItemOnClickEvent(e){
           }
           break
         case 'med':
+        case 'berry':
           switch(currItem.effect){
             case 'heal':
               if(targetPogemon.fainted){
                 dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} has fainted and cannot recover HP`
                 return
               }
-              if(targetPogemon.hp < targetPogemon.stats.baseHp){
-                if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
-
-                let prevHp = targetPogemon.hp
-                targetPogemon.heal(e.target.classList[1], currItem)
+              
+              if(typeof currItem.pow == 'number'){
+                if(targetPogemon.hp < targetPogemon.stats.baseHp){
+                  if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
   
-                player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
-                currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
-  
-                itemUsed.item = currItem
-            
-                dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
+                  let prevHp = targetPogemon.hp
+                  targetPogemon.heal(e.target.classList[1], currItem)
+    
+                  player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+                  currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+    
+                  itemUsed.item = currItem
+              
+                  dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)}.\n\n${targetPogemon.hp - prevHp}hp were recovered.`
+                } else {
+    
+                  dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need to be healed.`
+                  dialogueInterfaceDom.style.display = 'block'
+                  return
+                }
               } else {
-  
-                dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need to be healed.`
-                dialogueInterfaceDom.style.display = 'block'
-                return
+                if(targetPogemon.status.name == currItem.pow){
+
+                  targetPogemon.status.name == null
+                  targetPogemon.status.turns = 0
+
+                  dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)}.\n\n${switchUnderScoreForSpace(targetPogemon.nickname)} was cured of it's status ailment.`
+
+                  player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
+                  currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+    
+                  itemUsed.item = currItem
+
+                  player.team.forEach((pogemon, i) =>{
+                    if(pogemon.id == targetPogemon.id){
+                      document.querySelectorAll('.bagSceneTeamSectionStatusImg')[i].src = 'img/status/null.png'
+                    }
+                  })
+                } else {
+                  dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} has no effect on ${switchUnderScoreForSpace(targetPogemon.nickname)}.`
+                }
               }
+
+              currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
               break
             case 'revive':
               // breaks the game
@@ -304,10 +345,107 @@ function useItemOnClickEvent(e){
   
                 itemUsed.item = currItem
                 itemUsed.used = true
+
+                currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
               } else {
                 dialogueInterfaceDom.innerText = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need to be revived.`
                 return
               }
+              break
+            case 'pp':
+              const restoreMovePPContainerBackground = document.createElement('div')
+              restoreMovePPContainerBackground.id = 'restoreMovePPContainerBackground'
+
+              bagScene.appendChild(restoreMovePPContainerBackground)
+
+              function removeRestorePPMenu(text){
+                bagSceneItemDialogueContainer.innerText = text
+                bagScene.removeChild(bagScene.childNodes[1])
+                bagScene.removeChild(bagScene.childNodes[1])
+              }
+
+              restoreMovePPContainerBackground.addEventListener('click', () => removeRestorePPMenu(``))
+
+              const restoreMovePPContainer = document.createElement('div')
+              restoreMovePPContainer.id = 'restoreMovePPContainer'
+
+              bagScene.appendChild(restoreMovePPContainer)
+
+              let freezePPRestore = false
+
+              function restorePPOnClick(e, i, move, currItem){
+                if(freezePPRestore) return
+                freezePPRestore = true
+
+                targetPogemon.moves[i].pp += currItem.pow
+                if(targetPogemon.moves[i].pp > movesObj[move.name].pp) targetPogemon.moves[i].pp = movesObj[move.name].pp
+                
+                console.log(currItem)
+
+                player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+                e.target.innerText = `${switchUnderScoreForSpace(move.name)}\n\n${move.pp}/${movesObj[move.name].pp}`
+                currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+  
+                itemUsed.item = currItem
+
+                let ppAmount = 10
+                if(ppAmount == 999) ppAmount = 'all'
+
+                bagSceneItemDialogueContainer.innerText = `${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)} successfully!`
+
+                setTimeout(() =>{
+                  removeRestorePPMenu(`${switchUnderScoreForSpace(targetPogemon.nickname)}'s move restored ${ppAmount} of it's pp!`)                
+                }, 1750)
+              }
+
+              let rememberClickItem = {...currItem}
+
+              targetPogemon.moves.forEach((move, i) =>{
+
+                const restoreMovePPMoveContainer = document.createElement('div')
+                restoreMovePPMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
+                restoreMovePPContainer.appendChild(restoreMovePPMoveContainer)
+
+                const restoreMovePPMoveContentContainer = document.createElement('div')
+                restoreMovePPMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainer')
+                restoreMovePPMoveContainer.appendChild(restoreMovePPMoveContentContainer)
+
+                restoreMovePPMoveContentContainer.innerText = `${move.name}\n\n${move.pp}/${movesObj[move.name].pp}`
+
+                // if(move.pp != movesObj[move.name].pp) {
+                  restoreMovePPMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainerHover restoreMovePPMoveContentContainer')
+                  restoreMovePPMoveContentContainer.addEventListener('click', e => restorePPOnClick(e, i, move, rememberClickItem))
+                // }
+              })
+              break
+            case 'ppAll':
+              let pass = false
+
+              targetPogemon.moves.forEach((move, i) =>{
+                if(move.pp < movesObj[move.name].pp) {
+                  pass = true
+                }
+
+                if(pass){
+                  move.pp += currItem.pow
+                }
+              })
+
+              if(!pass) {
+                dialogueInterfaceDom.textContent = `${switchUnderScoreForSpace(targetPogemon.nickname)} doesnt need it's pp restored.`
+                return
+              }
+
+              if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
+
+              player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
+              currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+
+              itemUsed.item = currItem
+
+              dialogueInterfaceDom.innerText = `A ${switchUnderScoreForSpace(currItem.name)} was used on ${switchUnderScoreForSpace(targetPogemon.nickname)}.\n\n${switchUnderScoreForSpace(targetPogemon.nickname)} recovered some pp.`
+              
+              currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
               break
           }
           break
@@ -318,7 +456,69 @@ function useItemOnClickEvent(e){
         case 'battle':
           player.team[0].dialogue('bag', 'Battle items cannot be used.')
           break
-      }
+        case 'tm':
+          console.log('?????????????????')
+
+          const TMContainerBackground = document.createElement('div')
+          TMContainerBackground.id = 'restoreMovePPContainerBackground'
+          bagScene.appendChild(TMContainerBackground)
+
+          function removeTMMenu(text){
+            bagSceneItemDialogueContainer.innerText = text
+            bagScene.removeChild(bagScene.childNodes[1])
+            bagScene.removeChild(bagScene.childNodes[1])
+          }
+
+          TMContainerBackground.addEventListener('click', () => removeTMMenu(``))
+          const TMContainer = document.createElement('div')
+          TMContainer.id = 'restoreMovePPContainer'
+
+          bagScene.appendChild(TMContainer)
+
+          let freezeTMProcess = false
+
+          function changeMoveForTMOnClick(e, i, move, currItem){
+            if(freezeTMProcess) return
+            freezeTMProcess = true
+
+            const lastMove = targetPogemon.moves[i]
+
+            targetPogemon.moves[i] = movesObj[currItem.TMName]
+            if(targetPogemon.moves[i].pp > lastMove) targetPogemon.moves[i].pp = lastMove.pp
+
+            player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+            e.target.innerText = `${switchUnderScoreForSpace(currItem.TMName)}`
+            currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+
+            itemUsed.item = currItem
+
+            bagSceneItemDialogueContainer.innerText = `${switchUnderScoreForSpace(currItem.name)} was taught to ${switchUnderScoreForSpace(targetPogemon.nickname)} successfully!`
+
+            targetPogemon.learntMoves.push(currItem.TMName)
+
+            setTimeout(() =>{
+              removeTMMenu(`${switchUnderScoreForSpace(lastMove.name)} was switched to ${switchUnderScoreForSpace(currItem.TMName)}.`)
+            }, 1750)
+          }
+
+          let rememberTMClickItem = {...currItem}
+
+          targetPogemon.moves.forEach((move, i) =>{
+            const TMMoveContainer = document.createElement('div')
+            TMMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
+            restoreMovePPContainer.appendChild(TMMoveContainer)
+
+            const TMMoveContentContainer = document.createElement('div')
+            TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainer')
+            TMMoveContainer.appendChild(TMMoveContentContainer)
+
+            TMMoveContentContainer.innerText = `${switchUnderScoreForSpace(move.name)}`
+
+            TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainerHover restoreMovePPMoveContentContainer')
+            TMMoveContentContainer.addEventListener('click', e => changeMoveForTMOnClick(e, i, move, rememberTMClickItem))
+          })
+          break  
+        }
       break
     case 'give':
       let prevItem
@@ -371,6 +571,7 @@ function useItemOnClickEvent(e){
     node.style.cursor = 'auto'
   })
 
+  currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
 }
 
 function cancelEventOnDocumentClick(e){

@@ -219,7 +219,10 @@ export class Pogemon extends Sprite{
     this.isEnemy = isEnemy
     this.knockedOff = false
     this.roosted = false
-    this.sturdy = false
+    this.choiceItem = {
+      type: null,
+      move: null
+    }
     this.preBuilt = preBuilt
     this.element = {
       1: this.pogemon.element[1],
@@ -505,17 +508,15 @@ export class Pogemon extends Sprite{
     recipientHealthBar.style.backgroundColor = hpColor
   }
 
-  managePP(move, pressure){
+  managePP(move){
     let movePP
+
     for(let i = 0; i < this.moves.length; i++){
       if(this.moves[i].name === move.name){
-        movePP = this.moves[i].pp
-        if(pressure) movePP = movePP - 2
-        else if(movePP > 0) movePP--
-
-        this.moves[i].pp = movePP
+        if(this.moves[i].pp > 0) this.moves[i].pp--
       }
     }
+
   }
 
   switchUnderScoreForSpace(text){
@@ -603,8 +604,8 @@ export class Pogemon extends Sprite{
         renderedSprites.push(statusSprite)
 
         setTimeout(() =>{
-          queueProcess.disabled = false
-          console.log('here')
+          // queueProcess.disabled = false
+          // console.log('here')
           renderedSprites.pop()
         }, 1000)
       } else if (effectType || move.animationType == 'stats' || move.animationType == 'statsSelf') {
@@ -771,6 +772,8 @@ export class Pogemon extends Sprite{
                 }
               }
 
+              console.log(effectName)
+
               const statsChanceAnimationEvent = () =>{
                 if(effectName == 'buff'){
   
@@ -835,7 +838,7 @@ export class Pogemon extends Sprite{
                         setTimeout(() =>{
                           this.dialogue(
                             'battle', 
-                            `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.name)} spun all the hazards away on it's side of the battlefield.`
+                            `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.nickname)} spun all the hazards away on it's side of the battlefield.`
                           )
                         }, 1250)
                       }
@@ -888,20 +891,20 @@ export class Pogemon extends Sprite{
   
                       switch(statState){
                         case 'all':
-                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nAll of it's stats went up!.`)
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nAll of it's stats went up!.`)
                           break
                         case 'some':
-                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nSome of it's stats went up!.`)
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nSome of it's stats went up!.`)
                           break
                         case 'none':
-                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut none of it's stats went up...`)
+                          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut none of it's stats went up...`)
                           return
                       }
                     }
   
                     // if(statsChangeObj.foe.nominator[effect.target] == 8) return
                     if(statsChangeObj.foe.nominator[effect.target] == 8) {
-                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up anymore.`)
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go up anymore.`)
                       return
                     }
                   
@@ -909,7 +912,7 @@ export class Pogemon extends Sprite{
                     if(move.name == 'rapid_spin') {
                       this.dialogue(
                         'battle', 
-                        `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                        `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
                       )
   
                       if(spinAwayBool('foe')){
@@ -921,14 +924,14 @@ export class Pogemon extends Sprite{
                         setTimeout(() =>{
                           this.dialogue(
                             'battle', 
-                            `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.name)} spun all the hazards away on it's side of the battlefield.`
+                            `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.\n\n${this.switchUnderScoreForSpace(this.nickname)} spun all the hazards away on it's side of the battlefield.`
                           )
                         }, 1250)
                       }
                     }  else if(effect.target != 'all') 
                       this.dialogue(
                         'battle', 
-                        `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.name)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
+                        `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(this.nickname)}'s ${effect.target} went up by ${effect.pow} ${tier}.`
                       )
   
                     buffDiv.setAttribute('class', `${effectName}Div ${userStatsChangeContainer}`)
@@ -1056,13 +1059,13 @@ export class Pogemon extends Sprite{
                     }
   
                     if(statsChangeObj.ally.denominator[effect.target] == 8) {
-                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
                       return
                     }
   
                     // foe debuff
                     if(move.name == 'sticky_web') this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} got stuck in the sticky web!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
-                    else this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
+                    else this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\n${this.switchUnderScoreForSpace(recipient.nickname)}'s ${effect.target} went down by ${effect.pow} ${tier}.`)
   
                     buffDiv.setAttribute('class', `${effectName}Div ${recipientStatsChangeContainer}`)
                     buffDiv.style.top = -850
@@ -1139,7 +1142,7 @@ export class Pogemon extends Sprite{
                     }
   
                     if(statsChangeObj.foe.nominator[effect.target] == 8) {
-                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.name)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
+                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nBut it's ${effect.target} can't go down anymore.`)
                       return
                     }
   
@@ -1174,14 +1177,13 @@ export class Pogemon extends Sprite{
                 }
               }
               
-              if(recipient.abilityInfo.ability.name == 'magic_Bounce'){
+              if(recipient.abilityInfo.ability.name == 'magic_Bounce' && effectName == 'selfDebuff'){
                 if(this.fainted) return
                 if(recipient.fainted) return
                 queueProcess.disabled = true
                 console.log('there')
 
                 setTimeout(() =>{
-
                   this.dialogue('battle', `${recipient.nickname}'s ability made ${this.nickname}'s move bounce back!`)
                 }, 1250)
 
@@ -1205,15 +1207,15 @@ export class Pogemon extends Sprite{
 
           //probably fucky here
           
-          if(move.effects != null) if(i == Object.values(move.effects).length - 1){
-            if(Object.values(move.effects).length > 1) {
-              // queue.splice(1,1)[0]()
-            }
+          // if(move.effects != null) if(i == Object.values(move.effects).length - 1){
+          //   if(Object.values(move.effects).length > 1) {
+          //     // queue.splice(1,1)[0]()
+          //   }
             
-            // queue.push(queue.splice(0,1)[0])
+          //   // queue.push(queue.splice(0,1)[0])
 
-            if(this.fainted || recipient.fainted) queueFaintTrigger.initiated = true
-          }
+          //   // if(this.fainted || recipient.fainted) queueFaintTrigger.initiated = true
+          // }
 
           setTimeout(() =>{
             if(move.type == 'status') renderedSprites.splice(2,1)
@@ -1712,7 +1714,26 @@ export class Pogemon extends Sprite{
 
     console.log(`${this.nickname} move start`)
 
-    if(move.type == 'status' && this.affliction[2].active){
+    let cantUseStatus = false
+
+    if(this.affliction[2].active) cantUseStatus = true
+    else if (this.heldItem != null) if(this.heldItem.name == 'assault_Vest') cantUseStatus = true
+
+    let returnIfChoiced = false
+
+    if(this.choiceItem.move != null) if(move.name != this.choiceItem.move.name){
+
+      returnIfChoiced = true
+
+      move = this.choiceItem.move
+      if(this.affliction[2].active && move.type == 'status') move = movesObj.struggle
+    }
+
+    if(returnIfChoiced) return
+
+    console.log(returnIfChoiced)
+
+    if(move.type == 'status' && cantUseStatus){
       if(this.isEnemy){
         const attackingMovesArr = []
 
@@ -1726,8 +1747,16 @@ export class Pogemon extends Sprite{
         } else {
           move = movesObj.struggle
         }
-      } else this.dialogue('battle', `${this.name} is taunted into a rage and can only use attacking moves...`)
-      
+      } 
+      else if(this.affliction[2].active) this.dialogue('battle', `${this.nickname} is taunted into a rage and can only use attacking moves...`)
+      else if (this.heldItem.name == 'assault_Vest') this.dialogue('battle', `${this.nickname} has an assault vest equipped and so can only use attacking moves...`)
+
+      setTimeout(() =>{
+        queue.length = 0
+        document.querySelector('#encounterInterface').style.display = 'grid'
+        queueProcess.disabled = false
+        console.log('here')
+      }, 1250)
       return
     }
 
@@ -1742,8 +1771,6 @@ export class Pogemon extends Sprite{
 
     let immuned = false
 
-    this.managePP(move, false)
-
     this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!`)
 
     if(move.name == 'sucker_punch' && recipientMove.type != 'physical'){
@@ -1751,8 +1778,8 @@ export class Pogemon extends Sprite{
       return
     }
     
-    if(move.pp == 0) move = movesObj['struggle']
-    else move.pp--
+    if(move.pp == 0) move = movesObj.struggle
+    // else move.pp--
 
     let recipientStatus = document.querySelector('#foeStatus')
 
@@ -1947,7 +1974,17 @@ export class Pogemon extends Sprite{
 
       // determins held item damage
       let heldItemDmg = 1
-      if(this.heldItem != null) if(this.heldItem.heldType = 'elemental') if(moveElement == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
+      if(this.heldItem != null) {
+        if(this.heldItem.heldType = 'elemental') if(moveElement == this.heldItem.effect) heldItemDmg += (this.heldItem.pow / 100)
+        else if(this.heldItem.name == 'life_Orb'){
+          heldItemDmg = 1.3
+
+          const chip = Math.floor(this.stats.baseHp / 10)
+          this.hp -= chip
+
+          setTimeout(() => this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.nickname}'s life orb hurt it!`), 500)
+        }
+      }
 
       // determins weather damage
       let weatherDamage = 1
@@ -2036,8 +2073,11 @@ export class Pogemon extends Sprite{
           break
       }
 
+      let expertBelt = 1
+      if(this.heldItem != null) if(this.heldItem.name == 'expertBelt') if(typeEffectivness > 1) expertBelt = 1.2
+
       let sturdy = false
-      if(recipient.hp == recipient.stats.baseHp) if(recipient.abilityInfo.ability.name == 'sturdy') if(this.abilityInfo.ability.name != 'mold_Breaker') sturdy = true
+      if(recipient.hp == recipient.stats.baseHp) sturdy = true
       if(move.type === 'physical'){
         if(typeEffectivness !== 0){
           let userAtkNum = statsChangeObj[userId].nominator.atk
@@ -2057,13 +2097,33 @@ export class Pogemon extends Sprite{
           userStatChange = userAtkNum / userAtkDenum
           recipientStatChange = recipientDefNum / recipientDefDenum
 
-          let fluffyCoat = 1
-          if(recipient.abilityInfo.ability.name == 'fluffy_Coat') if(this.abilityInfo.ability.name != 'mold_Breaker') fluffyCoat = 2
+          let defAbility = 1
+          if(recipient.abilityInfo.ability.name == 'fluffy_Coat') if(this.abilityInfo.ability.name != 'mold_Breaker') defAbility = 2
           if(recipient.abilityInfo.ability.name == 'weak_Armor') queue.unshift(() =>{
             recipient.statusAnimation('status', recipient.abilityInfo.ability.effects, {name: 'weak_Armor'}, this, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
           )
 
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * (this.stats.atk * userStatChange) / ((recipient.stats.def * fluffyCoat) * weatherResistance * recipientStatChange) / 50 + 2) * burn * reflect) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
+          let defItem = 1
+          if(recipient.heldItem != null){
+            if(recipient.heldItem.name == 'rocky_Helmet'){
+              const chip = Math.floor(this.stats.baseHp / 16)
+              this.hp -= chip
+    
+              setTimeout(() => this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.nickname}'s helmet hurt ${this.nickname}!`), 550)
+            } else if(recipient.heldItem.name == 'eviolite' && recipient.evo != null) 
+              defItem = 1.5
+          }
+
+          let choiceBand = 1
+          if(this.heldItem != null) if(this.heldItem.name == 'choice_Band') {
+
+            this.choiceItem.type = 'band'
+            this.choiceItem.move = move
+
+            choiceBand = 1.5
+          }
+
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * ((this.stats.atk * choiceBand) * userStatChange) / ((recipient.stats.def * defAbility * defItem) * weatherResistance * recipientStatChange) / 50 + 2) * burn * reflect) * roll * (typeEffectivness * expertBelt) * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
         }
       } else if(move.type === 'special'){
         if(typeEffectivness !== 0){
@@ -2084,7 +2144,22 @@ export class Pogemon extends Sprite{
           userStatChange = userSpatkNum / userSpatkDenum
           recipientStatChange = recipientSpdefNum / recipientSpdefDenum
 
-          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * ((this.stats.spatk * solarPower) * userStatChange) / (recipient.stats.spdef * weatherResistance * recipientStatChange) / 50 + 2) * frozen * lightScreen) * roll * typeEffectivness * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
+          let spdefItem = 1
+          if(recipient.heldItem != null){
+            if(recipient.heldItem.name == 'assault_Vest') spdefItem = 1.5
+            else if(recipient.heldItem.name == 'eviolite' && recipient.evo != null) spdefItem = 1.5
+          }
+
+          let choiceSpecs = 1
+          if(this.heldItem != null) if(this.heldItem.name == 'choice_Specs') {
+
+            this.choiceItem.type = 'specs'
+            this.choiceItem.move = move
+
+            choiceSpecs = 1.5
+          }
+
+          damage = Math.ceil((((2 * this.lvl / 5 + 2) * movePow * (((this.stats.spatk * choiceSpecs) * solarPower) * userStatChange) / ((recipient.stats.spdef * spdefItem) * weatherResistance * recipientStatChange) / 50 + 2) * frozen * lightScreen) * roll * (typeEffectivness * expertBelt) * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
         }
       }
 
@@ -2200,22 +2275,40 @@ export class Pogemon extends Sprite{
       }
 
       if(recipient.hp <= 0 && sturdy){
+        if(recipient.abilityInfo.ability.name == 'sturdy'){
+          if(this.abilityInfo.ability.name == 'mold_Breaker') return
 
-        recipient.sturdy = false
-        recipient.hp = 1
+          recipient.hp = 1
+  
+          setTimeout(() =>{
+            queueProcess.disabled = true
+            console.log('there')
+            this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.nickname} hung on thanks to it's ability.`)
+            setTimeout(() =>{
+              // queueProcess.disabled = false
+              // console.log('here')
+            }, 750)
+          }, 1500)
+        } 
 
-        if(recipient.abilityInfo.ability.name == 'sturdy') if(this.abilityInfo.ability.name != 'mold_Breaker') recipient.sturdy = true
+        if(recipient.heldItem != null) if(recipient.heldItem.effect == 'sturdy'){
+          if(recipient.heldItem.name == 'focusSash') if(targetHpBeforeMove !== 100) return
 
-        setTimeout(() =>{
+          const rng = Math.floor(Math.random() * 99) + 1
+          if(rng > recipient.heldItem.odds) return
+
+          recipient.hp = 1
+          recipient.fainted = false
+          recipient.hpManagement()
           queueProcess.disabled = true
           console.log('there')
-          this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${recipient.nickname} hung on thanks to it's ability.`)
-          setTimeout(() =>{
-            // queueProcess.disabled = false
-            // console.log('here')
-          }, 750)
-        }, 1500)
+
+          //change stuff here for sur
+  
+          this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThanks to it's ${this.switchUnderScoreForSpace(recipient.heldItem.name)}, ${this.switchUnderScoreForSpace(recipient.nickname)} held on by the grit of it's teeth!`)
+        }
       }
+        
 
       this.hpManagement()
 
@@ -2274,7 +2367,7 @@ export class Pogemon extends Sprite{
                     else if(statsChangeObj.ally.nominator[effect.target] <= 8) statsChangeObj.ally.nominator[effect.target] += effect.pow
                     else {
                       // statsChangeObj.ally.nominator[effect.target] = 8
-                      // queue.push(() => this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`))
+                      // queue.push(() => this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go up any further.`))
                       return
                     }
                   }
@@ -2285,7 +2378,7 @@ export class Pogemon extends Sprite{
                   else if(statsChangeObj.foe.nominator[effect.target] <= 8) statsChangeObj.foe.nominator[effect.target] += effect.pow
                   else {
                     // statsChangeObj.foe.nominator[effect.target] = 8
-                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                    // this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go up any further.`)
                     return
                   }
                 }
@@ -2330,14 +2423,14 @@ export class Pogemon extends Sprite{
                   if(statsChangeObj.ally.nominator[effect.target] > 2) statsChangeObj.ally.nominator[effect.target] -= effect.pow
                   else if(statsChangeObj.ally.denominator[effect.target] <= 8) statsChangeObj.ally.denominator[effect.target] += effect.pow
                   else {
-                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                    // this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go down any further.`)
                     return
                   }
               } else {
                   if(statsChangeObj.foe.nominator[effect.target] > 2) statsChangeObj.foe.nominator[effect.target] -= effect.pow
                   else if(statsChangeObj.foe.denominator[effect.target] <= 8) statsChangeObj.foe.denominator[effect.target] += effect.pow
                   else {
-                    // this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                    // this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go down any further.`)
                     return
                   }
               }
@@ -2481,7 +2574,7 @@ export class Pogemon extends Sprite{
                   else statsChangeObj.ally.nominator[effect.target] += 1
         
                   // if(statsChangeObj.ally.nominator[effect.target] > 8) {
-                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                  //   this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go up any further.`)
                   //   return
                   // }
                 } else {
@@ -2490,7 +2583,7 @@ export class Pogemon extends Sprite{
                   else statsChangeObj.foe.nominator[effect.target] += effect.pow
         
                   // if(statsChangeObj.foe.nominator[effect.target] > 8) {
-                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go up any further.`)
+                  //   this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go up any further.`)
                   //   return
                   // }
                 }
@@ -2541,7 +2634,7 @@ export class Pogemon extends Sprite{
                   else statsChangeObj.ally.denominator[effect.target] += effect.pow
         
                   // if(statsChangeObj.ally.denominator[effect.target] > 8) {
-                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                  //   this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go down any further.`)
                   //   return
                   // }
                 } else {
@@ -2549,7 +2642,7 @@ export class Pogemon extends Sprite{
                   else statsChangeObj.foe.denominator[effect.target] += effect.pow
                     
                   // if(statsChangeObj.foe.denominator[effect.target] > 8) {
-                  //   this.dialogue('battle', `${this.name}'s ${effect.target} won't go down any further.`)
+                  //   this.dialogue('battle', `${this.nickname}'s ${effect.target} won't go down any further.`)
                   //   return
                   // }
                 }
@@ -3682,6 +3775,10 @@ export class Pogemon extends Sprite{
         this.statusAnimation('array', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
       // })
     }
+
+    console.log('this needs to happen at the end of every turn')
+
+    this.managePP(move)
   }
 
   statusEffectAnimation(type, renderedSprites, queueProcess, confusionProcess){
@@ -3912,7 +4009,8 @@ export class Pogemon extends Sprite{
       let checkIfTerrainConditionActive = () =>{
         console.log(terrainConditions)
         let flag = false
-        let terrainArr = []
+        const terrainArr = []
+
         Object.values(terrainConditions).forEach((types, i) =>{
           Object.entries(types).forEach((terrainType, j) =>{
             if(terrainType[0] == 'etc' || terrainType[0] == 'weather') 
@@ -3920,6 +4018,7 @@ export class Pogemon extends Sprite{
                 // terrain.active = false
                 // terrain.turns = 5
                 if(terrain[1].active){
+                  console.log(terrain)
                   flag = true
                   terrainArr.push({type: terrain[0], info: terrain[1]})
                 }
@@ -3927,7 +4026,7 @@ export class Pogemon extends Sprite{
           })
         })
 
-        console.log(flag)
+        console.log(terrainArr)
   
         return [flag, terrainArr]
       }
@@ -4043,8 +4142,8 @@ export class Pogemon extends Sprite{
           this.dialogue('battle', `${activeTerrain.info.turns} turns left to ${activeTerrain.type.replace(/_/g, ' ')}.`)
 
           setTimeout(() =>{
-            queueProcess.disabled = false
-            console.log('here')
+            // queueProcess.disabled = false
+            // console.log('here')
           }, 1250)
         }
 
@@ -4057,7 +4156,7 @@ export class Pogemon extends Sprite{
           if(terrainConditions.weatherSpent) return
 
           if(i == 0){
-            if(terrainArr.length = 1) terrainConditions.weatherSpent = true
+            if(terrainArr.length == 1) terrainConditions.weatherSpent = true
             dispatchWeatherHeal()
             spendWeatherTurn(activeTerrain)
           } else if(i < terrainArr.length - 1) {
@@ -4089,7 +4188,7 @@ export class Pogemon extends Sprite{
       }
     }
 
-    const endOfTurnRegenAbility = target =>{
+    const endOfTurnRegen = target =>{
       if(target.hp == target.stats.baseHp) return
 
       if(target.abilityInfo.ability.name == 'slimie_regeneration'){
@@ -4127,18 +4226,45 @@ export class Pogemon extends Sprite{
           this.hpManagement()
         })
       }
+
+      let isTargetPoisonType = false
+
+      if(target.element[0] == 'poison') isTargetPoisonType = true
+      if(target.element[1] == 'poison') isTargetPoisonType = true
+
+      if(target.heldItem != null){
+        if(target.heldItem.name == 'leftovers'){
+          queue.push(() =>{
+            target.dialogue('battle', `${target.nickname}'s leftovers allowed it to heal a bit.`)
+  
+            let healAmount = Math.floor(target.stats.baseHp / 16)
+            target.hp += healAmount
+  
+            target.hpManagement()
+          })
+        } else if(target.heldItem.name == 'poison_Sludge' && isTargetPoisonType){
+          queue.push(() =>{
+            target.dialogue('battle', `${target.nickname}'s black sludge allowed it to heal a bit.`)
+  
+            let healAmount = Math.floor(target.stats.baseHp / 16)
+            target.hp += healAmount
+  
+            target.hpManagement()
+          })
+        }
+      }
     }
 
     // maybe put regen here???????
-    endOfTurnRegenAbility(slower)
-    endOfTurnRegenAbility(faster)
+    endOfTurnRegen(slower)
+    endOfTurnRegen(faster)
   }
 
   // should pass foe instead of slower
   checkStatus(healthBar, healthAmount, renderedSprites, queue, queueProcess, faintEvent, opponent, info, debounce, terrainConditions, manageWeatherState, faintSwitch){
     //makes sure the pogemon isint fainted and that the second pogemon's statusCheck is queued up
 
-    // console.log(this.name)
+    // console.log(this.nickname)
 
     let opponentHealthBar
     let opponentHealthAmount
@@ -4179,7 +4305,7 @@ export class Pogemon extends Sprite{
   
             let chip = Math.floor(this.stats.baseHp / 8)
   
-            this.hp = Math.floor(this.hp - chip)
+            this.hp -= chip
             if(opponent.hp < opponent.stats.baseHp) opponent.hp = Math.floor(opponent.hp + chip)
             if(opponent.hp > opponent.stats.baseHp) opponent.hp = opponent.stats.baseHp
             if(this.hp < 1) this.hp = 0
@@ -4231,7 +4357,7 @@ export class Pogemon extends Sprite{
               chip = Math.floor(this.stats.baseHp / 16)
               // console.log(chip)
               // console.log(this.hp)
-              this.hp = Math.floor(this.hp - chip)
+              this.hp -= chip
               // console.log(this.hp)
               if(this.hp < 1) this.hp = 0
     
@@ -4263,7 +4389,7 @@ export class Pogemon extends Sprite{
               break
             case 'psn':
               chip = Math.floor((this.stats.baseHp / 16) * this.status.turns + 1)
-              this.hp = Math.floor(this.hp - chip)
+              this.hp -= chip
               if(this.hp < 1) this.hp = 0
     
               if(this.isEnemy) {
@@ -4291,7 +4417,7 @@ export class Pogemon extends Sprite{
       }
     }
 
-    // console.log(this.name)
+    // console.log(this.nickname)
     checkForSeededEvent()
 
     //checks if dead
@@ -4682,11 +4808,50 @@ export class Pogemon extends Sprite{
       return false
   }
 
+  eatBerrySprite(renderedSprites){
+    const berryImg = new Image()
+    berryImg.src = 'img/moves/eat_berry.png'
+
+    const berrySprite = new Sprite({
+      type: 'berry',
+      position: {
+        x: 0,
+        y: 0
+      },
+      img: berryImg,
+      frames: {
+        hold: 50,
+        max: 4
+      },
+      animate: true
+    })
+
+    if(this.isEnemy){
+      berrySprite.position = {
+        x: this.position.x - this.width / 8,
+        y: this.position.y + this.height / 4
+      }
+    } else {
+      berrySprite.position = {
+        x: this.position.x + this.width / 4,
+        y: this.position.y + this.height / 0.65
+      }
+    }
+
+    renderedSprites.push(berrySprite)
+    
+    setTimeout(() =>{
+      renderedSprites.pop()
+    }, 1000)
+  }
+
   useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, characters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState, foeMove){
     const item = this.heldItem
 
+    console.log(item)
     if(item == undefined) return
 
+    console.log(this)
     switch(item.effect){
       case 'heal':
         if(item.heldEffect == undefined) return
@@ -4698,62 +4863,101 @@ export class Pogemon extends Sprite{
 
         // if(this.convertToPercentage(this.hp, this.stats.baseHp) > item.heldThreshHold) return
         
-        let healedAmount = item.pow
+        if(typeof item.pow == 'number'){
+          let healedAmount = item.pow
         
-        if(item.heldEffect == 'flatHealing'){
-          this.hp += item.pow
-        } else if(item.heldEffect == 'percentHealing'){
-          healedAmount = Math.floor(this.stats.baseHp * (item.pow / 100))
-          this.hp += healedAmount
+          if(item.heldEffect == 'flatHealing'){
+            this.hp += item.pow
+          } else if(item.heldEffect == 'percentHealing'){
+            healedAmount = Math.floor(this.stats.baseHp * (item.pow / 100))
+            this.hp += healedAmount
+          }
+  
+          if(this.abilityInfo.ability.name == 'cheeck_Pouch'){
+            let cheeckPouchHealAmount = Math.floor(this.stats.baseHp * 0.33)
+            this.hp += cheeckPouchHealAmount
+  
+            healedAmount += cheeckPouchHealAmount
+          }
+  
+          if(this.hp > this.stats.baseHp) {
+            let removeFromHealedAmount = this.hp - this.stats.baseHp
+            healedAmount -= removeFromHealedAmount
+  
+            this.hp = this.stats.baseHp
+          }
+
+          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.switchUnderScoreForSpace(this.heldItem.name)} healed it by ${healedAmount} HP!`)
+        } else {
+          if(this.abilityInfo.ability.name == 'cheeck_Pouch') this.hp += Math.floor(this.stats.baseHp * 0.33)
+          
+          console.log(this.status.name)
+          console.log(item.pow)
+
+          this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.switchUnderScoreForSpace(this.heldItem.name)} cured it of it's status ailment!`)
+
+          let recipientStatus
+          
+          if(this.isEnemy) recipientStatus = document.querySelector('#foeStatus')
+          else recipientStatus = document.querySelector('#allyStatus')
+      
+          recipientStatus.style.display = 'none'
+          recipientStatus.src = ''
+
+          this.status.name = null
+          this.status.turns = 0
         }
-
-        if(this.abilityInfo.ability.name == 'cheeck_Pouch'){
-          let cheeckPouchHealAmount = Math.floor(this.stats.baseHp * 0.33)
-          this.hp += cheeckPouchHealAmount
-
-          healedAmount += cheeckPouchHealAmount
-        }
-
-        if(this.hp > this.stats.baseHp) {
-          let removeFromHealedAmount = this.hp - this.stats.baseHp
-          healedAmount -= removeFromHealedAmount
-
-          this.hp = this.stats.baseHp
-        }
+        
 
         this.hpManagement()
-        this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.heldItem.name} healed it by ${healedAmount} HP!`)
+        this.eatBerrySprite(renderedSprites)
+        break
+      case 'pp':
+        for(let i = 0; i < this.moves.length; i++){
+          const move = this.moves[i]
+          
+          if(move.pp == 0){
+            if(this.abilityInfo.ability.name == 'cheeck_Pouch') this.hp += Math.floor(this.stats.baseHp * 0.33)
+
+            this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.switchUnderScoreForSpace(this.heldItem.name)} restored some of it's pp!`)
+
+            this.hpManagement()
+            this.eatBerrySprite(renderedSprites)
+            break
+          }
+        }
         break
       case 'sturdy':
-        if(this.hp != 0) return
-        if(this.fainted) return
-        if(item.name == 'focusSash') if(targetHpBeforeMove !== 100) return
+        // if(this.hp != 0) return
+        // if(this.fainted) return
+        // if(item.name == 'focusSash') if(targetHpBeforeMove !== 100) return
 
-        const rng = Math.floor(Math.random() * 99) + 1
+        // const rng = Math.floor(Math.random() * 99) + 1
         
-        if(rng > this.heldItem.odds) return
+        // if(rng > this.heldItem.odds) return
 
-        if(this.fainted == false){
-          this.hp = 1
-          this.fainted = false
-          this.hpManagement()
-          queueProcess.disabled = true
-          console.log('there')
-          this.dialogue('battle', `Thanks to it's ${this.switchUnderScoreForSpace(this.heldItem.name)}, ${this.switchUnderScoreForSpace(this.nickname)} held on by the grit of it's teeth!`)
+        // if(this.fainted == false){
+        //   this.hp = 1
+        //   this.fainted = false
+        //   this.hpManagement()
+        //   queueProcess.disabled = true
+        //   console.log('there')
 
-          //change stuff here for sure
+        //   //change stuff here for sure
   
-          queue.push(() => {
-            if(this.isEnemy) this.move({move: moves.foe, recipient: characters.ally, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
-            else this.move({move: moves.ally, recipient: characters.foe, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
-            console.log('YAYA')
-          })
+          
+        //   if(this.isEnemy) this.move({move: moves.foe, recipient: characters.ally, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+        //   else this.move({move: moves.ally, recipient: characters.foe, recipientMove: foeMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+        //   console.log('YAYA')
+
+
+        //   this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThanks to it's ${this.switchUnderScoreForSpace(this.heldItem.name)}, ${this.switchUnderScoreForSpace(this.nickname)} held on by the grit of it's teeth!`)
   
-          setTimeout(() =>{
-            queueProcess.disabled = false
-            console.log('here')
-          }, 500)
-        }
+        //   setTimeout(() =>{
+        //     queueProcess.disabled = false
+        //     console.log('here')
+        //   }, 500)
+        // }
         break
     }
 
@@ -4764,6 +4968,16 @@ export class Pogemon extends Sprite{
     this.friendliness += amount
     if(this.friendliness < 0) this.friendliness = 0
     if(this.friendliness > 255) this.friendliness = 255
+  }
+
+  rerollEnemyMoveSoNotStatus(){
+    let foeRNGMove = this.moves[Math.floor(Math.random() * this.moves.length)]
+
+    if(this.choiceItem.move != null) if(this.affliction[2].active && this.choiceItem.move == 'status') foeRNGMove = movesObj.struggle
+    if(this.heldItem != null) if(this.heldItem.name == 'assault_Vest' && foeRNGMove.type == 'status') this.rerollEnemyMoveSoNotStatus()
+    if(this.affliction[2].active && foeRNGMove.type == 'status') this.rerollEnemyMoveSoNotStatus()
+
+    return foeRNGMove
   }
 }
 
@@ -4915,10 +5129,18 @@ export class Character extends Sprite{
     if(ball != undefined) this.dialogue('battle', `You throw a ${ball.name} at ${pogemon.switchUnderScoreForSpace(pogemon.nickname)}.`)
 
     const catchCalc = ball => {
+      let pass = false
+
       let statusBonus = 1
+
       const rng = Math.floor(Math.random() * 100)
       const rate = Math.floor(((3 * pogemon.stats.baseHp - 2 * pogemon.hp) * pogemon.pogemon.catchRate * ball.pow / (3 * pogemon.stats.baseHp) * statusBonus))
-      return {rng, rate} 
+
+      console.log(rate)
+
+      if(rng <= rate) pass = true
+
+      return pass
     }
     
     const markAsCaught = () =>{
@@ -4931,9 +5153,8 @@ export class Character extends Sprite{
     }
 
     const catchEvent = ballSprite => {
-      const {rng, rate} = catchCalc(ball)
       // rng <= rate
-      if(rng <= rate){
+      if(catchCalc(ball)){
         pogemon.dialogue('battle', `${pogemon.switchUnderScoreForSpace(pogemon.nickname)} decided to become your companion! :D`)
         renderedSprites.splice(1,1)
         console.log('remove sprite')
@@ -4977,7 +5198,7 @@ export class Character extends Sprite{
                   document.querySelector('#proceedImg').style.display = 'block'
                 }, 250)
                 queue.push(() =>{
-                  let foeRNGMove = pogemon.moves[Math.floor(Math.random() * pogemon.moves.length)]
+                  let foeRNGMove = this.rerollEnemyMoveSoNotStatus()
 
                   // let rng = Math.floor(Math.random() * 2)
 
@@ -5101,7 +5322,7 @@ export class Character extends Sprite{
 
       //working here
       //trying to make animation for pogeball
-      newPogemon = pogemon
+      newPogemon = pogemon 
 
       const ballImg = new Image()
       ballImg.src = ball.animation

@@ -122,7 +122,7 @@ function statsSceneMovesInteraction(e, state){
     document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
 
     e.target.style.backgroundColor = 'rgba(75,75,75,0.35)'
-    // printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
+    printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
 
     document.querySelector('#statsSceneMovesInterface').style.display = 'grid'
 
@@ -152,34 +152,32 @@ function printMoveDesc(selectedMove){
   if(selectedMove == undefined) return
   const statsSceneMovesInterfaceDescContainer = document.querySelector('#statsSceneMovesInterfaceDescContainer')
 
-  for(let i = 0; i < 8; i++){
+  for(let i = 0; i < 7; i++){
     const statsSceneMovesInterfaceMoveDescContent = document.createElement('div')
     statsSceneMovesInterfaceMoveDescContent.setAttribute('class', 'statsSceneMovesInterfaceMoveDescContent')
-    if(Object.keys(selectedMove)[i] == 'effects') {
-      statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : null`
-      if(Object.values(selectedMove)[i] != null){
-      	statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.keys(Object.values(selectedMove)[i])}`
-      }
-    } else {
-			if(i == 2){
-				const statsSceneMovesInterfaceMoveDescElementTag = document.createElement('span')
-				statsSceneMovesInterfaceMoveDescElementTag.textContent = `${Object.keys(selectedMove)[i]} : `
-				statsSceneMovesInterfaceMoveDescElementTag.setAttribute('class', 'statsElementContent')
+		if(i == 2){
+			const statsSceneMovesInterfaceMoveDescElementTag = document.createElement('span')
+			statsSceneMovesInterfaceMoveDescElementTag.textContent = `${Object.keys(selectedMove)[i]} : `
+			statsSceneMovesInterfaceMoveDescElementTag.setAttribute('class', 'statsElementContent')
 
-				const statsSceneMovesInterfaceMoveDescElementName = document.createElement('span')
-				statsSceneMovesInterfaceMoveDescElementName.textContent = Object.values(selectedMove)[i]
-				statsSceneMovesInterfaceMoveDescElementName.style.color = typesObj[Object.values(selectedMove)[i]].color
-				statsSceneMovesInterfaceMoveDescElementName.setAttribute('class', 'statsElementContent')
-	
-				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementTag)
-				statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementName)
-			} else {
-				if(i == 0) {
-					statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i].replace(/_/g, ' ')}`
-				}
-				else statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i]}`
+			const statsSceneMovesInterfaceMoveDescElementName = document.createElement('span')
+			statsSceneMovesInterfaceMoveDescElementName.textContent = Object.values(selectedMove)[i]
+			statsSceneMovesInterfaceMoveDescElementName.style.color = typesObj[Object.values(selectedMove)[i]].color
+			statsSceneMovesInterfaceMoveDescElementName.setAttribute('class', 'statsElementContent')
+
+			statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementTag)
+			statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementName)
+		} else if (i <= 5) {
+			if(i == 0) {
+				statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i].replace(/_/g, ' ')}`
 			}
-    }
+			else statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i]}`
+		} else {
+			statsSceneMovesInterfaceMoveDescContent.id = 'statsSceneMoveDescContainer'
+
+			console.log(selectedMove)
+			statsSceneMovesInterfaceMoveDescContent.innerText = selectedMove.desc
+		}
 
     statsSceneMovesInterfaceDescContainer.appendChild(statsSceneMovesInterfaceMoveDescContent)
   }
@@ -389,6 +387,7 @@ function createMenu(){
 						break
 					case 2:
 						statsSceneGridSectionPogemon.setAttribute('id', 'statsSceneGridSectionPogemonHPContainer')
+						
 						for(let i = 0; i < 2; i++){
 							const statsSceneGridSectionPogemonSectionHpContainer = document.createElement('div')
 

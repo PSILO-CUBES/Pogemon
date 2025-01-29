@@ -4,16 +4,29 @@ export const movesObj = {
                               // physical
 
   // normal
+  struggle:{
+    name: 'struggle',
+    type: 'physical',
+    element: 'normal',
+    pow: 50,
+    acc: 100,
+    pp: 56,
+    effects: [{recoil: 50}],
+    priority: 0,
+    animationType: 'physical',
+    desc: 'User loses 1/4 of its max HP.'
+  },
   tackle:{
     name: 'tackle',
     type: 'physical',
     element: 'normal',
-    pow: 50,
+    pow: 40,
     acc: 95,
     pp: 48,
     effects: null,
     priority: 0,
-    animationType: 'physical'
+    animationType: 'physical',
+    desc: 'No additional effect.'
   },
   quick_attack:{
     name: 'quick_attack',
@@ -24,7 +37,8 @@ export const movesObj = {
     pp: 36,
     effects: null,
     priority: 1,
-    animationType: 'physical'
+    animationType: 'physical',
+    desc: 'Usually goes first.'
   },
   rapid_spin:{
     name: 'rapid_spin',
@@ -35,7 +49,8 @@ export const movesObj = {
     pp: 64,
     effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
     priority: 0,
-    animationType: 'physical'
+    animationType: 'physical',
+    desc: 'Free user from hazards/bind/Leech Seed; +1 Spe.'
   },
   slash:{
     name: 'slash',
@@ -47,7 +62,8 @@ export const movesObj = {
     effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/slash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'High critical hit ratio.'
   },
   headbutt:{
     name: 'headbutt',
@@ -58,7 +74,8 @@ export const movesObj = {
     pp: 24,
     effects: [{flinched: 30}],
     priority: 0,
-    animationType: 'physical'
+    animationType: 'physical',
+    desc: '30% chance to make the target flinch.'
   },
   extreme_speed:{
     name: 'extreme_speed',
@@ -69,18 +86,8 @@ export const movesObj = {
     pp: 16,
     effects: null,
     priority: 2,
-    animationType: 'physical'
-  },
-  struggle:{
-    name: 'struggle',
-    type: 'physical',
-    element: 'normal',
-    pow: 50,
-    acc: 100,
-    pp: 56,
-    effects: [{recoil: 50}],
-    priority: 0,
-    animationType: 'physical'
+    animationType: 'physical',
+    desc: 'Nearly always goes first.'
   },
 
   // grass
@@ -94,7 +101,8 @@ export const movesObj = {
     effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/green_slash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'High critical hit ratio.'
   },
   horn_leech:{
     name: 'horn_leech',
@@ -106,7 +114,8 @@ export const movesObj = {
     effects: [{leech: 50}],
     priority: 0,
     sprite: '../../img/moves/horn_leech.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'User recovers 50% of the damage dealt.'
   },
   leaf_blade:{
     name: 'leaf_blade',
@@ -118,7 +127,8 @@ export const movesObj = {
     effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/green_slash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'High critical hit ratio.'
   },
 
   // water
@@ -132,7 +142,8 @@ export const movesObj = {
     effects: null,
     priority: 1,
     sprite: '../../img/moves/water_hit.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'Usually goes first.'
   },
   waterfall:{
     name: 'waterfall',
@@ -144,7 +155,8 @@ export const movesObj = {
     effects: [{flinched: 20}],
     priority: 1,
     sprite: '../../img/moves/waterfall.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: '20% chance to make the target flinch.'
   },
   wave_crash:{
     name: 'wave_crash',
@@ -156,7 +168,8 @@ export const movesObj = {
     effects: [{recoil: 33}],
     priority: 1,
     sprite: '../../img/moves/waterfall.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: 'Has 33% recoil.'
   },
 
   //fire
@@ -170,7 +183,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/fire_hit.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to raise the user's Speed by 1."
   },
   fire_punch:{
     name: 'fire_punch',
@@ -182,7 +196,8 @@ export const movesObj = {
     effects: [{burn: 20}],
     priority: 0,
     sprite: '../../img/moves/red_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: '10% chance to burn the target.'
   },
   fire_lash:{
     name: 'fire_lash',
@@ -194,7 +209,8 @@ export const movesObj = {
     effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/fire_hit.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Defense by 1."
   },
   flare_blitz:{
     name: 'flare_blitz',
@@ -206,7 +222,8 @@ export const movesObj = {
     effects: [{recoil: 33}],
     priority: 0,
     sprite: '../../img/moves/red_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Has 33% recoil. 10% chance to burn. Thaws user."
   },
 
   // electric
@@ -220,7 +237,8 @@ export const movesObj = {
     effects: [{para: 100, type: 'status'}],
     priority: 0,
     sprite: '../../img/moves/para.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to paralyze the target."
   },
   thunder_punch:{
     name: 'thunder_punch',
@@ -232,7 +250,8 @@ export const movesObj = {
     effects: [{para: 10}],
     priority: 0,
     sprite: '../../img/moves/yellow_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to paralyze the target."
   },
   volt_tackle:{
     name: 'volt_tackle',
@@ -244,7 +263,8 @@ export const movesObj = {
     effects: [{recoil: 33}],
     priority: 0,
     sprite: '../../img/moves/yellow_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Has 33% recoil. 10% chance to paralyze target."
   },
 
   // bug
@@ -258,7 +278,8 @@ export const movesObj = {
     effects: [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/bug.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Speed by 1."
   },
   u_turn:{
     name: 'u_turn',
@@ -270,7 +291,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/u_turn.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "User switches out after damaging the target."
   },
   x_scissor:{
     name: 'x_scissor',
@@ -282,7 +304,8 @@ export const movesObj = {
     effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/bug.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   megahorn:{
     name: 'megahorn',
@@ -294,7 +317,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/megahorn.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "No additional effect."
   },
 
   // flying
@@ -308,7 +332,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/gust.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "No additional effect."
   },
   drill_peck:{
     name: 'drill_peck',
@@ -320,7 +345,8 @@ export const movesObj = {
     effects: [{crit: 1}],
     priority: 0,
     sprite: '../../img/moves/gust.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   brave_bird:{
     name: 'brave_bird',
@@ -332,7 +358,8 @@ export const movesObj = {
     effects: [{recoil: 33}],
     priority: 0,
     sprite: '../../img/moves/brave_bird.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Has 33% recoil."
   },
 
   // dark
@@ -346,7 +373,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/theif.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "If the user has no item, it steals the target's."
   },
   brutal_swing:{
     name: 'brutal_swing',
@@ -358,7 +386,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/dark.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "No additional effect."
   },
   knock_off:{
     name: 'knock_off',
@@ -370,7 +399,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/knock_off.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "1.5x damage if foe holds an item. Removes item."
   },
   sucker_punch:{
     name: 'sucker_punch',
@@ -382,7 +412,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/punch.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Usually goes first. Fails if target is not attacking."
   },
   crunch:{
     name: 'crunch',
@@ -394,7 +425,8 @@ export const movesObj = {
     effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 20}],
     priority: 0,
     sprite: '../../img/moves/crunch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "20% chance to lower the target's Defense by 1."
   },
 
   // rock
@@ -408,7 +440,8 @@ export const movesObj = {
     effects: null,
     priority: 1,
     sprite: '../../img/moves/rock.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Usually goes first."
   },
   rock_slide:{
     name: 'rock_slide',
@@ -420,7 +453,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/rock_slide.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "30% chance to make the foe(s) flinch."
   },
   stone_miss:{
     name: 'stone_miss',
@@ -432,7 +466,8 @@ export const movesObj = {
     effects: [{crit: 2}],
     priority: 0,
     sprite: '../../img/moves/stone_miss.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   head_smash:{
     name: 'head_smash',
@@ -444,7 +479,8 @@ export const movesObj = {
     effects: [{recoil: 50}],
     priority: 0,
     sprite: '../../img/moves/head_smash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Has 1/2 recoil."
   },
 
   // fighting
@@ -458,7 +494,8 @@ export const movesObj = {
     effects: null,
     priority: 1,
     sprite: '../../img/moves/punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Usually goes first."
   },
   rock_smash:{
     name: 'rock_smash',
@@ -470,7 +507,8 @@ export const movesObj = {
     effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 50}],
     priority: 0,
     sprite: '../../img/moves/rock_smash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "50% chance to lower the target's Defense by 1."
   },
   drain_punch:{
     name: 'drain_punch',
@@ -482,19 +520,21 @@ export const movesObj = {
     effects: [{leech: 50}],
     priority: 0,
     sprite: '../../img/moves/punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "User recovers 50% of the damage dealt."
   },
   lokick:{
     name: 'lokick',
     type: 'physical',
     element: 'fighting',
-    pow: 175,
+    pow: 25,
     acc: 100,
     pp: 24,
     effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats',}],
     priority: 0,
     sprite: '../../img/moves/lokick.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to raise the user's Attack by 1."
   },
   thunderous_kick:{
     name: 'thunderous_kick',
@@ -506,23 +546,23 @@ export const movesObj = {
     effects: [{name: 'buff', target:'def', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/lokick.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Defense by 1."
   },
-  super_power: {
-    name: 'super_power',
+  close_Combat: {
+    name: 'close_Combat',
     type: 'physical',
     element: 'fighting',
     pow: 120,
     acc: 90,
-    pp: 30,
-    effects: [{name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}],
+    pp: 8,
+    effects: [{name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'spdef', pow: 1, type: 'stats'}],
     priority: 0,
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/superpower.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Lowers the user's Defense and Sp. Def by 1."
   },
 
   // ground
@@ -538,7 +578,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/earth.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Speed by 1."
   },
   drill_run:{
     name: 'drill_run',
@@ -552,7 +593,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/earth.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   earthquake:{
     name: 'earthquake',
@@ -566,7 +608,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/earth.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "No additional effect."
   },
 
   // ghost
@@ -582,7 +625,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/shadow_sneak.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Usually goes first."
   },
   shadow_punch:{
     name: 'shadow_punch',
@@ -596,7 +640,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/shadow_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "This move does not check accuracy."
   },
   shadow_claw:{
     name: 'shadow_claw',
@@ -610,7 +655,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/shadow_claw.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   
   // poison
@@ -626,7 +672,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/poison_fang.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "50% chance to badly poison the target."
   },
   poison_jab:{
     name: 'poison_jab',
@@ -640,7 +687,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/poison_jab.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "30% chance to poison the target."
   },
   gunk_shot:{
     name: 'gunk_shot',
@@ -654,7 +702,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/poison_jab.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "30% chance to poison the target."
   },
 
   // steel
@@ -670,7 +719,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/bullet_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Usually goes first."
   },
   metal_claw:{
     name: 'metal_claw',
@@ -684,7 +734,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/metal_claw.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to raise the user's Attack by 1."
   },
   iron_head:{
     name: 'iron_head',
@@ -698,7 +749,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/iron_head.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "30% chance to make the target flinch."
   },
 
   // psychic
@@ -714,7 +766,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/psycho_cut.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "High critical hit ratio."
   },
   psychic_fang:{
     name: 'psychic_fang',
@@ -728,7 +781,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/psychic_fang.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Destroys screens, unless the target is immune."
   },
 
   // ice
@@ -744,7 +798,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/ice_shard.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Usually goes first."
   },
   ice_punch:{
     name: 'ice_punch',
@@ -758,7 +813,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/blue_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Defense by 1."
   },
   icicle_crash:{
     name: 'icicle_crash',
@@ -772,7 +828,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/icicle_crash.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to freeze the target."
   },
   ice_hammer:{
     name: 'ice_hammer',
@@ -786,7 +843,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/blue_punch.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Lowers the user's Speed by 1."
   },
 
   // fairy
@@ -802,7 +860,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/spirit_break.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the target's Sp. Atk by 1."
   },
   play_rought:{
     name: 'play_rought',
@@ -816,7 +875,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/spirit_break.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to lower the target's Attack by 1."
   },
 
   // dragon
@@ -832,7 +892,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/breaking_swipe.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "100% chance to lower the foe(s) Attack by 1."
   },
   dragon_claw:{
     name: 'dragon_claw',
@@ -846,7 +907,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/dragon_claw.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "No additional effect."
   },
   dragon_rush:{
     name: 'dragon_rush',
@@ -860,7 +922,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/breaking_swipe.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "20% chance to make the target flinch."
   },
 
                               // special
@@ -878,7 +941,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/swift.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "This move does not check accuracy."
   },
   boomburst: {
     name: 'boomburst',
@@ -893,7 +957,8 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/boomburst.png',
     animationType: 'specialSprite',
-    sound: true
+    sound: true,
+    desc: "No additional effect."
   },
 
   // grass
@@ -910,6 +975,7 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/drain.png',
     animationType: 'specialSprite',
+    desc: "User recovers 50% of the damage dealt."
   },
   mega_drain: {
     name: 'mega_drain',
@@ -924,6 +990,7 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/drain2.png',
     animationType: 'specialSprite',
+    desc: "User recovers 50% of the damage dealt."
   },
   magical_leaf: {
     name: 'magical_leaf',
@@ -938,6 +1005,7 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/magical_leaf.png',
     animationType: 'specialSprite',
+    desc: "This move does not check accuracy."
   },
   giga_drain: {
     name: 'giga_drain',
@@ -952,6 +1020,7 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/drain3.png',
     animationType: 'specialSprite',
+    desc: "User recovers 50% of the damage dealt."
   },
   energy_ball: {
     name: 'energy_ball',
@@ -966,9 +1035,10 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/energy_ball.png',
     animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
-  leaf_tornado: {
-    name: 'leaf_tornado',
+  leaf_storm: {
+    name: 'leaf_storm',
     type: 'special',
     element: 'grass',
     pow: 130,
@@ -980,6 +1050,7 @@ export const movesObj = {
     duration: 0.5,
     sprite: '../../img/moves/leaf_tornado.png',
     animationType: 'specialSprite',
+    desc: "Lowers the user's Sp. Atk by 2."
   },
 
   // water
@@ -995,7 +1066,8 @@ export const movesObj = {
     rotation: {ally: -2, foe: 1},
     duration: 0.5,
     sprite: '../../img/moves/watergun.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
   scald:{
     name: 'scald',
@@ -1009,7 +1081,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/scald.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to burn the target. Thaws target."
   },
   surf:{
     name: 'surf',
@@ -1023,7 +1096,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/surf.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Hits adjacent Pokemon. Double damage on Dive."
   },
   hydro_pump:{
     name: 'hydro_pump',
@@ -1037,7 +1111,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 0.5,
     sprite: '../../img/moves/surf.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
 
   // fire
@@ -1048,14 +1123,15 @@ export const movesObj = {
     pow: 50,
     acc: 100,
     pp: 30,
-    effects: [{burn: 100}],
+    effects: [{burn: 10}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 0.5,
     sprite: '../../img/moves/fireball.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to burn the target."
   },
   mystical_fire:{
     name: 'mystical_fire',
@@ -1070,7 +1146,8 @@ export const movesObj = {
     sprite: '../../img/moves/mystical_fire.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to lower the target's Sp. Atk by 1."
   },
   flamethrower:{
     name: 'flamethrower',
@@ -1085,7 +1162,8 @@ export const movesObj = {
     sprite: '../../img/moves/flamethrower.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to burn the target."
   },
   overheat:{
     name: 'overheat',
@@ -1100,7 +1178,8 @@ export const movesObj = {
     sprite: '../../img/moves/overheat.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Lowers the user's Sp. Atk by 2."
   },
   fire_miss:{
     name: 'fire_miss',
@@ -1115,7 +1194,8 @@ export const movesObj = {
     sprite: '../../img/moves/fire_blast.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to burn the target."
   },
 
   // electric
@@ -1130,7 +1210,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/charge_beam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "70% chance to raise the user's Sp. Atk by 1."
   },
   shock_wave:{
     name: 'shock_wave',
@@ -1143,7 +1224,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/charge_beam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "This move does not check accuracy."
   },
   volt_switch:{
     name: 'volt_switch',
@@ -1156,7 +1238,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/charge_beam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "User switches out after damaging the target."
   },
   thunderbolt:{
     name: 'thunderbolt',
@@ -1169,7 +1252,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/thunderbolt.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to paralyze the target."
   },
   thunder:{
     name: 'thunder',
@@ -1183,7 +1267,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/thunder.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "30% chance to paralyze. Can't miss in rain."
   },
 
   // bug
@@ -1198,7 +1283,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/struggle_bug.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to lower the foe(s) Sp. Atk by 1."
   },
   bug_buzz:{
     name: 'bug_buzz',
@@ -1212,7 +1298,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/bug_buzz.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
 
   // flying
@@ -1227,7 +1314,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/gust.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
   air_slash:{
     name: 'air_slash',
@@ -1240,7 +1328,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/air_slash.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to make the target flinch."
   },
   aeroblast:{
     name: 'aeroblast',
@@ -1253,7 +1342,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/boomburst.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "High critical hit ratio."
   },
   hurricane:{
     name: 'hurricane',
@@ -1267,7 +1357,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/hurricane.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to confuse target. Can't miss in rain."
   },
 
   // dark
@@ -1282,7 +1373,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/snarl.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to lower the foe(s) Sp. Atk by 1."
   },
   dark_pulse:{
     name: 'dark_pulse',
@@ -1295,7 +1387,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/snarl.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "20% chance to make the target flinch."
   },
 
   // rock
@@ -1310,7 +1403,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/ancient_power.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to raise all stats by 1."
   },
   power_gem:{
     name: 'power_gem',
@@ -1323,7 +1417,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/ancient_power.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
 
   // fighting
@@ -1338,7 +1433,8 @@ export const movesObj = {
     priority: 1,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/vacuum_wave.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Usually goes first."
   },
   aura_sphere: {
     name: 'aura_sphere',
@@ -1351,7 +1447,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/aura_sphere.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "This move does not check accuracy."
   },
   focus_miss: {
     name: 'focus_miss',
@@ -1364,7 +1461,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/aura_sphere.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
 
   // ground
@@ -1379,7 +1477,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/mud_shot.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to lower the target's Speed by 1."
   },
   scorching_sands: {
     name: 'scorching_sands',
@@ -1392,7 +1491,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/scorching_sands.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to burn the target."
   },
   earth_power: {
     name: 'earth_power',
@@ -1405,7 +1505,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/mud_shot.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
 
   // ghost
@@ -1421,7 +1522,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/ghastly_whisper.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
   shadow_ball:{
     name: 'shadow_ball',
@@ -1435,7 +1537,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/shadowball.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "20% chance to lower the target's Sp. Def by 1."
   },
   hex:{
     name: 'hex',
@@ -1448,7 +1551,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/hex.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Power doubles if the target has a status ailment."
   },
 
   // poison
@@ -1464,7 +1568,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/clear_smog.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Resets all of the target's stat stages to 0."
   },
   sludge:{
     name: 'sludge',
@@ -1477,7 +1582,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/sludge.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to poison the target."
   },
   sludge_bomb:{
     name: 'sludge_bomb',
@@ -1490,7 +1596,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/sludge.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to poison the target."
   },
 
   // steel
@@ -1505,7 +1612,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/flash_cannon.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
 
   // psychic
@@ -1520,7 +1628,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/psy_beam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to confuse the target."
   },
   mystical_power: {
     name: 'mystical_power',
@@ -1533,7 +1642,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/psy_strike.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to raise the user's Sp. Atk by 1."
   },
   psychic: {
     name: 'psychic',
@@ -1546,7 +1656,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/psy_strike.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to lower the target's Sp. Def by 1."
   },
   dream_eater: {
     name: 'dream_eater',
@@ -1559,7 +1670,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/dream_eater.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "User gains 1/2 HP inflicted. Sleeping target only."
   },
   psycho_boost: {
     name: 'psycho_boost',
@@ -1572,7 +1684,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/psycho_boost.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Lowers the user's Sp. Atk by 2."
   },
 
   // ice
@@ -1587,7 +1700,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/frost_breath.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "100% chance to lower the foe(s) Speed by 1."
   },
   frost_breath: {
     name: 'frost_breath',
@@ -1600,7 +1714,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/frost_breath.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "Always results in a critical hit."
   },
   freeze_dry: {
     name: 'freeze_dry',
@@ -1613,7 +1728,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/freeze_dry.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to freeze. Super effective on Water."
   },
   ice_beam: {
     name: 'ice_beam',
@@ -1626,7 +1742,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 1, foe: -2},
     sprite: '../../img/moves/ice_beam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "10% chance to freeze the target."
   },
   blizzard: {
     name: 'blizzard',
@@ -1640,7 +1757,8 @@ export const movesObj = {
     snow: true,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/blizzard.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "10% chance to freeze foe(s). Can't miss in Snow."
   },
 
   // fairy
@@ -1655,7 +1773,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/draining_kiss.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "User recovers 75% of the damage dealt."
   },
   dazzling_gleam: {
     name: 'dazzling_gleam',
@@ -1668,7 +1787,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/dazzling_gleam.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
   moonblast: {
     name: 'moonblast',
@@ -1681,7 +1801,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/moonblast.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to lower the target's Sp. Atk by 1."
   },
   puppet_realm: {
     name: 'puppet_realm',
@@ -1694,7 +1815,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/puppet_realm.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to put the target to sleep."
   },
 
   // dragon
@@ -1709,7 +1831,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/dragon_breath.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "30% chance to paralyze the target."
   },
   dragon_pulse: {
     name: 'dragon_pulse',
@@ -1722,7 +1845,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/dragon_pulse.png',
-    animationType: 'specialSprite'
+    animationType: 'specialSprite',
+    desc: "No additional effect."
   },
   draco_meteor: {
     name: 'draco_meteor',
@@ -1735,7 +1859,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/draco_meteor.png',
-    animationType: 'physicalSprite'
+    animationType: 'physicalSprite',
+    desc: "Lowers the user's Sp. Atk by 2."
   },
 
                               // status
@@ -1755,9 +1880,8 @@ export const movesObj = {
     duration: 0,
     //sprite set to blank because animation is done with css so no sprite is used
     sprite: '../../img/moves/blank.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Prevents moves from affecting the user this turn."
   },
   substitute: {
     name: 'substitute',
@@ -1773,9 +1897,8 @@ export const movesObj = {
     duration: 0,
     //sprite set to blank because animation is done with css so no sprite is used
     sprite: '../../img/moves/blank.png',
-    initAudio: audioObj.SFX.initFireBall,
-    hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'status'
+    animationType: 'status',
+    desc: "User takes 1/4 its max HP to put in a substitute."
   },  
   milk_drink:{
     name: 'milk_drink',
@@ -1789,7 +1912,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/heal.png',
-    animationType: 'healng'
+    animationType: 'healing',
+    desc: "Heals the user by 50% of its max HP."
   },
   recover:{
     name: 'recover',
@@ -1803,7 +1927,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/heal.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by 50% of its max HP."
   },
   rest:{
     name: 'rest',
@@ -1817,7 +1942,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/slp.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "User falls asleep turns and restores HP and status."
   },
 
   // grass
@@ -1830,9 +1956,10 @@ export const movesObj = {
     pp: 32,
     effects: [{seeded: 100, type: 'status'}],
     priority: 0,
-    rotation: {ally: 1, foe: -2},
+    rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/seed.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "1/8 of target's HP is restored to user every turn."
   },
   poison_powder:{
     name: 'poison_powder',
@@ -1845,7 +1972,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/poison_powder.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Poisons the target."
   },
   stun_spore:{
     name: 'stun_spore',
@@ -1858,7 +1986,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/stun_spore.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Paralyzes the target."
   },
   sleep_powder:{
     name: 'sleep_powder',
@@ -1871,7 +2000,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/sleep_powder.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Causes the target to fall asleep."
   },
   spore:{
     name: 'spore',
@@ -1884,7 +2014,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/spore.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Causes the target to fall asleep."
   },
 
   // water
@@ -1898,7 +2029,8 @@ export const movesObj = {
     effects: [{rain: 100, type: 'weather'}],
     priority: 0,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "For 5 turns, heavy rain powers Water moves."
   },
   withdraw:{
     name: 'withdraw',
@@ -1910,10 +2042,11 @@ export const movesObj = {
     effects: [{name: 'buff', target:'def', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/withdraw.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Defense by 1."
   },
-  rain_dish:{
-    name: 'rain_dish',
+  puddle_break:{
+    name: 'puddle_break',
     type: 'heal',
     element: 'water',
     pow: '---',
@@ -1922,7 +2055,8 @@ export const movesObj = {
     effects: [25,50,75],
     priority: 0,
     sprite: '../../img/moves/rain_dish.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by a weather-dependent amount."
   },
 
   // fire
@@ -1942,7 +2076,8 @@ export const movesObj = {
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Burns the target."
   },
   sunny_day:{
     name: 'sunny_day',
@@ -1956,7 +2091,8 @@ export const movesObj = {
     sprite: '../../img/moves/blank.png',
     initAudio: audioObj.SFX.initFireBall,
     hitAudio: audioObj.SFX.hitFireBall,
-    animationType: 'status'
+    animationType: 'status',
+    desc: "For 5 turns, intense sunlight powers Fire moves."
   },
   morning_sun:{
     name: 'morning_sun',
@@ -1968,7 +2104,8 @@ export const movesObj = {
     effects: [25,50,75],
     priority: 0,
     sprite: '../../img/moves/morning_sun.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by a weather-dependent amount."
   },
 
   // electric
@@ -1984,7 +2121,8 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/thunderwave.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Paralyzes the target."
   },
   eerie_impulse:{
     name: 'eerie_impulse',
@@ -1997,7 +2135,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/eerie_impulse.png',
-    animationType: 'stats'
+    animationType: 'stats',
+    desc: "Lowers the target's Sp. Atk by 2."
   },
 
   // bug
@@ -2012,7 +2151,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/string_shot.png',
-    animationType: 'stats'
+    animationType: 'stats',
+    desc: "Lowers the foe(s) Speed by 2."
   },
   sticky_web:{
     name: 'sticky_web',
@@ -2025,7 +2165,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/sticky_web.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Lowers Speed of grounded foes by 1 on switch-in."
   },
   quiver_dance:{
     name: 'quiver_dance',
@@ -2038,7 +2179,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/quiver_dance.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Sp. Atk, Sp. Def, Speed by 1."
   },
   tail_glow:{
     name: 'tail_glow',
@@ -2051,7 +2193,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/tail_glow.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Sp. Atk by 3."
   },
 
   // flying
@@ -2070,7 +2213,8 @@ export const movesObj = {
       x: 200,
       y: 250
     },
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Speed by 1."
   },
   roost:{
     name: 'roost',
@@ -2082,7 +2226,8 @@ export const movesObj = {
     effects: [50],
     priority: 0,
     sprite: '../../img/moves/feather_weight.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals 50% HP. Flying-type removed 'til turn ends."
   },
   defog:{
     name: 'defog',
@@ -2094,7 +2239,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/defog.png',
-    animationType: 'statusSelf'
+    animationType: 'statusSelf',
+    desc: "ends user and target hazards/terrain."
   },
 
   // dark
@@ -2114,7 +2260,8 @@ export const movesObj = {
       x: 450,
       y: 175
     },
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Lowers the foe(s) Attack by 1."
   },
   stare:{
     name: 'stare',
@@ -2127,6 +2274,7 @@ export const movesObj = {
     priority: 0,
     animationType: 'statsSelf',
     sprite: '../../img/moves/stare.png',
+    desc: "Lowers the foe(s) Defense by 1."
   },
   nasty_plot:{
     name: 'nasty_plot',
@@ -2139,7 +2287,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/nasty_plot.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Sp. Atk by 2."
   },
   taunt:{
     name: 'taunt',
@@ -2152,7 +2301,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/taunt.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Target can't use status moves its next 3 turns."
   },
 
   // rock
@@ -2166,7 +2316,8 @@ export const movesObj = {
     effects: [{sand: 100, type: 'weather'}],
     priority: 0,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "For 5 turns, a sandstorm rages. Rock: 1.5x SpD."
   },
   rock_polish:{
     name: 'rock_polish',
@@ -2178,7 +2329,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'spd', pow: 2, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/rock_polish.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Speed by 2."
   },
   stealth_rock:{
     name: 'stealth_rock',
@@ -2190,7 +2342,8 @@ export const movesObj = {
     effects: null,
     priority: 0,
     sprite: '../../img/moves/stealth_rock.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Hurts foes on switch-in. Factors Rock weakness."
   },
   shell_smash:{
     name: 'shell_smash',
@@ -2202,7 +2355,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'atk', pow: 2, type: 'stats'}, {name: 'buff', target:'spatk', pow: 2, type: 'stats'}, {name: 'buff', target:'spd', pow: 2, type: 'stats'}, {name: 'selfDebuff', target:'def', pow: 2, type: 'stats'}, {name: 'selfDebuff', target:'spdef', pow: 2, type: 'stats'},],
     priority: 0,
     sprite: '../../img/moves/shell_smash.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Lowers Def, SpD by 1; raises Atk, SpA, Spe by 2."
   },
 
   // fighting
@@ -2216,7 +2370,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}, {name: 'buff', target:'def', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/bulk_up.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Attack and Defense by 1."
   },
 
   // ground
@@ -2230,7 +2385,25 @@ export const movesObj = {
     effects: [25,50,75],
     priority: 0,
     sprite: '../../img/moves/shore_up.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by a weather-dependent amount."
+  },
+
+  // ghost
+  confuse_ray:{
+    name: 'confuse_ray',
+    type: 'status',
+    element: 'ghost',
+    pow: '---',
+    acc: 75,
+    pp: 32,
+    effects: [{confusion: 100, type: 'status'}],
+    priority: 0,
+    rotation: {ally: 1, foe: -2},
+    duration: 1.5,
+    sprite: '../../img/moves/confusion.png',
+    animationType: 'status',
+    desc: "Confuses the target."
   },
 
   // poison
@@ -2246,7 +2419,8 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/fart.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Badly poisons the target."
   },
 
   // steel
@@ -2260,7 +2434,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/sharpen.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Attack by 1."
   },
   swords_dance:{
     name: 'sharpen',
@@ -2272,7 +2447,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'atk', pow: 2, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/sharpen.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Attack by 2."
   },
   iron_defence:{
     name: 'iron_defence',
@@ -2284,7 +2460,8 @@ export const movesObj = {
     effects: [{name: 'buff', target:'def', pow: 2, type: 'stats'}],
     priority: 0,
     sprite: '../../img/moves/iron_defence.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Defense by 2."
   },
   shift_gear:{
     name: 'shift_gear',
@@ -2298,7 +2475,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/shift_gear.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Speed by 2 and Attack by 1."
   },
 
   // psychic
@@ -2307,28 +2485,15 @@ export const movesObj = {
     type: 'status',
     element: 'psychic',
     pow: '---',
-    acc: 100,
+    acc: 65,
     pp: 24,
     effects: [{slp: 100, type: 'status'}],
     priority: 0,
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
-  },
-  confuse_ray:{
-    name: 'confuse_ray',
-    type: 'status',
-    element: 'psychic',
-    pow: '---',
-    acc: 75,
-    pp: 32,
-    effects: [{confusion: 100, type: 'status'}],
-    priority: 0,
-    rotation: {ally: 1, foe: -2},
-    duration: 1.5,
-    sprite: '../../img/moves/confusion.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Causes the target to fall asleep."
   },
   trick_room:{
     name: 'trick_room',
@@ -2342,7 +2507,8 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "For 5 turns, turn order is reversed."
   },
   reflect:{
     name: 'reflect',
@@ -2356,7 +2522,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 1.5,
     sprite: '../../img/moves/reflect.png',
-    animationType: 'statusSelf'
+    animationType: 'statusSelf',
+    desc: "For 5 turns, physical damage to allies is halved."
   },
   light_screen:{
     name: 'light_screen',
@@ -2370,7 +2537,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 1.5,
     sprite: '../../img/moves/light_screen.png',
-    animationType: 'statusSelf'
+    animationType: 'statusSelf',
+    desc: "For 5 turns, special damage to allies is halved."
   },
 
   // ice
@@ -2386,7 +2554,8 @@ export const movesObj = {
     rotation: {ally: 1, foe: -2},
     duration: 1.5,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Always results in a critical hit."
   },
   snow_storm:{
     name: 'snow_storm',
@@ -2398,7 +2567,8 @@ export const movesObj = {
     effects: [{snow: 100, type: 'weather'}],
     priority: 0,
     sprite: '../../img/moves/blank.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Freezes the target."
   },
   freeze_over:{
     name: 'freeze_over',
@@ -2410,7 +2580,8 @@ export const movesObj = {
     effects: [25,50,75],
     priority: 0,
     sprite: '../../img/moves/freeze_over.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by a weather-dependent amount."
   },
 
   // fairy
@@ -2425,7 +2596,8 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/draining_kiss.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Lowers the target's Attack by 2."
   },
   sweet_kiss:{
     name: 'sweet_kiss',
@@ -2439,7 +2611,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 1.5,
     sprite: '../../img/moves/moonlight.png',
-    animationType: 'status'
+    animationType: 'status',
+    desc: "Causes the target to become confused."
   },
   moonlight:{
     name: 'moonlight',
@@ -2453,7 +2626,8 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/moonlight.png',
-    animationType: 'healing'
+    animationType: 'healing',
+    desc: "Heals the user by a weather-dependent amount."
   },
 
   // dragon
@@ -2469,6 +2643,7 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     duration: 2,
     sprite: '../../img/moves/dragon_dance.png',
-    animationType: 'statsSelf'
+    animationType: 'statsSelf',
+    desc: "Raises the user's Attack and Speed by 1."
   },
 }

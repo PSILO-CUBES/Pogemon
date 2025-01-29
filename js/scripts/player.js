@@ -903,6 +903,8 @@ function playerInteraction(e) {
 
         scenes.set('pickingItem', {initiated: true})
 
+        console.log(player.interaction.info)
+
         let item = {...itemsObj[player.interaction.info.name]}
   
         Object.values(keys).forEach(value =>{
@@ -920,7 +922,7 @@ function playerInteraction(e) {
         console.log(player.interaction.info)
   
         const itemImage = new Image()
-        itemImage.src = `img/item_scene/items/${item.type}/${item.name}.png`
+        itemImage.src = item.img
         itemImage.id = 'pickedUpItem'
         
         document.querySelector('#openWindow').replaceChildren()

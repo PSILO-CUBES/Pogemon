@@ -158,6 +158,11 @@ function switchProcessEvent(first, second){
           }
         }
 
+        second.choiceItem = {
+          type: null,
+          move: null
+        }
+
         if(prevScene == 'battle') {
           if(player.team[0].fainted == true) return
           if(firstTeamPogemon.id == player.team[0].id) return
