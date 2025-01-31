@@ -27,7 +27,7 @@ const frameRateInMilliseconds = 1000 / frameRate
 let lastFrameSpent = 0
 
 export let [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-let movables
+export let movables
 
 async function setMapData(){
   [background, map, boundaries, battleZones, changeMap, eventZones, trainerSpritesArr, NPCSpritesArr, itemSpritesArr, obstacleSpritesArr, FG] = await generateMapData()
@@ -75,28 +75,29 @@ export async function switchMap(nextMapInfo, preMapInfo){
   if(preMapInfo.name == 'pogemart' || preMapInfo.name == 'pogecenter') {
     // vvvv wtf?????? why if true? delaying something????? vvvv
     console.log('now')
-    if(true){
-
-      if(data != null){
-        if(firstLoad){
-          firstLoad = false
-          if(data.nextMapInfo.name != null){
-            pogecenterReturnInfo.name = data.nextMapInfo.name
-            pogecenterReturnInfo.spawnPosition = data.nextMapInfo.spawnPosition
-          }
-        } else {
-          pogecenterReturnInfo.name = prevMap.name
-          pogecenterReturnInfo.spawnPosition = prevMap.position
-          prevMap = undefined
+    
+    if(data != null){
+      if(firstLoad){
+        firstLoad = false
+        if(data.nextMapInfo.name != null){
+          pogecenterReturnInfo.name = data.nextMapInfo.name
+          pogecenterReturnInfo.spawnPosition = data.nextMapInfo.spawnPosition
+          console.log(pogecenterReturnInfo)
         }
+      } else {
+        pogecenterReturnInfo.name = prevMap.name
+        pogecenterReturnInfo.spawnPosition = prevMap.position
+        console.log(pogecenterReturnInfo)
+        prevMap = undefined
       }
-
-      pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
     }
+
+    pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
 
     if(pogecenterReturnInfo.name == 'pogemart' || pogecenterReturnInfo.name == 'pogecenter') {
       pogecenterReturnInfo.name = pogelocationBackUp.name
       pogecenterReturnInfo.spawnPosition = pogelocationBackUp.position
+      console.log(pogecenterReturnInfo)
 
       pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
     }
@@ -117,7 +118,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
     duration: 0.4,
     onComplete(){
       player.disabled = false
-      console.log(catchEventObj)
+      // console.log(catchEventObj)
       nextMapSaveInfo = nextMapInfo
       //map changed here
       startOverWorldWeather()
@@ -127,7 +128,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
         pogecenterReturnInfo.spawnPosition.x = preMapInfo.spawnPosition.x
         pogecenterReturnInfo.spawnPosition.y = preMapInfo.spawnPosition.y
 
-        console.log(pogecenterReturnInfo, preMapInfo)
+        // console.log(pogecenterReturnInfo, preMapInfo)
       }
     }
   })
@@ -561,21 +562,22 @@ export const playerTeamItemsState = {
   team : []
 }
 
-function transitionScenes(prevScene, exitedScene){
+export function transitionScenes(prevScene, exitedScene){
   switch(prevScene){
     case 'overworld':
       gsap.to('#overlapping', {
         opacity: 1,
         onComplete: () =>{
-          console.log(prevScene)
-          console.log(exitedScene)
-
           manageOverWorldState(true, exitedScene)
+          
           gsap.to('#overlapping', {
             opacity: 0,
             onComplete: () =>{
+              player.team.forEach(pogemon =>{
+                pogemon.opacity = 1
+              })
               player.disabled = false
-              console.log(catchEventObj)
+              // console.log(catchEventObj)
             }
           })
         }
@@ -602,7 +604,7 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
-      console.log(optionMenuState)
+      // console.log(optionMenuState)
       if(optionMenuState) manageOptionMenuState(false)
       if(pogemartInteraction.initiated) {
         pogemartInteraction.initiated = false
@@ -633,6 +635,7 @@ function escapeKeyEventOptions(e) {
 
       // opens OW menu
       if(player.interaction != null) if(player.interaction.info.starter) if(player.disabled) return
+
       manageMenuState(menu.initiated)
     }
 
@@ -656,6 +659,7 @@ function escapeKeyEventOptions(e) {
     if(scenes.get('bag').initiated){
       if(itemUsed.used == true) return
       manageBagState(false)
+      console.log(prevScene)
       transitionScenes(prevScene, 'bag')
     }
 
@@ -696,7 +700,7 @@ function escapeKeyEventOptions(e) {
     }
   } else if(e.key == '`'){
     console.log(player)
-    console.log(battleQueue)
+    // console.log(worldEventData.djed)
   }
 }
 
@@ -840,7 +844,9 @@ let teamOrder
 export function manageOverWorldState(state, previousScene){
   if(state) {
     player.disabled = true
+
     if(OWAnimationRuning) return
+
     document.querySelector('#overworldSceneContainer').style.backgroundColor = 'rgba(0,0,0,0)'
     eventZones.forEach(zone =>{
       if(zone.info.createdTrainer != undefined){
@@ -848,6 +854,7 @@ export function manageOverWorldState(state, previousScene){
         zone.info.createdTrainer.position.y = zone.position.y
       }
     })
+
     document.querySelector('#overworldDialogueContainer').style.display = 'none'
     document.querySelector('#overworldScene').style.display = 'block'
     document.querySelector('#overworldMenu').style.display = 'none'
@@ -863,8 +870,8 @@ export function manageOverWorldState(state, previousScene){
     let teamPlaceHolder = []
     
     if(previousScene != 'boot' && previousScene != 'team'){
-      console.log(teamOrder)
-      console.log(player.team)
+      // console.log(teamOrder)
+      // console.log(player.team)
 
       teamOrder.forEach((order, i) =>{
         player.team.forEach((pogemon, j) =>{
@@ -892,12 +899,11 @@ export function manageOverWorldState(state, previousScene){
     scenes.set('overworld', {initiated : true})
     if(document.querySelector('#pogemonNamingScene').style.display == 'none') {if(catchEventObj.active == false) player.disabled = false}
     else setTimeout(() => player.disabled = false, 500)
-    console.log(document.querySelector('#pogemonNamingScene').style.display == 'none')
-    console.log(catchEventObj)
+    // console.log(document.querySelector('#pogemonNamingScene').style.display == 'none')
+    // console.log(catchEventObj)
     menu.initiated = false
     overworldMenuDom.replaceChildren()
-  }
-  else {
+  } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)
     cancelAnimationFrame(animationId)

@@ -76,7 +76,7 @@ if(data != null){
             })
 
             // need to implement for more than 1 box at a time
-            box[j] = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, pogemon, pogemonSprite)
+            box[j] = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null,  null,  null, pogemon, pogemonSprite)
         })
     })
 

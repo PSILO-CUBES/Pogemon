@@ -9,7 +9,7 @@ import { Sprite, Character, Pogemon } from "../classes.js"
 
 import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
+import { changeMapInfo, currMap, generateMapData, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
 import { changeMap, disableOWMenu, manageOverWorldState, playerTeamItemsState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
@@ -90,19 +90,23 @@ export async function generatePlayer(canvas){
       }))  
 
       player.catch(pogemonsObj.loko, true, mapsObj.lab)
-      player.catch(pogemonsObj.loko, true, mapsObj.lab)
-      player.catch(pogemonsObj.loko, true, mapsObj.lab)
-      player.catch(pogemonsObj.loko, true, mapsObj.lab)
-      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      setTimeout(() =>{
+        player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
+        player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 1})
+        player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
+        player.bag.set("pogeball", {item: {...itemsObj.pogeball}, quantity: 15})
+        player.bag.set("potion", {item: {...itemsObj.potion}, quantity: 5})
+
+      }, 250)
 
       player.pogedexInfo.forEach(pogedex =>{
         // pogedex.seen = true
         // pogedex.caught = true
       })
 
-      player.badges[0] = true
-      player.badges[1] = true
-      player.badges[2] = true
+      // player.badges[0] = true
+      // player.badges[1] = true
+      // player.badges[2] = true
 
       return player
     } else {
@@ -135,7 +139,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -676,8 +680,58 @@ let healProcess = false
 let goldieEvoFlag = false
 let soundFlag = false
 
+function itemPickUp(item, amount, msg){
+  player.disabled = true
+
+  scenes.set('pickingItem', {initiated: true})
+  
+  Object.values(keys).forEach(value =>{
+    value.pressed = false
+  })
+
+  player.team[0].dialogue('overworld', msg)
+  
+  gsap.to(document.querySelector('#overlapping'), {
+    opacity: 0.5
+  })
+  
+  const itemImage = new Image()
+  itemImage.src = item.img
+  itemImage.id = 'pickedUpItem'
+        
+  document.querySelector('#openWindow').replaceChildren()
+  document.querySelector('#openWindow').appendChild(itemImage)
+        
+  player.bag.set(item.name, {item: {...itemsObj[item.name]}, quantity: player.bag.get(item.name).quantity + amount})
+  
+  if(player.interaction.info.name != undefined){
+    player.interaction.collisionInstance.boundary.collision = false
+
+    if(player.interaction.info.eventKey == 'bananacopia'){
+
+    } else player.interaction.info.pickedUp = true
+
+    mapsObj[currMap.name].items.forEach(item =>{
+      // console.log(item.name == player.interaction.info.name)
+      if(player.interaction.info.eventKey == 'bananacopia') return
+      if(item.name == player.interaction.info.name) item.pickedUp = true
+    })
+    
+    if(data != undefined || data != null){
+      if(player.interaction.info.eventKey == 'bananacopia') return
+      data.mapsObjState[currMap.name].items.forEach((item,i) =>{
+        if(item == null) item = mapsObj[currMap.name].items[i]
+        if(item.name == player.interaction.info.name) item.pickedUp = true
+      })
+      // console.log(data.mapsObjState.cross_Link)
+    }
+  
+    if(!player.interaction.info.hidden) itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+  }
+}
+
 function playerInteraction(e) {
-  if(scenes.get('overworld').initiated == false) return
+  if(!scenes.get('overworld').initiated) return
   if(scenes.get('evolution').initiated) return
   if(e.key != ' ') return
 
@@ -773,6 +827,13 @@ function playerInteraction(e) {
               }
             }
             break
+          case 'djedMeeting':
+            worldEventData.djed.meet = true
+            break
+          case 'sandPlanktonNPC':
+            if(worldEventData.sifter.given) 
+              chosenDialogue = player.interaction.info.givenDialogue
+            break
         }
       }
 
@@ -819,6 +880,7 @@ function playerInteraction(e) {
       break
     case 'item':
       if(player.interaction.info.pickedUp == true) return
+      if(player.interaction.info.eventKey == 'bananacopia' && bananaBlock) return
 
       // interactions with OW pogeballs that dissapear
 
@@ -899,54 +961,17 @@ function playerInteraction(e) {
           }
         })
       } else {
-        player.disabled = true
+        let msg
 
-        scenes.set('pickingItem', {initiated: true})
+        if(player.interaction.info.amount == 1) msg = `You've picked up a ${switchUnderScoreForSpace(player.interaction.info.name)}.`
+        else msg = `You've picked ${player.interaction.info.amount} ${switchUnderScoreForSpace(player.interaction.info.name)}'s.`
 
-        console.log(player.interaction.info)
+        if(player.interaction.info.eventKey == 'bananacopia' && !bananaAquired()){
+          itemPickUp(itemsObj[player.interaction.info.name], player.interaction.info.amount, msg)
+          return
+        } else if (player.interaction.info.eventKey == 'bananacopia' && bananaAquired()) return
 
-        let item = {...itemsObj[player.interaction.info.name]}
-  
-        Object.values(keys).forEach(value =>{
-          value.pressed = false
-        })
-  
-        gsap.to(document.querySelector('#overlapping'), {
-          opacity: 0.5
-        })
-  
-        
-        if(player.interaction.info.amount == 1) player.team[0].dialogue('overworld', `You've picked up a ${switchUnderScoreForSpace(item.name)}.`)
-        else player.team[0].dialogue('overworld', `You've picked ${player.interaction.info.amount} ${switchUnderScoreForSpace(item.name)}'s.`)
-
-        console.log(player.interaction.info)
-  
-        const itemImage = new Image()
-        itemImage.src = item.img
-        itemImage.id = 'pickedUpItem'
-        
-        document.querySelector('#openWindow').replaceChildren()
-        document.querySelector('#openWindow').appendChild(itemImage)
-        
-        player.bag.set(player.interaction.info.name, {item: {...itemsObj[player.interaction.info.name]}, quantity: player.bag.get(`${player.interaction.info.name}`).quantity + player.interaction.info.amount})
-  
-        player.interaction.collisionInstance.boundary.collision = false
-        player.interaction.info.pickedUp = true
-  
-        mapsObj[currMap.name].items.forEach(item =>{
-          // console.log(item.name == player.interaction.info.name)
-          if(item.name == player.interaction.info.name) item.pickedUp = true
-        })
-  
-        if(data != undefined || data != null){
-          data.mapsObjState[currMap.name].items.forEach((item,i) =>{
-            if(item == null) item = mapsObj[currMap.name].items[i]
-            if(item.name == player.interaction.info.name) item.pickedUp = true
-          })
-          // console.log(data.mapsObjState.cross_Link)
-        }
-
-        if(!player.interaction.info.hidden) itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+        itemPickUp(itemsObj[player.interaction.info.name], player.interaction.info.amount, msg)
       }
       break
     case 'tree':
@@ -983,11 +1008,13 @@ function playerInteraction(e) {
   }
 }
 
+let bananaBlock = false 
+
 window.addEventListener('keydown', e => playerInteraction(e))
 
 // collissions
 
-let playerCenterOffset = 17
+let playerCenterOffset = 16
 
 function rectangularCollision({ rectangle1, rectangle2 }, type){
   if(type == undefined){
@@ -999,10 +1026,10 @@ function rectangularCollision({ rectangle1, rectangle2 }, type){
       )
   } else if(type == 'event') {
     return (
-      rectangle1.position.x + playerCenterOffset <= rectangle2.position.x + rectangle2.width + rectangle2.info.direction.reach.neg.x - rectangle2.info.direction.sight.neg.x
-      && rectangle1.position.x + rectangle1.width - playerCenterOffset >= rectangle2.position.x - rectangle2.info.direction.reach.pos.x + rectangle2.info.direction.sight.neg.x
-      && rectangle1.position.y + playerCenterOffset <= rectangle2.position.y + rectangle2.height + rectangle2.info.direction.reach.neg.y - rectangle2.info.direction.sight.neg.y
-      && rectangle1.position.y + rectangle1.height - playerCenterOffset >= rectangle2.position.y - rectangle2.info.direction.reach.pos.y + rectangle2.info.direction.sight.neg.y
+      rectangle1.position.x + playerCenterOffset * 2.5 <= rectangle2.position.x + rectangle2.width + rectangle2.info.direction.reach.neg.x
+      && rectangle1.position.x + rectangle1.width - playerCenterOffset * 3 >= rectangle2.position.x - rectangle2.info.direction.reach.pos.x
+      && rectangle1.position.y + playerCenterOffset * 2.5 <= rectangle2.position.y + rectangle2.height + rectangle2.info.direction.reach.neg.y
+      && rectangle1.position.y + rectangle1.height - playerCenterOffset * 5 >= rectangle2.position.y - rectangle2.info.direction.reach.pos.y
       )
   }
 }
@@ -1034,7 +1061,11 @@ function eventWhenColliding(boundaries, direction){
     let xOffset
     let yOffset
 
+    let typeAddition = 0
+
     let playerOffset = 16
+
+    // if(type == 9 && direction != 'Down') typeAddition = 32
     
     switch(direction){
       case 'Up':
@@ -1065,7 +1096,12 @@ function eventWhenColliding(boundaries, direction){
         }}
       })
     ){
-      if(boundary.collision) player.animate = false
+      // console.log(boundary.type)
+
+      if(boundary.collision) {
+        player.animate = false
+        // console.log(boundary)
+      }
 
       let surfCheck = false
 
@@ -1075,15 +1111,13 @@ function eventWhenColliding(boundaries, direction){
         })
       }
 
-      if(!surfCheck) return
-
-      if(type == 9){
-        // console.log('now')
+      if(type == 9){   
         if(stairsDebuff == false) setTimeout(() => {stairsDebuff = false}, 500)
         stairsDebuff = true
         player.running = false
-        return
       }
+
+      if(!surfCheck) return
 
       if(type == 8){
         if(player.surfing) return
@@ -1114,7 +1148,6 @@ function eventWhenColliding(boundaries, direction){
       }
 
       if(type == 1){
-
         if(waterCollided){
           // console.log('hahahaha')
           if(!player.surfing) return
@@ -1157,7 +1190,7 @@ function eventWhenColliding(boundaries, direction){
 }
 
 function engageBattle(animationId, battleZones) {
-  // if(true) return // remove to set battles back on
+  if(repelObj.active) return
   if(player.team.length < 1) return
   if(waitForNextBattle.initiated) return
   
@@ -1284,7 +1317,32 @@ function addFriendlinessWhenMoving(){
   }
 }
 
-function move(direction, movables, moveSpeed){
+let timeBeforeNextStep = 0
+
+function incrementRepelStepsWhenMoving(){
+  timeBeforeNextStep += 1
+
+  if(timeBeforeNextStep < 4) return
+
+  if(repelObj.steps == 0){
+    repelObj.active = false
+
+    player.disabled = true
+    player.dialogue('overworld', `The repel effect wore off..`)
+
+  } else repelObj.steps -= 1
+
+  timeBeforeNextStep = 0
+
+  console.log(repelObj)
+}
+
+export const repelObj = {
+  active: false,
+  steps: 0
+}
+
+function playerMove(direction, movables, moveSpeed){
   if(!collisionWhileSurfing){
     player.img.src = 'img/charSprites/ethan/ethan.png'
     if(player.running) player.img.src = 'img/charSprites/ethan/ethan_run.png'
@@ -1316,6 +1374,7 @@ function move(direction, movables, moveSpeed){
   }
 
   pickUpAbility()
+  if(repelObj.active) incrementRepelStepsWhenMoving()
   addFriendlinessWhenMoving()
 }
 
@@ -1329,11 +1388,8 @@ let newGameFlagFlagLMAO = false
 // let prevMap
 
 function changeMapEvent(changeMap, currPos){
-
-
   for(let i = 0; i < changeMap.length; i++){
     let changeMapIndex = changeMap[i]
-    // console.log(changeMap[i])
     const currMapInfo = {
       name: currMap.name,
       spawnPosition: {
@@ -1433,6 +1489,19 @@ exclamation.src = 'img/charSprites/exclamation.png'
 exclamation.setAttribute('class', 'exclamation')
 document.querySelector('#overworldSceneContainer').appendChild(exclamation)
 
+function bananaAquired(){
+  let pass = false
+
+  if(player.bag.get('banana').quantity > 0) pass = true
+  
+  player.team.forEach(pogemon =>{
+    if(pogemon.heldItem == 'banana') pass = true
+  })
+
+  console.log(pass)
+  return pass
+}
+
 function eventZoneManagement(eventZones){
   for(let i = 0; i < eventZones.length; i++){
     const eventZonesIndex = eventZones[i]
@@ -1443,15 +1512,35 @@ function eventZoneManagement(eventZones){
       }, 'event')
     ){
       // console.log(eventZonesIndex)
+      console.log(eventZonesIndex.type)
 
-      if(eventZonesIndex.info.eventKey == "banishmentPathBlock") {
+      if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && !worldEventData.bananaGuy.bananaAsked) {
         player.interaction = eventZonesIndex
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
 
+        worldEventData.bananaGuy.bananaAsked = true
+
         // console.log('block event')
         return
+      } if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && !bananaAquired()) {
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
+
+        worldEventData.bananaGuy.bananaAsked = true
+
+        // console.log('block event')
+        return
+      } else if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && worldEventData.bananaGuy.bananaAsked && bananaAquired() && !worldEventData.bananaGuy.bananaGiven) {
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.bananaDialogue)
+
+        worldEventData.bananaGuy.bananaGiven = true
       }
 
       let playerLookingAtNPC = false
@@ -1471,6 +1560,8 @@ function eventZoneManagement(eventZones){
             if(player.direction == 2) playerLookingAtNPC = true
             break
         }
+
+        if(eventZonesIndex.info.faceToFace != undefined) playerLookingAtNPC = true
   
         if(eventZonesIndex.info.looking != undefined) if(!playerLookingAtNPC) return
       }
@@ -1490,8 +1581,9 @@ function eventZoneManagement(eventZones){
 
           switch(eventZonesIndex.info.eventKey){
             case 'maatGymTrainer':
+              if(worldEventData.maat.firstMeet && !player.badges[0]) return
+
               document.addEventListener('keydown', (e) =>{
-                if(worldEventData.maat.firstMeet && !player.badges[0]) return
                 if(e.key == ' '){
                   player.disabled = true
                   player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
@@ -1500,6 +1592,19 @@ function eventZoneManagement(eventZones){
               if(!worldEventData.maat.firstMeet) return
               if(player.badges[0]) return
               break
+            case 'djedGymTrainer':
+              if(worldEventData.djed.meet && !player.badges[1]) return
+
+                document.addEventListener('keydown', (e) =>{
+                  if(e.key == ' '){
+                    player.disabled = true
+                    player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                  }
+                })
+
+                if(!worldEventData.djed.meet) return
+                if(player.badges[1]) return
+                break
           }
 
           if(eventZonesIndex.info.beaten) return
@@ -1655,20 +1760,81 @@ function spendQueue(){
         goldieEvoFlag = false
       }
     } 
-    
-    if(player.interaction.info.eventKey == 'banishmentPathBlock'){
-    audioObj.SFX.changeMap.play()
 
-    gsap.to('#overlapping', {
-      opacity: 1,
-      duration: 0.4,
-      onComplete(){
-        // console.log({name:'pearly_Path', spawnPosition:{x:map.position.x + 150, y:map.position.y}})
-        changeMapInfo({name:'pearly_Path', spawnPosition:{x:map.position.x - 150, y:map.position.y}}, {name:'pearly_Path', spawnPosition:{x:map.position.x, y:map.position.y}})
-      }
-    })
+    // vv happens when clicking last dialogue on important NPCs vv
+
+    if(player.interaction == null) return
+
+    if(player.interaction.info.eventKey == 'banishmentPathBlock' && !worldEventData.bananaGuy.bananaGiven){
+      player.disabled = true
+      audioObj.SFX.changeMap.play()
+
+      gsap.to('#overlapping', {
+        opacity: 1,
+        duration: 0.4,
+        onComplete(){
+          // console.log({name:'pearly_Path', spawnPosition:{x:map.position.x + 150, y:map.position.y}})
+          changeMapInfo({name:'pearly_Path', spawnPosition:{x:map.position.x - 350, y:map.position.y}}, {name:'pearly_Path', spawnPosition:{x:map.position.x, y:map.position.y}})
+          setTimeout(() =>{
+            disableOWMenu.active = false
+            player.disabled = false
+          }, 250)
+        }
+      })
+    }
+
+    if(player.interaction.info.eventKey == 'mapNPC' && !worldEventData.lippo.mapGiven){
+      worldEventData.lippo.mapGiven = true
+
+      itemPickUp(itemsObj.map, 1, `Lippo handed you a map.`)
+    } else if(player.interaction.info.eventKey == 'mapNPC' && worldEventData.lippo.mapGiven){
+      gsap.to('#overlapping', {
+        opacity: 0,
+        duration: 0.4,
+        onComplete:() =>{
+          scenes.set('pickingItem', {initiated: false})
+        }
+      })
     }
   }
+
+  if(player.interaction.info.eventKey == 'bananacopia'){
+    bananaBlock = true
+
+    setTimeout(() =>{
+      bananaBlock = false
+    }, 1750)
+  }
+
+  if(player.interaction.info.eventKey == 'sandPlanktonNPC' && !worldEventData.sifter.given) {
+    worldEventData.sifter.given = true
+
+    itemPickUp(itemsObj.sand_Plankton, 3, `Sifter handed you a couple of weird critters...`)
+  } else if(player.interaction.info.eventKey == 'sandPlanktonNPC' && worldEventData.sifter.given){
+    gsap.to('#overlapping', {
+      opacity: 0,
+      duration: 0.4,
+      onComplete:() =>{
+        scenes.set('pickingItem', {initiated: false})
+      }
+    })
+  }
+
+  console.log(player.interaction.info.eventKey)
+
+  if(player.interaction.info.eventKey == 'frozenBaaull' && worldEventData.baaull.awake){
+    manageBattleState(true, null, null, player.interaction.info)
+    manageOverWorldState(false)
+
+    setTimeout(() =>{
+      map.img.src = 'img/maps/keme_Town/keme_Town.png'
+    }, 1250)
+
+  } else if(player.interaction.info.eventKey == 'frozenBaaull' && !worldEventData.baaull.awake){
+    worldEventData.baaull.awake = true
+
+    player.dialogue('overworld', `The golden disk in your inventory started to glow.\n\nThe same thing happens to the statue in front of you.\n\nThe statue starts moving, you get ready for combat.`)
+  } 
 }
 
 function playerInputEvent(animationId, direction, movables, boundaries, battleZones, changeMap, eventZones){
@@ -1683,7 +1849,7 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
     engageBattle(animationId, battleZones)
     changeMapEvent(changeMap, map.position)
     lastDirection = direction
-    move(direction, movables, moveSpeed)
+    playerMove(direction, movables, moveSpeed)
     if(player.running){
     player.frames.hold = 5
     } else {

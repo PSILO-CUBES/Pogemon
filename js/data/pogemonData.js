@@ -88,6 +88,7 @@ export let pogemonsObj = {
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
@@ -1922,9 +1923,9 @@ export let pogemonsObj = {
   },
 
   // #43 golden bull 
-  baull: {
+  baaull: {
     pogedex: 43,
-    name: 'baull',
+    name: 'baaull',
     element:{
       1: 'steel',
       2: 'fighting'
@@ -1946,18 +1947,18 @@ export let pogemonsObj = {
     },
     sprites: {
       classic:{
-        sprite: 'img/pogemon/043_Baull/Baull.png',
-        frontSprite: 'img/pogemon/043_Baull/Baull_Animation.png',
-        backSprite: 'img/pogemon/043_Baull/Baull_Back_Animation.png',
-        teamSprite: 'img/pogemon/043_Baull/Baull_Team_Animation.png',
-        bagSprite: 'img/pogemon/043_Baull/Baull_Bag_Animation.png',
+        sprite: 'img/pogemon/043_Baaull/Baaull.png',
+        frontSprite: 'img/pogemon/043_Baaull/Baaull_Animation.png',
+        backSprite: 'img/pogemon/043_Baaull/Baaull_Back_Animation.png',
+        teamSprite: 'img/pogemon/043_Baaull/Baaull_Team_Animation.png',
+        bagSprite: 'img/pogemon/043_Baaull/Baaull_Bag_Animation.png',
       },
       shiny: {
-        sprite: 'img/pogemon/043_Baull/Baull_Shiny.png',
-        frontSprite: 'img/pogemon/043_Baull/Baull_Animation_Shiny.png',
-        backSprite: 'img/pogemon/043_Baull/Baull_Back_Animation_Shiny.png',
-        teamSprite: 'img/pogemon/043_Baull/Baull_Team_Animation_Shiny.png',
-        bagSprite: 'img/pogemon/043_Baull/Baull_Bag_Animation_Shiny.png',
+        sprite: 'img/pogemon/043_Baaull/Baaull_Shiny.png',
+        frontSprite: 'img/pogemon/043_Baaull/Baaull_Animation_Shiny.png',
+        backSprite: 'img/pogemon/043_Baaull/Baaull_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/043_Baaull/Baaull_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/043_Baaull/Baaull_Bag_Animation_Shiny.png',
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,

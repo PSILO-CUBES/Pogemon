@@ -6,6 +6,7 @@ import { typesObj } from "./data/typesData.js"
 
 import { c } from "./scripts/canvas.js"
 import { loadData } from "./save.js"
+import { abilitiesObj } from "./data/abilitiesData.js"
 
 export class Sprite {
   constructor({
@@ -101,7 +102,7 @@ export class Boundary {
 
   generateInfo(){
     const opacity = 0
-    const opacity2 = 0.5
+    const opacity2 = 0
     switch(this.type){
       case 1:
         this.color = `rgba(255,0,0,${opacity})`
@@ -192,6 +193,9 @@ export class Pogemon extends Sprite{
     isEnemy,
     map,
     heldItem,
+    predeterminedAbility,
+    predeterminedShiny,
+    predeterminedIvs,
     preBuilt,
     {
       type, 
@@ -238,9 +242,9 @@ export class Pogemon extends Sprite{
       this.lvl = this.generateLevel()
       this.nature = this.generateNature()
       this.gender = this.generateGender()
-      this.ivs = this.generateIVs()
+      this.ivs = this.generateIVs(predeterminedIvs)
       this.stats = this.generateStats()
-      this.isShiny = this.generateShiny()
+      this.isShiny = this.generateShiny(predeterminedShiny)
       this.hp = this.stats.baseHp
       this.status = {name: null, turns: 0}
       this.affliction = [
@@ -251,7 +255,7 @@ export class Pogemon extends Sprite{
       this.flinched = false
       this.fainted = false
       this.evo = this.pogemon.evo
-      this.abilityInfo = this.generateAbility()
+      this.abilityInfo = this.generateAbility(predeterminedAbility)
       this.moves = this.generateMoves(true, 'battle')
       this.animationProperties = pogemon.animationProperties
       this.heldItem = heldItem
@@ -316,8 +320,8 @@ export class Pogemon extends Sprite{
     return gender
   }
 
-  generateIVs(){
-    const ivObj = {
+  generateIVs(predeterminedIvs){
+    let ivObj = {
       baseHp: 0,
       atk: 0,
       def: 0,
@@ -333,6 +337,17 @@ export class Pogemon extends Sprite{
         ivObj[stat] = Math.floor(Math.random() * 31)
       }
     })
+
+    if(predeterminedIvs != null){
+      ivObj = {
+        baseHp: 31,
+        atk: 31,
+        def: 31,
+        spatk: 31,
+        spdef: 31,
+        spd: 31,
+      }
+    }
 
     return ivObj
   }
@@ -364,11 +379,27 @@ export class Pogemon extends Sprite{
     return statObj
   }
 
-  generateAbility(){
-    let rng = Math.floor(Math.random() * Math.floor(this.pogemon.abilities.length))
-    
-    this.pogemon.abilities[rng].seen = true
-    return {ability: {...this.pogemon.abilities[rng].ability}, index: rng}
+  generateAbility(predeterminedAbility){
+    let index
+    let ability
+
+    if(predeterminedAbility != null){
+      for(let i = 0; i < this.pogemon.abilities.length; i++){
+        if(this.pogemon.abilities[i].ability.name == predeterminedAbility.name){
+          index = i
+          ability = {...predeterminedAbility}
+
+          this.pogemon.abilities[index].seen = true
+        }
+      }
+    } else {
+      index = Math.floor(Math.random() * Math.floor(this.pogemon.abilities.length))
+      ability = {...this.pogemon.abilities[index].ability}
+  
+      this.pogemon.abilities[index].seen = true
+    }
+
+    return {ability, index}
   }
 
   generateMoves = (init, type) => {
@@ -419,10 +450,11 @@ export class Pogemon extends Sprite{
     return catchInfo
   }
 
-  generateShiny(){
+  generateShiny(predeterminedShiny){
     const rng = Math.floor(Math.random() * 1)
 
     if(rng == 0) return true
+    else if(predeterminedShiny != null) return true
     else return false
   }
 
@@ -771,8 +803,6 @@ export class Pogemon extends Sprite{
                     break
                 }
               }
-
-              console.log(effectName)
 
               const statsChanceAnimationEvent = () =>{
                 if(effectName == 'buff'){
@@ -4547,10 +4577,10 @@ export class Pogemon extends Sprite{
 
     queueFaintTrigger.initiated = true
     this.fainted = true
-    audioObj.SFX.faint.play()
     gsap.to(this.position, {
       y: this.position.y + 20,
       onComplete: () =>{
+        audioObj.SFX.faint.play()
         gsap.to(this.position, {
           y: this.position.y - 20,
         })
@@ -4848,10 +4878,8 @@ export class Pogemon extends Sprite{
   useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, characters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState, foeMove){
     const item = this.heldItem
 
-    console.log(item)
     if(item == undefined) return
 
-    console.log(this)
     switch(item.effect){
       case 'heal':
         if(item.heldEffect == undefined) return
@@ -4890,9 +4918,6 @@ export class Pogemon extends Sprite{
           this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.switchUnderScoreForSpace(this.heldItem.name)} healed it by ${healedAmount} HP!`)
         } else {
           if(this.abilityInfo.ability.name == 'cheeck_Pouch') this.hp += Math.floor(this.stats.baseHp * 0.33)
-          
-          console.log(this.status.name)
-          console.log(item.pow)
 
           this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)}'s ${this.switchUnderScoreForSpace(this.heldItem.name)} cured it of it's status ailment!`)
 
@@ -5136,8 +5161,6 @@ export class Character extends Sprite{
       const rng = Math.floor(Math.random() * 100)
       const rate = Math.floor(((3 * pogemon.stats.baseHp - 2 * pogemon.hp) * pogemon.pogemon.catchRate * ball.pow / (3 * pogemon.stats.baseHp) * statusBonus))
 
-      console.log(rate)
-
       if(rng <= rate) pass = true
 
       return pass
@@ -5314,7 +5337,7 @@ export class Character extends Sprite{
         animate: true
       })
 
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)

@@ -22,10 +22,9 @@ export let mapsObj = {
     width: 60,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        // {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.piny, lvls: [2, 3], odds: {min:0,max:50}},
+        {pogemon: pogemonsObj.flailegant, lvls: [2, 3], odds: {min:50,max:100}},
         // {pogemon: pogemonsObj.disso, lvls: [3, 6], odds: {min:0,max:100}}
-
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -35,7 +34,7 @@ export let mapsObj = {
       {name: 'pearly_Path', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearly_Path', spawnPosition: {x:-1100, y:-2550,}},
       {name: 'pearly_Path', spawnPosition: {x:-1100, y:-2550,}},{name: 'pearly_Path', spawnPosition: {x:-1100, y:-2550,}},
 
-      {name: 'gene_Town_home1', spawnPosition: {x:250, y:0,}}, 
+      {name: 'gene_Town_Home', spawnPosition: {x:250, y:0}}, 
 
       {name: 'home', spawnPosition: {x:250, y:-50,}}, 
 
@@ -48,22 +47,22 @@ export let mapsObj = {
     obstaclesInfo: [
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
         disabled: false,
       },
     ],
@@ -102,21 +101,56 @@ export let mapsObj = {
       {name: 'gene_Town', spawnPosition: {x: -1435, y: -615,}}, {name: 'gene_Town', spawnPosition: {x: -1435, y: -615,}}
     ]
   },
-  gene_Town_Home1:{
+  gene_Town_Home:{
     seen: false,
-    name: 'gene_Town_Home1',
-    mapImg: './img/maps/gene_Town_Home1/gene_Town_Home1.png',
-    FGImg: './img/maps/gene_Town_Home1/gene_Town_Home1FG.png',
+    name: 'gene_Town_Home',
+    mapImg: './img/maps/gene_Town_Home/gene_Town_Home.png',
+    FGImg: './img/maps/gene_Town_Home/gene_Town_HomeFG.png',
     spawnPosition: {
       x: -75,
       y: -750
     },
-    height: 10,
-    width: 21,
+    height: 11,
+    width: 22,
     encounters: {},
     changeMapLocations:[
       {name: 'gene_Town', spawnPosition: {x: -415, y: -615,}}, {name: 'gene_Town', spawnPosition: {x: -415, y: -615,}}
     ],
+    event: [
+      {
+        name: 'npc',
+        sprite: "img/charSprites/fatguy/fatguy.png",
+        info: {
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          looking: 'Down',
+          dialogue: [`I've never stepped off of this tile for my whole life! :D\n\nI probably won't ever need this, why don't you take it?`],
+          eventKey: 'mapNPC'
+        },
+      },
+    ],
+    items: [
+      {
+        name: 'leftovers',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'sharp_Beak',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'black_Sludge',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ]
   },
   lab:{
     name: 'lab',
@@ -136,14 +170,13 @@ export let mapsObj = {
     event: [
       {
         name: 'pc',
-        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}},
+        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}}},
       },
       {
         name: 'npc',
         sprite: 'img/charSprites/oak/oak.png',
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:50, y:50}, neg:{x:50, y:50}}}, 
           dialogue:[`I hope you enjoy the adventure you'll have alongside one of those 3!`], 
           looking: 'Down'
         },
@@ -153,7 +186,7 @@ export let mapsObj = {
       {
         name: 'loko',
         amount: 0,
-        direction: {reach: {pos:{x:2, y:20}, neg:{x:2, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        direction: {reach: {pos:{x:50, y:50}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: false,
         starter: true
@@ -161,7 +194,7 @@ export let mapsObj = {
       {
         name: 'steeli',
         amount: 1,
-        direction: {reach: {pos:{x:2, y:20}, neg:{x:2, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        direction: {reach: {pos:{x:50, y:50}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: false,
         starter: true
@@ -169,97 +202,12 @@ export let mapsObj = {
       {
         name: 'maaph',
         amount: 2,
-        direction: {reach: {pos:{x:20, y:20}, neg:{x:20, y:20}}, sight: {pos: {x:1, y:1}, neg:{x:-1, y:-1}}},
+        direction: {reach: {pos:{x:50, y:50}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: false,
         starter: true
       },
     ],
-  },
-
-  // eden forest
-  eden_Forest:{
-    seen: false,
-    name: 'eden_Forest',
-    mapImg: './img/maps/eden_Forest/eden_Forest.png',
-    FGImg: './img/maps/eden_Forest/eden_ForestFG.png',
-    spawnPosition: {
-      x: -962,
-      y: -650
-    },
-    height: 58,
-    width: 79,
-    encounters: {
-      ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
-      ], 
-      water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
-      ]
-    },
-    changeMapLocations:[
-      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}},
-      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}
-    ],
-    trainers: [
-      {
-        name: 'May', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
-        looking: 'Right',
-        sprite: '../../img/charSprites/woman/woman.png',
-        dialogue: 'slither_Road NPC',
-        reward: 0,
-        beaten: true,
-      },
-      {
-        name: 'Tristan', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
-        looking: 'Up',
-        sprite: '../../img/charSprites/youngster/youngster.png',
-        dialogue: "I can't get throught those darned trees, there is so much room around them it\n\nmakes no sence.. ;-;",
-        reward: 100,
-        beaten: false,
-      },      
-      {
-        name: 'Gab', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
-        looking: 'Down',
-        sprite: '../../img/charSprites/youngman2/youngman2.png',
-        dialogue: 'Git gud',
-        reward: 100,
-        beaten: false,
-      },
-    ],
-    event: [
-      {
-        name: 'vignus',
-        sprite: "img/charSprites/ma'at/ma'at.png",
-        info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
-          dialogue:
-          [
-            "-Vignus stares at you calmly-"
-          ], 
-          eventKey: 'vignus'
-        },
-      },
-    ],
-    items: [
-      {
-        name: 'leaf_Stone',
-        amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
-        pickedUp: false,
-        hidden: false
-      },
-    ],
-    obstaclesInfo: [],
-    weather: null
   },
 
   //pearlyPath
@@ -276,16 +224,15 @@ export let mapsObj = {
     width: 64,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.loko, lvls: [7, 7], odds: {min:1,max:100}}, 
-
-        // {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:1,max:65}}, 
-        // {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
-        // {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
-        // {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
-
+        {pogemon: pogemonsObj.piny, lvls: [2, 6], odds: {min:1,max:35}}, 
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:35,max:65}}, 
+        {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
+        {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
+        {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [8, 12], odds: {min:1,max:100}}
+        {pogemon: pogemonsObj.tadtoxic, lvls: [8, 12], odds: {min:1,max:75}},
+        {pogemon: pogemonsObj.flailegant, lvls: [8, 12], odds: {min:75,max:100}},
       ]
     },
     changeMapLocations:[
@@ -314,18 +261,19 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Samael', 
-        team: [[pogemonsObj.ouroboross, 30, null], [pogemonsObj.rockwil, 30, null], [pogemonsObj.skopt, 50, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        //     pogemon                 lvl item ability shiny ivs
+        team: [[pogemonsObj.ouroboross, 30, null, null, null, null], [pogemonsObj.rockwil, 30, null, null, null, null], [pogemonsObj.skopt, 50, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}}, 
         looking: 'Left',
         sprite: '../../img/charSprites/oldman2/oldman2.png',
         dialogue: 'The road ahead is steep..\n\nMay the light in your heart guide you forward..',
-        reward: 0,
+        reward: 550,
         beaten: false,
       },
       {
         name: 'NPC', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}}, 
         looking: 'Right',
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: 'slither_Road NPC',
@@ -335,17 +283,17 @@ export let mapsObj = {
       {
         name: 'NPC', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}}, 
         looking: 'Right',
         sprite: '../../img/charSprites/guy2/guy2.png',
         dialogue: 'banishment_Road NPC',
-        reward: 100,
+        reward: 0,
         beaten: true,
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 6, itemsObj.energy_Berry], [pogemonsObj.steeli, 6, null], [pogemonsObj.maaph, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        team: [[pogemonsObj.wallafi, 6, itemsObj.banana, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: "Wagwan man?",
@@ -357,33 +305,34 @@ export let mapsObj = {
       {
         name: 'leaf_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'water_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: false
       },
       {
-        name: 'TM018',
+        name: itemsObj.banana.name,
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:16, y:16}, neg:{x:16, y:16}}},
         pickedUp: false,
-        hidden: true
+        hidden: false
       },
     ],
     event: [
       {
-        name: 'npc',
+        name: 'Joey',
         sprite: 'img/charSprites/youngster/youngster.png',
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:275}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
-          dialogue:[`This next area is a bit too strong for you right now..\n\nIf you manage to show me an oran berry, i'll concider letting you through.`], 
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:275}}}, 
+          dialogue:[`This next area is a bit too strong for you right now..\n\n\nTell you what, if you bring me back one of those banana's from the eden forest\n\nsouth of here, i'll let you throught!`], 
+          waitingDialogue: [`I'm still waiting for my banana..\n\n\nFriendly reminder, you can find banana's in the eden forest south of here.`],
+          bananaDialogue: [`That looks delicious!!\n\n\nI'll look the other way while i enjoy my banana.\n\nWhatever happens to you from now on ain't on me..`],
           looking: 'Down',
           eventKey: 'banishmentPathBlock'
         },
@@ -444,9 +393,9 @@ export let mapsObj = {
     ],
     trainers: [
       {
-        name: 'Rocky', 
+        name: 'cross_Link NPC"', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
@@ -455,8 +404,8 @@ export let mapsObj = {
       },
       {
         name: 'May', 
-        team: [[pogemonsObj.flailegant, 7, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.flailegant, 7, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: "This poor thing is trying to fly but is failing misebarly at it..\n\nI love mine regardless of how goofy it looks!",
@@ -464,49 +413,48 @@ export let mapsObj = {
         beaten: true,
       },      
       {
-        name: 'Jah', 
+        name: 'pearly_Path NPC', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: 'pearly_Path NPC',
-        reward: 100,
-        beaten: true,
-      },
-      {
-        name: 'Dakota', 
-        team: [[pogemonsObj.nahass, 9, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
-        looking: 'Left' ,
-        sprite: '../../img/charSprites/youngman3/youngman3.png',
-        dialogue: "I've never seen this type of critter before..\n\nI'm glad i managed to catch it!",
         reward: 0,
         beaten: true,
       },
       {
+        name: 'Dakota', 
+        team: [[pogemonsObj.nahass, 9, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}},
+        looking: 'Left' ,
+        sprite: '../../img/charSprites/youngman3/youngman3.png',
+        dialogue: "I've never seen this type of critter before..\n\nI'm glad i managed to catch it!",
+        reward: 100,
+        beaten: true,
+      },
+      {
         name: 'Marley', 
-        team: [[pogemonsObj.flailegant, 8, null], [pogemonsObj.formal, 11, null]],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        team: [[pogemonsObj.flailegant, 8, null, null, null, null], [pogemonsObj.formal, 11, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}}, 
         looking: 'Up',
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: "I love Ma'at so much!\n\nShe taught me many great things.",
         reward: 100,
         beaten: true,
       },
-
     ],
     items:[
       {
         name: 'black_Sludge',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'poison_Barb',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: false
       },
@@ -520,7 +468,7 @@ export let mapsObj = {
     mapImg: './img/maps/fair_Town/fair_Town.png',
     FGImg: './img/maps/fair_Town/fair_TownFG.png',
     spawnPosition: {
-      x: -500,
+      x: -675,
       y: -500
     },
     height: 43,
@@ -530,7 +478,7 @@ export let mapsObj = {
       {
         name: 'Rocky', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
@@ -540,7 +488,7 @@ export let mapsObj = {
       {
         name: 'Marley', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Up', 
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: "slither_Road NPC",
@@ -585,8 +533,8 @@ export let mapsObj = {
     trainers: [
       {
         name: "Ma'at", 
-        team: [[pogemonsObj.flailegant, 14, null], [pogemonsObj.slimie, 15, null], [pogemonsObj.balancia, 16, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        team: [[pogemonsObj.flailegant, 14, null, null, null, null, null, null, null], [pogemonsObj.slimie, 15, null], [pogemonsObj.balancia, 16, null, null, null, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}},
         looking: 'Down', 
         sprite: "../../img/charSprites/ma'at/ma'at.png",
         dialogue: "Are you ready for your first challenge?",
@@ -597,8 +545,8 @@ export let mapsObj = {
       },
       {
         name: 'Larry', 
-        team: [[pogemonsObj.formal, 11, null], [pogemonsObj.allingua, 13, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.formal, 11, null, null, null, null], [pogemonsObj.allingua, 13, null, null, null, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/youngman/youngman.png',
         dialogue: 'Gramps is facinated with those slime pogemon.\n\nHe talked about stones being the catalysts for evolution or\n\nsomething like that.',
@@ -609,8 +557,8 @@ export let mapsObj = {
       },
       {
         name: 'Barry',
-        team: [[pogemonsObj.wallafi, 12, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.wallafi, 12, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "Ma'at is one of my best friends!\n\nShe helped me catch my first pogemon!",
@@ -640,7 +588,7 @@ export let mapsObj = {
         name: 'npc',
         sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
-          direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}, looking: 'Down'}, 
+          direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, looking: 'Down'}, 
           dialogue:['Make sure you speak to Professor Heisenberg before you leave town.'],
         },
       },
@@ -665,7 +613,7 @@ export let mapsObj = {
         name: 'npc',
         sprite: 'img/charSprites/oak/Oak.png',
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
           dialogue:["Let me introduce myself, i am professor Heisenberg.", "When Ma'at brought her slimie for me to study, it somehow secreated a\n\nstrange glowy substance that hardened itself into this halo.\n\n\nThis slime creature is very strange..", "It's genetic makeup indicates it could somehow evolve!\n\n\nMy hypothesis is that the halo plays an important role in\n\nit's evolution process.", "If you manage to make that happen, come and show me.", "Professor Heisenberg gave you the glowy halo."],
           slimeDialogue: ["Wow, what a strange speciment!\n\nIt seems like draining certain elemental essences allows it to change form.", "Even though you managed to prove slimie can actualy evolve,\n\nit does not seem like this is the last form this pogemon can take.", "If you manage to fill your party with one of each type of smile,\n\ncome back and show me."],
           haloDialogue: ["You did it, impressive!\n\nWell, actualy....", `According to the genetics of that pogemon it does seem like\n\nit could still evol..\n\n\n Hold on... What is going on with the halo!?`],
@@ -712,7 +660,7 @@ export let mapsObj = {
         name: 'npc',
         sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
           looking: 'Down',
           dialogue:
           [
@@ -727,8 +675,8 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Rocky', 
-        team: [[pogemonsObj.sturdle, 8, null], [pogemonsObj.sturdle, 9, null], [pogemonsObj.sturdle, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}}, 
+        team: [[pogemonsObj.sturdle, 9, null, null, null, null], [pogemonsObj.sturdle, 10, null, null, null, null], [pogemonsObj.sturdle, 11, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}}, 
         looking: 'Left',
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: 'I love collecting stones!\n\nSome cool ones often appear around the bigger ones! :D',
@@ -739,7 +687,7 @@ export let mapsObj = {
     obstaclesInfo: [
       {
         name: 'rock',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}},
         disabled: false,
         id: 0
       }
@@ -748,25 +696,117 @@ export let mapsObj = {
       {
         name: 'leaf_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'fire_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'water_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
     ],
+  },
+
+  // eden forest
+  eden_Forest:{
+    seen: false,
+    name: 'eden_Forest',
+    mapImg: './img/maps/eden_Forest/eden_Forest.png',
+    FGImg: './img/maps/eden_Forest/eden_ForestFG.png',
+    spawnPosition: {
+      x: -962,
+      y: -650
+    },
+    height: 58,
+    width: 79,
+    encounters: {
+      ground: [
+        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+      ], 
+      water: [
+        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+      ]
+    },
+    changeMapLocations:[
+      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}},
+      {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}, {name: 'gene_Town', spawnPosition: {x:-1750, y:-1725}}
+    ],
+    trainers: [
+      {
+        name: 'Eve', 
+        team: [[pogemonsObj.flailegant, 12, null, null, null, null], [pogemonsObj.grazzer, 13, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}}, 
+        looking: 'Right',
+        sprite: '../../img/charSprites/woman/woman.png',
+        dialogue: "It smells wonderful here, i wish i could've stayed longer...",
+        reward: 0,
+        beaten: true,
+      },
+      {
+        name: 'Shitil', 
+        team: [[pogemonsObj.tadtoxic, 14, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}}, 
+        looking: 'Down',
+        sprite: '../../img/charSprites/youngster/youngster.png',
+        dialogue: "I can't get throught those darned trees, there is so much room around them it\n\nmakes no sence.. ;-;",
+        reward: 0,
+        beaten: false,
+      },      
+      {
+        name: 'Adam', 
+        team: [[pogemonsObj.allingua, 13, null, null, null, null], [pogemonsObj.formal, 12, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}}, 
+        looking: 'Right',
+        sprite: '../../img/charSprites/youngman2/youngman2.png',
+        dialogue: 'Git gud',
+        reward: 0,
+        beaten: false,
+      },
+    ],
+    event: [
+      {
+        name: 'vignus',
+        sprite: "img/charSprites/ma'at/ma'at.png",
+        info: {
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          dialogue:
+          [
+            "-Vignus stares at you calmly-"
+          ], 
+          eventKey: 'vignus'
+        },
+      },
+    ],
+    items: [
+      {
+        name: 'leaf_Stone',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'banana',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true,
+        eventKey: 'bananacopia'
+      },
+    ],
+    obstaclesInfo: [],
+    weather: null
   },
 
   //banisment_Road
@@ -806,18 +846,18 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Spritz', 
-        team: [[pogemonsObj.allingua, 17, null], [pogemonsObj.formal, 17, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.allingua, 14, null, null, null, null], [pogemonsObj.formal, 15, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "Both my pogemons can't stand each other, i'm not sure why...",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },   
       {
-        name: 'Tristan', 
+        name: 'pearly_Path', 
         team: [],
-        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:350}, neg:{x:0, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "pearly_Path",
@@ -826,23 +866,23 @@ export let mapsObj = {
       },  
       {
         name: 'Splinter', 
-        team: [[pogemonsObj.piny, 16, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.piny, 12, null, null, null, null], [pogemonsObj.piny, 15, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:350, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/guy2/guy2.png',
         dialogue: "I love this guy, he's a mushroom thing. :)",
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Duster', 
-        team: [[pogemonsObj.sturdle, 15, null], [pogemonsObj.tadtoxic, 15, null], [pogemonsObj.wallafi, 15]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.sturdle, 12, null, null, null, null], [pogemonsObj.tadtoxic, 12, null, null, null, null], [pogemonsObj.wallafi, 13, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "Who knows what true riches hide away in these mountains..",
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
     ],
   },
@@ -864,11 +904,11 @@ export let mapsObj = {
       {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, 
       {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}}, {name: 'exodus_Road', spawnPosition: {x: -1450, y: -1850}},
 
-      {name: 'keme_Town_Gym', spawnPosition: {x:-40, y: -500,}}, // 2nd gym
+      {name: 'keme_Town_Gym', spawnPosition: {x:-40, y: -500,}},
 
-      {name: 'keme_Town_House1', spawnPosition: {x: 440, y: -175}}, // keme_Town_House1
+      {name: 'sifter_House', spawnPosition: {x: 440, y: -175}},
 
-      {name: 'keme_Town_House2', spawnPosition: {x: 440, y: -175}}, // keme_Town_House2
+      {name: 'djed_House', spawnPosition: {x: 440, y: -175}},
 
       {name: 'pogecenter', spawnPosition: {x:405, y: -50,}}, 
 
@@ -883,8 +923,7 @@ export let mapsObj = {
         sprite: "img/charSprites/guy1/guy1.png",
         info: {
           looking: 'Up',
-          direction: {reach: {pos:{x:20, y:40}, neg:{x:-20, y:0}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:20, y:40}, neg:{x:-20, y:0}}}, 
           dialogue:
           [
             `Djed is a pretty rad dude!\n\nHe's the drummer of our band "THE ROCK QUILLERS!!!".`
@@ -895,13 +934,27 @@ export let mapsObj = {
         name: 'npc',
         sprite: "img/charSprites/beardguy/beardguy.png",
         info: {
-          looking: 'Down',
-          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          looking: 'Left',
+          direction: {reach: {pos:{x:20, y:20}, neg:{x:20, y:40}}}, 
           dialogue:
           [
-            "The winds are pretty sandy around here."
+            "How do these people get out of their house?\n\nThere isn't even a door on this building!.."
           ],
+        },
+      },
+      {
+        name: 'npc',
+        sprite: "img/charSprites/blank/blank.png",
+        info: {
+          looking: 'Down',
+          direction: {reach: {pos:{x:60, y:60}, neg:{x:60, y:60}}}, 
+          team: [[pogemonsObj.baaull, [45,45], null, null, null, null]],
+          trainer: false,
+          dialogue:
+          [
+            `This statue is so life life, it takes you by suprise.\n\nIt seems to be molded out of metal, but you find that hard to believe.`
+          ],
+          eventKey: 'frozenBaaull'
         },
       },
     ],
@@ -909,43 +962,43 @@ export let mapsObj = {
       {
         name: 'hard_Stone',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'soft_Sand',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: false
       },
       {
         name: 'metal_Coat',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
-      },
-      {
-        name: 'soft_Sand',
-        amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
-        pickedUp: false,
-        hidden: false
       },
     ],
     trainers: [
       {
         name: 'Spritz', 
-        team: [[pogemonsObj.allingua, 10, null], [pogemonsObj.formal, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.allingua, 10, null, null, null, null], [pogemonsObj.formal, 10, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "Both my pogemons can't stand each other, i'm not sure why...",
         reward: 100,
         beaten: true,
       },
-    ]
+    ],
   },
-  keme_Town_House1:{
+  djed_House:{
     seen: false,
-    name: 'keme_Town_House1',
-    mapImg: './img/maps/keme_Town_House1/keme_Town_House1.png',
-    FGImg: './img/maps/keme_Town_House1/keme_Town_House1FG.png',
+    name: 'djed_House',
+    mapImg: './img/maps/djed_House/djed_House.png',
+    FGImg: './img/maps/djed_House/djed_HouseFG.png',
     spawnPosition: {
       x: -900,
       y: -750
@@ -953,24 +1006,56 @@ export let mapsObj = {
     height: 12,
     width: 16,
     encounters: {},
-    changeMapLocations:[
-      {name: 'keme_Town', spawnPosition: {x:-160, y: -850}},{name: 'keme_Town', spawnPosition: {x:-160, y: -850}},
-    ]
-  },
-  keme_Town_House2:{
-    seen: false,
-    name: 'keme_Town_House2',
-    mapImg: './img/maps/keme_Town_House2/keme_Town_House2.png',
-    FGImg: './img/maps/keme_Town_House2/keme_Town_House2FG.png',
-    spawnPosition: {
-      x: -900,
-      y: -750
-    },
-    height: 12,
-    width: 16,
-    encounters: {},
+    event: [
+      {
+        name: 'npc',
+        sprite: "img/charSprites/djed/djed.png",
+        info: {
+          looking: 'Down',
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}}, 
+          dialogue:
+          [
+            "You beat me fair and square, you've got it in you kid!"
+          ],
+        },
+      }
+    ],
     changeMapLocations:[
       {name: 'keme_Town', spawnPosition: {x:-1120, y: -1170}},{name: 'keme_Town', spawnPosition: {x:-1120, y: -1170}},
+    ]
+  },
+  sifter_House:{
+    seen: false,
+    name: 'sifter_House',
+    mapImg: './img/maps/sifter_House/sifter_House.png',
+    FGImg: './img/maps/sifter_House/sifter_HouseFG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 12,
+    width: 16,
+    encounters: {},
+    event: [
+      {
+        name: 'npc',
+        sprite: "img/charSprites/burglar/burglar.png",
+        info: {
+          looking: 'Down',
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}}, 
+          dialogue:
+          [
+            "I sift around and find stuff!\n\nI found this sifting thru the sand, you can have it!"
+          ],
+          givenDialogue: [
+            `If you hold it in front of you while running around in the desert,\n\nsomething cool might happen!`
+          ],
+          eventKey: 'sandPlanktonNPC'
+        },
+      }
+    ],
+    changeMapLocations:[
+      {name: 'keme_Town', spawnPosition: {x:-160, y: -850}},{name: 'keme_Town', spawnPosition: {x:-160, y: -850}},
     ]
   },
   keme_Town_Gym:{
@@ -988,28 +1073,32 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Rocky', 
-        team: [[pogemonsObj.sturdle, 15, null], [pogemonsObj.sturdle, 15, null]],
-        direction: {reach: {pos:{x:0, y:150}, neg:{x:0, y:150}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.sturdle, 15, null, null, null, null], [pogemonsObj.sturdle, 15, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:150}, neg:{x:0, y:150}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
-        dialogue: 'I still very much like rocks.',
+        dialogue: 'I still very much like rocks! :p',
+        OWdialogue: 'Looking everywhere can help find hidden tresures!\n\n\nIn my estimation there are a BUNCH of them around the region,\n\nmaybe even behind you right as we speak! :D',
         reward: 100,
         beaten: false,
+        eventKey: 'djedGymTrainer'
       },
       {
         name: 'Onyx', 
         team: [[pogemonsObj.cobbird, 16, null], [pogemonsObj.sturdle, 17, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:150, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:150, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: 'I hope i can be just like Djed one day.',
+        OWdialogue: "I used to always be sacred, but then i met him..",
         reward: 100,
         beaten: false,
+        eventKey: 'djedGymTrainer'
       },
       {
         name: 'Djed', // gym leader
-        team: [[pogemonsObj.cobbird, 18, null],[pogemonsObj.punbreakable, 19, null], [pogemonsObj.rockwil, 20, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        team: [[pogemonsObj.cobbird, 18, null, null, null, null],[pogemonsObj.punbreakable, 19, null, null, null, null], [pogemonsObj.rockwil, 20, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/djed/djed.png',
         dialogue: 'A new challenger for me?\n\nBring it on!',
@@ -1020,15 +1109,16 @@ export let mapsObj = {
       },
       {
         name: 'Clayton', 
-        team: [[pogemonsObj.allingua, 15, null]],
-        direction: {reach: {pos:{x:150, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.allingua, 15, null, null, null, null]],
+        direction: {reach: {pos:{x:250, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/youngman2/youngman2.png',
         dialogue: "I don't have a rock type pogemon, but Djed was cool enought to let me be here!",
+        OWdialogue: "Psst.. Do you think steel types are as cool as rock types?",
         reward: 100,
         beaten: false,
+        eventKey: 'djedGymTrainer'
       },
-
     ],
     changeMapLocations:[
       {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}}, {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}}, {name: 'keme_Town', spawnPosition: {x:-1375, y: -675}},
@@ -1071,38 +1161,38 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Bugzzy', 
-        team: [[pogemonsObj.sparkust, 16, null], [pogemonsObj.antber, 18, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        team: [[pogemonsObj.sparkust, 16, null, null, null, null], [pogemonsObj.formal, 18, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/bugman/bugman.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Kim', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        team: [[pogemonsObj.sturdle, 6, null, null, null, null]],
+        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Buzzy', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:450, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        team: [[pogemonsObj.sturdle, 6, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:450, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/guitarist/guitarist.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
       {
-        name: 'Buzzy', 
-        team: [[pogemonsObj.sturdle, 6, null]],
-        direction: {reach: {pos:{x:450, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        name: 'Willet', 
+        team: [[pogemonsObj.sturdle, 6, null, null, null, null]],
+        direction: {reach: {pos:{x:450, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
@@ -1137,8 +1227,8 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Moses', 
-        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.wettie, 5, null, null, null, null], [pogemonsObj.sturdle, 6, null, null, null, null], [pogemonsObj.sturdle, 7, null, null, null, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
@@ -1148,7 +1238,7 @@ export let mapsObj = {
       {
         name: 'Moses', 
         team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
@@ -1158,7 +1248,7 @@ export let mapsObj = {
       {
         name: 'Moses', 
         team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
@@ -1168,7 +1258,7 @@ export let mapsObj = {
       {
         name: 'Moses', 
         team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
@@ -1177,18 +1267,18 @@ export let mapsObj = {
       },
       {
         name: 'Moses', 
-        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.formal, 5, null, null, null, null], [pogemonsObj.sturdle, 6, null, null, null, null], [pogemonsObj.sturdle, 7, null, null, null, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Bugzzy', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/bugman/bugman.png',
         dialogue: "OTHER MAP",
@@ -1198,7 +1288,7 @@ export let mapsObj = {
       {
         name: 'Kim', 
         team: [],
-        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:35, y:35}, neg:{x:35, y:35}}},
+        direction: {reach: {pos:{x:125, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
         dialogue: "OTHER MAP",
@@ -1210,21 +1300,21 @@ export let mapsObj = {
       {
         name: 'royal_Jelly',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: false
       },
       {
         name: 'royal_Jelly',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'royal_Jelly',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
@@ -1232,15 +1322,19 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        sprite: "img/charSprites/guy1/guy1.png",
+        sprite: "img/charSprites/djed/djed.png",
         info: {
-          looking: 'Up',
-          direction: {reach: {pos:{x:20, y:40}, neg:{x:-20, y:0}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          looking: 'Left',
+          faceToFace: false,
+          direction: {reach: {pos:{x:16, y:16}, neg:{x:16, y:16}}}, 
           dialogue:
           [
-            `Djed is a pretty rad dude!\n\nHe's the drummer of our band "THE ROCK QUILLERS!!!".`
+            `You're looking for Keme town's gym leader?\n\nYeah, that would happen to be me! 8)`,
+            `turn around to talk to ya? Nah.. \n\nIm way too hard for that..`,
+            `Anyways, if you're looking to get beaten into a pulp and your remains\n\nscrapped by the vaultures, i'd be happy to be assist you in that venture!`,
+            `I'll be waiting.`
           ],
+          eventKey: 'djedMeeting'
         },
       },
       {
@@ -1248,8 +1342,7 @@ export let mapsObj = {
         sprite: "img/charSprites/beardguy/beardguy.png",
         info: {
           looking: 'Down',
-          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}}, 
           dialogue:
           [
             "The winds are pretty sandy around here."
@@ -1260,7 +1353,7 @@ export let mapsObj = {
     obstaclesInfo: [
       {
         name: 'rock',
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:50}}},
         disabled: false,
         id: 0
       }
@@ -1300,8 +1393,8 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Moses', 
-        team: [[pogemonsObj.wettie, 5, null], [pogemonsObj.sturdle, 6, null], [pogemonsObj.sturdle, 7, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.wettie, 5, null, null, null, null], [pogemonsObj.sturdle, 6, null, null, null, null], [pogemonsObj.sturdle, 7, null, null, null, null]],
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/moses/moses.png',
         dialogue: "A challenge for an old man like me? I'm all up for it!\n\nIf you manage to defeat me, i'll let you have this old stick.\n\nIt'll guide you when the path ahead seems too dark to continue.",
@@ -1313,7 +1406,7 @@ export let mapsObj = {
       {
         name: 'royal_Jelly',
         amount: 1,
-        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}, sight: {pos: {x:10, y:10}, neg:{x:-10, y:-10}}},
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
         pickedUp: false,
         hidden: true
       },
@@ -1353,8 +1446,7 @@ export let mapsObj = {
         sprite: "img/charSprites/brownlady/brownlady.png",
         info: {
           looking: 'Down',
-          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}, 
-          sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, 
+          direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:40}}}, 
           dialogue:
           [
             `It's so dark up ahead, seems to be impossible to carry on without a light source...`
@@ -1365,8 +1457,8 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Rocky', 
-        team: [[pogemonsObj.sturdle, 8, null], [pogemonsObj.sturdle, 9, null], [pogemonsObj.sturdle, 10, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.sturdle, 8, null, null, null, null], [pogemonsObj.sturdle, 9, null, null, null, null], [pogemonsObj.sturdle, 10, null, null, null, null]],
+        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/rangermale/rangermale.png',
         dialogue: "I keep running into cobwebs, it's starting to get on my nerves....",
@@ -1411,7 +1503,7 @@ export let mapsObj = {
       {
         name: 'Caseoh', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/burglar/burglar.png',
         dialogue: "Kinda hard to walk around me, i get it...",
@@ -1460,7 +1552,7 @@ export let mapsObj = {
       {
         name: 'Caseoh', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Up', 
         sprite: '../../img/charSprites/fatguy/fatguy.png',
         dialogue: "Kinda hard to walk around me, i get it...",
@@ -1470,7 +1562,7 @@ export let mapsObj = {
       {
         name: 'Alicia', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/blackbelt/blackbelt.png',
         dialogue: "cross_Link NPC",
@@ -1524,7 +1616,7 @@ export let mapsObj = {
       {
         name: 'Alicia', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
         dialogue: "cross_Link NPC",
@@ -1534,7 +1626,7 @@ export let mapsObj = {
       {
         name: 'Hieronymus', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Up', 
         sprite: '../../img/charSprites/artist/artist.png',
         dialogue: "cross_Link NPC",
@@ -1544,7 +1636,7 @@ export let mapsObj = {
       {
         name: 'Granite', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
         dialogue: "cross_Link NPC",
@@ -1554,7 +1646,7 @@ export let mapsObj = {
       {
         name: 'Quwill', 
         team: [],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
@@ -1612,18 +1704,18 @@ export let mapsObj = {
     mapImg: './img/maps/scribble_Town/scribble_Town.png',
     FGImg: './img/maps/scribble_Town/scribble_TownFG.png',
     spawnPosition: {
-      x: -675,
-      y: -1200
+      x: -575,
+      y: -1000
     },
     height: 42,
     width: 72,
     encounters: {ground: [{pogemon: pogemonsObj.sturdle, lvls: [2, 6], odds: {min:1,max:100}}], water: [{pogemon: pogemonsObj.tadtoxic, lvls: [2, 6], odds: {min:1,max:100}}]},
     changeMapLocations:[
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 1
+      {name: 'scribble_Town_House1', spawnPosition: {x: 447, y: -370}}, // house 1
 
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 2
+      {name: 'scribble_Town_House2', spawnPosition: {x: 447, y: -370}}, // house 2
 
-      {name: 'luna_Mountain', spawnPosition: {x: -2850, y: -250}}, // house 3
+      {name: 'scribble_Town_House3', spawnPosition: {x: 447, y: -370}}, // house 3
 
       {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
       {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}}, {name: 'commandment_Road', spawnPosition: {x: -225, y: -500}},
@@ -1662,11 +1754,11 @@ export let mapsObj = {
     ],
     event: [
     ],
-    trainers: [      
+    trainers: [
       {
         name: "Hermes", 
-        team: [[pogemonsObj.flailegant, 11, null], [pogemonsObj.slimie, 12, null], [pogemonsObj.balancia, 13, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}, sight: {pos: {x:35, y:0}, neg:{x:35, y:0}}},
+        team: [[pogemonsObj.flailegant, 11, null, null, null, null], [pogemonsObj.slimie, 12, null, null, null, null], [pogemonsObj.balancia, 13, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}},
         looking: 'Down', 
         sprite: "../../img/charSprites/hermes/hermes.png",
         dialogue: "I heard from my wife that you defeated her all the way back in fair town.\n\nI'm sure she tried to teach you as much as she could.\n\nLet me do the same..",
@@ -1677,7 +1769,7 @@ export let mapsObj = {
       {
         name: 'Saphir', 
         team: [[pogemonsObj.formal, 9, null], [pogemonsObj.allingua, 10, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/bluehairgirl/bluehairgirl.png',
         dialogue: '...',
@@ -1687,7 +1779,7 @@ export let mapsObj = {
       {
         name: 'Stza',
         team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/bluepunk/bluepunk.png',
         dialogue: "We're the gang in blue!\n\nNo, not that one..",
@@ -1697,7 +1789,7 @@ export let mapsObj = {
       {
         name: 'Quartz',
         team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/bluehairwoman2/bluehairwoman2.png',
         dialogue: "Have you met my little sister yet?\n\nShe had a strong connection to pogemons ever since she was very little..\n\nHermes even took her as his pupil.\n\nShe grew to strong and free, i'm proud of her for that.",
@@ -1706,8 +1798,8 @@ export let mapsObj = {
       },
       {
         name: 'Ruby',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.wallafi, 8, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/bluehairwoman/bluehairwoman.png',
         dialogue: "Let me show you what i've got!\n\nYou're never gonna recover from this! >:)",
@@ -1716,14 +1808,83 @@ export let mapsObj = {
       },
       {
         name: 'Hurley',
-        team: [[pogemonsObj.wallafi, 8, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}, sight: {pos: {x:0, y:35}, neg:{x:0, y:35}}},
+        team: [[pogemonsObj.wallafi, 8, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/bluehairsunglasses/bluehairsunglasses.png',
         dialogue: "My bike fell in the water, so i'm stuck here now..",
         reward: 100,
         beaten: false,
       },
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+  scribble_Town_House1:{
+    seen: false,
+    name: 'scribble_Town_House1',
+    mapImg: './img/maps/scribble_Town_House1/scribble_Town_House1.png',
+    FGImg: './img/maps/scribble_Town_House1/scribble_Town_House1FG.png',
+    spawnPosition: {
+      x: -275,
+      y: -1200
+    },
+    height: 16,
+    width: 16,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -543, y: -350}}, {name: 'scribble_Town', spawnPosition: {x: -543, y: -350}}, 
+    ],
+    event: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+  scribble_Town_House2:{
+    seen: false,
+    name: 'scribble_Town_House2',
+    mapImg: './img/maps/scribble_Town_House2/scribble_Town_House2.png',
+    FGImg: './img/maps/scribble_Town_House2/scribble_Town_House2FG.png',
+    spawnPosition: {
+      x: -275,
+      y: -1200
+    },
+    height: 16,
+    width: 16,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -1118, y: -350}}, {name: 'scribble_Town', spawnPosition: {x: -1118, y: -350}}, 
+    ],
+    event: [
+    ],
+    obstaclesInfo: [
+    ],
+    items: [
+    ],
+    weather: null
+  },
+  scribble_Town_House3:{
+    seen: false,
+    name: 'scribble_Town_House3',
+    mapImg: './img/maps/scribble_Town_House3/scribble_Town_House3.png',
+    FGImg: './img/maps/scribble_Town_House3/scribble_Town_House3FG.png',
+    spawnPosition: {
+      x: -275,
+      y: -1200
+    },
+    height: 16,
+    width: 16,
+    encounters: {ground: [], water: []},
+    changeMapLocations:[
+      {name: 'scribble_Town', spawnPosition: {x: -1696, y: -350}}, {name: 'scribble_Town', spawnPosition: {x: -1696, y: -350}}, 
+    ],
+    event: [
     ],
     obstaclesInfo: [
     ],
@@ -2008,8 +2169,8 @@ export let mapsObj = {
     mapImg: './img/maps/alquima_Town/alquima_Town.png',
     FGImg: './img/maps/alquima_Town/alquima_TownFG.png',
     spawnPosition: {
-      x:-175,
-      y: -2385
+      x: -1175,
+      y: -750
     },
     height: 52,
     width: 70,
@@ -2030,11 +2191,11 @@ export let mapsObj = {
 
       {name: 'pogemart', spawnPosition: {x:-200, y: -155}},
 
-      {name: 'house', spawnPosition: {x:-200, y: -155}},
+      {name: 'alquima_Town_House1', spawnPosition: {x: 440, y: -175}},
       
-      {name: 'house', spawnPosition: {x:-200, y: -155}},
+      {name: 'alquima_Town_House2', spawnPosition: {x: 440, y: -175}},
 
-      {name: 'lodge', spawnPosition: {x:-200, y: -155}},
+      {name: 'alquima_Town_Lodge', spawnPosition: {x:320, y: -375}},
 
       {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}},
       {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}},
@@ -2043,6 +2204,96 @@ export let mapsObj = {
     trainers: [
     ],
     items: [
+    ],
+  },
+  alquima_Town_House1:{
+    seen: false,
+    name: 'alquima_Town_House1',
+    mapImg: './img/maps/alquima_Town_House1/alquima_Town_House1.png',
+    FGImg: './img/maps/alquima_Town_House1/alquima_Town_House1FG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 12,
+    width: 16,
+    encounters: {},
+    changeMapLocations:[
+      {name: 'alquima_Town', spawnPosition: {x:-165, y: -1685}},{name: 'alquima_Town', spawnPosition: {x:-165, y: -1685}},
+    ]
+  },
+  alquima_Town_House2:{
+    seen: false,
+    name: 'alquima_Town_House2',
+    mapImg: './img/maps/alquima_Town_House2/alquima_Town_House2.png',
+    FGImg: './img/maps/alquima_Town_House2/alquima_Town_House2FG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 12,
+    width: 16,
+    encounters: {},
+    changeMapLocations:[
+      {name: 'alquima_Town', spawnPosition: {x:-1500, y: -1825}},{name: 'alquima_Town', spawnPosition: {x:-1500, y: -1825}},
+    ]
+  },
+  alquima_Town_Lodge:{
+    seen: false,
+    name: 'alquima_Town_Lodge',
+    mapImg: './img/maps/alquima_Town_Lodge/alquima_Town_Lodge.png',
+    FGImg: './img/maps/alquima_Town_Lodge/alquima_Town_LodgeFG.png',
+    spawnPosition: {
+      x: -900,
+      y: -750
+    },
+    height: 16,
+    width: 24,
+    encounters: {},
+    changeMapLocations:[
+      {name: 'alquima_Town', spawnPosition: {x:-930, y: -2015}},{name: 'alquima_Town', spawnPosition: {x:-930, y: -2015}},
+    ],
+    items: [
+      {
+        name: 'nugget',
+        amount: 5,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'spell_Tag',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'silver_Powder',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'charcoal',
+        amount: 1,
+        direction: {reach: {pos:{x:25, y:25}, neg:{x:25, y:25}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ],
+    event: [
+      {
+        name: 'npc',
+        sprite: 'img/charSprites/whiteelder/whiteelder.png',
+        info: {
+          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:275}}}, 
+          dialogue:[`This next area is a bit too strong for you right now..\n\n\nTell you what, if you bring me back one of those banana's from the eden forest\n\nsouth of here, i'll let you throught!`], 
+          looking: 'Down',
+          eventKey: 'evilElderFirstInteraction'
+        },
+      },
     ],
   },
 
@@ -2180,11 +2431,11 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:25}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
+        info: {direction: {reach: {pos:{x:20, y:0}, neg:{x:-20, y:25}}}, dialogue:['Let me heal your team'], type:'pogecenter'},
       },
       {
         name: 'pc',
-        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}},
+        info: {direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:0}}}},
       },
     ],
     changeMapLocations:[{name: 'prevMap', spawnPosition: {x: 0, y: 0,}}]
@@ -2203,7 +2454,7 @@ export let mapsObj = {
     event: [
       {
         name: 'npc',
-        info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}, sight: {pos: {x:0, y:0}, neg:{x:0, y:0}}}, dialogue:['Welcome to my store, how may i help you?'], type:'pogemart'},
+        info: {direction: {reach: {pos:{x:0, y:-20}, neg:{x:20, y:20}}}, dialogue:['Welcome to my store, how may i help you?'], type:'pogemart'},
       },
     ],
     changeMapLocations:[{name: 'prevMap', spawnPosition: {x: 0, y: 0,}}],

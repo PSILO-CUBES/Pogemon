@@ -52,10 +52,43 @@ export const itemsObj = {
     effect: 'evo',
     pow: '---',
     img: 'img/item_scene/items/misc/royal_Jelly.png',
-    desc: "Can trigger certain pogemon's evolution, also quite tasty.",
+    desc: "Can trigger a certain pogemon's evolution, also quite tasty.",
     consume: true,
     price: 1,
     value: null
+  },
+  sand_Plankton:{
+    name:'sand_Plankton',
+    type: 'misc',
+    effect: 'evo',
+    pow: '---',
+    img: 'img/item_scene/items/misc/sand_Plankton.png',
+    desc: "a rare and very tiny sand plankton,\na certain type of pogemon cannot resist these.",
+    consume: true,
+    price: 1,
+    value: null
+  },
+  repel:{
+    name:'repel',
+    type: 'misc',
+    effect: 'repel',
+    pow: 100,
+    img: 'img/item_scene/items/misc/repel.png',
+    desc: "Every pogemon hates the scent of this stuff.\n\nPrevents wild encouters for 100 steps.",
+    consume: true,
+    price: 350,
+    value: 175
+  },
+  super_Repel:{
+    name:'super_Repel',
+    type: 'misc',
+    effect: 'repel',
+    pow: 200,
+    img: 'img/item_scene/items/misc/super_Repel.png',
+    desc: "Every pogemon hates the scent of this stuff.\n\nPrevents wild encouters for 200 steps.",
+    consume: true,
+    price: 750,
+    value: 350
   },
 
   // med
@@ -700,9 +733,35 @@ export const itemsObj = {
     price: 1,
     value: 725
   },
-  
+
   // vals
+  nugget:{
+    name:'nugget',
+    type: 'vals',
+    effect: 'valuable',
+    pow: '---',
+    img: 'img/item_scene/items/vals/nugget.png',
+    desc: "Can trigger certain pogemon's evolution.",
+    consume: true,
+    price: 1,
+    value: 10000
+  },
+  
   // key
+  // key
+  map:{
+    name: 'map',
+    type: 'key',
+    effect: 'teleport',
+    pow: "---",
+    img: 'img/item_scene/items/key/map.png',
+    desc: "A very ordinary map of the X region!",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
   glowy_Halo:{
     name: 'glowy_Halo',
     type: 'key',
@@ -710,6 +769,32 @@ export const itemsObj = {
     pow: "---",
     img: 'img/item_scene/items/key/halo.png',
     desc: "A strange and glowy halo, given to you by Professor Heisenberg in Sol Town.\n\nHe mentioned something about it allowing slimie to somehow evolve.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  golden_Disk:{
+    name: 'golden_Disk',
+    type: 'key',
+    effect: 'event',
+    pow: "---",
+    img: 'img/item_scene/items/key/golden_Disk.png',
+    desc: "A very shiny and heavy disk, it looks like it used belonged to something living a long time ago.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  teleport_Gem:{
+    name: 'teleport_Gem',
+    type: 'key',
+    effect: 'teleport',
+    pow: "---",
+    img: 'img/item_scene/items/key/teleport_Gem.png',
+    desc: "A very powerful gem, it allows you to teleport to places you've seen before in the blink of an eye!",
     heldType: '---',
     consume: false,
     odds: 0,
@@ -724,8 +809,6 @@ Object.values(movesObj).forEach((move, i) =>{
   if(i < 10) TMNum = `00${i}`
   else if(i < 100) TMNum = `0${i}`
   else TMNum = i
-
-  console.log(TMNum)
 
   const TMObj = {
     name: `TM${TMNum}`,

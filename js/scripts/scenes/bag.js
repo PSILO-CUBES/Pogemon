@@ -1,14 +1,15 @@
 import { Sprite } from "../../classes.js"
 
-import { player } from "../player.js"
+import { player, repelObj } from "../player.js"
 import { scenes, backgroundSprite } from "../canvas.js"
-import { prevScene, returnPrevScene } from "./overworld.js"
+import { prevScene, returnPrevScene, transitionScenes } from "./overworld.js"
 import { itemsObj } from "../../data/itemsData.js"
 import { manageBattleState } from "./battle.js"
 import { mapsObj } from "../../data/mapsData.js"
 import { manageEvolutionState } from "./evolution.js"
 import { switchUnderScoreForSpace } from "./stats.js"
 import { movesObj } from "../../data/movesData.js"
+import { changeMapInfo, currMap, map } from "../maps.js"
 
 const bagMenuButtonOption = ['use', 'give', 'discard']
 let nodeArr = ['bagSceneItem','bagSceneMenuButton']
@@ -96,6 +97,158 @@ function bagSceneHoverEvent(e, state){
 
 let selectedMenuOption
 
+export const teleportEvent = {
+  active: false
+}
+
+function printMap(type){
+  const dialogueBox = document.querySelector('.bagSceneItemDialogueContainer')
+
+  function removeMapMenu(text){
+    dialogueBox.innerText = text
+    bagScene.removeChild(bagScene.childNodes[1])
+    bagScene.removeChild(bagScene.childNodes[1])
+
+    document.querySelectorAll('.bagSceneItem').forEach(node =>{
+      node.style.backgroundColor = 'transparent'
+    })
+  }
+
+  dialogueBox.innerText = ''
+
+  const bagSceneMapContainerBackground = document.createElement('div')
+  bagSceneMapContainerBackground.id = 'bagSceneMapContainerBackground'
+  bagSceneMapContainerBackground.addEventListener('click', () => removeMapMenu(``))
+
+  bagScene.appendChild(bagSceneMapContainerBackground)
+
+  const bagSceneMapContainer = document.createElement('div')
+  bagSceneMapContainer.id = 'bagSceneMapContainer'
+
+  bagScene.appendChild(bagSceneMapContainer)
+
+  const bagSceneMap = document.createElement('img')
+  bagSceneMap.id = 'bagSceneMap'
+  bagSceneMap.src = 'img/maps/mini_map.png'
+
+  bagSceneMapContainer.appendChild(bagSceneMap)
+
+  const mapsBlockArr = [
+    {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
+    {name: 'pearly_Path', x: 120, y: 632, height: 92, width: 68}, 
+    {name: 'slither_Road', x: 188, y: 582, height: 142, width: 63}, 
+    {name: 'fair_Town', x: 251, y: 663, height: 70, width: 45}, 
+    {name: 'cross_Link', x: 251, y: 593, height: 81, width: 45}, 
+    {name: 'eden_Forest', x: 114, y: 772, height: 103, width: 96}, 
+    {name: 'banishment_Road', x: 47, y: 664, height: 56, width: 73}, 
+    {name: 'keme_Town', x: 27, y: 593, height: 71, width: 93}, 
+    {name: 'exodus_Road', x: 17, y: 530, height: 64, width: 103}, 
+    {name: 'sinai_Desert', x: 17, y: 432, height: 98, width: 103}, 
+    {name: 'melchi_Cave', x: 67, y: 392, height: 40, width: 51} , 
+    {name: 'luna_Mountain_Entrance', x: 268, y: 572, height: 75, width: 113}, 
+    {name: 'luna_Mountain', x: 269, y: 466, height: 107, width: 121}, 
+    {name: 'sol_Path', x: 390, y: 473, height: 59, width: 104}, 
+    {name: 'commandment_Road', x: 389, y: 338, height: 136, width: 104}, 
+    {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
+    {name: 'mousa_Crest', x: 282, y: 404, height: 63, width: 107}, 
+    {name: 'revelation_Road', x: 120, y: 573, height: 59, width: 68}, 
+    {name: 'bellum_Way', x: 120, y: 480, height: 102, width: 109}, 
+    {name: 'stasis_Cave', x: 119, y: 382, height: 99, width: 110}, 
+    {name: 'stasis_Cave_Lower_Level', x: 30, y: 234, height: 128, width: 106},  
+    {name: 'stasis_Cave_Upper_Level', x: 28, y: 146, height: 88, width: 112},
+    {name: 'stasis_Cave_Top_Level', x: 93, y: 67, height: 81, width: 47}, 
+    {name: 'ascension_Path', x: 178, y: 297, height: 91, width: 101}, 
+    {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
+    {name: 'end_Trail', x: 240, y: 130, height: 110, width: 178}, 
+    {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
+    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93}
+  ]
+
+  mapsBlockArr.forEach(node =>{
+    let hidden = false
+
+    Object.values(mapsObj).forEach(map =>{
+      if(node.name == map.name && map.seen == true) hidden = false
+    })
+
+    if(hidden){
+      const blockContainer = document.createElement('div')
+
+      blockContainer.style.backgroundColor = 'rgb(10,10,10)'
+      blockContainer.style.position = 'absolute'
+      blockContainer.style.left = node.x + 98
+      blockContainer.style.top = node.y + 5
+      blockContainer.style.width = node.width
+      blockContainer.style.height = node.height
+
+      bagSceneMapContainer.appendChild(blockContainer)
+    }
+  })
+
+  if(type == 'teleport'){
+    const mapsBlockArr = [
+      {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
+      {name: 'fair_Town', x: 251, y: 663, height: 61, width: 45}, 
+      {name: 'keme_Town', x: 27, y: 593, height: 71, width: 93}, 
+      {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
+      {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101},
+    ]
+
+    function teleportToClickedArea(e){
+      map.position = currMap.spawnPosition
+
+      changeMapInfo({...mapsObj[e.target.id]}, currMap)
+      teleportEvent.active = true
+
+      console.log(teleportEvent.active)
+
+      setTimeout(() =>{
+        teamSprites.forEach(sprite =>{
+          gsap.to(sprite, {
+            opacity: 0
+          })
+        })
+        
+        teamSprites.splice(0, teamSprites.length)
+        if(itemUsed.used == true) return
+        manageBagState(false)
+        transitionScenes(prevScene, 'bag')
+
+        setTimeout(() =>{
+          teleportEvent.active = false
+          console.log(teleportEvent.active)
+        }, 1250)
+      }, 250)
+    }
+
+    mapsBlockArr.forEach(node =>{
+      let hidden = false
+  
+      Object.values(mapsObj).forEach(map =>{
+        if(node.name == map.name && map.seen == true) hidden = false
+      })
+  
+      if(!hidden && node.name != currMap.name){
+        const blockContainer = document.createElement('div')
+  
+        blockContainer.style.backgroundColor = 'rgb(155,15,155,0.15)'
+        blockContainer.style.position = 'absolute'
+        blockContainer.style.left = node.x + 98
+        blockContainer.style.top = node.y + 5
+        blockContainer.style.width = node.width
+        blockContainer.style.height = node.height
+
+        blockContainer.id = node.name
+
+        blockContainer.setAttribute('class', 'teleportArea')
+        blockContainer.addEventListener('click', e => teleportToClickedArea(e))
+  
+        bagSceneMapContainer.appendChild(blockContainer)
+      }
+    })
+  }
+}
+
 function bagSceneMenuButtonOnClick(e){
   document.querySelector('.bagSceneItemMenuContainer').style.display = 'none'
   const dialogueBox = document.querySelector('.bagSceneItemDialogueContainer')
@@ -103,11 +256,56 @@ function bagSceneMenuButtonOnClick(e){
 
   switch(e.target.textContent){
     case 'use':
+      if(currItem.effect == 'repel'){
+        if(repelObj.active) player.team[0].dialogue('bag', `Repel is already applied..\n\n${repelObj.steps} steps left.`)
+        else {
+          player.team[0].dialogue('bag', 'the repel effect was applied!')
+
+          repelObj.active = true
+          repelObj.steps = currItem.pow
+
+          const currQuantity = player.bag.get(currItem.name).quantity
+          
+          player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+
+          currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+        }
+        return
+      }
+
+      if(currItem.type == 'battle'){
+        player.team[0].dialogue('bag', 'Battle items cannot be used.')
+        return
+      }
+
       if(prevScene == 'battle' && currItem.type == 'ball'){
         itemUsed.item = currItem
         itemUsed.used = true
 
         manageBagState(false, 'battle')
+        return
+      } else if(currItem.name == 'map'){
+        // teleport to places you've seen.
+        if(prevScene == 'battle') {
+          player.team[0].dialogue('bag', "Can't do this right now.")
+          return
+        }
+
+        printMap('map')
+
+        return
+      }else if(currItem.name == 'teleport_Gem'){
+        // teleport to places you've seen.
+        if(prevScene == 'battle') {
+          player.team[0].dialogue('bag', "Can't do this right now.")
+          return
+        }
+
+        printMap('teleport')
+
+        return
+      } else if(currItem.name == 'golden_Disk'){
+        player.dialogue('bag', 'This item cannot be used.')
         return
       }
 
@@ -116,6 +314,11 @@ function bagSceneMenuButtonOnClick(e){
       selectedMenuOption = 'use'
       break
     case 'give':
+      if(currItem.type == 'key') {
+        player.team[0].dialogue('bag', 'Cannot give a key item to a pogemon.')
+        return
+      }
+      
       if(prevScene == 'battle') {
         player.team[0].dialogue('bag', 'Cannot give an item to a pogemon while you are in battle..')
         return
@@ -210,6 +413,8 @@ export let evoItemUsed = {
   item: null
 }
 
+const bagScene = document.querySelector('#bagScene')
+
 function useItemOnClickEvent(e){
   if(!choosePogemon) return
 
@@ -224,8 +429,6 @@ function useItemOnClickEvent(e){
 
   const bagSceneItemDialogueContainer = document.querySelector('.bagSceneItemDialogueContainer')
   bagSceneItemDialogueContainer.innerText = `Which move should this ${currItem.name} be used on?`
-
-  const bagScene = document.querySelector('#bagScene')
 
   switch(selectedMenuOption){
     case 'use':
@@ -453,9 +656,6 @@ function useItemOnClickEvent(e){
           if(prevScene == 'battle') return
           dialogueInterfaceDom.innerText = `Can't use this.`
           break
-        case 'battle':
-          player.team[0].dialogue('bag', 'Battle items cannot be used.')
-          break
         case 'tm':
           console.log('?????????????????')
 
@@ -636,10 +836,14 @@ function printItems(bagSceneItemSectionDom){
     bagSceneItemDom.addEventListener('click', e => bagSceneSectionOnClickEvent(e, true))
     bagSceneItemContainerDom.appendChild(bagSceneItemDom)
 
+    const bagSceneItemImgContainerDom = document.createElement('div')
+    bagSceneItemImgContainerDom.classList.add('bagSceneItemImgContainerDom')
+    bagSceneItemDom.appendChild(bagSceneItemImgContainerDom)
+
     const bagSceneItemImgDom = document.createElement('img')
     bagSceneItemImgDom.classList.add('bagSceneItemImgDom')
     bagSceneItemImgDom.src = item.img
-    bagSceneItemDom.appendChild(bagSceneItemImgDom)
+    bagSceneItemImgContainerDom.appendChild(bagSceneItemImgDom)
 
     const bagSceneItemInfoContainerDom = document.createElement('div')
     bagSceneItemInfoContainerDom.classList.add('bagSceneItemInfoContainer')
@@ -921,10 +1125,25 @@ function printBagScene(){
 
 let bagSceneAnimationId
 
+const teamSprites = []
+
 function bagSceneAnimation(){
   bagSceneAnimationId = window.requestAnimationFrame(bagSceneAnimation)
   
   backgroundSprite.draw()
+
+  teamSprites.forEach(sprite =>{
+    sprite.draw()
+  })
+}
+
+function initBagScene(prevScene){
+  player.team.forEach(pogemon =>{
+    pogemon.animate = false
+  })
+  document.querySelector('#bagScene').style.display = 'block'
+  returnPrevScene(prevScene)
+  scenes.set('bag', {initiated: true})
 
   for(let i = 0; i < player.team.length; i++){
     player.team[i].position = {
@@ -935,17 +1154,9 @@ function bagSceneAnimation(){
     if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
     else player.team[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
     // player.team[i].animate = false
-    player.team[i].draw()
+    teamSprites.push(player.team[i])
   }
-}
 
-function initBagScene(prevScene){
-  player.team.forEach(pogemon =>{
-    pogemon.animate = false
-  })
-  document.querySelector('#bagScene').style.display = 'block'
-  returnPrevScene(prevScene)
-  scenes.set('bag', {initiated: true})
   bagSceneAnimation()
   printBagScene()
   document.querySelector('#bagScene').style.pointerEvents = 'all'
@@ -957,16 +1168,16 @@ function clearBagScene(prevScene){
   // itemUsed = {item: null, used : false}
   if(document.querySelector('#bagSceneContainer') != null){
     document.querySelector('#bagSceneContainer').style.display = 'none'
-
   }
+
   if(document.querySelector('#bagScene') != null){
     document.querySelector('#bagScene').style.pointerEvents = 'none'
     document.querySelector('#bagScene').style.display = 'none'
     document.querySelector('#bagScene').replaceChildren()
   }
 
-
   window.cancelAnimationFrame(bagSceneAnimationId)
+
   if(prevScene == 'battle') {
     returnPrevScene('bag')
     manageBattleState(true)

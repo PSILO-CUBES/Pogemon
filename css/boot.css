@@ -126,12 +126,16 @@
 }
 
 .trainerInfoSubContainerContentDisplay:nth-child(1){
+    padding-left: 75;
+    
     display: flex;
     justify-content: start;
     align-items: center;
 }.trainerInfoSubContainerContentDisplay:nth-child(2){
+    padding-right: 75;
+
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
 }
 

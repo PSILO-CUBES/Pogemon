@@ -71,11 +71,16 @@ function loadAlly(){
   document.querySelector("#allyGenderImg").src = `../../../img/${ally.gender}_icon.png`
 }
 
-function foeRNGEncounter(tileInfo){
-  const rng = Math.floor(Math.random() * 100) + 1
-  const encounters = mapsObj[`${currMap.name}`].encounters[tileInfo]
+function foeRNGEncounter(tileInfo, info){
+  if(tileInfo != undefined){
+    const rng = Math.floor(Math.random() * 100) + 1
+    const encounters = mapsObj[`${currMap.name}`].encounters[tileInfo]
+  
+    for (let i = 0; i < encounters.length; i++) if(rng >= encounters[i].odds.min && rng < encounters[i].odds.max) return encounters[i]
+  } else {
+    return {pogemon: info.team[0][0], lvls: info.team[0][1]}
+  }
 
-  for (let i = 0; i < encounters.length; i++) if(rng >= encounters[i].odds.min && rng < encounters[i].odds.max) return encounters[i]
 }
 
 let battleType
@@ -269,19 +274,37 @@ const foeSprite = new Sprite({
   animate: true
 })
 
-function initWildEncounter(tileInfo){
+function initWildEncounter(tileInfo, info){
   enemyTrainer = undefined
 
   battleType = 'wild'
 
-  let returnedFoe = foeRNGEncounter(tileInfo)
+  let returnedFoe = foeRNGEncounter(tileInfo, info)
   if(returnedFoe == undefined) return
-  
+
+  console.log(returnedFoe)
+
   let foeObj = returnedFoe.pogemon
 
   const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
 
-  foe = new Pogemon(foeObj, Math.pow(rngLvl, 3), true, currMap.name, null, null, foeSprite)
+  let encounterLevel = Math.pow(rngLvl, 3)
+
+  if(currMap.name == 'sinai_Desert' || currMap.name == 'exodus_Road') {
+    if(player.team[0].heldItem != undefined) if(player.team[0].heldItem.name == 'sand_Plankton'){
+      const rng = Math.floor(Math.random() * 20)
+
+      if(rng == 1) {
+        player.team[0].heldItem = null
+        foeObj = pogemonsObj.duney
+        encounterLevel = Math.pow(30, 3)
+      }
+    }
+  }
+
+  console.log(rngLvl)
+
+  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, null, null, null, null, null, foeSprite)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -634,7 +657,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
     enemyTrainerInfo = info
 
-    if(enemyTrainerInfo != null){
+    console.log(enemyTrainerInfo)
+
+    if(enemyTrainerInfo != null && enemyTrainerInfo.trainer == undefined){
       document.querySelector('#foeTeamShowcase').style.display = 'flex'
 
       document.querySelectorAll('.foeTeamShowcaseIndividual').forEach(node =>{
@@ -650,14 +675,15 @@ export function initBattle(faintedTriggered, info, tileInfo){
     } else document.querySelector('#foeTeamShowcase').style.display = 'none'
 
     resetStats('both')
-    if(info == undefined) initWildEncounter(tileInfo)
+    console.log(tileInfo)
+    if(info == undefined || info.trainer != undefined) initWildEncounter(tileInfo, info)
     else initTrainerEncounter(info)
 
     player.team.forEach(pogemon =>{
       pogemon.knockedOff = false
     })
 
-    if(enemyTrainerInfo != null) 
+    if(enemyTrainerInfo != null && enemyTrainerInfo.trainer == undefined) 
       enemyTrainerInfo.createdTrainer.team.forEach(pogemon =>{
         pogemon.knockedOff = false
       })
@@ -772,6 +798,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
   if(!itemUsed.used){
     if(prevScene == 'overworld') {
       if(info == null) player.dialogue('battle', `a wild ${switchUnderScoreForSpace(foe.nickname)} appeared!`)
+      else if(info.name == undefined) player.dialogue('battle', `${switchUnderScoreForSpace(foe.nickname)} attacks!`)
       else player.dialogue('battle', `${info.name} sent out ${switchUnderScoreForSpace(foe.nickname)}!`)
 
       if(foe.abilityInfo.ability.name == 'frisk'){
@@ -1402,6 +1429,17 @@ function optionButtonInteraction(e) {
         break
       case 'Run':
         if(enemyTrainer == undefined){
+
+          // if(player.interaction != null){
+          //   if(player.interaction.info.eventKey == 'frozenBaaull'){
+          //     document.querySelector('#textBox').innerText = "Can't run from this battle!"
+          //     setTimeout(() =>{
+          //       document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+          //     }, 1250)
+          //     return
+          //   }
+          // }
+
           C + 1
 
           function chanceToEscape(A, B){
@@ -1476,7 +1514,7 @@ function optionButtonInteraction(e) {
             movesInterfaceDom.style.display = 'none'
             dialogueInterfaceDom.style.display = 'block'
             document.querySelector('#proceedImgContainer').style.display = 'block'
-            dialogueInterfaceDom.textContent = 'You fleed'
+            dialogueInterfaceDom.textContent = 'You fleed.'
             audioObj.SFX.flee.play()
             // need to put rng check based on speed stat`
             queue.push(() =>{

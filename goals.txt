@@ -541,6 +541,25 @@ tms for everyone? x
 
 add move description somewhere x
 
+make fly / teleport x
+
+held items effect in battle {
+    leftovers
+    life orb
+} x
+
+dude in eden forest that gives a banana if you dont already have one x
+
+make sure baaull isint on altar after battle x
+
+keme_Town:{
+    dude in keme town that gives the sand plankton to find duney
+
+    2nd house in keme could just be djed's house
+} x
+
+fix change map name display -- disable map change while display still happening?? x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -549,17 +568,13 @@ add move description somewhere x
 
 stuffToDo:{
     battle: {
-        didint test unaware but 80% sure it works
-
-        80% sure magic bounce / synchronize interaction works properly
-
-        didint test black sludge
-
         reduce hold when status afflicted
     }
+
     sprites:{
         make npc get to me slower relative to how far away i am from them
     }
+
     data: {
         add event zones and wild mon objects to : {
             exodus road
@@ -574,17 +589,72 @@ stuffToDo:{
             need to put Event Zones on tiles for battle zones to work
         }
 
-        scribble town houses
-
         set exp yeild for each pogemon correctly
+
+        set catch rate for each pogemon correctly
+
+        set moves for each pogemon correctly
+
+        set abilities for each pogemon correctly
+
+        re enable trainers
     }
+
     ideas:{
+        scribble_Town:{
+            set encounters in prev areas
+            set items in prev areas
+            set trainers in prev areas
+            
+            hermes house in scribble town -- add kukum that give permission to go on mountain peak
+    
+            move relearner and renamer
+    
+            pacc isle map access giver -- after beating Solomon
+        }
+
+        alquima_Town:{
+            set encounters in prev areas
+            set items in prev areas
+            set trainers in prev areas
+
+            teleport gem giver
+    
+            evil monk rich guy / Solomon house -- gives teleport gem after explaining portal
+    
+            battle item shop - tm shop
+        }
+
+        set pogemon exp yeild
+
+        set pogemon evolution
+
+        put some story stuff
+
+
         make multiple boxes for pc
 
-        somehow remember moves
+        name player scene before game start after new save file
+
+        repels
+
+        fix change map sign
+
+        -- done!!!!
     }
+
     bugs:{
         remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
+
+        didint test unaware but 80% sure it works
+
+        80% sure magic bounce / synchronize interaction works properly
+
+        didint test black sludge
+
+        teleport gem teleports to weird ass places when tping -- related spawnPosition being reassinged when there is a save file or pogecenterReturnInfo stuff found
+
+        put looking direction on changeMap collisions so i dont get in by accident
     }
 }
 
@@ -604,11 +674,6 @@ Infinite EV's??????
 if i add EVS i need to add ev reducing berries
 
 stats menu number tags to see how much EVS have been collected
-
-held items effect in battle {
-    leftovers
-    life orb
-}
 
 spikes
 
