@@ -12,7 +12,7 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, generateMapData, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
-import { changeMap, disableOWMenu, manageOverWorldState, playerTeamItemsState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
+import { changeMap, disableOWMenu, manageOverWorldState, menu, playerTeamItemsState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
@@ -139,7 +139,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -680,7 +680,7 @@ let healProcess = false
 let goldieEvoFlag = false
 let soundFlag = false
 
-function itemPickUp(item, amount, msg){
+export function itemPickUp(item, amount, msg){
   player.disabled = true
 
   scenes.set('pickingItem', {initiated: true})
@@ -705,7 +705,7 @@ function itemPickUp(item, amount, msg){
   player.bag.set(item.name, {item: {...itemsObj[item.name]}, quantity: player.bag.get(item.name).quantity + amount})
   
   if(player.interaction.info.name != undefined){
-    player.interaction.collisionInstance.boundary.collision = false
+    if(player.interaction.collisionInstance != undefined) player.interaction.collisionInstance.boundary.collision = false
 
     if(player.interaction.info.eventKey == 'bananacopia'){
 
@@ -731,8 +731,10 @@ function itemPickUp(item, amount, msg){
 }
 
 function playerInteraction(e) {
+  if(document.querySelector('#pogemonNamingScene').style.display == 'block') return
   if(!scenes.get('overworld').initiated) return
   if(scenes.get('evolution').initiated) return
+  if(menu.initiated) return
   if(e.key != ' ') return
 
   let openWindow = document.querySelector('#openWindow')
@@ -757,6 +759,7 @@ function playerInteraction(e) {
     case 'npc':
       if(interaction.initiated) return
       disableOWMenu.active = true
+      console.log('here2')
 
       interaction.initiated = true
       player.disabled = true
@@ -834,6 +837,9 @@ function playerInteraction(e) {
             if(worldEventData.sifter.given) 
               chosenDialogue = player.interaction.info.givenDialogue
             break
+          case 'kukumPermission':
+            worldEventData.kukum.permission = true
+            break 
         }
       }
 
@@ -865,9 +871,11 @@ function playerInteraction(e) {
           queue.push(() =>{
             let index
             for(let i = 0; i < Object.values(player.badges).length; i++){
-              if(Object.values(player.badges)[i] == false) break
+              if(Object.values(player.badges)[i] == false) index = 0
               index = i
             }
+
+            console.log(index)
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[index])
             // console.log(index)
             disableOWMenu.active = false
@@ -1387,6 +1395,8 @@ let newGameLabFlag = false
 let newGameFlagFlagLMAO = false
 // let prevMap
 
+let blockChangeMap = false
+
 function changeMapEvent(changeMap, currPos){
   for(let i = 0; i < changeMap.length; i++){
     let changeMapIndex = changeMap[i]
@@ -1432,6 +1442,17 @@ function changeMapEvent(changeMap, currPos){
         document.querySelector('#openWindow').style.backgroundColor = 'transparent'
         player.dialogue('overworld', 'Please, come back and choose a pogemon before leaving on your adventure.')
         return
+      } else if(currMap.name == 'luna_Mountain_Entrance' && !worldEventData.moses.staffGiven){
+        // player.disabled = true
+        if(!blockChangeMap) {
+          player.dialogue('overworld', `It seems impossible to go ahead since it's so dark in here..\n\n\nI should trace back my steps and see if i havent missed anything`)
+          blockChangeMap = true
+
+          setTimeout(() =>{
+            blockChangeMap = false
+          }, 2000)
+        }
+        else player.disabled = false
       } else {
         audioObj.SFX.changeMap.play()
 
@@ -1543,6 +1564,34 @@ function eventZoneManagement(eventZones){
         worldEventData.bananaGuy.bananaGiven = true
       }
 
+      if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && !worldEventData.mousaCrest.ask){
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.dialogue)
+
+        worldEventData.mousaCrest.ask = true
+
+        // console.log('block event')
+        return
+      } else if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && !worldEventData.kukum.permission){
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
+
+        // console.log('block event')
+        return
+      } else if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && worldEventData.kukum.permission){
+        player.interaction = eventZonesIndex
+        
+        player.disabled = true
+        player.dialogue('overworld', eventZonesIndex.info.permissionDialogue)
+
+        // console.log('block event')
+        return
+      } 
+
       let playerLookingAtNPC = false
 
       if(eventZonesIndex.type != 4) {
@@ -1605,11 +1654,25 @@ function eventZoneManagement(eventZones){
                 if(!worldEventData.djed.meet) return
                 if(player.badges[1]) return
                 break
+            case 'hermesGymTrainer':
+              if(worldEventData.hermes.met && !player.badges[2]) return
+
+                document.addEventListener('keydown', (e) =>{
+                  if(e.key == ' '){
+                    player.disabled = true
+                    player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                  }
+                })
+
+                if(!worldEventData.hermes.met) return
+                if(player.badges[1]) return
+                break
           }
 
           if(eventZonesIndex.info.beaten) return
           
           disableOWMenu.active = true
+          console.log('here2')
           
           player.disabled = true
           
@@ -1733,6 +1796,8 @@ function spendQueue(){
     queue.shift()
     return
   } else { 
+    if(document.querySelector('#pickedUpItem') != undefined) document.querySelector('#pickedUpItem').src = ''
+
     if(!healProcess) {
       if(player.interaction != null){
         if(player.interaction.name == 'item') gsap.to(document.querySelector('#overlapping'), {
@@ -1796,6 +1861,41 @@ function spendQueue(){
         }
       })
     }
+
+    if(currMap.name == 'luna_Mountain_Entrance'){
+      // audioObj.SFX.changeMap.play()
+
+      // gsap.to('#overlapping', {
+      //   opacity: 1,
+      //   duration: 0.4,
+      //   onComplete(){
+      //     // console.log({name:'pearly_Path', spawnPosition:{x:map.position.x + 150, y:map.position.y}})
+      //     changeMapInfo({name:'luna_Mountain_Entrance', spawnPosition:{x:map.position.x, y:map.position.y - 350}}, {name:'pearly_Path', spawnPosition:{x:map.position.x, y:map.position.y}})
+      //     setTimeout(() =>{
+      //       disableOWMenu.active = false
+      //       player.disabled = false
+      //     }, 250)
+      //   }
+      // })
+    }
+
+    if(player.interaction.info.eventKey == 'mousaCrestBlock' && !worldEventData.kukum.permission){
+      player.disabled = true
+      audioObj.SFX.changeMap.play()
+
+      gsap.to('#overlapping', {
+        opacity: 1,
+        duration: 0.4,
+        onComplete(){
+          // console.log({name:'pearly_Path', spawnPosition:{x:map.position.x + 150, y:map.position.y}})
+          changeMapInfo({name:'commandment_Road', spawnPosition:{x:map.position.x - 350, y:map.position.y}}, {name:'commandment_Road', spawnPosition:{x:map.position.x, y:map.position.y}})
+          setTimeout(() =>{
+            disableOWMenu.active = false
+            player.disabled = false
+          }, 250)
+        }
+      })
+    }
   }
 
   if(player.interaction.info.eventKey == 'bananacopia'){
@@ -1835,6 +1935,188 @@ function spendQueue(){
 
     player.dialogue('overworld', `The golden disk in your inventory started to glow.\n\nThe same thing happens to the statue in front of you.\n\nThe statue starts moving, you get ready for combat.`)
   } 
+
+  if(player.interaction.info.eventKey == 'renamer' || player.interaction.info.eventKey == 'relearner') homouFamilyInteraction(player.interaction.info.eventKey)
+}
+
+
+const partyInteractionContainer = document.querySelector('#partyInteractionContainer')
+partyInteractionContainer.addEventListener('click', e =>{
+  if(e.target.id == 'partyInteractionContainerBackground'){
+    disableOWMenu.active = false
+    player.disabled = false
+
+    partyInteractionContainer.style.display = 'none'
+  }
+
+  e.target.classList.forEach(className =>{
+    if(className == 'partyInteractionContentActive'){
+      partyInteractionContainer.style.display = 'none'
+    }
+  })
+})
+
+function homouFamilyInteraction(type){
+  disableOWMenu.active = true
+  player.disabled = true
+
+  const partyInteractionContentContainer = document.querySelector('#partyInteractionContentContainer')
+  partyInteractionContentContainer.replaceChildren()
+
+  for(let i = 0; i < 6; i++){
+    const partyInteractionContent = document.createElement('div')
+    partyInteractionContent.setAttribute('class', 'partyInteractionContent')
+    partyInteractionContentContainer.appendChild(partyInteractionContent)
+
+    const partyInteractionContentImg = document.createElement('img')
+    partyInteractionContentImg.setAttribute('class', 'partyInteractionContentImg')
+
+    if(type == 'renamer') partyInteractionContentImg.addEventListener('click', e => initRenameEvent(player.team[i]))
+    else partyInteractionContentImg.addEventListener('click', e => initRelearnMoveEvent(player.team[i]))
+
+    if(player.team[i] != undefined) {
+      if(player.team[i].isShiny) partyInteractionContentImg.src = player.team[i].pogemon.sprites.shiny.sprite
+      else partyInteractionContentImg.src = player.team[i].pogemon.sprites.classic.sprite
+
+      partyInteractionContentImg.setAttribute('class', 'partyInteractionContentImg partyInteractionContentActive')
+    }
+
+    partyInteractionContent.appendChild(partyInteractionContentImg)
+  }
+
+  partyInteractionContainer.style.display = 'block'
+}
+
+const relearnMoveObj = {
+  active: false,
+  oldMove: {
+    move: null,
+    id: null,
+    DOM: null
+  },
+  currMove: {
+    move: null,
+    id: null,
+    DOM: null
+  }
+}
+
+const relearnMoveContentContainer = document.querySelector('#relearnMoveContentContainer')
+relearnMoveContentContainer.addEventListener('click', e =>{
+  if(e.target.classList[0] == 'relearnMoveLearntMovesListContent' || e.target.classList[0] == 'relearnMoveContentMoveContainer') return
+
+  document.querySelector('#relearnMoveContentContainer').style.display = 'none'
+  disableOWMenu.active = false
+  player.disabled = false
+})
+
+const relearnMoveCurrMovesArr = []
+const relearnMoveLearntMovesArr = []
+
+function initRelearnMoveEvent(pogemon){
+  relearnMoveContentContainer.style.display = 'grid'
+
+  const relearnMoveContentPogemonImg = document.querySelector('#relearnMoveContentPogemonImg')
+
+  if(pogemon.isShiny) relearnMoveContentPogemonImg.src = pogemon.pogemon.sprites.shiny.sprite
+  else relearnMoveContentPogemonImg.src = pogemon.pogemon.sprites.classic.sprite
+
+  relearnMoveObj.oldMove = {
+    move: null,
+    id: null,
+    DOM: null
+  }
+
+  relearnMoveObj.currMove = {
+    move: null,
+    id: null,
+    DOM: null
+  }
+
+  // know moves
+
+  const relearnMoveContentMovesContentContainer = document.querySelector('#relearnMoveContentMovesContentContainer')
+  relearnMoveContentMovesContentContainer.replaceChildren()
+  
+  relearnMoveCurrMovesArr.length = 0
+  for(let i = 0; i < 4; i++){
+    const relearnMoveContentMoveContainer = document.createElement('div')
+    relearnMoveContentMoveContainer.setAttribute('class', 'relearnMoveContentMoveContainer')
+
+    if(pogemon.moves[i] != undefined) {
+      relearnMoveContentMoveContainer.innerText = pogemon.switchUnderScoreForSpace(pogemon.moves[i].name)
+
+      relearnMoveCurrMovesArr.push(pogemon.moves[i].name)
+    }
+
+    relearnMoveContentMoveContainer.addEventListener('click', e =>{
+
+      relearnMoveObj.currMove.move = pogemon.moves[i].name
+      relearnMoveObj.currMove.id = i
+      relearnMoveObj.currMove.DOM = relearnMoveContentMoveContainer
+
+      switchMoveVisualEvent(pogemon)
+
+
+    //   for(let j = 0; j < relearnMoveCurrMovesArr.length; j++){
+
+ 
+    //     if(e.target.inner == relearnMoveCurrMovesArr[j]) {
+    //       skip = true
+    //       break
+    //     } else index = i
+    //   }
+    })
+
+    relearnMoveContentMovesContentContainer.appendChild(relearnMoveContentMoveContainer)
+  }
+
+  // learnt moves
+
+  const relearnMoveLearntMovesListContainer = document.querySelector('#relearnMoveLearntMovesListContainer')
+  relearnMoveLearntMovesListContainer.replaceChildren()
+  
+  relearnMoveLearntMovesArr.length = 0
+  pogemon.learntMoves.forEach((move, i) =>{
+    let skip = false
+    let index
+
+    console.log(relearnMoveCurrMovesArr)
+
+    if(relearnMoveCurrMovesArr.includes(move)) skip = true
+    else index = i
+
+    if(skip) return
+
+    const relearnMoveLearntMovesListContent = document.createElement('div')
+    relearnMoveLearntMovesListContent.setAttribute('class', `relearnMoveLearntMovesListContent ${index} activeButton`)
+    relearnMoveLearntMovesListContent.textContent = pogemon.switchUnderScoreForSpace(move)
+
+    relearnMoveLearntMovesArr.push(move)
+
+    relearnMoveLearntMovesListContent.addEventListener('click', e =>{
+      if(relearnMoveObj.active) return
+      
+      relearnMoveObj.oldMove.move = move
+      relearnMoveObj.oldMove.id = index
+      relearnMoveObj.oldMove.DOM = relearnMoveLearntMovesListContent
+
+      relearnMoveLearntMovesListContent.classList.add('pressed')
+
+      for(let i = 0; i < relearnMoveCurrMovesArr.length; i++){
+        const learnMoveCurrMoveContainer = document.querySelectorAll('.relearnMoveContentMoveContainer')[i]
+        learnMoveCurrMoveContainer.classList.add('activeButton')
+      }
+    })
+
+    relearnMoveLearntMovesListContainer.appendChild(relearnMoveLearntMovesListContent)
+  })
+
+  // pogemon.moves.forEach(move =>{
+  //   const relearnMoveContentMove = document.createElement('div')
+  //   relearnMoveContentMove.setAttribute('class', 'relearnMoveContentMove')
+  // })
+  
 }
 
 function playerInputEvent(animationId, direction, movables, boundaries, battleZones, changeMap, eventZones){
@@ -1856,6 +2138,71 @@ function playerInputEvent(animationId, direction, movables, boundaries, battleZo
       player.frames.hold = 10
     }
   }
+}
+
+function switchMoveVisualEvent(pogemon){
+  if(relearnMoveObj.active) return
+
+  let oldRelearnMoveObj = relearnMoveObj
+  
+  relearnMoveObj.active = true
+
+  if(oldRelearnMoveObj.oldMove.DOM == null) return
+  if(oldRelearnMoveObj.currMove.DOM == null) return
+
+  oldRelearnMoveObj.oldMove.DOM.style.color = 'rgba(0,0,0,0)'
+  oldRelearnMoveObj.currMove.DOM.style.color = 'rgba(0,0,0,0)'
+
+  // spot to push back currMove into learntMoves Arr
+
+  // let placeBackIntoLearntIndex
+  
+  // Object.values(pogemon.pogemon.movepool).forEach((moveInfo, i) =>{
+  //   if(pogemon.learntMoves.includes())
+  //   if(relearnMoveObj.currMove.move == moveInfo.move.name) pogemon.learntMoves.splice(i, 0, relearnMoveObj.currMove.move)
+  //   else pogemon.learntMoves.push(relearnMoveObj.currMove.move)
+  // })
+
+  pogemon.moves[oldRelearnMoveObj.currMove.id] = movesObj[oldRelearnMoveObj.oldMove.move]
+  console.log(pogemon.moves[oldRelearnMoveObj.currMove.id])
+
+  // // let movePlaceHolder
+  // // movePlaceHolder
+
+  let index
+
+  for(let i = 0; i < pogemon.learntMoves.length; i++){
+    if(oldRelearnMoveObj.currMove.move == pogemon.learntMoves[i]) index = i
+  }
+
+  document.querySelectorAll('.relearnMoveLearntMovesListContent').forEach(node =>{
+    node.setAttribute('class', `relearnMoveLearntMovesListContent ${index}`)
+  })
+
+  document.querySelectorAll('.relearnMoveContentMoveContainer').forEach(node =>{
+    node.setAttribute('class', 'relearnMoveContentMoveContainer')
+  })
+
+  setTimeout(() =>{
+    setTimeout(() =>{
+      relearnMoveObj.active = false
+
+      document.querySelector('#relearnMoveContentContainer').style.display = 'none'
+
+      disableOWMenu.active = false
+      player.disabled = false
+    }, 750)
+
+    let textPlaceHolder
+    textPlaceHolder = oldRelearnMoveObj.oldMove.DOM.textContent
+    oldRelearnMoveObj.oldMove.DOM.textContent = oldRelearnMoveObj.currMove.DOM.textContent
+    oldRelearnMoveObj.currMove.DOM.textContent = textPlaceHolder
+
+    oldRelearnMoveObj.oldMove.DOM.style.color = 'white'
+    oldRelearnMoveObj.currMove.DOM.style.color = 'white'
+  }, 500)
+
+  // console.log(relearnMoveObj)
 }
 
 export function playerMovement(animationId, movables, boundaries, battleZones, changeMap, eventZones) {

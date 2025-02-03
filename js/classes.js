@@ -196,6 +196,7 @@ export class Pogemon extends Sprite{
     predeterminedAbility,
     predeterminedShiny,
     predeterminedIvs,
+    predeterminedMoves,
     preBuilt,
     {
       type, 
@@ -256,7 +257,7 @@ export class Pogemon extends Sprite{
       this.fainted = false
       this.evo = this.pogemon.evo
       this.abilityInfo = this.generateAbility(predeterminedAbility)
-      this.moves = this.generateMoves(true, 'battle')
+      this.moves = this.generateMoves(true, predeterminedMoves)
       this.animationProperties = pogemon.animationProperties
       this.heldItem = heldItem
       this.friendliness = 0
@@ -402,36 +403,38 @@ export class Pogemon extends Sprite{
     return {ability, index}
   }
 
-  generateMoves = (init, type) => {
+  generateMoves = (init, predeterminedMoves) => {
     let moves = []
     let movepool = this.pogemon.movepool
 
-    if(type !== 'battle') return
-
-    if(!init){
-      moves = this.moves
-    } else this.learntMoves = new Array()
-
-    Object.keys(movepool).forEach(key =>{
-      if(movepool[key].lvl <= this.lvl){
-        if(!init){
-          if(this.learntMoves.includes(movepool[key].move.name)) return
-
-          moves.push({...movepool[key].move})
-          if(!this.isEnemy) movepool[key].seen = true
-        } else {
-          // isint an array when trying to push things to it
-          if(this.learntMoves.includes(movepool[key].move.name)) return
-
-          this.learntMoves.push(movepool[key].move.name)
-          if(!this.isEnemy) movepool[key].seen = true
-          
-
-          if(moves.length == 4) moves.splice(0, 1)
-          moves.push({...movepool[key].move})
+    if(predeterminedMoves != undefined){
+      moves = predeterminedMoves
+    } else {
+      if(!init){
+        moves = this.moves
+      } else this.learntMoves = new Array()
+  
+      Object.keys(movepool).forEach(key =>{
+        if(movepool[key].lvl <= this.lvl){
+          if(!init){
+            if(this.learntMoves.includes(movepool[key].move.name)) return
+  
+            moves.push({...movepool[key].move})
+            if(!this.isEnemy) movepool[key].seen = true
+          } else {
+            // isint an array when trying to push things to it
+            if(this.learntMoves.includes(movepool[key].move.name)) return
+  
+            this.learntMoves.push(movepool[key].move.name)
+            if(!this.isEnemy) movepool[key].seen = true
+            
+  
+            if(moves.length == 4) moves.splice(0, 1)
+            moves.push({...movepool[key].move})
+          }
         }
-      }
-    })
+      })
+    }
 
     return moves
   }
@@ -2344,7 +2347,8 @@ export class Pogemon extends Sprite{
 
       if(recipient.hp <= 0) {
         recipient.hp = 0
-        queue.push(() => faintEvent(recipient))
+        // faintEvent(recipient)
+        // console.log('faintEvent')
       } 
     }
 
@@ -2777,8 +2781,9 @@ export class Pogemon extends Sprite{
           console.log('there')
 
           setTimeout(() =>{
-            if(recipient.status.name != null) queueProcess.disabled = false
-            if(!statusApplied) queueProcess.disabled = false
+            // if(recipient.status.name != null) queueProcess.disabled = false
+            // if(!statusApplied) queueProcess.disabled = false
+            queueProcess.disabled = false
             console.log('here')
           }, 1250)
           
@@ -2994,7 +2999,7 @@ export class Pogemon extends Sprite{
                 }, 1250)
               }, 750)
             } else {
-              manageWeatherState('sun', terrainConditions.turns.weather.sun, 'init')
+              manageWeatherState('sun', terrainConditions.turns.weather.sun, 'init', this)
               setTimeout(() =>{
                 this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt intensified the sun!`)
               }, 750)
@@ -3010,7 +3015,8 @@ export class Pogemon extends Sprite{
                 }, 1250)
               }, 750)
             } else {
-              manageWeatherState('rain', terrainConditions.turns.weather.rain, 'init')
+              manageWeatherState('rain', terrainConditions.turns.weather.rain, 'init', this)
+              console.log('here')
               setTimeout(() =>{
                 this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned intense rain!`)
               }, 750)
@@ -3026,7 +3032,7 @@ export class Pogemon extends Sprite{
                 }, 1250)
               }, 750)
             } else {
-              manageWeatherState('sand', terrainConditions.turns.weather.sand, 'init')
+              manageWeatherState('sand', terrainConditions.turns.weather.sand, 'init', this)
               setTimeout(() =>{
                 this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a strong sand storm!`)
               }, 750)
@@ -3040,7 +3046,7 @@ export class Pogemon extends Sprite{
                 console.log('here')
               }, 1250)
             } else {
-              manageWeatherState('snow', terrainConditions.turns.weather.snow, 'init')
+              manageWeatherState('snow', terrainConditions.turns.weather.snow, 'init', this)
               setTimeout(() =>{
                 this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt summoned a frigid snow storm!`)
               }, 750)
@@ -3054,7 +3060,7 @@ export class Pogemon extends Sprite{
                 console.log('here')
               }, 1250)
             } else {
-              manageWeatherState('trick_room', terrainConditions.turns.etc.trick_room, 'init')
+              manageWeatherState('trick_room', terrainConditions.turns.etc.trick_room, 'init', this)
               setTimeout(() =>{
                 this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.`)
               }, 750)
@@ -4179,7 +4185,7 @@ export class Pogemon extends Sprite{
 
         terrainArr.forEach((activeTerrain, i) =>{
           if(activeTerrain.info.turns <= 1){
-            manageWeatherState(null, null, 'endOfTurn', activeTerrain)
+            manageWeatherState(null, null, 'endOfTurn', null, activeTerrain)
             return
           }
 
@@ -4318,6 +4324,7 @@ export class Pogemon extends Sprite{
         // audioObj.music.victory.play()
         this.hpManagement()
         faintEvent(this)
+        console.log('faintEvent')
         return
       }
     }
@@ -4623,10 +4630,12 @@ export class Pogemon extends Sprite{
 
     const yeild = pogemonsObj[`${this.switchUnderScoreForSpace(yeilder.nickname)}`].yeild * a
     const lvl = yeilder.lvl
-    const expGained = Math.floor(((yeild * lvl / 5) * (1 / s) * Math.pow(((2 * lvl + 10) / (lvl + this.lvl + 10)), 2.5) + 1))
+    let expGained = Math.floor(((yeild * lvl / 5) * (1 / s) * Math.pow(((2 * lvl + 10) / (lvl + this.lvl + 10)), 2.5) + 1))
+
+    if(this.heldItem != null) if(this.heldItem.name == 'lucky_Egg') expGained = expGained * 1.5
     
     this.exp += expGained
-    this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} gained ${expGained} exp points!`)
+    this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} gained ${expGained} exp points!`)
 
     this.expBarProgress(inBattle)
 
@@ -4818,7 +4827,7 @@ export class Pogemon extends Sprite{
   learnMoveOnLvlUp() {
     let oldMoves = [...this.moves]
     
-    this.moves = this.generateMoves(false, 'battle')
+    this.moves = this.generateMoves(false, null)
 
     let newMovesAmount = this.moves.length - oldMoves.length
     let newMoves = [...this.moves].splice(-newMovesAmount, newMovesAmount)
@@ -5259,6 +5268,7 @@ export class Character extends Sprite{
                   if(ally.hp <= 0){
                     // pogemonInUse.faint(queueFaintTrigger)
                     faintEvent(ally)
+                    console.log('faintEvent')
                     // put this in a queue
                     // check if they all fainted
                     // if(pogemonInUse.fainted) {
@@ -5336,8 +5346,8 @@ export class Character extends Sprite{
         },
         animate: true
       })
-
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, pogemonSprite)
+      //                                                             // held item      //ability          //shiny//ivs//moves               
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)

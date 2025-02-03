@@ -41,7 +41,33 @@ export let worldEventData = {
     meet:false,
     gym:false
   },
+  moses:{
+    staffGiven: false
+  },
+  mousaCrest:{
+    ask: false,
+  },
+  kukum:{
+    permission: false
+  },
+  hermes:{
+    met: false,
+  },
+  endPortal:{
+    explained: false,
+    open: false
+  },
+  summoners:{
+    dawn: false,
+    dusk: false,
+    twilight: false,
+    solstice: false
+  },
   vignus:{
+    catchable:false,
+    caught:false
+  },
+  caera:{
     catchable:false,
     caught:false
   }
@@ -90,7 +116,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.pearly_Path}
+      currMap = {...mapsObj.stasis_Cave}
       currMap.seen = true
     }
   } else {
@@ -259,19 +285,44 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${currMap.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${currMap.name}`].trainers[z]
 
+                if(trainerInfo == undefined) return
+
                 if(z == 0) z = z + 1
                 else z++
 
-                switch(trainerInfo.eventKey){
-                  case 'maatGym':
-                    if(!worldEventData.maat.firstMeet) return
-                    if(player.badges[0]) return
-                    break
-                  case 'djedGym':
-                    if(!worldEventData.djed.meet) return
-                    if(player.badges[1]) return
-                    break
+                if(trainerInfo.eventKey != undefined){
+                  switch(trainerInfo.eventKey){
+                    case 'maatGymTrainer':
+                      if(!worldEventData.maat.firstMeet && player.badges[0]) 
+                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                      break
+                    case 'maatGym':
+                      if(!worldEventData.maat.firstMeet) return
+                      if(player.badges[0]) return
+                      break
+                    case 'djedGymTrainer':
+                      if(!worldEventData.djed.meet && player.badges[1]) 
+                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                      break
+                    case 'djedGym':
+                      if(!worldEventData.djed.meet) return
+                      if(player.badges[1]) return
+                      break
+                    case 'hermesGym':
+                      if(worldEventData.hermes.met) return
+                      if(player.badges[2]) return
+                      break
+                    case 'hermesGymTrainer':
+                      if(!worldEventData.djed.meet && player.badges[1]) 
+                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                      break
+                    case 'duskSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                  }
                 }
+
               
                 let trainerTeam = []
 
@@ -294,8 +345,13 @@ async function generateBoundaries(nextMapInfo){
                       },
                       animate: true
                     })
-                  
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, null, foeSprite))
+
+                    let pogemonMoves
+                    if(trainerInfo.team[i][6] != undefined) pogemonMoves = trainerInfo.team[i][6]
+
+                    console.log(trainerInfo.team[i][1])
+
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, null, foeSprite))
                   }
                 }
               
@@ -349,6 +405,7 @@ async function generateBoundaries(nextMapInfo){
               break
             case 5:
               let eventInfo = defaultMapsObj[`${currMap.name}`].event[x]
+              console.log(eventInfo)
               if(eventInfo == undefined) return
 
               // console.log(worldEventData)
@@ -365,9 +422,24 @@ async function generateBoundaries(nextMapInfo){
                   case 'cross_Link':
                     if(worldEventData.maat.firstMeet) return
                     break
+                  case 'djed_House':
+                    if(!player.badges[1]) return
+                    break
                   case 'eden_Forest':
                     if(!worldEventData.vignus.catchable) return
                     break
+                }
+
+                if(eventInfo.info.eventKey != undefined){
+                  switch(eventInfo.info.eventKey){
+                    case 'caera':
+                      if(!worldEventData.caera.catchable) return
+                      break
+                      case 'duskSummoner':
+                        if(!worldEventData.endPortal.explained) return
+                        if(worldEventData.summoners.dawn) return
+                        break
+                  }
                 }
 
               eventZones.push(
@@ -786,7 +858,8 @@ async function generateBoundaries(nextMapInfo){
 
                 switch(trainerInfo.eventKey){
                   case 'maatGymTrainer':
-                    if(!worldEventData.maat.firstMeet && player.badges[0]) trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                    if(!worldEventData.maat.firstMeet && player.badges[0]) 
+                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                     // console.log(trainerInfo)
                     break
                   case 'maatGym':
@@ -794,11 +867,25 @@ async function generateBoundaries(nextMapInfo){
                     if(player.badges[0]) return
                     break
                   case 'djedGymTrainer':
-                    if(!worldEventData.djed.meet && player.badges[1]) trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                    if(!worldEventData.djed.meet && player.badges[1]) 
+                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                     break
                   case 'djedGym':
                     if(!worldEventData.djed.meet) return
                     if(player.badges[1]) return
+                    break
+                  case 'hermesGym':
+                    if(!worldEventData.hermes.met) return
+                    if(player.badges[2]) return
+                    break
+                  case 'hermesGymTrainer':
+                    if(!worldEventData.djed.meet && player.badges[1]) 
+                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                    break
+                  case 'duskSummoner':
+                    console.log(trainerInfo.eventKey)
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
                     break
                 }
 
@@ -827,7 +914,10 @@ async function generateBoundaries(nextMapInfo){
                       animate: true
                     })
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, null, foeSprite))
+                    let pogemonMoves
+                    if(trainerInfo.team[i][6] != undefined) pogemonMoves = trainerInfo.team[i][6]
+
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, null, foeSprite))
                   }
                 }
               
@@ -888,6 +978,7 @@ async function generateBoundaries(nextMapInfo){
 
               switch(nextMapInfo.name){
                 case 'maat_House':
+                  if(!worldEventData.maat.firstMeet) return
                   if(!player.badges[0]) return
                   break
                 case 'cross_Link':
@@ -896,9 +987,21 @@ async function generateBoundaries(nextMapInfo){
                 case 'djed_House':
                   if(!player.badges[1]) return
                   break
-                // case 'eden_Forest':
-                //   if(!worldEventData.vignus.catchable) return
-                //   break
+                case 'eden_Forest':
+                  if(!worldEventData.vignus.catchable) return
+                  break
+              }
+
+              if(eventInfo.info.eventKey != undefined){
+                switch(eventInfo.info.eventKey){
+                  case 'caera':
+                    if(!worldEventData.caera.catchable) return
+                    break
+                    case 'duskSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                }
               }
 
               if(eventInfo.sprite != undefined){
@@ -946,10 +1049,10 @@ async function generateBoundaries(nextMapInfo){
 
               if(eventInfo.name == 'pc') return
 
-              if(nextMapInfo.name == 'maat_House') {
-                if(!worldEventData.maat.firstMeet) return
-                if(!player.badges[0]) return
-              }
+              // if(nextMapInfo.name == 'maat_House') {
+              //   if(!worldEventData.maat.firstMeet) return
+              //   if(!player.badges[0]) return
+              // }
 
               boundaries.push(
                 new Boundary({
@@ -1201,7 +1304,7 @@ function showMapNameAnimation(currMap){
   // console.log(mapsObj[currMap.name])
 }
 
-function flashContainerManagement(type){
+export function flashContainerManagement(type){
   const flashContainer =  document.querySelector('#flashContainer')
   const flashStuffArr = []
 
@@ -1224,7 +1327,7 @@ function flashContainerManagement(type){
     case 'full':
       flashContainer.style.display = 'grid'
       flashContainer.style.backgroundColor = 'transparent'
-
+  
       flashStuffArr.forEach((node,i) =>{
         if(i == 0 || i == 2) node.style.display = 'block'
         else node.style.display = 'grid'
@@ -1241,7 +1344,7 @@ export let encounterButtonState = {
   active : false
 }
 
-function printEncounterBox(map){
+export function printEncounterBox(map){
   let encounterArr = []
 
   document.querySelector('#mapEncounterContainer').replaceChildren()
@@ -1294,6 +1397,9 @@ function printEncounterBox(map){
     document.querySelector('#mapEncounterContainer').style.height = 0
     document.querySelector('#manageEncounterStateButtonImg').src = 'img/downArrow.png'
   }
+
+  if(map.name == 'luna_Mountain') encounterContainer.style.backgroundColor = 'rgba(30, 30, 30, 0.5)'
+  else encounterContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
 }
 
 export function changeMapInfo(nextMapInfo, currMapInfo){

@@ -10,6 +10,21 @@
   user-select: none;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: darkgray; 
+}
+
 body{
   background-color: black;
 
@@ -381,6 +396,9 @@ body{
 
 .pogemartItemPriceContainer{
   display: flex;
+
+  position: relative;
+  left: -15;
 }
 
 #pogemartBuyMenuTextContainer{
@@ -756,6 +774,8 @@ input[type="range"]::-webkit-slider-thumb {
   width: 45%;
 
   background-color: black;
+
+  text-align: center;
 }
 
 #confirmPogemonNameTextDisplayContainer{
@@ -866,4 +886,183 @@ input[type="range"]::-webkit-slider-thumb {
 
 #encounterImg{
   width: 100%;
+}
+
+#partyInteractionContainer{
+  display: none;
+
+  position: absolute;
+  top: 0;
+
+  height: 100%;
+  width: 100%;
+}
+
+#partyInteractionContainerBackground{
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#partyInteractionContentContainer{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 200;
+  width: 1200;
+
+  background-color: rgba(0, 0, 0, 0.75);
+
+  display: grid;
+  grid-template-columns: repeat(6, 200px);
+  justify-items: center;
+  align-items: center;
+}
+
+.partyInteractionContent{
+  height: 150;
+  width: 150;
+
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.partyInteractionContentActive:hover{
+  cursor: pointer;
+  background-color: rgba(10, 10, 10, 10.75);
+}
+
+.partyInteractionContentImg{
+  height: 100%;
+}
+
+#relearnMoveContentContainer{
+  position: absolute;
+  top: 0;
+
+  height: 100%;
+  width: 100%;
+
+  display: none;
+  grid-template-columns: 50% 50%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#relearnMoveLearntMovesContainer{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#relearnMoveLearntMovesListContainer{
+  position: relative;
+  left: -105px;
+  top: 5px;
+
+  height: 800;
+  width: 400;
+
+  background-color: rgba(0, 0, 0, 0.75);
+
+  overflow-y: scroll;
+
+  padding: 15;
+}
+
+#relearnMoveContentPogemonInfoContainer{
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+
+#relearnMoveContentPogemonImgContainer{
+  height: 100%;
+  width: 100%;
+  
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+#relearnMoveContentPogemonImg{
+  position: relative;
+  left: -150;
+
+  height: 75%;
+}
+
+#relearnMoveContentMovesContainer{
+  height: 100%;
+  width: 100%;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#relearnMoveContentMovesContentContainer{
+  position: relative;
+  left: -150;
+
+  height: 50%;
+  width: 80%;
+
+  display: flex;
+  justify-content: space-evenly;
+  align-content: space-around;
+  flex-wrap: wrap;
+
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.relearnMoveLearntMovesListContent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  height: 75;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.35);
+
+  margin-bottom: 10;
+
+  transition: 0.5s ease-in-out;
+}
+
+.pressed{
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.activeButton:hover{
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.relearnMoveContentMoveContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  height: 40%;
+  width: 45%;
+
+  background-color: rgba(0, 0, 0, 0.35);
+
+  transition: 0.5s ease-in-out;
+}
+
+.relearnMoveContentSecondChoice:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.75);
 }

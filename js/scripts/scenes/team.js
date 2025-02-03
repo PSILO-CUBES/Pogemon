@@ -60,6 +60,7 @@ function switchProcessEvent(first, second){
   if(second.pogemon == undefined) return
 
   disableOWMenu.active = true
+  console.log('here2')
 
   switchEvent = true
 

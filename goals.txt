@@ -560,6 +560,33 @@ keme_Town:{
 
 fix change map name display -- disable map change while display still happening?? x
 
+make faint happen after damage animation x
+
+chance for wild encouter to have held item x
+
+set premade moveset for gym leader pogemons / static encouters / legendaries / boss / whatever x
+
+make lucky egg x
+
+make weather and screen items x
+
+repels x
+
+scribble_Town:{
+    set encounters in prev areas
+    set items in prev areas
+    set trainers in prev areas
+    
+    hermes house in scribble town -- add kukum that give permission to go on mountain peak
+
+    move relearner and renamer
+} x
+
+split exp gain between combatants???? -- not sure if it works properly, was done a LONNNNGGG time ago x
+
+manage what pogemart shows properly x
+
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -577,13 +604,6 @@ stuffToDo:{
 
     data: {
         add event zones and wild mon objects to : {
-            exodus road
-            sidai desert
-            eden forest
-            luna mountain entrance
-            luna mountain
-            sol path
-            commandment road
             revelation road
         
             need to put Event Zones on tiles for battle zones to work
@@ -597,48 +617,52 @@ stuffToDo:{
 
         set abilities for each pogemon correctly
 
+        set pogemon evolution for each pogemon correctly
+
+        set who is surfable
+
         re enable trainers
     }
 
     ideas:{
-        scribble_Town:{
-            set encounters in prev areas
-            set items in prev areas
-            set trainers in prev areas
-            
-            hermes house in scribble town -- add kukum that give permission to go on mountain peak
-    
-            move relearner and renamer
-    
-            pacc isle map access giver -- after beating Solomon
-        }
-
         alquima_Town:{
             set encounters in prev areas
             set items in prev areas
             set trainers in prev areas
 
-            teleport gem giver
+            1rst house gives bait for regaligyne
     
             evil monk rich guy / Solomon house -- gives teleport gem after explaining portal
     
             battle item shop - tm shop
         }
 
-        set pogemon exp yeild
-
-        set pogemon evolution
-
         put some story stuff
 
+        make ability capsule
+
+        weather related evolutions
+
+        ma'at's berry shop?? no real other to get berries otherwise
+        bananacopia give all type of berry?
+
+        add jleech evo -- if atk + spatk + spd ivs > hp + def + spdef ivs
+
+        add regaligyne evo -- feed royal jelly to female formal when party full of ants
 
         make multiple boxes for pc
 
         name player scene before game start after new save file
 
-        repels
+        take back items when composite evolution happens -- dont want to loose black sludge when evolving godlie
 
-        fix change map sign
+        prevent TM learning of move is already in learntMove Arr
+
+        pacc isle map access giver -- after beating Solomon
+
+        false swipe
+
+        swap avatars
 
         -- done!!!!
     }

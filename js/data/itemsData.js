@@ -90,6 +90,17 @@ export const itemsObj = {
     price: 750,
     value: 350
   },
+  rare_Candy:{
+    name:'rare_Candy',
+    type: 'misc',
+    effect: 'level',
+    pow: '---',
+    img: 'img/item_scene/items/misc/rare_Candy.png',
+    desc: "Raises a pogemon's lvl by 1.",
+    consume: true,
+    price: 10000,
+    value: 5000
+  },
 
   // med
   potion: {
@@ -378,6 +389,20 @@ export const itemsObj = {
     price: 1,
     value: 125
   },
+  rainbo_Berry: {
+    name: 'rainbo_Berry',
+    type: 'berry',
+    effect: 'heal',
+    pow: 'all',
+    img: 'img/item_scene/items/berry/rainbo_Berry.png',
+    desc: 'A very colorful berry.\n\nCures from any status when held in battle.',
+    heldType: 'after',
+    heldEffect: 'healStatus',
+    consume: true,
+    friendliness: 1,
+    price: 1,
+    value: 125
+  },
   energy_Berry: {
     name: 'energy_Berry',
     type: 'berry',
@@ -566,6 +591,18 @@ export const itemsObj = {
     price: 1,
     value: 725
   },
+  never_Melting_Ice:{
+    name: 'never_Melting_Ice',
+    type: 'battle',
+    effect: 'ice',
+    pow: 20,
+    img: 'img/item_scene/items/battle/never_Melting_Ice.png',
+    desc: 'An eternal piece of ice.\n\nWhen held, boosts ice type attacks by 20%.',
+    heldType: 'elemental',
+    consume: false,
+    price: 1,
+    value: 725
+  },
   dragon_Fang:{
     name: 'dragon_Fang',
     type: 'battle',
@@ -730,7 +767,71 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/choice_Scarf.png',
     desc: "Holder's Speed is 1.5x, but it can only select the first move it executes.",
     consume: false,
-    price: 1,
+    price: 2175,
+    value: 725
+  },
+  lucky_Egg:{
+    name: 'lucky_Egg',
+    type: 'battle',
+    effect: 'exp',
+    img: 'img/item_scene/items/battle/lucky_Egg.png',
+    desc: "A hold item that boosts EXP. points earned in battle.",
+    consume: false,
+    price: 2175,
+    value: 725
+  },
+  heat_Rock:{
+    name: 'heat_Rock',
+    type: 'battle',
+    effect: 'weather',
+    weatherType: 'sun',
+    img: 'img/item_scene/items/battle/heat_Rock.png',
+    desc: "	",
+    consume: false,
+    price: 2175,
+    value: 725
+  },
+  damp_Rock:{
+    name: 'damp_Rock',
+    type: 'battle',
+    effect: 'weather',
+    weatherType: 'rain',
+    img: 'img/item_scene/items/battle/damp_Rock.png',
+    desc: "A Pokémon hold item that extends the duration of the Rain.",
+    consume: false,
+    price: 2175,
+    value: 725
+  },
+  smooth_Rock:{
+    name: 'smooth_Rock',
+    type: 'battle',
+    effect: 'weather',
+    weatherType: 'sand',
+    img: 'img/item_scene/items/battle/smooth_Rock.png',
+    desc: "A Pokémon hold item that extends the duration of the Sand.",
+    consume: false,
+    price: 2175,
+    value: 725
+  },
+  icy_Rock:{
+    name: 'icy_Rock',
+    type: 'battle',
+    effect: 'weather',
+    weatherType: 'snow',
+    img: 'img/item_scene/items/battle/icy_Rock.png',
+    desc: "A Pokémon hold item that extends the duration of the Snow.",
+    consume: false,
+    price: 2175,
+    value: 725
+  },
+  light_Clay:{
+    name: 'light_Clay',
+    type: 'battle',
+    effect: 'screens',
+    img: 'img/item_scene/items/battle/light_Clay.png',
+    desc: "A Pokémon hold item that extends the duration of Screens.",
+    consume: false,
+    price: 2175,
     value: 725
   },
 
@@ -801,6 +902,19 @@ export const itemsObj = {
     price: 1,
     value: null
   },
+  guiding_Staff:{
+    name: 'guiding_Staff',
+    type: 'key',
+    effect: 'flash',
+    pow: "---",
+    img: 'img/item_scene/items/key/guiding_Staff.png',
+    desc: "At first glance it seems to be a very old and ordinary staff. It guides it users through the darkest to times.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  }
 }
 
 Object.values(movesObj).forEach((move, i) =>{

@@ -1,10 +1,10 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player, interaction, lastDirection, pogemartInteraction } from '../player.js'
-import { currMap, encounterButtonState, generateMapData, pogecenterReturnInfo, worldEventData } from '../maps.js'
+import { playerMovement, player, interaction, lastDirection, pogemartInteraction, itemPickUp } from '../player.js'
+import { currMap, encounterButtonState, flashContainerManagement, generateMapData, pogecenterReturnInfo, printEncounterBox, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent, enemyTrainer } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState, switchSpaceForUnderScore, switchUnderScoreForSpace } from './stats.js'
@@ -41,7 +41,7 @@ const data = await loadData()
 
 let animationId
 
-const menu = {
+export const menu = {
   initiated: false
 }
 
@@ -620,6 +620,7 @@ function escapeKeyEventOptions(e) {
         document.querySelector('#pogemartSellItemsContainer').style.display = 'none'
 
         disableOWMenu.active = true
+        console.log('here2')
         player.team[0].dialogue('overworld', 'Have a good day! :D')
         document.querySelector('#pogemartMenuDescripion').textContent = ''
 
@@ -700,7 +701,7 @@ function escapeKeyEventOptions(e) {
     }
   } else if(e.key == '`'){
     console.log(player)
-    // console.log(worldEventData.djed)
+    console.log(battleQueue)
   }
 }
 
@@ -861,6 +862,7 @@ export function manageOverWorldState(state, previousScene){
 
     if(player.interaction != null) if(player.interaction.info.gymLeader != undefined){
       disableOWMenu.active = true
+      console.log('here2')
       document.querySelector('#overworldDialogueContainer').style.display = 'flex'
 
       if(!player.badges[0]) player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!\n\nYou can now cut down pesky tree that are in your way.")
@@ -894,6 +896,12 @@ export function manageOverWorldState(state, previousScene){
       player.team = teamPlaceHolder 
     }
 
+    printEncounterBox(currMap)
+
+    if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+    else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
+    else flashContainerManagement('none')
+
     overWorldAnimation()
     startOverWorldWeather()
     scenes.set('overworld', {initiated : true})
@@ -903,6 +911,14 @@ export function manageOverWorldState(state, previousScene){
     // console.log(catchEventObj)
     menu.initiated = false
     overworldMenuDom.replaceChildren()
+
+    if(player.interaction != null) if(player.interaction.info.eventKey == 'mosesStaff') {
+      if(worldEventData.moses.staffGiven) return
+      if(enemyTrainer == undefined) return
+
+      worldEventData.moses.staffGiven = true
+      itemPickUp(itemsObj.guiding_Staff, 1, `Here, take this. It should help you along your journey towards truth.`)
+    }
   } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)
@@ -910,6 +926,8 @@ export function manageOverWorldState(state, previousScene){
     OWAnimationRuning = false
     document.querySelector('#overworldScene').style.display = 'none'
     scenes.set('overworld', {initiated : false})
+    
+    setTimeout(() => flashContainerManagement('none'), 1250)
   }
 }
 
@@ -951,6 +969,7 @@ document.querySelector('#confirmPogemonNameYes').addEventListener('click', e =>{
   
     setTimeout(() =>{
       document.querySelector('#pogemonNamingScene').style.display = 'none'
+      disableOWMenu.active = false
       player.disabled = false
       document.querySelector('#overlapping').style.opacity = 0.5
       gsap.to(document.querySelector('#overlapping').style, {
@@ -967,6 +986,7 @@ document.querySelector('#confirmPogemonNameYes').addEventListener('click', e =>{
   
     setTimeout(() =>{
       document.querySelector('#pogemonNamingScene').style.display = 'none'
+      disableOWMenu.active = false
       player.disabled = false
       document.querySelector('#overlapping').style.opacity = 0.5
       gsap.to(document.querySelector('#overlapping').style, {

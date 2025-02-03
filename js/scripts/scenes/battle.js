@@ -278,7 +278,7 @@ function initWildEncounter(tileInfo, info){
   enemyTrainer = undefined
 
   battleType = 'wild'
-
+  
   let returnedFoe = foeRNGEncounter(tileInfo, info)
   if(returnedFoe == undefined) return
 
@@ -304,12 +304,26 @@ function initWildEncounter(tileInfo, info){
 
   console.log(rngLvl)
 
-  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, null, null, null, null, null, foeSprite)
+  let wildPogemonHeldItem = null
+  if(returnedFoe.heldItem != null) {
+    const rng = Math.floor(Math.random() * 100)
+
+    if(rng <= returnedFoe.heldItem.odds) wildPogemonHeldItem = {...returnedFoe.heldItem.item}
+  }
+
+  console.log(returnedFoe)
+
+  let wildPogemonMoves = null
+  if(returnedFoe.moves != undefined) wildPogemonMoves = returnedFoe.moves
+
+  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, null, foeSprite)
+
+  console.log(foe.moves)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
 
-let enemyTrainer
+export let enemyTrainer
 
 function initTrainerEncounter(info){
   battleType = 'trainer'
@@ -373,9 +387,21 @@ let allyId
 let enemyTrainerInfo
 export const startWeatherFlag = {active: false}
 
-function startWeather(type, info){
+function startWeather(type, info, timing, user){
+  let turns = 5
+
+  console.log(user)
+
+  if(timing = 'init')
+    if(user != undefined && user != null)
+      if(user.heldItem != null)
+        if(user.heldItem.effect == 'weather' && user.heldItem.weatherType == type)
+          turns = 8
+
   startWeatherFlag.active = true
-  startWeatherFlag.turns = 5
+  startWeatherFlag.turns = turns
+
+  console.log(type)
 
   if(prevScene != 'overworld') return
   
@@ -383,7 +409,7 @@ function startWeather(type, info){
 
   const fieldContainer = document.querySelector('#fieldEffectContainer')
   fieldContainer.style.display = 'flex'
-  info.turns = 5
+  info.turns = turns
 
   const weatherTurnIndicator = document.querySelector('#fieldEffectTurnIndicator')
   weatherTurnIndicator.textContent = info.turns
@@ -521,15 +547,15 @@ function manageTrickRoomState(info){
   ally.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\nThe trick room now affects the battlefield.`)
 }
 
-function manageWeatherState(type, info, timing, activeTerrain){
+function manageWeatherState(type, info, timing, user, activeTerrain){
   if(type == 'trick_room'){
     if(timing == 'init') manageTrickRoomState(info)
     else clearWeather(activeTerrain)
     return
   }
 
-  if(timing == 'init'){
-    startWeather(type, info)
+  if(timing == 'init' || timing == 'startOfBattle'){
+    startWeather(type, info, timing, user)
   }
 
   if(timing == 'endOfTurn'){
@@ -547,6 +573,9 @@ const shinySparklesManagement = {
 export const catchEventObj = {active: false, caughtPogemon: null}
 
 export function initRenameEvent(pogemon){
+  document.querySelector('#confirmPogemonInfoDisplayContainer').style.display  = 'none'
+  document.querySelector('#confirmPogemonNameButtonsContainerBackground').style.display = 'none'
+
   catchEventObj.active = true
   catchEventObj.caughtPogemon = pogemon
   player.disabled = true
@@ -676,8 +705,13 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
     resetStats('both')
     console.log(tileInfo)
-    if(info == undefined || info.trainer != undefined) initWildEncounter(tileInfo, info)
-    else initTrainerEncounter(info)
+    console.log(info)
+
+    if(info == undefined) initWildEncounter(tileInfo, info)
+    else {
+      if(info.trainer == false) initWildEncounter(tileInfo, info)
+      else initTrainerEncounter(info)
+    }
 
     player.team.forEach(pogemon =>{
       pogemon.knockedOff = false
@@ -805,7 +839,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
         let itemName
         if(ally.heldItem == null) itemName = 'nothing'
-        if(ally.heldItem != null) itemName = `a ${ally.heldItem.name}`
+        if(ally.heldItem != null) itemName = `a ${switchUnderScoreForSpace(ally.heldItem.name)}`
 
         setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(foe.nickname)} frisked ${itemName}.`),250)
       }
@@ -814,7 +848,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
         let itemName
         if(foe.heldItem == null) itemName = 'nothing'
-        if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
+        if(foe.heldItem != null) itemName = `a ${switchUnderScoreForSpace(foe.heldItem.name)}`
 
         setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`), 750)
       }
@@ -964,7 +998,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
           let itemName
           if(foe.heldItem == null) itemName = 'nothing'
-          if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
+          if(foe.heldItem != null) itemName = `a ${switchUnderScoreForSpace(foe.heldItem.name)}`
   
           setTimeout(() => ally.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`),500)
         }
@@ -1003,7 +1037,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
           let itemName
           if(foe.heldItem == null) itemName = 'nothing'
-          if(foe.heldItem != null) itemName = `a ${foe.heldItem.name}`
+          if(foe.heldItem != null) itemName = `a ${switchUnderScoreForSpace(foe.heldItem.name)}`
   
           setTimeout(() => ally.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`),500)
         }
@@ -1200,13 +1234,20 @@ export function initBattle(faintedTriggered, info, tileInfo){
   }
 
   if(currMap.weather != undefined) 
-    if(!ranAway) queue.push(() => manageWeatherState(currMap.weather, terrainConditions.turns.weather[currMap.weather], 'init'))
+    if(!ranAway) queue.push(() => manageWeatherState(currMap.weather, terrainConditions.turns.weather[currMap.weather], 'startOfBattle'))
+
+  console.log(faster.abilityInfo.ability.info)
+  console.log(slower.abilityInfo.ability.info)
+
+  console.log(terrainConditions.turns.weather[currMap.weather])
 
   if(faster.abilityInfo.ability.type == 'initWeather') 
-    if(!ranAway) queue.push(() => manageWeatherState(faster.abilityInfo.ability.info, terrainConditions.turns.weather[faster.abilityInfo.ability.info], 'init'))
+    if(faster.abilityInfo.ability.info != currMap.weather) 
+      if(!ranAway) queue.push(() => manageWeatherState(faster.abilityInfo.ability.info, terrainConditions.turns.weather[faster.abilityInfo.ability.info], 'init', faster))
 
   if(slower.abilityInfo.ability.type == 'initWeather') 
-    if(!ranAway) queue.push(() => manageWeatherState(slower.abilityInfo.ability.info, terrainConditions.turns.weather[slower.abilityInfo.ability.info], 'init'))
+    if(slower.abilityInfo.ability.info != currMap.weather) 
+      if(!ranAway) queue.push(() => manageWeatherState(slower.abilityInfo.ability.info, terrainConditions.turns.weather[slower.abilityInfo.ability.info], 'init', slower))
 }
 
 function clearBattleScene(nextScene){
@@ -1216,7 +1257,6 @@ function clearBattleScene(nextScene){
     mapsObj[`${currMap.name}`].trainers.forEach(trainer =>{
       if(trainer.name == player.interaction.info.name) trainer.beaten = true
     })
-    
   }
   
   if(player.interaction != null) if(player.interaction.info.gymLeader != undefined) {
@@ -2194,7 +2234,7 @@ function switchEnemyAfterFaint(type){
 
     let itemName
     if(ally.heldItem == null) itemName = 'nothing'
-    if(ally.heldItem != null) itemName = `a ${ally.heldItem.name}`
+    if(ally.heldItem != null) itemName = `a ${switchUnderScoreForSpace(ally.heldItem.name)}`
 
     setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(foe.nickname)} frisked ${itemName}.`),500)
   }
@@ -2580,36 +2620,21 @@ function faintEvent(target){
 
   if(target.isEnemy){
     if(target.fainted) return
-    target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
-    target.faint(queueFaintTrigger)
+
+    queueProcess.disabled = true
+    console.log('there')
 
     setTimeout(() =>{
-      queueProcess.disabled = false
-    }, 750)
+      target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
+      target.faint(queueFaintTrigger)
 
-    queue.push(() => {
-      if(target.isEnemy){
-        manageFaintingEvent(target)
-      } else if(checkIfTeamWipedOut()){
-        document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
-        document.querySelector('#overlapping').textContent = 'Git Gud'
-        gsap.to('#overlapping', {
-          opacity: 1,
-        })
-        //here
-        document.querySelector('#overlapping').addEventListener('click', spendQueue)
-        document.querySelector('#overlapping').style.cursor = 'pointer'
-        document.querySelector('#overlapping').style.pointerEvents = 'auto'
-        queue.push(() =>{
-          location.reload()
-        })
-      } else {
-        if(!target.fainted) return
-        faintedTriggered.active = true
-        manageBattleState(false, 'team', {active : true})
+      manageFaintingEvent(target)
+
+      setTimeout(() =>{
+        queueProcess.disabled = false
         console.log('here')
-      }
-    })
+      }, 750)
+    }, 750)
   } else {
     queue.push(() =>{
       if(target.fainted) return
@@ -2621,9 +2646,7 @@ function faintEvent(target){
       }, 750)
   
       queue.push(() => {
-        if(target.isEnemy){
-          manageFaintingEvent(target)
-        } else if(checkIfTeamWipedOut()){
+        if(checkIfTeamWipedOut()){
           document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
           document.querySelector('#overlapping').textContent = 'Git Gud'
           gsap.to('#overlapping', {
@@ -2664,9 +2687,7 @@ function manageCheckStatusEvent(faster, slower){
 
 function checkIfFainted(target){
   if(target.hp <= 0){
-
-    queue.push(() =>{
-
+    // queue.push(() =>{
       // if(!target.hp <= 0 || !target.fainted) {
       //   queue.splice(1, 1)
       //   return
@@ -2677,13 +2698,14 @@ function checkIfFainted(target){
       // target.dialogue('battle', `${target.name} fainted!`)
       // target.faint(queueFaintTrigger)
       faintEvent(target)
+      console.log('faintEvent')
       // if(battleType != 'trainer'){
       //   let placeHolder = queue[1]
       //   queue[1] = queue[2]
       //   queue[2] = placeHolder
       //   queue.pop()
       // }
-    })
+    // })
   }
 }
 
@@ -2697,25 +2719,21 @@ const terrainConditions = {
       },
       ally_reflect: {
         active: false,
-        turns: 0,
         element: 'psychic',
         color: typesObj['psychic'].color
       },
       ally_light_screen: {
         active: false,
-        turns: 0,
         element: 'psychic',
         color: typesObj['psychic'].color
       },
       foe_reflect: {
         active: false,
-        turns: 0,
         element: 'psychic',
         color: typesObj['psychic'].color
       },
       foe_light_screen: {
         active: false,
-        turns: 0,
         element: 'psychic',
         color: typesObj['psychic'].color
       },
@@ -2879,6 +2897,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
           console.log(`status event`)
           if(battleType != 'trainer') if(target.hp <= 0){
             faintEvent(target)
+            console.log('faintEvent')
             return
           }
 
@@ -2906,6 +2925,8 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         console.log('confuse check now')
 
         if(battleType != 'trainer') if(target.hp <= 0) faintEvent(target)
+        
+        console.log('faintEvent')
 
         // console.log('YAYA')
       } else {
@@ -2913,6 +2934,8 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
         // console.log(`status event`)
         if(battleType != 'trainer') if(target.hp <= 0) faintEvent(target)
+        
+        console.log('faintEvent')
 
         // check para and sleep here
         let recipientMove
@@ -3919,7 +3942,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
           terrainConditions.turns.etc[screenType].active = true
 
           terrainConditions.turns.etc[screenType].turns = 5
-          if(target.heldItem != undefined) if(target.heldItem.name == 'light_clay') terrainConditions.turns.etc[screenType].turns = 8
+          if(target.heldItem != undefined) if(target.heldItem.name == 'light_Clay') terrainConditions.turns.etc[screenType].turns = 8
 
           setTimeout(() => target.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${targetName} put up a ${switchUnderScoreForSpace(move.name)}.`), 750)
 
@@ -4087,7 +4110,7 @@ function pushRecipientEndOfTurnBattleItemEvent(target, targetHpBeforeMove, recip
     if(target.abilityInfo.ability.name == 'gluttony' && target.heldItem.type == 'berry') threshold += 25
 
     if(target.heldItem.heldThreshHold != undefined && threshold <= target.convertToPercentage(target.hp, target.stats.baseHp)) return
-    if(target.heldItem.heldEffect == 'healStatus' && target.status.name != target.heldItem.pow) return 
+    if(target.heldItem.heldEffect == 'healStatus' && target.status.name != target.heldItem.pow && target.heldItem.pow != 'all') return 
     if(target.fainted) return
     if(target.hp <= 0) return
 

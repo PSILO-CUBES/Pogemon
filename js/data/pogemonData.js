@@ -87,14 +87,15 @@ export let pogemonsObj = {
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.drizzle, seen: false, hidden: false},
+      // {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
-      2: {move: movesObj.reflect, lvl: 1, seen: false},
+      1: {move: movesObj.thunderous_kick, lvl: 1, seen: false},
+      2: {move: movesObj.breaking_swipe, lvl: 1, seen: false},
       3: {move: movesObj.lokick, lvl: 1, seen: false},
-      4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
+      // 4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
+      // 5: {move: movesObj.tackle, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -747,7 +748,7 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 50
     },
-    evo: [{name: 'Antber', type: 'item', item:'fire_Stone'}, {name: 'Antber', type: 'item', item:'royal_Jelly'}],
+    evo: {name: 'Antber', type: 'item', item:'fire_Stone'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
@@ -878,7 +879,7 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 30
     },
-    evo: {name: 'sterra', lvl: 20, type: 'lvl'},
+    evo: {name: 'sterra', lvl: 25, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
@@ -966,7 +967,7 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 10
     },
-    evo: {name: 'kampgooroo', lvl: 21, type: 'lvl'},
+    evo: {name: 'kampgooroo', lvl: 27, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.run_Away, seen: false, hidden: false},
     ],
@@ -1057,7 +1058,7 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 70
     },
-    evo: {name: 'sophistaves', lvl: 23, type: 'lvl'},
+    evo: {name: 'sophistaves', lvl: 26, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
@@ -1145,7 +1146,7 @@ export let pogemonsObj = {
       spdef: 50,
       spd: 50
     },
-    evo: {name: 'kampgooroo', lvl: 22, type: 'lvl'},
+    evo: {name: 'kampgooroo', lvl: 24, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],

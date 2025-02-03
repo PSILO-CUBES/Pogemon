@@ -561,6 +561,7 @@ function initStatsMenu(){
 
 function clearStatsMenu(prevScene){
   disableOWMenu.active = true
+  console.log('here2')
   
   gsap.to('#overlapping', {
     opacity: 1,
