@@ -586,6 +586,16 @@ split exp gain between combatants???? -- not sure if it works properly, was done
 
 manage what pogemart shows properly x
 
+false swipe x
+
+make ability capsule x
+
+battle item shop - tm shop x
+
+ma'at's berry shop?? no real other way to get berries otherwise x
+
+copy json file as save file and button to import during new game boot scene x
+
 
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
@@ -603,12 +613,6 @@ stuffToDo:{
     }
 
     data: {
-        add event zones and wild mon objects to : {
-            revelation road
-        
-            need to put Event Zones on tiles for battle zones to work
-        }
-
         set exp yeild for each pogemon correctly
 
         set catch rate for each pogemon correctly
@@ -626,25 +630,12 @@ stuffToDo:{
 
     ideas:{
         alquima_Town:{
-            set encounters in prev areas
-            set items in prev areas
-            set trainers in prev areas
-
             1rst house gives bait for regaligyne
     
             evil monk rich guy / Solomon house -- gives teleport gem after explaining portal
-    
-            battle item shop - tm shop
         }
 
         put some story stuff
-
-        make ability capsule
-
-        weather related evolutions
-
-        ma'at's berry shop?? no real other to get berries otherwise
-        bananacopia give all type of berry?
 
         add jleech evo -- if atk + spatk + spd ivs > hp + def + spdef ivs
 
@@ -654,15 +645,19 @@ stuffToDo:{
 
         name player scene before game start after new save file
 
-        take back items when composite evolution happens -- dont want to loose black sludge when evolving godlie
-
         prevent TM learning of move is already in learntMove Arr
 
         pacc isle map access giver -- after beating Solomon
-
-        false swipe
-
+ 
         swap avatars
+
+        drizzle wont start on second battle
+
+        key item for cut rock smash and surf
+
+        put weather in movables
+
+        fix exclamation box
 
         -- done!!!!
     }

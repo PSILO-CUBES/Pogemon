@@ -35,6 +35,7 @@ export let worldEventData = {
     given: false
   },
   baaull:{
+    goldenDisk: false,
     awake: false,
   },
   djed:{
@@ -116,7 +117,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.stasis_Cave}
+      currMap = {...mapsObj.transit_Peak}
       currMap.seen = true
     }
   } else {
@@ -349,9 +350,10 @@ async function generateBoundaries(nextMapInfo){
                     let pogemonMoves
                     if(trainerInfo.team[i][6] != undefined) pogemonMoves = trainerInfo.team[i][6]
 
-                    console.log(trainerInfo.team[i][1])
+                    let pogemonGender
+                    if(trainerInfo.team[i][7] != undefined) pogemonGender = trainerInfo.team[i][7]
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, null, foeSprite))
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, pogemonGender, null, foeSprite))
                   }
                 }
               
@@ -416,8 +418,8 @@ async function generateBoundaries(nextMapInfo){
               if(nextMapInfo != undefined)
                 switch(nextMapInfo.name){
                   case 'maat_House':
-                    if(!worldEventData.maat.firstMeet) return
-                    if(!player.badges[0]) return
+                    // if(!worldEventData.maat.firstMeet) return
+                    // if(!player.badges[0]) return
                     break
                   case 'cross_Link':
                     if(worldEventData.maat.firstMeet) return
@@ -489,10 +491,10 @@ async function generateBoundaries(nextMapInfo){
 
               if(eventInfo.name == 'pc') return
 
-              if(currMap.name == 'maat_House') {
-                if(!worldEventData.maat.firstMeet) return
-                if(!player.badges[0]) return
-              }
+              // if(currMap.name == 'maat_House') {
+              //   if(!worldEventData.maat.firstMeet) return
+              //   if(!player.badges[0]) return
+              // }
 
               // console.log(`boundary pushed`)
 
@@ -917,7 +919,10 @@ async function generateBoundaries(nextMapInfo){
                     let pogemonMoves
                     if(trainerInfo.team[i][6] != undefined) pogemonMoves = trainerInfo.team[i][6]
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, null, foeSprite))
+                    let pogemonGender
+                    if(trainerInfo.team[i][7] != undefined) pogemonGender = trainerInfo.team[i][7]
+
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, pogemonGender, null, foeSprite))
                   }
                 }
               
@@ -978,8 +983,8 @@ async function generateBoundaries(nextMapInfo){
 
               switch(nextMapInfo.name){
                 case 'maat_House':
-                  if(!worldEventData.maat.firstMeet) return
-                  if(!player.badges[0]) return
+                  // if(!worldEventData.maat.firstMeet) return
+                  // if(!player.badges[0]) return
                   break
                 case 'cross_Link':
                   if(worldEventData.maat.firstMeet) return
@@ -1008,6 +1013,8 @@ async function generateBoundaries(nextMapInfo){
                 const NPCImg = new Image()
                 NPCImg.src = eventInfo.sprite
 
+                console.log(NPCImg)
+
                 const NPCSprite = new Sprite({
                   type:'NPC',
                   position:{
@@ -1031,6 +1038,8 @@ async function generateBoundaries(nextMapInfo){
                   null,
                   NPCSprite
                 )
+
+                console.log(NPCSprite)
 
                 NPCSpritesArr.push(NPCharacter)
               }
@@ -1259,9 +1268,6 @@ function showMapNameAnimation(currMap){
     case 'maat House':
       mapName = "ma'at House"
       break
-    case 'keme Town House1':
-    case 'keme Town House2':
-      return
   }
 
   changeMapContainer.textContent = mapName
@@ -1418,7 +1424,7 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 
   // console.log(info)
 
-  OWWeatherParticles.arr = []
+  if(nextMapInfo.weather != currMap.weather) OWWeatherParticles.arr = []
 
   //deal with flash container stuff
 

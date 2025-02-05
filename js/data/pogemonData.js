@@ -79,21 +79,22 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 80,
-      atk: 75,
+      atk: 999999,
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 10
+      spd: 50
     },
     evo: {name: 'lokol', lvl: 16, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.drizzle, seen: false, hidden: false},
-      // {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.thunderous_kick, lvl: 1, seen: false},
-      2: {move: movesObj.breaking_swipe, lvl: 1, seen: false},
-      3: {move: movesObj.lokick, lvl: 1, seen: false},
+      1: {move: movesObj.false_Swipe, lvl: 1, seen: false},
+      // 2: {move: movesObj.breaking_swipe, lvl: 1, seen: false},
+      // 3: {move: movesObj.lokick, lvl: 1, seen: false},
       // 4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
       // 5: {move: movesObj.tackle, lvl: 1, seen: false},
     },
@@ -2809,9 +2810,9 @@ export let pogemonsObj = {
     catchRate: 200,
     surfable: false
   },
-  cataclismus: {
+  cataclysmus: {
     pogedex: 63,
-    name: 'cataclismus',
+    name: 'cataclysmus',
     element:{
       1: 'water',
       2: 'fire'
@@ -2833,18 +2834,18 @@ export let pogemonsObj = {
     },
     sprites: {
       classic:{
-        sprite: 'img/pogemon/063_Cataclismus/Cataclismus.png',
-        frontSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Animation.png',
-        backSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Back_Animation.png',
-        teamSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Team_Animation.png',
-        bagSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Bag_Animation.png',
+        sprite: 'img/pogemon/063_cataclysmus/cataclysmus.png',
+        frontSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Animation.png',
+        backSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Back_Animation.png',
+        teamSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Team_Animation.png',
+        bagSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Bag_Animation.png',
       },
       shiny: {
-        sprite: 'img/pogemon/063_Cataclismus/Cataclismus_Shiny.png',
-        frontSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Animation_Shiny.png',
-        backSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Back_Animation_Shiny.png',
-        teamSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Team_Animation_Shiny.png',
-        bagSprite: 'img/pogemon/063_Cataclismus/Cataclismus_Bag_Animation_Shiny.png',
+        sprite: 'img/pogemon/063_cataclysmus/cataclysmus_Shiny.png',
+        frontSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Animation_Shiny.png',
+        backSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Back_Animation_Shiny.png',
+        teamSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Team_Animation_Shiny.png',
+        bagSprite: 'img/pogemon/063_cataclysmus/cataclysmus_Bag_Animation_Shiny.png',
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,

@@ -92,11 +92,9 @@ export async function generatePlayer(canvas){
       player.catch(pogemonsObj.loko, true, mapsObj.lab)
       setTimeout(() =>{
         player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
-        player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 1})
         player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
-        player.bag.set("pogeball", {item: {...itemsObj.pogeball}, quantity: 15})
-        player.bag.set("potion", {item: {...itemsObj.potion}, quantity: 5})
-
+        player.bag.set("ability_Capsule", {item: {...itemsObj.ability_Capsule}, quantity: 999})
+        // player.bag.set("super_Repel", {item: {...itemsObj.}, quantity: 999})
       }, 250)
 
       player.pogedexInfo.forEach(pogedex =>{
@@ -139,7 +137,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -1778,7 +1776,7 @@ function eventZoneManagement(eventZones){
   }
 }
 
-let queue = []
+export let queue = []
 let queueEnabled = true
 
 document.querySelector('#overworldDialogue').addEventListener('click', (e) => {
@@ -1896,47 +1894,52 @@ function spendQueue(){
         }
       })
     }
+
+    if(player.interaction.info.eventKey == 'bananacopia'){
+      bananaBlock = true
+  
+      setTimeout(() =>{
+        bananaBlock = false
+      }, 1750)
+    }
+  
+    if(player.interaction.info.eventKey == 'sandPlanktonNPC' && !worldEventData.sifter.given) {
+      worldEventData.sifter.given = true
+  
+      itemPickUp(itemsObj.sand_Plankton, 3, `Sifter handed you a couple of weird critters...`)
+    } else if(player.interaction.info.eventKey == 'sandPlanktonNPC' && worldEventData.sifter.given){
+      gsap.to('#overlapping', {
+        opacity: 0,
+        duration: 0.4,
+        onComplete:() =>{
+          scenes.set('pickingItem', {initiated: false})
+        }
+      })
+    }
+  
+    if(player.interaction.info.eventKey == 'frozenBaaull' && worldEventData.baaull.awake){
+      manageBattleState(true, null, null, player.interaction.info)
+      manageOverWorldState(false)
+  
+      setTimeout(() =>{
+        map.img.src = 'img/maps/keme_Town/keme_Town.png'
+      }, 1250)
+  
+    } else if(player.interaction.info.eventKey == 'frozenBaaull' && !worldEventData.baaull.awake){
+      worldEventData.baaull.awake = true
+  
+      player.dialogue('overworld', `The golden disk in your inventory started to glow.\n\nThe same thing happens to the statue in front of you.\n\nThe statue starts moving, you get ready for combat.`)
+    } 
+  
+    if(player.interaction.info.eventKey == 'renamer' || player.interaction.info.eventKey == 'relearner') homouFamilyInteraction(player.interaction.info.eventKey)
+  
+    if(player.interaction.info.eventKey == 'Tms' || player.interaction.info.eventKey == 'battleItems' || player.interaction.info.eventKey == 'maatBerryShop') {
+      if(document.querySelector('#overworldDialogue').innerText == 'Have a good day! :D') return
+      // disableOWMenu.active = true
+      player.disabled = true
+      generatePogemartMenu(mapsObj.pogemart.productOptions[player.interaction.info.shopKey])
+    }
   }
-
-  if(player.interaction.info.eventKey == 'bananacopia'){
-    bananaBlock = true
-
-    setTimeout(() =>{
-      bananaBlock = false
-    }, 1750)
-  }
-
-  if(player.interaction.info.eventKey == 'sandPlanktonNPC' && !worldEventData.sifter.given) {
-    worldEventData.sifter.given = true
-
-    itemPickUp(itemsObj.sand_Plankton, 3, `Sifter handed you a couple of weird critters...`)
-  } else if(player.interaction.info.eventKey == 'sandPlanktonNPC' && worldEventData.sifter.given){
-    gsap.to('#overlapping', {
-      opacity: 0,
-      duration: 0.4,
-      onComplete:() =>{
-        scenes.set('pickingItem', {initiated: false})
-      }
-    })
-  }
-
-  console.log(player.interaction.info.eventKey)
-
-  if(player.interaction.info.eventKey == 'frozenBaaull' && worldEventData.baaull.awake){
-    manageBattleState(true, null, null, player.interaction.info)
-    manageOverWorldState(false)
-
-    setTimeout(() =>{
-      map.img.src = 'img/maps/keme_Town/keme_Town.png'
-    }, 1250)
-
-  } else if(player.interaction.info.eventKey == 'frozenBaaull' && !worldEventData.baaull.awake){
-    worldEventData.baaull.awake = true
-
-    player.dialogue('overworld', `The golden disk in your inventory started to glow.\n\nThe same thing happens to the statue in front of you.\n\nThe statue starts moving, you get ready for combat.`)
-  } 
-
-  if(player.interaction.info.eventKey == 'renamer' || player.interaction.info.eventKey == 'relearner') homouFamilyInteraction(player.interaction.info.eventKey)
 }
 
 

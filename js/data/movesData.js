@@ -40,6 +40,18 @@ export const movesObj = {
     animationType: 'physical',
     desc: 'Usually goes first.'
   },
+  false_Swipe:{
+    name: 'false_Swipe',
+    type: 'physical',
+    element: 'normal',
+    pow: 40,
+    acc: 100,
+    pp: 36,
+    effects: null,
+    priority: 1,
+    animationType: 'physical',
+    desc: 'Always leaves the target on 1HP.'
+  },
   rapid_spin:{
     name: 'rapid_spin',
     type: 'physical',
@@ -82,10 +94,22 @@ export const movesObj = {
     type: 'physical',
     element: 'normal',
     pow: 80,
-    acc: 700,
+    acc: 100,
     pp: 16,
     effects: null,
     priority: 2,
+    animationType: 'physical',
+    desc: 'Nearly always goes first.'
+  },
+  double_Edge:{
+    name: 'double_Edge',
+    type: 'physical',
+    element: 'normal',
+    pow: 120,
+    acc: 100,
+    pp: 8,
+    effects: [{recoil: 33}],
+    priority: 0,
     animationType: 'physical',
     desc: 'Nearly always goes first.'
   },
@@ -527,14 +551,14 @@ export const movesObj = {
     name: 'lokick',
     type: 'physical',
     element: 'fighting',
-    pow: 75,
-    acc: 100,
+    pow: 65,
+    acc: 95,
     pp: 24,
-    effects: [{name: 'buff', target:'atk', pow: 1, type: 'stats',}],
+    effects: [{name: 'buff', target:'spd', pow: 1, type: 'stats',}],
     priority: 0,
     sprite: '../../img/moves/lokick.png',
     animationType: 'physicalSprite',
-    desc: "100% chance to raise the user's Attack by 1."
+    desc: "100% chance to raise the user's Spd by 1."
   },
   thunderous_kick:{
     name: 'thunderous_kick',
@@ -548,6 +572,21 @@ export const movesObj = {
     sprite: '../../img/moves/lokick.png',
     animationType: 'physicalSprite',
     desc: "100% chance to lower the target's Defense by 1."
+  },
+  super_Power: {
+    name: 'super_Power',
+    type: 'physical',
+    element: 'fighting',
+    pow: 120,
+    acc: 90,
+    pp: 8,
+    effects: [{name: 'selfDebuff', target:'atk', pow: 1, type: 'stats'}, {name: 'selfDebuff', target:'def', pow: 1, type: 'stats'}],
+    priority: 0,
+    rotation: {ally: 0, foe: 0},
+    duration: 0.5,
+    sprite: '../../img/moves/superpower.png',
+    animationType: 'physicalSprite',
+    desc: "Lowers the user's Atk and Def by 1."
   },
   close_Combat: {
     name: 'close_Combat',
@@ -2438,7 +2477,7 @@ export const movesObj = {
     desc: "Raises the user's Attack by 1."
   },
   swords_dance:{
-    name: 'sharpen',
+    name: 'swords_dance',
     type: 'status',
     element: 'steel',
     pow: '---',

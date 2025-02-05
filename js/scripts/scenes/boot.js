@@ -1,6 +1,6 @@
 import { audioObj, volumeValues } from "../../data/audioData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
-import { loadData } from "../../save.js"
+import { loadData, setSaveData } from "../../save.js"
 import { manageOverWorldState, waitForNextBattle } from "./overworld.js"
 import { timeObj } from "./trainer.js"
 
@@ -118,6 +118,8 @@ function printSaveFileInfo(badgeContainer, trainerInfoContainer, trainerTeamCont
     printPogemonImg(trainerTeamContainer)
 }
 
+console.log(data)
+
 function printBootMenu(){
     const bootSceneDOM = document.querySelector('#bootScene')
     document.querySelector('#content').appendChild(bootSceneDOM)
@@ -128,8 +130,34 @@ function printBootMenu(){
     const trainerInfoContainer = document.querySelector('#trainerInfoContainer')
     const trainerTeamContainer = document.querySelector('#trainerTeamContainer')
 
-    trainerInfoContainer.textContent = 'no save file found'
-    trainerInfoContainer.setAttribute('class', 'noSaveCentering')
+    const newGameImportContainer = document.createElement('div')
+    newGameImportContainer.id = 'newGameImportContainer'
+    trainerInfoContainer.appendChild(newGameImportContainer)
+
+    const newGameNoSaveContainer = document.createElement('div')
+    newGameNoSaveContainer.id = 'newGameNoSaveContainer'
+    newGameNoSaveContainer.setAttribute('class', 'noSaveCentering')
+    newGameNoSaveContainer.textContent = 'no save file found'
+    newGameImportContainer.appendChild(newGameNoSaveContainer)
+
+    const newGameJSONInputFieldContainer = document.createElement('div')
+    newGameJSONInputFieldContainer.id = 'newGameJSONInputFieldContainer'
+    newGameJSONInputFieldContainer.setAttribute('class', 'noSaveCentering')
+    newGameImportContainer.appendChild(newGameJSONInputFieldContainer)
+
+    const newGameJSONInputField = document.createElement('input')
+    newGameJSONInputField.id = 'newGameJSONInputField'
+    newGameJSONInputFieldContainer.appendChild(newGameJSONInputField)
+    newGameJSONInputField.addEventListener('input', e =>{
+        if(e.data != null) {
+            const parsedData = JSON.parse(e.data)
+            setSaveData('saveFile', parsedData)
+            location.reload()
+        }
+    })
+    
+    // trainerInfoContainer.textContent = 'no save file found'
+    // trainerInfoContainer.setAttribute('class', 'noSaveCentering')
 
     if(data != null){
         const startButtonDOM = document.createElement('div')

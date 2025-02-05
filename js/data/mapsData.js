@@ -274,9 +274,9 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Samael', 
-        //     pogemon                 lvl item ability shiny ivs move
-        team: [[pogemonsObj.ouroboross, 30, null, null, null, null], [pogemonsObj.rockwil, 30, null, null, null, null], [pogemonsObj.steeler, 34, null, null, null, null]],
-        direction: {reach: {pos:{x:350, y:0}, neg:{x:0, y:0}}}, 
+        //     pogemon                 lvl  item  abili shiny  ivs    move gender
+        team: [[pogemonsObj.ouroboross, 30, null, null, null, null,], [pogemonsObj.rockwil, 30, null, null, null, null], [pogemonsObj.steeler, 34, null, null, null, null]],
+        direction: {reach: {pos:{x:400, y:0}, neg:{x:0, y:0}}}, 
         looking: 'Left',
         sprite: '../../img/charSprites/oldman2/oldman2.png',
         dialogue: 'The road ahead is steep..\n\nTo find the light withing ones heart,\n\none must be aware of the shadow that it casts..',
@@ -630,8 +630,11 @@ export let mapsObj = {
         name: 'npc',
         sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
-          direction: {reach: {pos:{x:30, y:0}, neg:{x:0, y:0}}, looking: 'Down'}, 
-          dialogue:['Make sure you speak to Professor Heisenberg before you leave town.'],
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}},
+          looking: 'Down', 
+          dialogue:['Make sure you speak to Professor Heisenberg before you leave town.\n\n\nAnyways, you can have a look at my berries if you want.'],
+          eventKey: 'maatBerryShop',
+          shopKey: 6
         },
       },
     ]
@@ -648,14 +651,15 @@ export let mapsObj = {
     height: 12,
     width: 16,
     changeMapLocations:[
-      {name: 'fair_Town', spawnPosition: {x: -1185, y: -400}}, {name: 'fair_Town', spawnPosition: {x: -1185, y: -400}},
+      {name: 'fair_Town', spawnPosition: {x: -1185, y: -415}}, {name: 'fair_Town', spawnPosition: {x: -1185, y: -415}},
     ],
     event: [
       {
         name: 'npc',
-        sprite: 'img/charSprites/oak/Oak.png',
+        sprite: 'img/charSprites/heisenberg/heisenberg.png',
         info: {
           direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          looking: 'Down',
           dialogue:["Let me introduce myself, i am professor Heisenberg.", "When Ma'at brought her slimie for me to study, it somehow secreated a\n\nstrange glowy substance that hardened itself into this halo.\n\n\nThis slime creature is very strange..", "It's genetic makeup indicates it could somehow evolve!\n\n\nMy hypothesis is that the halo plays an important role in\n\nit's evolution process.", "If you manage to make that happen, come and show me.", "Professor Heisenberg gave you the glowy halo."],
           slimeDialogue: ["Wow, what a strange speciment!\n\nIt seems like draining certain elemental essences allows it to change form.", "Even though you managed to prove slimie can actualy evolve,\n\nit does not seem like this is the last form this pogemon can take.", "If you manage to fill your party with one of each type of smile,\n\ncome back and show me."],
           haloDialogue: ["You did it, impressive!\n\nWell, actualy....", `According to the genetics of that pogemon it does seem like\n\nit could still evol..\n\n\n Hold on... What is going on with the halo!?`],
@@ -1244,7 +1248,7 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Bugzzy', 
-        team: [[pogemonsObj.sparkust, 16, null, null, null, null], [pogemonsObj.antber, 18, null, null, null, null]],
+        team: [[pogemonsObj.sparkust, 16, null, null, null, null], [pogemonsObj.antber, 18, null, null, null, null, null, 'male']],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:155}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/bugman/bugman.png',
@@ -1482,10 +1486,9 @@ export let mapsObj = {
     width: 26,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.formal, lvls: [11, 15], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.sturdle, lvls: [11, 15], odds: {min:50,max:80}},
-        {pogemon: pogemonsObj.cobbird, lvls: [12, 16], odds: {min:80,max:95}},
-        {pogemon: pogemonsObj.earthsa, lvls: [20, 25], odds: {min:95,max:100}},
+        {pogemon: pogemonsObj.sturdle, lvls: [11, 15], odds: {min:1,max:80}, heldItem:{odds: 100, item: itemsObj.nugget}},
+        {pogemon: pogemonsObj.formal, lvls: [12, 16], odds: {min:80,max:90}},
+        {pogemon: pogemonsObj.earthsa, lvls: [20, 25], odds: {min:90,max:100}},
       ], 
       water: [
         // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -1510,7 +1513,7 @@ export let mapsObj = {
     ],
     items: [
       {
-        name: 'royal_Jelly',
+        name: 'regina_Esca',
         amount: 1,
         direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
         pickedUp: false,
@@ -1528,6 +1531,18 @@ export let mapsObj = {
             "-Beeasis smiles at you mischievously-"
           ], 
           eventKey: 'beeasis'
+        },
+      },
+      {
+        name: 'beeasis',
+        sprite: "img/charSprites/ma'at/ma'at.png",
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:
+          [
+            "It seems like the first formal on your team is reacting to the jelly"
+          ], 
+          eventKey: 'regaligyneEvo'
         },
       },
     ]
@@ -1781,7 +1796,7 @@ export let mapsObj = {
     trainers: [
       {
         name: 'Adrien', 
-        team: [[pogemonsObj.antber, 22, null, null, null, null], [pogemonsObj.cheeto, 22, null, null, null, null], [pogemonsObj.flamie, 24, null, null, null, null]],
+        team: [[pogemonsObj.antber, 22, null, null, null, null, null, 'male'], [pogemonsObj.cheeto, 22, null, null, null, null], [pogemonsObj.flamie, 24, null, null, null, null]],
         direction: {reach: {pos:{x:0, y:200}, neg:{x:0, y:0}}},
         looking: 'Up', 
         sprite: '../../img/charSprites/firebreather/firebreather.png',
@@ -1803,6 +1818,13 @@ export let mapsObj = {
     obstaclesInfo: [
     ],
     items: [
+      {
+        name: 'fire_Stone',
+        amount: 1,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
       {
         name: 'choice_Specs',
         amount: 1,
@@ -2534,6 +2556,16 @@ export let mapsObj = {
         hidden: false
       },
     ],    
+    event: [
+      {
+        name: 'npc',
+        sprite: 'img/charSprites/oldman2/oldman2.png',
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}}, 
+          looking: 'Left',
+        },
+      },
+    ],
     weather: null,
   },
 
@@ -2660,11 +2692,15 @@ export let mapsObj = {
     width: 86,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.sturdle, lvls: [23, 27], odds: {min:1,max:25}}, 
+        {pogemon: pogemonsObj.punbreakable, lvls: [26, 29], odds: {min:25,max:40}},
+        {pogemon: pogemonsObj.formal, lvls: [23, 27], odds: {min:40,max:60}},
+        {pogemon: pogemonsObj.cobbird, lvls: [23, 27], odds: {min:60,max:80}},
+        {pogemon: pogemonsObj.furriticus, lvls: [23, 27], odds: {min:80,max:99}},
+        {pogemon: pogemonsObj.loko, lvls: [25, 28], odds: {min:99,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
@@ -2690,15 +2726,65 @@ export let mapsObj = {
 
       {name: 'stasis_Cave_Lower_Level', spawnPosition: {x:-1825, y: -2900}}, {name: 'stasis_Cave_Lower_Level', spawnPosition: {x:-1825, y: -2900}}, // lower right down ladder
 
-      {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, 
-      {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -400}}, 
+      {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, 
+      {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, {name: 'bellum_Way', spawnPosition: {x:-95, y: -415}}, 
     ],
     weather: null,
     trainers: [
+      {
+        name: 'Tesla',
+        team: [[pogemonsObj.furriticus, 31, null, null, null, null], [pogemonsObj.statikie, 34, null, null, null, null], [pogemonsObj.thunderhopper, 36, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:400}, neg:{x:0, y:0}}},
+        looking: 'Up', 
+        sprite: '../../img/charSprites/engineerguy/engineerguy.png',
+        dialogue: "Starts to get pretty cold from now on..\n\n\nI hope you brought supplies with ya.",
+        reward: 500,
+        beaten: true
+      },
+      {
+        name: 'Marty McFly',
+        team: [[pogemonsObj.wallafi, 32, null, null, null, null], [pogemonsObj.purdustus, 33, null, null, null, null], [pogemonsObj.volaticus, 35, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:400}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/mcfly/mcfly.png',
+        dialogue: "Doc fucking crashed the car, were stuck here bro.....",
+        reward: 650,
+        beaten: true
+      },
+      {
+        name: 'Arden',
+        team: [[pogemonsObj.venophibian, 31, null, null, null, null], [pogemonsObj.fruity, 33, null, null, null, null], [pogemonsObj.sterra, 34, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:400}, neg:{x:0, y:0}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/brownhatguy/brownhatguy.png',
+        dialogue: "This can't still be funny, right?..",
+        reward: 650,
+        beaten: true
+      },
+      {
+        name: 'Doc',
+        team: [[pogemonsObj.fruity, 33, null, null, null, null], [pogemonsObj.antber, 35, null, null, null, null, null, 'male'], [pogemonsObj.venophibian, 31, null, null, null, null]],
+        direction: {reach: {pos:{x:400, y:0}, neg:{x:0, y:0}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/doc/doc.png',
+        dialogue: "Idk why i look like this but i'm supposed to be the doc...\n\n\nHe wanted me to be there so whatever..\n\n\nI'm kinda drunk ngl.",
+        reward: 0,
+        beaten: true
+      },
+      {
+        name: 'Clair',
+        team: [[pogemonsObj.sophistaves, 36, null, null, null, null],  [pogemonsObj.balancia, 33, null, null, null, null], [pogemonsObj.psyranea, 34, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:400, y:0}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/purpleprof/purpleprof.png',
+        dialogue: "I think those two guys are having a psychosis and\n\nthink they are rick and morty or something...\n\n\nI'm just here looking for fossils tbh..",
+        reward: 700,
+        beaten: true
+      },
     ],
     items: [
       {
-        name: 'never_Melting_Ice',
+        name: 'nevermelt_ice',
         amount: 1,
         direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
         pickedUp: false,
@@ -2733,11 +2819,15 @@ export let mapsObj = {
     width: 86,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.sturdle, lvls: [25, 29], odds: {min:1,max:25}}, 
+        {pogemon: pogemonsObj.punbreakable, lvls: [29, 32], odds: {min:25,max:40}},
+        {pogemon: pogemonsObj.cobbird, lvls: [25, 29], odds: {min:40,max:60}}, 
+        {pogemon: pogemonsObj.spidathia, lvls: [25, 29], odds: {min:60,max:80}},
+        {pogemon: pogemonsObj.furriticus, lvls: [25, 29], odds: {min:80,max:99}},
+        {pogemon: pogemonsObj.maaph, lvls: [28, 31], odds: {min:99,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
@@ -2749,7 +2839,7 @@ export let mapsObj = {
 
       {name: 'stasis_Cave', spawnPosition: {x:-3350, y: -885}}, {name: 'stasis_Cave', spawnPosition: {x:-3350, y: -885}}, // top middle left down ladder
 
-      {name: 'stasis_Cave', spawnPosition: {x:-805, y: -1800}}, {name: 'stasis_Cave', spawnPosition: {x:-805, y: -1800}}, // bottom left down ladder
+      {name: 'stasis_Cave', spawnPosition: {x:-805, y: -1815}}, {name: 'stasis_Cave', spawnPosition: {x:-805, y: -1815}}, // bottom left down ladder
 
       {name: 'stasis_Cave', spawnPosition: {x:-3040, y: -1885}}, {name: 'stasis_Cave', spawnPosition: {x:-3040, y: -1885}}, // bottom right 1 down ladder
 
@@ -2764,9 +2854,77 @@ export let mapsObj = {
     ],
     weather: null,
     trainers: [
+      {
+        name: 'Piker',
+        team: [[pogemonsObj.mower, 40, null, null, null, null], [pogemonsObj.punbreakable, 38, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:400}, neg:{x:0, y:0}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
+        dialogue: "Don't get lost kid, there's still a good way before\n\nyou're out of this cave.",
+        reward: 750,
+        beaten: true
+      },
+      {
+        name: 'Geranthine',
+        team: [[pogemonsObj.earthsa, 40, null, null, null, null], [pogemonsObj.avorago, 38, null, null, null, null]],
+        direction: {reach: {pos:{x:400, y:0}, neg:{x:0, y:0}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/oldlady/oldlady.png',
+        dialogue: "You made it!\n\nI always believed in you dear. <3",
+        reward: 1000,
+        beaten: true
+      },
+      {
+        name: 'Spritz',
+        team: [[pogemonsObj.sterra, 39, null, null, null, null], [pogemonsObj.antber, 39, null, null, null, null, null, 'male']],
+        direction: {reach: {pos:{x:400, y:0}, neg:{x:0, y:0}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
+        dialogue: "They still don't like each other at all..",
+        reward: 800,
+        beaten: true
+      },
+      {
+        name: 'Elizabeth',
+        team: [[pogemonsObj.volaticus, 43, null, null, null, null], [pogemonsObj.purdustus, 39, null, null, null, null], [pogemonsObj.furriticus, 39, null, null, null, null], [pogemonsObj.moldy, 38, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:400}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/artist2/artist2.png',
+        dialogue: "How facinating, the polarities of life and death...",
+        reward: 900,
+        beaten: true
+      },
     ],
     items: [
-    ],
+      {
+        name: 'mega_Potion',
+        amount: 5,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'nugget',
+        amount: 3,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'golden_Banana',
+        amount: 6,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'megaball',
+        amount: 6,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+    ], 
   },
   stasis_Cave_Lower_Level:{
     seen: false,
@@ -2774,18 +2932,22 @@ export let mapsObj = {
     mapImg: './img/maps/stasis_Cave_Lower_Level/stasis_Cave_Lower_Level.png',
     FGImg: './img/maps/stasis_Cave_Lower_Level/stasis_Cave_Lower_LevelFG.png',
     spawnPosition: {
-      x: -2750,
+      x: -150,
       y: -850
     },
     height: 61,
     width: 52,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.sturdle, lvls: [24, 28], odds: {min:1,max:25}}, 
+        {pogemon: pogemonsObj.punbreakable, lvls: [27, 30], odds: {min:25,max:40}},
+        {pogemon: pogemonsObj.cobbird, lvls: [24, 28], odds: {min:40,max:60}}, 
+        {pogemon: pogemonsObj.spidathia, lvls: [24, 28], odds: {min:60,max:80}},
+        {pogemon: pogemonsObj.furriticus, lvls: [24, 28], odds: {min:80,max:99}},
+        {pogemon: pogemonsObj.steeli, lvls: [26, 29], odds: {min:99,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
@@ -2797,10 +2959,75 @@ export let mapsObj = {
     ],
     weather: null,
     trainers: [
+      {
+        name: 'Kurt',
+        team: [[pogemonsObj.aquario, 31, null, null, null, null], [pogemonsObj.jlissue, 33, null, null, null, null], [pogemonsObj.tonifurr, 36, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:600, y:0}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/guitarist/guitarist.png',
+        dialogue: "No ghost pogemon joke i swear.",
+        reward: 850,
+        beaten: true
+      },
+      {
+        name: 'Cromagnon',
+        team: [[pogemonsObj.infragice, 38, null, null, null, null], [pogemonsObj.rockwil, 33, null, null, null, null], ],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:900}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/oogabooga/oogabooga.png',
+        dialogue: "BOUGABOUGA!\n\nNOOTNOOT!\n\nOOUGABOOUGA!\n\nWOMPWOMP!",
+        reward: 0,
+        beaten: true
+      },
     ],
     items: [
+      {
+        name: 'super_Elixir',
+        amount: 5,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'focus_Sash',
+        amount: 1,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'super_Revive',
+        amount: 3,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
     ],
     event: [
+      {
+        name: 'iceRock',
+        sprite: "img/charSprites/blank/blank.png",
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:
+          [
+            "You can fell the cold eminating from the rock without even touching it."
+          ],
+          eventKey: 'iceRock'
+        },
+      },
+      {
+        name: 'iceRock',
+        sprite: "img/charSprites/blank/blank.png",
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:
+          [
+            "You can fell the cold eminating from the rock without even touching it."
+          ],
+          eventKey: 'iceRock'
+        },
+      },
       {
         name: 'papien',
         sprite: "img/charSprites/ma'at/ma'at.png",
@@ -2821,18 +3048,23 @@ export let mapsObj = {
     mapImg: './img/maps/stasis_Cave_Top_Level/stasis_Cave_Top_Level.png',
     FGImg: './img/maps/stasis_Cave_Top_Level/stasis_Cave_Top_LevelFG.png',
     spawnPosition: {
-      x: -2750,
+      x: -250,
       y: -850
     },
     height: 47,
     width: 42,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.sturdle, lvls: [26, 32], odds: {min:1,max:35}}, 
+        {pogemon: pogemonsObj.punbreakable, lvls: [29, 33], odds: {min:35,max:50}},
+        {pogemon: pogemonsObj.infragice, lvls: [32, 36], odds: {min:50,max:51}},
+        {pogemon: pogemonsObj.spidathia, lvls: [26, 32], odds: {min:51,max:80}},
+        {pogemon: pogemonsObj.psyranea, lvls: [29, 33], odds: {min:80,max:81}},
+        {pogemon: pogemonsObj.furriticus, lvls: [26, 32], odds: {min:81,max:95}},
+        {pogemon: pogemonsObj.salvulpis, lvls: [27, 31], odds: {min:95,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
@@ -2842,8 +3074,35 @@ export let mapsObj = {
     ],
     weather: null,
     trainers: [
+      {
+        name: 'Mom Boucher',
+        team: [[pogemonsObj.ouroboross, 38, null, null, null, null], [pogemonsObj.antber, 38, null, null, null, null, null, 'male'], [pogemonsObj.kampgooroo, 39, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:600, y:0}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/bikerguy/bikerguy.png',
+        dialogue: "Some dude from the scribble town gym stole my bike..\n\n\nIf i see this motherfucker again i'll rip his head off!",
+        reward: 1200,
+        beaten: true
+      },
+      {
+        name: 'Lavender',
+        team: [[pogemonsObj.maaphett, 35, null, null, null, null], [pogemonsObj.psyranea, 42, null, null, null, null], [pogemonsObj.contamitoad, 43, null, null, null, null]],
+        direction: {reach: {pos:{x:600, y:0}, neg:{x:0, y:0}}},
+        looking: 'Left', 
+        sprite: '../../img/charSprites/purplehairgirl/purplehairgirl.png',
+        dialogue: "Don't think you're done quite yet.\n\nI'll make sure you don't progress further!",
+        reward: 1000,
+        beaten: true
+      },
     ],
     items: [
+      {
+        name: 'nugget',
+        amount: 10,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
     ],
   },
 
@@ -2861,11 +3120,15 @@ export let mapsObj = {
     width: 70,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.sturdle, lvls: [28, 33], odds: {min:1,max:35}}, 
+        {pogemon: pogemonsObj.punbreakable, lvls: [30, 34], odds: {min:35,max:45}},
+        {pogemon: pogemonsObj.cobbird, lvls: [28, 33], odds: {min:45,max:55}},
+        {pogemon: pogemonsObj.furriticus, lvls: [28, 33], odds: {min:55,max:85}}, 
+        {pogemon: pogemonsObj.salvulpis, lvls: [29, 33], odds: {min:85,max:95}},
+        {pogemon: pogemonsObj.jlissue, lvls: [28, 33], odds: {min:95,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
@@ -2874,15 +3137,58 @@ export let mapsObj = {
 
       {name: 'stasis_Cave', spawnPosition: {x:-3165, y: -50}}, {name: 'stasis_Cave', spawnPosition: {x:-3165, y: -50}}, 
     ],
-    weather: null,
     trainers: [
+      {
+        name: 'Bertha',
+        team: [[pogemonsObj.balancia, 39, null, null, null, null], [pogemonsObj.antber, 38, null, null, null, null, null, 'male'], [pogemonsObj.avorago, 44, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:600, y:0}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/whitelady/whitelady.png',
+        dialogue: "To have made it this far means you are strong.\n\n\nBeating me is the rite required to pass\n\nto walk the grounds of alquima.",
+        reward: 1750,
+        beaten: true
+      },
+      {
+        name: 'Ophelia',
+        team: [[pogemonsObj.furriticus, 38, null, null, null, null], [pogemonsObj.salvulpis, 38, null, null, null, null], [pogemonsObj.rockwil, 42, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:450}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/pastelgirl/pastelgirl.png',
+        dialogue: "This snow here is lovely.\n\n\nAnd it's hot enought not to be cold,\n\nbut cold enought not to be hot!",
+        reward: 1050,
+        beaten: true
+      },
+      {
+        name: 'Meowth',
+        team: [[pogemonsObj.purdustus, 41, null, null, null, null], [pogemonsObj.grassie, 43, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:500}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/meowth/meowth.png',
+        dialogue: "Wtf am i doing here?\n\n\nI'm definetly in the wrong game...\n\n\nHow am i supposed to get back home? ;-;",
+        reward: 0,
+        beaten: true
+      },
     ],
     items: [
+      // {
+      //   name: 'mega_Revive',
+      //   amount: 6,
+      //   direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+      //   pickedUp: false,
+      //   hidden: true
+      // },
+      // {
+      //   name: 'mega_Potion',
+      //   amount: 12,
+      //   direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+      //   pickedUp: false,
+      //   hidden: true
+      // },
     ],
     event: [
       {
         name: 'sustiris',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        sprite: "img/charSprites/blank/blank.png",
         info: {
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           dialogue:
@@ -2908,28 +3214,20 @@ export let mapsObj = {
     },
     height: 52,
     width: 70,
-    encounters: {
-      ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
-      ], 
-      water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
-      ]
-    },
+    encounters: {},
     changeMapLocations:[
       {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, 
       {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}}, {name: 'end_Trail', spawnPosition: {x:-295, y: -2100}},
 
-      {name: 'pogecenter', spawnPosition: {x:-200, y: -155}},
+      {name: 'pogecenter', spawnPosition: {x:405, y: -50,}},
 
-      {name: 'pogemart', spawnPosition: {x:-200, y: -155}},
+      {name: 'pogemart', spawnPosition: {x:597.5, y: 0,}},
 
-      {name: 'alquima_Town_House1', spawnPosition: {x: 440, y: -175}},
+      {name: 'amator_House', spawnPosition: {x: 440, y: -175}},
       
-      {name: 'alquima_Town_House2', spawnPosition: {x: 440, y: -175}},
+      {name: 'duellum_House', spawnPosition: {x: 440, y: -175}},
 
-      {name: 'alquima_Town_Lodge', spawnPosition: {x:320, y: -375}},
+      {name: 'set_House', spawnPosition: {x:320, y: -375}},
 
       {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}},
       {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}}, {name: 'ascension_Path', spawnPosition: {x:-2400, y: -155}},
@@ -2941,11 +3239,11 @@ export let mapsObj = {
     ],
     weather: 'snow'
   },
-  alquima_Town_House1:{
+  amator_House:{
     seen: false,
-    name: 'alquima_Town_House1',
-    mapImg: './img/maps/alquima_Town_House1/alquima_Town_House1.png',
-    FGImg: './img/maps/alquima_Town_House1/alquima_Town_House1FG.png',
+    name: 'amator_House',
+    mapImg: './img/maps/amator_House/amator_House.png',
+    FGImg: './img/maps/amator_House/amator_HouseFG.png',
     spawnPosition: {
       x: -900,
       y: -750
@@ -2957,27 +3255,51 @@ export let mapsObj = {
       {name: 'alquima_Town', spawnPosition: {x:-165, y: -1685}},{name: 'alquima_Town', spawnPosition: {x:-165, y: -1685}},
     ]
   },
-  alquima_Town_House2:{
+  duellum_House:{
     seen: false,
-    name: 'alquima_Town_House2',
-    mapImg: './img/maps/alquima_Town_House2/alquima_Town_House2.png',
-    FGImg: './img/maps/alquima_Town_House2/alquima_Town_House2FG.png',
+    name: 'duellum_House',
+    mapImg: './img/maps/duellum_House/duellum_House.png',
+    FGImg: './img/maps/duellum_House/duellum_HouseFG.png',
     spawnPosition: {
-      x: -900,
-      y: -750
+      x: 50,
+      y: 0
     },
     height: 12,
     width: 16,
     encounters: {},
     changeMapLocations:[
       {name: 'alquima_Town', spawnPosition: {x:-1500, y: -1825}},{name: 'alquima_Town', spawnPosition: {x:-1500, y: -1825}},
-    ]
+    ],
+    event: [
+      {
+        name: 'npc',
+        sprite: 'img/charSprites/juggler/juggler.png',
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:[`What TM's will you be buying today?\n\nOr maybe you're here to sell me something?`], 
+          looking: 'Down',
+          eventKey: 'Tms',
+          shopKey: 4
+        },
+      },
+      {
+        name: 'npc',
+        sprite: 'img/charSprites/juggler2/juggler2.png',
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:[`What battle items will you be buying today?\n\nOr maybe you're here to sell me something?`], 
+          looking: 'Down',
+          eventKey: 'battleItems',
+          shopKey: 5
+        },
+      },
+    ],
   },
-  alquima_Town_Lodge:{
+  set_House:{
     seen: false,
-    name: 'alquima_Town_Lodge',
-    mapImg: './img/maps/alquima_Town_Lodge/alquima_Town_Lodge.png',
-    FGImg: './img/maps/alquima_Town_Lodge/alquima_Town_LodgeFG.png',
+    name: 'set_House',
+    mapImg: './img/maps/set_House/set_House.png',
+    FGImg: './img/maps/set_House/set_HouseFG.png',
     spawnPosition: {
       x: -900,
       y: -750
@@ -2989,6 +3311,13 @@ export let mapsObj = {
       {name: 'alquima_Town', spawnPosition: {x:-930, y: -2015}},{name: 'alquima_Town', spawnPosition: {x:-930, y: -2015}},
     ],
     items: [
+      {
+        name: 'charcoal',
+        amount: 1,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
       {
         name: 'nugget',
         amount: 5,
@@ -3010,20 +3339,13 @@ export let mapsObj = {
         pickedUp: false,
         hidden: true
       },
-      {
-        name: 'charcoal',
-        amount: 1,
-        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
-        pickedUp: false,
-        hidden: true
-      },
     ],
     event: [
       {
         name: 'npc',
         sprite: 'img/charSprites/whiteelder/whiteelder.png',
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:275}}}, 
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           dialogue:[`This next area is a bit too strong for you right now..\n\n\nTell you what, if you bring me back one of those banana's from the eden forest\n\nsouth of here, i'll let you throught!`], 
           looking: 'Down',
           eventKey: 'evilElderFirstInteraction'
@@ -3039,15 +3361,19 @@ export let mapsObj = {
     mapImg: './img/maps/end_Trail/end_Trail.png',
     FGImg: './img/maps/end_Trail/end_TrailFG.png',
     spawnPosition: {
-      x:-175,
-      y: -2385
+      x:-475,
+      y: -2285
     },
     height: 52,
     width: 84,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.cobbird, lvls: [29, 34], odds: {min:1,max:25}},
+        {pogemon: pogemonsObj.nahass, lvls: [29, 34], odds: {min:25,max:50}},
+        {pogemon: pogemonsObj.ouroboross, lvls: [34, 37], odds: {min:50,max:55}},
+        {pogemon: pogemonsObj.furriticus, lvls: [29, 34], odds: {min:55,max:80}}, 
+        {pogemon: pogemonsObj.salvulpis, lvls: [30, 35], odds: {min:80,max:95}},
+        {pogemon: pogemonsObj.jlissue, lvls: [29, 34], odds: {min:95,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -3059,10 +3385,70 @@ export let mapsObj = {
       {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, 
       {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, {name: 'alquima_Town', spawnPosition: {x:-2450, y: -150}}, 
     ],
-    weather: null,
     trainers: [
+      {
+        name: 'Phelps',
+        team: [[pogemonsObj.aquario, 41, null, null, null, null], [pogemonsObj.venophibian, 43, null, null, null, null], [pogemonsObj.avorago, 45, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:450}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/maleswimmer/maleswimmer.png',
+        dialogue: "Can't a man swim in the snow without people glaring!?\n\n\nJesus.....",
+        reward: 2000,
+        beaten: true
+      },
+      {
+        name: 'Ocean',
+        team: [[pogemonsObj.balancia, 43, null, null, null, null], [pogemonsObj.gelidatis, 46, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:450}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/femalepsychic/femalepsychic.png',
+        dialogue: "As one...",
+        reward: 1500,
+        beaten: true
+      },
+      {
+        name: 'Andromeda',
+        team: [[pogemonsObj.balancia, 43, null, null, null, null], [pogemonsObj.psyranea, 46, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:450}, neg:{x:0, y:0}}},
+        looking: 'Up', 
+        sprite: '../../img/charSprites/malepsychic/malepsychic.png',
+        dialogue: "As one...",
+        reward: 1500,
+        beaten: true
+      },
+      {
+        name: 'Bardy',
+        team: [[pogemonsObj.punbreakable, 39, null, null, null, null], [pogemonsObj.antber, 41, null, null, null, null, null, 'male'], [pogemonsObj.mower, 41, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:450}, neg:{x:0, y:0}}},
+        looking: 'Up', 
+        sprite: '../../img/charSprites/blackbelt/blackbelt.png',
+        dialogue: "I train barefoot in the snow,\n\njust like my pogemons!",
+        reward: 1200,
+        beaten: true
+      },
     ],
     items: [
+      {
+        name: 'super_Elixir',
+        amount: 3,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: true
+      },
+      {
+        name: 'super_Repel',
+        amount: 25,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'nugget',
+        amount: 1,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
     ],
     event: [
       {
@@ -3078,6 +3464,7 @@ export let mapsObj = {
         },
       },
     ],
+    weather: 'snow',
   },
 
   // transit_Peak
@@ -3087,28 +3474,115 @@ export let mapsObj = {
     mapImg: './img/maps/transit_Peak/transit_Peak.png',
     FGImg: './img/maps/transit_Peak/transit_PeakFG.png',
     spawnPosition: {
-      x:-175,
-      y: -2385
+      x: -175,
+      y: -2185
     },
     height: 52,
     width: 58,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.cobbird, lvls: [30, 35], odds: {min:1,max:35}}, 
+        {pogemon: pogemonsObj.rockwil, lvls: [35, 39], odds: {min:35,max:40}},
+        {pogemon: pogemonsObj.furriticus, lvls: [30, 35], odds: {min:40,max:75}},
+        {pogemon: pogemonsObj.salvulpis, lvls: [30, 35], odds: {min:70,max:85}},
+        {pogemon: pogemonsObj.jlissue, lvls: [30, 35], odds: {min:85,max:99}},
+        {pogemon: pogemonsObj.skopt, lvls: [32, 37], odds: {min:99,max:100}},
       ], 
       water: [
-        {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
+        // {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
       ]
     },
     changeMapLocations:[
       {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, 
     ],
-    weather: null,
     trainers: [
+      {
+        name: "Kah'nu",
+        team: [[pogemonsObj.aquario, 44, null, null, null, null], [pogemonsObj.avorago, 46, null, null, null, null], [pogemonsObj.cataclysmus, 50, null, null, null, null], [pogemonsObj.soleo, 49, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:150}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/greenhairgirl2/greenhairgirl2.png',
+        dialogue: "Things come and go, all we can do for ourselves is to fullfil the duties heart.",
+        reward: 2500,
+        eventKey: 'goldenDiskGiver',
+        beaten: true
+      },
+      {
+        name: "Yol'ne",
+        team: [[pogemonsObj.earthsa, 43, null, null, null, null], [pogemonsObj.contamitoad, 46, null, null, null, null], [pogemonsObj.rockwil, 47, null, null, null, null],  [pogemonsObj.ferusand, 49, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:475}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/greenhairguy/greenhairguy.png',
+        dialogue: "Some weird corrupted new species of pogemon started appearing around here..\n\n\nKah'nu has only got stronger through all the confusion.\n\n\nHer poise is commendable.",
+        reward: 2000,
+        beaten: true
+      },
+      {
+        name: "Que'fi",
+        team: [[pogemonsObj.sterra, 44, null, null, null, null], [pogemonsObj.sophistaves, 46, null, null, null, null], [pogemonsObj.jlorox, 47, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:450, y:0}}},
+        looking: 'Right', 
+        sprite: '../../img/charSprites/greenhairgirl/greenhairgirl.png',
+        dialogue: "These mountains have been sacred to us for centuries..\n\n\nThings have never been has unstable has they are now..",
+        reward: 2250,
+        beaten: true
+      },
+      {
+        name: "Nee'ya",
+        team: [[pogemonsObj.mower, 42, null, null, null, null], [pogemonsObj.volaticus, 44, null, null, null, null], [pogemonsObj.jleenex, 45, null, null, null, null]],
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:450}}},
+        looking: 'Down', 
+        sprite: '../../img/charSprites/greenhairgirl3/greenhairgirl3.png',
+        dialogue: "Everything is weird with this mountain top!\n\nThe snow stopped falling, and now a portal!?\n\n",
+        reward: 2000,
+        beaten: true
+      },
     ],
     items: [
+      {
+        name: 'ultimball',
+        amount: 1,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'rainbo_Berry',
+        amount: 6,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'mega_Potion',
+        amount: 6,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
+      {
+        name: 'megaball',
+        amount: 6,
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        pickedUp: false,
+        hidden: false
+      },
     ],
+    event: [
+      {
+        name: 'malumtehk',
+        sprite: "img/charSprites/ma'at/ma'at.png",
+        info: {
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          dialogue:
+          [
+            "-malumtehk intensly wants to make you stop existing-"
+          ], 
+          eventKey: 'malumtehk'
+        },
+      },
+    ],
+    weather: null,
   },
 
   // neo_Genesis
@@ -3125,8 +3599,9 @@ export let mapsObj = {
     width: 86,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 5], odds: {min:1,max:50}}, 
-        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:50,max:100}}
+        {pogemon: pogemonsObj.nahass, lvls: [32, 38], odds: {min:1,max:40}}, 
+        {pogemon: pogemonsObj.ouroboross, lvls: [39, 43], odds: {min:40,max:50}},
+        {pogemon: pogemonsObj.skopt, lvls: [34, 39], odds: {min:50,max:100}}
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -3209,16 +3684,196 @@ export let mapsObj = {
     changeMapLocations:[{name: 'prevMap', spawnPosition: {x: 0, y: 0,}}],
     productOptions: [
       // pogemart options
-      [{name:'potion'}, {name:'pogeball'}, {name:'repel'}],
-      [{name:'potion'}, {name:'super_Potion'}, {name:'pogeball'}, {name:'midball'}, {name:'repel'}],
-      [{name:'potion'}, {name:'super_Potion'}, {name:'revive'}, {name:'ether'}, {name:'pogeball'}, {name:'midball'}, {name:'repel'}, {name:'super_Repel'},],
-      [{name:'potion'}, {name:'super_Potion'}, {name:'mega_Potion'}, {name:'revive'}, {name:'ether'}, {name:'super_Ether'}, {name:'pogeball'}, {name:'midball'}, {name:'megaball'}, {name:'repel'}, {name:'super_Repel'},],
 
-      // battle shop
+      // fair town
+      [
+        {name:'potion'}, 
+        {name:'pogeball'}, 
+        {name:'repel'}
+      ],
+
+      // keme town
+      [
+        {name:'potion'}, 
+        {name:'super_Potion'}, 
+        {name:'pogeball'}, 
+        {name:'midball'}, 
+        {name:'repel'}
+      ],
+
+      // scribble town
+      [
+        {name:'potion'}, 
+        {name:'super_Potion'}, 
+        {name:'revive'}, 
+        {name:'ether'}, 
+        {name:'pogeball'}, 
+        {name:'midball'}, 
+        {name:'repel'}, 
+        {name:'super_Repel'}
+      ],
+
+      // alquima town
+      [
+        {name:'potion'}, 
+        {name:'super_Potion'}, 
+        {name:'mega_Potion'}, 
+        {name:'revive'}, 
+        {name:'ether'}, 
+        {name:'super_Ether'}, 
+        {name:'pogeball'}, 
+        {name:'midball'}, 
+        {name:'megaball'}, 
+        {name:'repel'}, 
+        {name:'super_Repel'}
+      ],
 
       // TM shop
+      [
+        {name:'TM003'},
+        {name:'TM004'},
+        {name:'TM007'},
+        {name:'TM008'},
+        {name:'TM011'},
+        {name:'TM013'},
+        {name:'TM014'},
+        {name:'TM016'},
+        {name:'TM020'},
+        {name:'TM021'},
+        {name:'TM024'},
+        {name:'TM025'},
+        {name:'TM026'},
+        {name:'TM027'},
+        {name:'TM028'},
+        {name:'TM031'},
+        {name:'TM035'},
+        {name:'TM043'},
+        {name:'TM044'},
+        {name:'TM045'},
+        {name:'TM046'},
+        {name:'TM048'},
+        {name:'TM049'},
+        {name:'TM052'},
+        {name:'TM056'},
+        {name:'TM057'},
+        {name:'TM060'},
+        {name:'TM063'},
+        {name:'TM065'},
+        {name:'TM069'},
+        {name:'TM072'},
+        {name:'TM074'},
+        {name:'TM075'},
+        {name:'TM077'},
+        {name:'TM078'},
+        {name:'TM082'},
+        {name:'TM083'},
+        {name:'TM084'},
+        {name:'TM088'},
+        {name:'TM089'},
+        {name:'TM091'},
+        {name:'TM093'},
+        {name:'TM095'},
+        {name:'TM097'},
+        {name:'TM098'},
+        {name:'TM099'},
+        {name:'TM101'},
+        {name:'TM102'},
+        {name:'TM105'},
+        {name:'TM107'},
+        {name:'TM108'},
+        {name:'TM109'},
+        {name:'TM111'},
+        {name:'TM112'},
+        {name:'TM115'},
+        {name:'TM117'},
+        {name:'TM119'},
+        {name:'TM121'},
+        {name:'TM122'},
+        {name:'TM122'},
+        {name:'TM124'},
+        {name:'TM127'},
+        {name:'TM128'},
+        {name:'TM130'},
+        {name:'TM131'},
+        {name:'TM134'},
+        {name:'TM140'},
+        {name:'TM144'},
+        {name:'TM154'},
+        {name:'TM158'},
+        {name:'TM159'},
+        {name:'TM172'},
+        {name:'TM173'},
+        {name:'TM174'},
+        {name:'TM176'},
+      ],
+
+      // battle shop
+      [
+        {name:'leftovers'},
+        {name:'black_Sludge'},
+
+        {name:'life_Orb'},
+
+        {name:'assault_Vest'},
+
+        {name:'eviolite'},
+
+        {name:'choice_Band'},
+        {name:'choice_Scarf'},
+        {name:'choice_Specs'},
+
+        {name:'lucky_Egg'},
+        {name:'rare_Candy'},
+
+        {name:'expert_Belt'},
+
+        {name:'heavy_Duty_Boots'},
+
+        {name:'rocky_Helmet'},
+
+        {name:'damp_Rock'},
+        {name:'heat_Rock'},
+        {name:'icy_Rock'},
+        {name:'smooth_Rock'},
+
+        {name:'light_Clay'},
+
+        {name:'focus_Band'},
+        {name:'focus_Sash'},
+
+        {name:'silk_Scarf'},
+        {name:'miracle_Seed'},
+        {name:'mystic_Water'},
+        {name:'charcoal'},
+        {name:'magnet'},
+        {name:'silver_Powder'},
+        {name:'sharp_Beak'},
+        {name:'black_Glasses'},
+        {name:'hard_Stone'},
+        {name:'black_Belt'},
+        {name:'soft_Sand'},
+        {name:'poison_Barb'},
+        {name:'spell_Tag'},
+        {name:'metal_Coat'},
+        {name:'twisted_Spoon'},
+        {name:'nevermelt_ice'},
+        {name:'fairy_Feather'},
+        {name:'dragon_Fang'},
+      ],
 
       // berry shop
+      [
+        {name:'old_Banana'},
+        {name:'banana'},
+        {name:'yellow_Berry'},
+        {name:'energy_Berry'},
+        {name:'libra_Berry'},
+        {name:'milky_Berry'},
+        {name:'net_Berry'},
+        {name:'spicy_Berry'},
+        {name:'wakeo_Berry'},
+        {name:'rainbo_Berry'},
+      ],
     ]
   },
 }

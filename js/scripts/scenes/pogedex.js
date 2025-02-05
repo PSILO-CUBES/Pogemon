@@ -551,6 +551,7 @@ function createInfoMenu(){
                                                         let correctInfo
 
                                                         Object.keys(move).forEach((info, i) =>{
+                                                            console.log(Object.values(move)[i])
                                                             if(info == type) correctInfo = Object.values(move)[i]
                                                         })
 
@@ -596,7 +597,7 @@ function createInfoMenu(){
                                                                 pogedexEffectsTitle.innerText = `Effects`
                                                                 if(targetPogemon.effects != undefined) pogedexEffectsContent.innerText = `${returnAbilityList()}`
                                                                 
-                                                            } else infoContainerArr[i].innerText = `${infoScequece[i]}\n\n${ (infoScequece[i])}`
+                                                            } else infoContainerArr[i].innerText = `${infoScequece[i]}\n\n${returnCorrectInfo(infoScequece[i])}`
                                                         } else infoContainerArr[i].childNodes[0].src = `img/moves/category/${move.type}.png`
                                                     }
                                                 }

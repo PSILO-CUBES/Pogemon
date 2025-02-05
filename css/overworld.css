@@ -187,7 +187,7 @@ body{
 
 #optionsMenu{
   display: grid;
-  grid-template-rows: repeat(33.33%, 3);
+  grid-template-rows: repeat(25%, 4);
 
   height: 75%;
   width: 50%;
@@ -217,14 +217,17 @@ body{
   margin-right: 25px;
 }
 
-#optionsMenuDelete{
+#optionsMenuLoadBackup,
+#optionsMenuCopySave{
   display: flex;
   justify-content: center;
 
   width: 100%;
   
   background-color: rgba(0, 255, 0, 0.05);
-}#optionsMenuDelete:hover{
+}
+#optionsMenuLoadBackup:hover,
+#optionsMenuCopySave:hover{
   background-color: rgba(0, 255, 0, 0.15);
   cursor: pointer;
 }
@@ -299,7 +302,7 @@ body{
 
 .pogemartItemsContainer{
   display: grid;
-  grid-template-columns: 150px 75% auto;
+  grid-template-columns: 20% 65% 15%;
   justify-content: center;
   align-items: center;
 

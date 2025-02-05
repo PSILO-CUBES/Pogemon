@@ -1,7 +1,7 @@
 // move things around
 
 import { printImages, scenes } from '../canvas.js'
-import { playerMovement, player, interaction, lastDirection, pogemartInteraction, itemPickUp } from '../player.js'
+import { playerMovement, player, interaction, lastDirection, pogemartInteraction, itemPickUp, queue as OWQueue } from '../player.js'
 import { currMap, encounterButtonState, flashContainerManagement, generateMapData, pogecenterReturnInfo, printEncounterBox, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent, enemyTrainer } from './battle.js'
@@ -164,15 +164,26 @@ document.querySelectorAll('.volumeRange').forEach(node =>{
   })
 })
 
-document.querySelector('#optionsMenuDelete').addEventListener('click', e =>{
+document.querySelector('#optionsMenuLoadBackup').addEventListener('click', e =>{
   if(data == undefined) alert('You need to have saved at least twice to use this feature.')
   else if(data.backupSave == null) alert('You need to save and refresh the game once more to use this feature.')
   else {
     console.log(data.backupSave)
   
     alert('Save File Backed Up.')
-    setSaveData(data.backupSave)
+    setSaveData('saveFile', data.backupSave)
     location.reload()
+  }
+})
+
+document.querySelector('#optionsMenuCopySave').addEventListener('click', async e =>{
+  const data = await loadData('saveFile')
+
+  if(data == undefined) alert('You need to have saved and refreshed the game at least once to use this feature.')
+  else {
+    alert('Save File Copied To Clipboard.')
+
+    await navigator.clipboard.writeText(JSON.stringify(data))    
   }
 })
 
@@ -624,11 +635,11 @@ function escapeKeyEventOptions(e) {
         player.team[0].dialogue('overworld', 'Have a good day! :D')
         document.querySelector('#pogemartMenuDescripion').textContent = ''
 
-        queue.push(() =>{
-          disableOWMenu.active = false
-          player.disabled = false
-          console.log(catchEventObj)
-        })
+        // OWQueue.push(() =>{
+        //   disableOWMenu.active = false
+        //   player.disabled = false
+        //   console.log(catchEventObj)
+        // })
         return
       }
 
@@ -674,6 +685,11 @@ function escapeKeyEventOptions(e) {
         pogedexInfoState.active = false
         pogedexInfoState.flag = false
         document.querySelector('#infoMainContainer').style.display = 'none'
+        document.querySelector('#rightInfoMovesContainer').style.display = 'none'
+        document.querySelector('#rightInfoMovesContainer').replaceChildren()
+        document.querySelector('#rightInfoReturnContainer').style.display = 'none'
+        document.querySelector('#rightInfoAbilitiesContainer').style.display = 'none'
+        document.querySelector('#rightInfoAbilitiesContainer').replaceChildren()
         document.querySelector('#pogedexSceneContainer').style.display = 'block'
         return
       }
@@ -912,13 +928,24 @@ export function manageOverWorldState(state, previousScene){
     menu.initiated = false
     overworldMenuDom.replaceChildren()
 
-    if(player.interaction != null) if(player.interaction.info.eventKey == 'mosesStaff') {
-      if(worldEventData.moses.staffGiven) return
-      if(enemyTrainer == undefined) return
+    if(player.interaction != null) {
+      if(player.interaction.info.eventKey == 'mosesStaff') {
+        if(worldEventData.moses.staffGiven) return
+        if(enemyTrainer == undefined) return
 
-      worldEventData.moses.staffGiven = true
-      itemPickUp(itemsObj.guiding_Staff, 1, `Here, take this. It should help you along your journey towards truth.`)
+        worldEventData.moses.staffGiven = true
+        itemPickUp(itemsObj.guiding_Staff, 1, `Here, take this. It should help you along your journey towards truth.`)
+      }
+
+      if(player.interaction.info.eventKey == 'goldenDiskGiver') {
+        if(worldEventData.baaull.goldenDisk) return
+        if(enemyTrainer == undefined) return
+
+        worldEventData.baaull.goldenDisk
+        itemPickUp(itemsObj.golden_Disk, 1, `I want you to have this, i trust you'll make better\n\nuse of it than i will.`)
+      }
     }
+
   } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)

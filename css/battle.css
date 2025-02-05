@@ -525,7 +525,7 @@
   align-items: start;
 
   position: absolute;
-  top: 0;
+  top: 3%;
   right: -124px;
 
   height: 72px;
@@ -540,7 +540,7 @@
   transition: ease-in-out 1s;
 
   position: absolute;
-  top: 72;
+  top: 10%;
   right: -124;
 
   height: 72;

@@ -197,6 +197,7 @@ export class Pogemon extends Sprite{
     predeterminedShiny,
     predeterminedIvs,
     predeterminedMoves,
+    predeterminedGender,
     preBuilt,
     {
       type, 
@@ -242,7 +243,7 @@ export class Pogemon extends Sprite{
       this.exp = exp
       this.lvl = this.generateLevel()
       this.nature = this.generateNature()
-      this.gender = this.generateGender()
+      this.gender = this.generateGender(predeterminedGender)
       this.ivs = this.generateIVs(predeterminedIvs)
       this.stats = this.generateStats()
       this.isShiny = this.generateShiny(predeterminedShiny)
@@ -311,12 +312,15 @@ export class Pogemon extends Sprite{
     return {name, values}
   }
 
-  generateGender(){
+  generateGender(predeterminedGender){
     //should add param that changes odds based on species
     let gender
-    const rng = Math.floor(Math.random() * 100)
-    if(rng < 50) gender = 'male'
-    else gender = 'female'
+
+    if(predeterminedGender == undefined){
+      const rng = Math.floor(Math.random() * 2)
+      if(rng == 1) gender = 'male'
+      else gender = 'female'
+    } else gender = predeterminedGender
 
     return gender
   }
@@ -407,7 +411,7 @@ export class Pogemon extends Sprite{
     let moves = []
     let movepool = this.pogemon.movepool
 
-    if(predeterminedMoves != undefined){
+    if(predeterminedMoves != undefined || predeterminedMoves != null){
       moves = predeterminedMoves
     } else {
       if(!init){
@@ -2091,6 +2095,8 @@ export class Pogemon extends Sprite{
           if(move.name.includes('punch')) abilityDamage = 1.2
           break
         case 'sheer_Force':
+          if(move.effects != null)
+            if(Object.keys(move.effects)[0] == 'recoil') return
             abilityDamage = 1.3
           break
         case 'guts':
@@ -2280,6 +2286,8 @@ export class Pogemon extends Sprite{
           } 
         } else recipient.hp -= damage
       } else recipient.hp -= damage
+
+      if(move.name == 'false_Swipe') recipient.hp = 1
 
       if(move.effects != undefined){
         if(Object.keys(move.effects[0])[0] == 'recoil'){
@@ -5346,8 +5354,8 @@ export class Character extends Sprite{
         },
         animate: true
       })
-      //                                                             // held item      //ability          //shiny//ivs//moves               
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, pogemonSprite)
+      //                                                             // held item      //ability          //shiny//ivs//moves//gender              
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)

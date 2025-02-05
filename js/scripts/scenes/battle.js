@@ -316,7 +316,10 @@ function initWildEncounter(tileInfo, info){
   let wildPogemonMoves = null
   if(returnedFoe.moves != undefined) wildPogemonMoves = returnedFoe.moves
 
-  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, null, foeSprite)
+  let wildPogemonGender = null
+  if(returnedFoe.gender != undefined) wildPogemonGender = returnedFoe.gender
+
+  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, null, foeSprite)
 
   console.log(foe.moves)
 

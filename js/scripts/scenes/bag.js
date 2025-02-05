@@ -428,7 +428,7 @@ function useItemOnClickEvent(e){
   dialogueInterfaceDom.style.display = 'block'
 
   const bagSceneItemDialogueContainer = document.querySelector('.bagSceneItemDialogueContainer')
-  bagSceneItemDialogueContainer.innerText = `Which move should this ${currItem.name} be used on?`
+  bagSceneItemDialogueContainer.innerText = `Which move should this ${targetPogemon.switchUnderScoreForSpace(currItem.name)} be used on?`
 
   switch(selectedMenuOption){
     case 'use':
@@ -477,6 +477,98 @@ function useItemOnClickEvent(e){
                   }
                 })
               }
+              break
+            case 'level':
+              console.log(e.target)
+
+              let nextLvl = targetPogemon.lvl + 1
+              let nextLvlExp = Math.pow(nextLvl, 3)
+
+              targetPogemon.exp = nextLvlExp
+              targetPogemon.lvl = targetPogemon.generateLevel(targetPogemon.exp)
+
+              console.log(targetPogemon.stats)
+              targetPogemon.stats = targetPogemon.generateStats()
+              console.log(targetPogemon.stats)
+
+              e.target.childNodes[1].childNodes[1].childNodes[0].childNodes[0].textContent = `Lv ${targetPogemon.lvl}`
+              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent = `${targetPogemon.hp}/${targetPogemon.stats.baseHp}`
+
+              targetPogemon.dialogue('bag', `${targetPogemon.switchUnderScoreForSpace(targetPogemon.nickname)} gained a lvl!`)
+
+              let hpToPercent = targetPogemon.convertToPercentage(targetPogemon.hp, targetPogemon.stats.baseHp)
+
+              console.log(hpToPercent)
+
+              let hpColor
+
+              if(hpToPercent >= 50) hpColor = 'green'
+              else if(hpToPercent < 50 && hpToPercent >= 25) hpColor = 'yellow'
+              else if(hpToPercent < 25 && hpToPercent > 0) hpColor = 'red'
+              else if(hpToPercent <= 0) hpColor = 'black'
+
+              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${hpToPercent}%`
+              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.backgroundColor = hpColor
+
+              player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
+              currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+              break
+            case 'ability':
+                bagSceneItemDialogueContainer.innerText = `Which ability should ${targetPogemon.switchUnderScoreForSpace(targetPogemon.nickname)} have instead?`
+
+              const TMContainerBackground = document.createElement('div')
+              TMContainerBackground.id = 'restoreMovePPContainerBackground'
+              bagScene.appendChild(TMContainerBackground)
+
+              function removeTMMenu(text){
+                bagSceneItemDialogueContainer.innerText = text
+                bagScene.removeChild(bagScene.childNodes[1])
+                bagScene.removeChild(bagScene.childNodes[1])
+              }
+            
+              TMContainerBackground.addEventListener('click', () => removeTMMenu(``))
+              const TMContainer = document.createElement('div')
+              TMContainer.id = 'restoreMovePPContainer'
+            
+              bagScene.appendChild(TMContainer)
+            
+              let freezeTMProcess = false
+            
+              function changeAbility(e, i, abilityInfo){
+                if(freezeTMProcess) return
+                freezeTMProcess = true
+            
+                targetPogemon.abilityInfo = abilityInfo
+              
+                player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+                currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+              
+                itemUsed.item = currItem
+
+                console.log(abilityInfo)
+              
+                bagSceneItemDialogueContainer.innerText = `${switchUnderScoreForSpace(abilityInfo.ability.name)} was taught to ${switchUnderScoreForSpace(targetPogemon.nickname)} successfully!`
+              
+                setTimeout(() =>{
+                  removeTMMenu(``)
+                }, 1750)
+              }
+            
+              targetPogemon.pogemon.abilities.forEach((abilityInfo, i) =>{
+                const TMMoveContainer = document.createElement('div')
+                TMMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
+                restoreMovePPContainer.appendChild(TMMoveContainer)
+              
+                const TMMoveContentContainer = document.createElement('div')
+                TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainer')
+                TMMoveContainer.appendChild(TMMoveContentContainer)
+              
+                TMMoveContentContainer.innerText = `${switchUnderScoreForSpace(abilityInfo.ability.name)}`
+              
+                TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainerHover restoreMovePPMoveContentContainer')
+                abilityInfo.seen = true
+                TMMoveContentContainer.addEventListener('click', e => changeAbility(e, i, abilityInfo))
+              })
               break
           }
           break

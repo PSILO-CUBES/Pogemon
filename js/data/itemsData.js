@@ -46,12 +46,12 @@ export const itemsObj = {
     price: 2100,
     value: 650
   },
-  royal_Jelly:{
-    name:'royal_Jelly',
+  regina_Esca:{
+    name:'regina_Esca',
     type: 'misc',
     effect: 'evo',
     pow: '---',
-    img: 'img/item_scene/items/misc/royal_Jelly.png',
+    img: 'img/item_scene/items/misc/regina_Esca.png',
     desc: "Can trigger a certain pogemon's evolution, also quite tasty.",
     consume: true,
     price: 1,
@@ -99,6 +99,17 @@ export const itemsObj = {
     desc: "Raises a pogemon's lvl by 1.",
     consume: true,
     price: 10000,
+    value: 5000
+  },
+  ability_Capsule:{
+    name:'ability_Capsule',
+    type: 'misc',
+    effect: 'ability',
+    pow: '---',
+    img: 'img/item_scene/items/misc/ability_Capsule.png',
+    desc: "Changes the current ability.",
+    consume: true,
+    price: 100000,
     value: 5000
   },
 
@@ -156,8 +167,8 @@ export const itemsObj = {
     img: 'img/item_scene/items/med/ether.png',
     desc: 'Restores the PP of the selected move by 10.',
     friendliness: 1,
-    price: 1,
-    value: 600
+    price: 1200,
+    value: 400
   },
   super_Ether: {
     name: 'super_Ether',
@@ -167,7 +178,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/med/super_Ether.png',
     desc: 'Fully restores the PP of the selected move.',
     friendliness: 3,
-    price: 1,
+    price: 3000,
     value: 1000
   },
   elixir: {
@@ -271,8 +282,8 @@ export const itemsObj = {
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
-    price: 1,
-    value: 50
+    price: 50,
+    value: 10
   },
   banana: {
     name: 'banana',
@@ -286,7 +297,7 @@ export const itemsObj = {
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 150,
     value: 50
   },
   golden_banana: {
@@ -301,7 +312,7 @@ export const itemsObj = {
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 1500,
     value: 50
   },
   yellow_Berry: {
@@ -316,7 +327,7 @@ export const itemsObj = {
     heldThreshHold: 50,
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 500,
     value: 125
   },
   wakeo_Berry: {
@@ -330,7 +341,7 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 350,
     value: 125
   },  
   milky_Berry: {
@@ -344,7 +355,7 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 350,
     value: 125
   },
   net_Berry: {
@@ -358,7 +369,7 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 350,
     value: 125
   },
   spicy_Berry: {
@@ -372,7 +383,7 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 350,
     value: 125
   },
   libra_Berry: {
@@ -386,7 +397,7 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 350,
     value: 125
   },
   rainbo_Berry: {
@@ -400,8 +411,8 @@ export const itemsObj = {
     heldEffect: 'healStatus',
     consume: true,
     friendliness: 1,
-    price: 1,
-    value: 125
+    price: 750,
+    value: 250
   },
   energy_Berry: {
     name: 'energy_Berry',
@@ -414,7 +425,7 @@ export const itemsObj = {
     heldEffect: 'healPP',
     consume: true,
     friendliness: 1,
-    price: 1,
+    price: 500,
     value: 125
   },
 
@@ -432,7 +443,7 @@ export const itemsObj = {
     desc: 'A silky scarf.\n\nWhen held, boosts normal type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   charcoal:{
@@ -444,7 +455,7 @@ export const itemsObj = {
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   mystic_Water:{
@@ -456,7 +467,7 @@ export const itemsObj = {
     desc: 'A necklass coated with condentation.\n\nWhen held, boosts water type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   miracle_Seed:{
@@ -468,7 +479,7 @@ export const itemsObj = {
     desc: 'A forever warm charcoal.\n\nWhen held, boosts fire type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   magnet:{
@@ -476,11 +487,11 @@ export const itemsObj = {
     type: 'battle',
     effect: 'electic',
     pow: 20,
-    img: 'img/item_scene/items/battle/charcoal.png',
+    img: 'img/item_scene/items/battle/magnet.png',
     desc: 'A strong magnet.\n\nWhen held, boosts electric type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   sharp_Beak:{
@@ -492,7 +503,7 @@ export const itemsObj = {
     desc: 'A beak as shark as a knife.\n\nWhen held, boosts flying type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   hard_Stone:{
@@ -504,7 +515,7 @@ export const itemsObj = {
     desc: 'A very sturdy stone.\n\nWhen held, boosts stone type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   soft_Sand:{
@@ -516,7 +527,7 @@ export const itemsObj = {
     desc: 'A bag of very fine sand.\n\nWhen held, boosts ground type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   silver_Powder:{
@@ -528,7 +539,7 @@ export const itemsObj = {
     desc: 'A very sticky and reflective substence.\n\nWhen held, boosts bug type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   poison_Barb:{
@@ -540,7 +551,7 @@ export const itemsObj = {
     desc: 'Handle carefully. :)\n\nWhen held, boosts poison type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   black_Glasses:{
@@ -552,8 +563,8 @@ export const itemsObj = {
     desc: 'A strong magnet.\n\nWhen held, boosts dark type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
-    value: 1
+    price: 3000,
+    value: 725
   },
   spell_Tag:{
     name: 'spell_Tag',
@@ -564,7 +575,7 @@ export const itemsObj = {
     desc: 'A very ominous tag with strange writing on it.\n\nWhen held, boosts ghost type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   twisted_Spoon:{
@@ -576,7 +587,7 @@ export const itemsObj = {
     desc: 'A twisted up spoon. How did it even get like this?..\n\nWhen held, boosts psychic type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   black_Belt:{
@@ -588,19 +599,19 @@ export const itemsObj = {
     desc: 'A worn out belt. Smells funny...\n\nWhen held, boosts fighting type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
-  never_Melting_Ice:{
-    name: 'never_Melting_Ice',
+  nevermelt_ice:{
+    name: 'nevermelt_ice',
     type: 'battle',
     effect: 'ice',
     pow: 20,
-    img: 'img/item_scene/items/battle/never_Melting_Ice.png',
+    img: 'img/item_scene/items/battle/nevermelt_ice.png',
     desc: 'An eternal piece of ice.\n\nWhen held, boosts ice type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   dragon_Fang:{
@@ -612,7 +623,7 @@ export const itemsObj = {
     desc: 'A very ancient tooth.\n\nWhen held, boosts dragon type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   fairy_Feather:{
@@ -624,7 +635,7 @@ export const itemsObj = {
     desc: 'Very soft to the touch.\n\nWhen held, boosts fairy type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
   metal_Coat:{
@@ -636,7 +647,7 @@ export const itemsObj = {
     desc: 'A lightweight coat of a strong alloy.\n\nWhen held, boosts steel type attacks by 20%.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 3000,
     value: 725
   },
 
@@ -647,7 +658,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/assault_Vest.png',
     desc: 'When held, boosts spdef by 50%, but cannot use status moves.',
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   heavy_Duty_Boots:{
@@ -657,7 +668,7 @@ export const itemsObj = {
     desc: 'Makes the wearer immuned to field hazards.',
     heldType: 'elemental',
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   leftovers:{
@@ -666,7 +677,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/leftovers.png',
     desc: "If held, the holder will heal 1/16th of it's max HP per turn.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   black_Sludge:{
@@ -675,7 +686,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/black_Sludge.png',
     desc: "If held, the holder will loose 1/16th of it's max HP per turn.\n\nHeals if the holder is poison type.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   life_Orb:{
@@ -684,7 +695,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/life_Orb.png',
     desc: "Holder's attacks do 1.3x damage, and it loses 1/10th of its max HP after the attack.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   rocky_Helmet:{
@@ -693,7 +704,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/rocky_Helmet.png',
     desc: "If holder is hit by a physical move, the attacker loses 1/16 of its max HP.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   eviolite:{
@@ -702,7 +713,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/eviolite.png',
     desc: "If holder can evolve, its Defense and Sp. Def are 1.5x.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   expert_Belt:{
@@ -711,7 +722,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/expert_Belt.png',
     desc: "Holder's attacks that are super effective against the target do 1.2x damage.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   focus_Band:{
@@ -724,7 +735,7 @@ export const itemsObj = {
     heldType: 'after',
     consume: false,
     odds: 10,
-    price: 1,
+    price: 10000,
     value: 725
   },
   focus_Sash:{
@@ -737,7 +748,7 @@ export const itemsObj = {
     heldType: 'after',
     consume: true,
     odds: 100,
-    price: 1,
+    price: 10000,
     value: 725
   },
   choice_Band:{
@@ -747,7 +758,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/choice_Band.png',
     desc: "Holder's Attack is 1.5x, but it can only select the first move it executes.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   choice_Specs:{
@@ -757,7 +768,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/choice_Specs.png',
     desc: "Holder's Sp. Atk is 1.5x, but it can only select the first move it executes.",
     consume: false,
-    price: 1,
+    price: 25000,
     value: 725
   },
   choice_Scarf:{
@@ -767,7 +778,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/choice_Scarf.png',
     desc: "Holder's Speed is 1.5x, but it can only select the first move it executes.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   lucky_Egg:{
@@ -777,7 +788,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/lucky_Egg.png',
     desc: "A hold item that boosts EXP. points earned in battle.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   heat_Rock:{
@@ -788,7 +799,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/heat_Rock.png',
     desc: "	",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   damp_Rock:{
@@ -799,7 +810,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/damp_Rock.png',
     desc: "A Pokémon hold item that extends the duration of the Rain.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   smooth_Rock:{
@@ -810,7 +821,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/smooth_Rock.png',
     desc: "A Pokémon hold item that extends the duration of the Sand.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   icy_Rock:{
@@ -821,7 +832,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/icy_Rock.png',
     desc: "A Pokémon hold item that extends the duration of the Snow.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
   light_Clay:{
@@ -831,7 +842,7 @@ export const itemsObj = {
     img: 'img/item_scene/items/battle/light_Clay.png',
     desc: "A Pokémon hold item that extends the duration of Screens.",
     consume: false,
-    price: 2175,
+    price: 25000,
     value: 725
   },
 
@@ -931,9 +942,11 @@ Object.values(movesObj).forEach((move, i) =>{
     img: `img/item_scene/items/tms/${movesObj[move.name].element}.png`,
     desc: `This Tm contains ${move.name.replace(/_/g, ' ')}`,
     consume: true,
-    price: 1,
+    price: 10000,
     value: 2250
   }
+
+  console.log(`TM${TMNum} : ${move.name}`)
 
   itemsObj[`TM${TMNum}`] = TMObj
 })
