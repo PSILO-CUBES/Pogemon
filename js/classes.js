@@ -869,8 +869,8 @@ export class Pogemon extends Sprite{
                       if(spinAwayBool('ally')){
                         this.affliction[1].active = false
   
-                        terrainConditions.static.stealth_rock.ally = false
-                        terrainConditions.static.sticky_web.ally = false
+                        terrainConditions.static.stealth_rock.active.ally = false
+                        terrainConditions.static.sticky_web.active.ally = false
   
                         setTimeout(() =>{
                           this.dialogue(
@@ -1764,11 +1764,10 @@ export class Pogemon extends Sprite{
 
       move = this.choiceItem.move
       if(this.affliction[2].active && move.type == 'status') move = movesObj.struggle
+      console.log(move)
     }
 
     if(returnIfChoiced) return
-
-    console.log(returnIfChoiced)
 
     if(move.type == 'status' && cantUseStatus){
       if(this.isEnemy){
@@ -1778,12 +1777,10 @@ export class Pogemon extends Sprite{
           if(move.type != 'status') attackingMovesArr.push(move)
         })
 
-        if(attackingMovesArr.length > 0){
-          const rng = Math.floor(Math.random() * attackingMovesArr.length)
-          move = this.moves[rng]
-        } else {
-          move = movesObj.struggle
-        }
+        if(attackingMovesArr.length > 0) this.rerollEnemyMoveSoAppropriate(recipient, move, terrainConditions, enemyTrainerInfo)
+        else move = movesObj.struggle
+
+        console.log(move)
       } 
       else if(this.affliction[2].active) this.dialogue('battle', `${this.nickname} is taunted into a rage and can only use attacking moves...`)
       else if (this.heldItem.name == 'assault_Vest') this.dialogue('battle', `${this.nickname} has an assault vest equipped and so can only use attacking moves...`)
@@ -1807,6 +1804,9 @@ export class Pogemon extends Sprite{
     // if(confusionCancel) return
 
     let immuned = false
+    
+    if(move.pp == 0) move = movesObj.struggle
+    // else move.pp--
 
     this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!`)
 
@@ -1814,9 +1814,6 @@ export class Pogemon extends Sprite{
       this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}!\n\nIt didin't seem to work for some reason..`)
       return
     }
-    
-    if(move.pp == 0) move = movesObj.struggle
-    // else move.pp--
 
     let recipientStatus = document.querySelector('#foeStatus')
 
@@ -1918,12 +1915,12 @@ export class Pogemon extends Sprite{
           typeEffectivness = typeEffectivness + factor
 
         if(Object.values(typesObj[`${moveElement}`])[1].includes(`${Object.values(recipient.element)[i]}`)){
-          if(Object.values(recipient.element)[i] == 'water' && move.name != 'freeze_dry') 
-            typeEffectivness = typeEffectivness - factor
+          if(Object.values(recipient.element)[i] == 'water' && move.name != 'freeze_dry') typeEffectivness = typeEffectivness - factor
+          else typeEffectivness = typeEffectivness - factor
         }
 
         let scrappy = false
-        if(Object.values(typesObj[`${moveElement}`])[2].includes(`${Object.values(recipient.element)[i]}`)) {
+        if(Object.values({...typesObj[`${moveElement}`]})[2].includes(`${Object.values(recipient.element)[i]}`)) {
           if(this.abilityInfo.ability.name == 'scrappy') if(`${Object.values(recipient.element)[i]}` == 'ghost')
             if(moveElement == 'normal' || moveElement == 'fighting') scrappy = true
 
@@ -1945,9 +1942,7 @@ export class Pogemon extends Sprite{
   
           if(moveElement == 'ice' || moveElement == 'fire') typeEffectivness = typeEffectivness - factor
         }
-      } 
-
-      if(recipient.abilityInfo.ability.name == 'fluffy_Coat'){
+      } else if(recipient.abilityInfo.ability.name == 'fluffy_Coat'){
         if(this.abilityInfo.ability.name != 'mold_Breaker') {
           if(typeEffectivness >= 1) {
             factor = 0.5
@@ -1962,6 +1957,7 @@ export class Pogemon extends Sprite{
       queueProcess.disabled = true
       console.log('there')
 
+      console.log(typeEffectivness)
       // dialogue for type effectiveness
       switch(typeEffectivness){
         case 0:
@@ -2055,7 +2051,7 @@ export class Pogemon extends Sprite{
         if(recipient.element[1] != 'rock' && recipient.element[2] != 'rock' && recipient.element[1] != 'ice' && recipient.element[2] != 'ice') return
         if(!weather.active) return
         
-        if(recipient.element[1] == weather.element || recipient.element[1] == weather.element){
+        if(recipient.element[1] == weather.element || recipient.element[2] == weather.element){
           if(weather.element == 'rock' && move.type == 'special') weatherResistance = 1.5
           if(weather.element == 'ice' && move.type == 'physical') weatherResistance = 1.5
         }
@@ -4273,8 +4269,8 @@ export class Pogemon extends Sprite{
 
       let isTargetPoisonType = false
 
-      if(target.element[0] == 'poison') isTargetPoisonType = true
       if(target.element[1] == 'poison') isTargetPoisonType = true
+      if(target.element[2] == 'poison') isTargetPoisonType = true
 
       if(target.heldItem != null){
         if(target.heldItem.name == 'leftovers'){
@@ -5012,14 +5008,94 @@ export class Pogemon extends Sprite{
     if(this.friendliness > 255) this.friendliness = 255
   }
 
-  rerollEnemyMoveSoNotStatus(){
-    let foeRNGMove = this.moves[Math.floor(Math.random() * this.moves.length)]
+  checkIfMoveEffectIsStatusAffliction(effectArr){
+    let pass
+    let statusNameArr = ['slp', 'psn', 'para', 'burn', 'frz']
 
-    if(this.choiceItem.move != null) if(this.affliction[2].active && this.choiceItem.move == 'status') foeRNGMove = movesObj.struggle
-    if(this.heldItem != null) if(this.heldItem.name == 'assault_Vest' && foeRNGMove.type == 'status') this.rerollEnemyMoveSoNotStatus()
-    if(this.affliction[2].active && foeRNGMove.type == 'status') this.rerollEnemyMoveSoNotStatus()
+    for(let i = 0; i < statusNameArr.length; i++){
+      if(effectArr[i] == statusNameArr[i]) pass = true
+    }
 
-    return foeRNGMove
+    return pass
+  }
+
+  rerollEnemyMoveSoAppropriate(recipient, move, terrainConditions, enemyTrainerInfo){
+    const pastMove = {...move}
+    if(move == undefined) move = this.moves[Math.floor(Math.random() * this.moves.length)]
+
+    console.log(move)
+    console.log('reroll MOve')
+
+    if(this.choiceItem.move != null) if(this.affliction[2].active && this.choiceItem.move == 'status') move = movesObj.struggle
+
+    let tauntInteraction = false    
+    if(this.affliction[2].active && move.type == 'status') tauntInteraction = true
+
+    const effectiveMovesArr = []
+
+    this.moves.forEach(move =>{
+      let firstTypeNotEffective = typesObj[move.element].notEffective.includes(recipient.element[1])
+      let secondTypeNotEffective = false
+      if(recipient.element[2] != null) secondTypeNotEffective = typesObj[move.element].notEffective.includes(recipient.element[2])
+
+      let firstTypeImmuned = typesObj[move.element].immuned.includes(recipient.element[1])
+      let secondTypeImmuned = false
+      if(recipient.element[2] != null) secondTypeImmuned = typesObj[move.element].immuned.includes(recipient.element[2])
+
+
+      console.log(terrainConditions.static)
+      console.log(move.name)
+
+      let preventRedundentStealthRocks = false
+      if(terrainConditions.static.stealth_rock.active.ally && move.name == 'stealth_rock') preventRedundentStealthRocks = true
+
+      let preventRedundentStickyWeb = false
+      if(terrainConditions.static.sticky_web.active.ally  && move.name == 'sticky_web') preventRedundentStickyWeb = true
+
+      let preventRedundentStatus = false
+      if(recipient.status.name != null && this.checkIfMoveEffectIsStatusAffliction(move.effect)) preventRedundentStatus = true
+
+      let assaultVestInteraction = false
+      if(move.type == 'status' && this.heldItem != null && this.heldItem.name == 'assault_Vest') assaultVestInteraction = true
+  
+      console.log(`${move.element} : ${recipient.element[1]} ` + firstTypeNotEffective)
+      console.log(`${move.element} : ${recipient.element[2]} ` + secondTypeNotEffective)
+      console.log(`${move.element} : ${recipient.element[1]} ` + firstTypeImmuned)
+      console.log(`${move.element} : ${recipient.element[2]} ` + secondTypeImmuned)
+
+      console.log(preventRedundentStealthRocks)
+      console.log(preventRedundentStickyWeb)
+      console.log(preventRedundentStatus)
+
+      console.log(enemyTrainerInfo)
+
+      if(
+        !firstTypeNotEffective &&
+        !secondTypeNotEffective &&
+        !firstTypeImmuned && 
+        !secondTypeImmuned &&
+        !preventRedundentStealthRocks &&
+        !preventRedundentStickyWeb &&
+        !preventRedundentStatus &&
+        !assaultVestInteraction &&
+        !tauntInteraction
+      ) effectiveMovesArr.push(move)
+    })
+
+    const newRNG = Math.floor(Math.random() * effectiveMovesArr.length)
+
+    if(effectiveMovesArr.length == 0) move = pastMove
+    else move = effectiveMovesArr[newRNG]
+
+    if(!this.affliction[2].active){
+      this.moves.forEach(arrMove =>{
+        if(!terrainConditions.static.stealth_rock.active.ally) if(arrMove.name == 'stealth_rock') move = arrMove
+        if(!terrainConditions.static.sticky_web.active.ally) if(arrMove.name == 'sticky_web') move = arrMove
+        // console.log(arrMove)
+      })
+    }
+
+    return move
   }
 }
 
@@ -5238,7 +5314,8 @@ export class Character extends Sprite{
                   document.querySelector('#proceedImg').style.display = 'block'
                 }, 250)
                 queue.push(() =>{
-                  let foeRNGMove = this.rerollEnemyMoveSoNotStatus()
+                  let foeRNGMove = this.rerollEnemyMoveSoAppropriate(recipient, move, terrainConditions, enemyTrainerInfo)
+                  console.log(foeRNGMove)
 
                   // let rng = Math.floor(Math.random() * 2)
 

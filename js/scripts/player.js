@@ -838,6 +838,9 @@ function playerInteraction(e) {
           case 'kukumPermission':
             worldEventData.kukum.permission = true
             break 
+          case 'setFirstMeet':
+            worldEventData.set.met = true
+            break
         }
       }
 
@@ -1787,7 +1790,7 @@ function spendQueue(){
   if(!queueEnabled) return
   // if(frozenJail) return
 
-  // console.log(player.interaction.info.eventKey)
+  console.log(player.interaction.info.eventKey)
 
   if(queue.length > 0){
     queue[0]()

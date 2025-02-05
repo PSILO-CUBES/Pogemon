@@ -946,7 +946,7 @@ Object.values(movesObj).forEach((move, i) =>{
     value: 2250
   }
 
-  console.log(`TM${TMNum} : ${move.name}`)
+  // console.log(`TM${TMNum} : ${move.name}`)
 
   itemsObj[`TM${TMNum}`] = TMObj
 })

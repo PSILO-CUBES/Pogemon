@@ -499,7 +499,9 @@ make scrappy immuned to intimidate x
 
 make more moves x
 
-terrainArr always return with only one entry -- if(terrainArr.length = 1) instead of if(terrainArr.length == 1)
+terrainArr always return with only one entry -- if(terrainArr.length = 1) instead of if(terrainArr.length == 1) XDDDD
+
+make npc not use not very effective moves x
 
 magicBounce:{
     afflictions :{
@@ -658,6 +660,10 @@ stuffToDo:{
         put weather in movables
 
         fix exclamation box
+
+        set no gender for steeli and legendaries
+
+        import trainer in move method and set ai based on trainer difficulty
 
         -- done!!!!
     }

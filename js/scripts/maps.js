@@ -38,6 +38,9 @@ export let worldEventData = {
     goldenDisk: false,
     awake: false,
   },
+  regaligyne:{
+    queenMade: false
+  },
   djed:{
     meet:false,
     gym:false
@@ -53,6 +56,13 @@ export let worldEventData = {
   },
   hermes:{
     met: false,
+  },
+  set:{
+    met: false,
+    lodge: false,
+    fourcrystals: false,
+    preTransformation: false,
+    defeated: false
   },
   endPortal:{
     explained: false,
@@ -71,7 +81,27 @@ export let worldEventData = {
   caera:{
     catchable:false,
     caught:false
-  }
+  },
+  mortdux:{
+    catchable:false,
+    caught:false
+  },
+  papien:{
+    catchable:false,
+    caught:false
+  },
+  sustiris:{
+    catchable:false,
+    caught:false
+  },
+  beeasis:{
+    catchable:false,
+    caught:false
+  },
+  malumtehk:{
+    catchable:false,
+    caught:false
+  },
 }
 
 if(data != null){
@@ -117,7 +147,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.transit_Peak}
+      currMap = {...mapsObj.gene_Town}
       currMap.seen = true
     }
   } else {
@@ -317,10 +347,6 @@ async function generateBoundaries(nextMapInfo){
                       if(!worldEventData.djed.meet && player.badges[1]) 
                         trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                       break
-                    case 'duskSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
                   }
                 }
 
@@ -415,11 +441,13 @@ async function generateBoundaries(nextMapInfo){
               if(x == 0) x = x + 1
               else x++
 
+              console.log(worldEventData)
+
               if(nextMapInfo != undefined)
                 switch(nextMapInfo.name){
                   case 'maat_House':
-                    // if(!worldEventData.maat.firstMeet) return
-                    // if(!player.badges[0]) return
+                    if(!worldEventData.maat.firstMeet) return
+                    if(!player.badges[0]) return
                     break
                   case 'cross_Link':
                     if(worldEventData.maat.firstMeet) return
@@ -427,20 +455,39 @@ async function generateBoundaries(nextMapInfo){
                   case 'djed_House':
                     if(!player.badges[1]) return
                     break
-                  case 'eden_Forest':
-                    if(!worldEventData.vignus.catchable) return
+                  case 'set_House':
+                    if(!worldEventData.set.met) return
+                    if(worldEventData.set.fourcrystals) return
                     break
                 }
 
                 if(eventInfo.info.eventKey != undefined){
                   switch(eventInfo.info.eventKey){
+                    case 'setFirstMeet':
+                      if(worldEventData.set.met && !worldEventData.set.fourcrystals) return
+                      break
+                    case 'duskSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'dawnSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'twilightSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'solsticeSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'vignus':
+                      if(!worldEventData.vignus.catchable) return
+                      break
                     case 'caera':
                       if(!worldEventData.caera.catchable) return
                       break
-                      case 'duskSummoner':
-                        if(!worldEventData.endPortal.explained) return
-                        if(worldEventData.summoners.dawn) return
-                        break
                   }
                 }
 
@@ -884,11 +931,6 @@ async function generateBoundaries(nextMapInfo){
                     if(!worldEventData.djed.meet && player.badges[1]) 
                       trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                     break
-                  case 'duskSummoner':
-                    console.log(trainerInfo.eventKey)
-                    if(!worldEventData.endPortal.explained) return
-                    if(worldEventData.summoners.dawn) return
-                    break
                 }
 
                 // console.log(worldEventData.maat)
@@ -983,8 +1025,8 @@ async function generateBoundaries(nextMapInfo){
 
               switch(nextMapInfo.name){
                 case 'maat_House':
-                  // if(!worldEventData.maat.firstMeet) return
-                  // if(!player.badges[0]) return
+                  if(!worldEventData.maat.firstMeet) return
+                  if(!player.badges[0]) return
                   break
                 case 'cross_Link':
                   if(worldEventData.maat.firstMeet) return
@@ -992,20 +1034,39 @@ async function generateBoundaries(nextMapInfo){
                 case 'djed_House':
                   if(!player.badges[1]) return
                   break
-                case 'eden_Forest':
-                  if(!worldEventData.vignus.catchable) return
+                case 'set_House':
+                  if(!worldEventData.set.met) return
+                  if(worldEventData.set.fourcrystals) return
                   break
               }
 
               if(eventInfo.info.eventKey != undefined){
                 switch(eventInfo.info.eventKey){
+                  case 'setFirstMeet':
+                    if(worldEventData.set.met) return
+                    break
+                  case 'duskSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'dawnSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'twilightSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'solsticeSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'vignus':
+                    if(!worldEventData.vignus.catchable) return
+                    break
                   case 'caera':
                     if(!worldEventData.caera.catchable) return
                     break
-                    case 'duskSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
                 }
               }
 

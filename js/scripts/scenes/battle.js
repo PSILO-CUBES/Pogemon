@@ -613,11 +613,11 @@ function onEnterTerrainAffliction(type, target, recipient){
   
         let ratio = 8
   
-        if(typesObj['rock'].veryEffective.includes(target.element[0])) ratio = ratio / 2
-        else if(typesObj['rock'].notEffective.includes(target.element[0])) ratio = ratio * 2
-  
         if(typesObj['rock'].veryEffective.includes(target.element[1])) ratio = ratio / 2
         else if(typesObj['rock'].notEffective.includes(target.element[1])) ratio = ratio * 2
+  
+        if(typesObj['rock'].veryEffective.includes(target.element[2])) ratio = ratio / 2
+        else if(typesObj['rock'].notEffective.includes(target.element[2])) ratio = ratio * 2
   
         const chipPercent = 1 / ratio
         const chip = Math.floor(target.stats.baseHp * chipPercent)
@@ -943,7 +943,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
       document.querySelector('#proceedImgContainer').style.display = 'block'
 
       queue.push(() =>{
-        foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+        foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
         console.log('YAYA')
 
         let faster = ally
@@ -1055,7 +1055,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
           // let rng = Math.floor(Math.random() * foe.moves.length)
           // let foeRNGAttack = foe.moves[rng]
 
-          foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+          foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
           console.log('YAYA')
     
           moveProcess = true
@@ -1828,10 +1828,13 @@ let foeRNGMove
 function chooseMove(e) {
   let selectedMove = movesObj[`${e.target.textContent.replace(/ /g, "_")}`]
   moves.ally = selectedMove
+
   //should change ai move depending on decided difficulty
-  console.log(foe)
-  foeRNGMove = foe.rerollEnemyMoveSoNotStatus()
+
+  foeRNGMove = foe.rerollEnemyMoveSoAppropriate(ally, selectedMove, terrainConditions, enemyTrainerInfo)
   moves.foe = foeRNGMove
+
+  console.log(foeRNGMove)
 
   return [selectedMove, foeRNGMove]
 }
@@ -1855,11 +1858,11 @@ function checkSpeed(e) {
   if(foeRNGMove.name == 'sucker_punch' && selectedMove.category == 'physical') priority.foe = 2
   
   if(ally.abilityInfo.ability.name == 'prankster' && selectedMove.type == 'status'){
-    if(foe.element[0] != 'dark' || foe.element[1] != 'dark') priority.ally = 1
+    if(foe.element[1] != 'dark' || foe.element[2] != 'dark') priority.ally = 1
   }
 
   if(foe.abilityInfo.ability.name == 'prankster' && selectedMove.type == 'status'){
-    if(ally.element[0] != 'dark' || ally.element[1] != 'dark') priority.foe = 1
+    if(ally.element[1] != 'dark' || ally.element[2] != 'dark') priority.foe = 1
   }
 
   let allySpeed
@@ -1914,6 +1917,8 @@ function checkSpeed(e) {
   if(foe.heldItem != null) if(foe.heldItem.effect == 'choice')
     if(foe.choiceItem.move == null) foe.choiceItem.move = foeRNGMove
     else foeRNGMove = foe.choiceItem.move
+
+    console.log(foeRNGMove)
 
   if(terrainConditions.turns.etc.trick_room.active){
     let placeHolder
@@ -2947,7 +2952,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         else recipientMove = foeRNGMove
 
         if(target.status.name != 'para' || target.status.name != 'slp') {
-          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
           console.log('YAYA')
         }
       }
@@ -3001,7 +3006,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
               targetMove = foeRNGMove
             }
 
-            recipient.move({move: recipientMove, recipient: target, recipientMove: targetMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
+            recipient.move({move: recipientMove, recipient: target, recipientMove: targetMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo}) 
             console.log('YAYA')
             // target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower)
             // console.log('endOfTurnTerrainManagement')
@@ -3357,7 +3362,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       console.log(target.status.name)
       if(target.status.name == 'slp') return
 
-      target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+      target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
       console.log('YAYA')
     } else {
       if(target.hp <= 0) return
@@ -3436,7 +3441,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
             targetMove = foeRNGMove
           }
 
-          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent}) 
+          target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo}) 
           console.log('YAYA')
         } else {
           if(target.hp <= 0) return
@@ -3563,7 +3568,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
           }
 
           setTimeout(() =>{
-            target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+            target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
             console.log('YAYA')
 
             manageCheckStatusEvent(faster, slower)
@@ -3630,7 +3635,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
     let foeRNGAttack = foe.moves[rng]
 
     // target.dialogue('battle', `${target.switchUnderScoreForSpace(target.nickname)} used ${target.switchUnderScoreForSpace(move.name)}!`)
-    target.move({move: foeRNGAttack, recipient, recipientMove: null, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent})
+    target.move({move: foeRNGAttack, recipient, recipientMove: null, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
     console.log('YAYA')
 
     if(target.isEnemy){
@@ -3704,9 +3709,11 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
 
     let move = targetMove
 
-    if(move == null || move == undefined){
-      move = target.rerollEnemyMoveSoNotStatus()
+    if(target.isEnemy) if(move == null || move == undefined){
+      move = target.rerollEnemyMoveSoAppropriate(recipient, targetMove, terrainConditions, enemyTrainerInfo)
       foeRNGMove = move
+
+      console.log(foeRNGMove)
     }
 
     switch(move.name){
