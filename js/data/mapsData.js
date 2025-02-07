@@ -584,6 +584,7 @@ export let mapsObj = {
         reward: 500,
         beaten: false,
         gymLeader: {name: "ma'at", num: 0},
+        difficulty: 'gym',
         eventKey: 'maatGym'
       },
       {
@@ -1176,6 +1177,9 @@ export let mapsObj = {
         team: [
           [pogemonsObj.allingua, 22, null, null, null, [
             movesObj.stealth_rock,
+            movesObj.metal_claw,
+            movesObj.bulldoze,
+            movesObj.accelerock
           ]], 
           [pogemonsObj.purdustus, 24, null, null, null, null, null], 
           [pogemonsObj.punbreakable, 23, null, abilitiesObj.sand_Stream, null, null], 
@@ -1193,6 +1197,7 @@ export let mapsObj = {
         reward: 1000,
         beaten: false,
         gymLeader: {name: "djed", num: 1},
+        difficulty: 'gym',
         eventKey: 'djedGym'
       },
       {
@@ -1360,7 +1365,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/cowgirl/cowgirl.png',
         dialogue: "fa sowme rayeson thowse powgayman's down't sayem ta wawnt to\n\nhang 'rowund thays pletfoarm 'ere...",
         reward: 400,
-        beaten: false,
+        beaten: true,
       },
       {
         name: 'Lisa', 
@@ -1370,7 +1375,59 @@ export let mapsObj = {
         sprite: '../../img/charSprites/brownlady/brownlady.png',
         dialogue: "This bear thingy must be pretty rare, i've never seen one of them before\n\nbefriending this one today!",
         reward: 250,
-        beaten: false,
+        beaten: true,
+      },
+      {
+        name: 'Gabriel', // summoner
+        looking: 'Down',
+        sprite: "img/charSprites/dawnsummoner/dawnsummoner.png",
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:80}}}, 
+        dialogue:
+        [
+          "I have people to make proud.\n\nI cannot stop here."
+        ],
+        team: [
+          //                   lvl         item                  abili               shiny ivs  move   gender
+          [pogemonsObj.sterra, 1, itemsObj.rocky_Helmet, abilitiesObj.mold_Breaker, true, true, [
+            movesObj.iron_head,
+            movesObj.earthquake,
+            movesObj.icicle_crash,
+            movesObj.stealth_rock
+          ]],
+          // [pogemonsObj.volaticus, 57, itemsObj.expert_Belt, abilitiesObj.aerilate, null, true, [
+          //   movesObj.extreme_speed,
+          //   movesObj.double_Edge,
+          //   movesObj.leaf_blade,
+          //   movesObj.u_turn
+          // ]],
+          // [pogemonsObj.mower, 59, itemsObj.golden_banana, abilitiesObj.fluffy_Coat, null, true, [
+          //   movesObj.bulk_up,
+          //   movesObj.milk_drink,
+          //   movesObj.earthquake,
+          //   movesObj.horn_leech
+          // ]],
+          // [pogemonsObj.rockwil, 60, itemsObj.black_Sludge, abilitiesObj.sand_Stream, null, true, [
+          //   movesObj.rock_slide,
+          //   movesObj.earthquake,
+          //   movesObj.iron_head,
+          //   movesObj.crunch
+          // ]],
+          // [pogemonsObj.infragice, 62, itemsObj.leftovers, abilitiesObj.rock_Head, null, true, [
+          //   movesObj.shell_smash,
+          //   movesObj.earthquake,
+          //   movesObj.head_smash,
+          //   movesObj.icicle_crash
+          // ]],
+          // [pogemonsObj.vignus, 65, itemsObj.life_Orb, abilitiesObj.no_Guard, null, true, [
+          //   movesObj.stone_miss,
+          //   movesObj.fire_miss,
+          //   movesObj.roost,
+          //   movesObj.earthquake
+          // ]],
+        ],
+        reward: 0,
+        eventKey: 'dawnSummoner',
+        difficulty: 'optimalMove'
       },
       {
         name: 'Richard', 
@@ -1442,58 +1499,6 @@ export let mapsObj = {
             `I'll be waiting.`
           ],
           eventKey: 'djedMeeting'
-        },
-      },
-      {
-        name: 'npc', // summoner
-        sprite: "img/charSprites/dawnsummoner/dawnsummoner.png",
-        info: {
-          looking: 'Down',
-          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
-          dialogue:
-          [
-            "The winds are pretty sandy around here."
-          ],
-          team: [
-          //                   lvl         item                  abili               shiny ivs  move   gender
-          [pogemonsObj.sterra, 57, itemsObj.rocky_Helmet, abilitiesObj.mold_Breaker, null, true, [
-            movesObj.iron_head,
-            movesObj.earthquake,
-            movesObj.icicle_crash,
-            movesObj.stealth_rock
-          ]],
-          [pogemonsObj.avorago, 59, itemsObj.damp_Rock, abilitiesObj.drizzle, null, true, [
-            movesObj.hurricane,
-            movesObj.surf,
-            movesObj.roost,
-            movesObj.reflect
-          ]],
-          [pogemonsObj.tonifurr, 59, itemsObj.life_Orb, abilitiesObj.refrigirate, null, true, [
-            movesObj.thunder,
-            movesObj.boomburst,
-            movesObj.earth_power,
-            movesObj.volt_switch
-          ]],
-          [pogemonsObj.fruity, 61, itemsObj.black_Sludge, abilitiesObj.sand_Force, null, true, [
-            movesObj.rock_slide,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.crunch
-          ]],
-          [pogemonsObj.contamitoad, 60, itemsObj.leftovers, abilitiesObj.levitate, null, true, [
-            movesObj.shift_gear,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.dark_pulse
-          ]],
-          [pogemonsObj.papiens, 65, itemsObj.assault_Vest, abilitiesObj.scrappy, null, true, [
-            movesObj.drain_punch,
-            movesObj.knock_off,
-            movesObj.crunch,
-            movesObj.close_Combat
-          ]],
-          ],
-          eventKey: 'dawnsummoner'
         },
       },
     ],
@@ -1707,13 +1712,55 @@ export let mapsObj = {
         name: 'npc', // summoner
         sprite: "img/charSprites/twilightsummoner/twilightsummoner.png",
         info: {
+          name: 'Lilly',
           looking: 'Down',
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           dialogue:
           [
-            "The winds are pretty sandy around here."
+            "I have a person to find within myself.\n\nFinding your soul is a never ending dream."
           ],
-          eventKey: 'twilightsummoner'
+          eventKey: 'twilightSummoner',
+          difficulty: 'optimalMove',
+          team: [
+            //                   lvl         item                    abili             shiny  ivs  move   gender
+            [pogemonsObj.ouroboross, 57, itemsObj.rocky_Helmet, abilitiesObj.intimidate, null, true, [
+              movesObj.gunk_shot,
+              movesObj.crunch,
+              movesObj.earthquake,
+              movesObj.fart
+            ]],
+            [pogemonsObj.sophistaves, 59, itemsObj.expert_Belt, abilitiesObj.aerilate, null, true, [
+              movesObj.moonblast,
+              movesObj.boomburst,
+              movesObj.earth_power,
+              movesObj.roost
+            ]],
+            [pogemonsObj.maapheeno, 59, itemsObj.golden_banana, abilitiesObj.fluffy_Coat, null, true, [
+              movesObj.calm_mind,
+              movesObj.moonlight,
+              movesObj.puppet_realm,
+              movesObj.shadow_ball
+            ]],
+            [pogemonsObj.gelidatis, 60, itemsObj.choice_Specs, abilitiesObj.frozen_Soul, null, true, [
+              movesObj.frost_breath,
+              movesObj.psychic,
+              movesObj.freeze_dry,
+              movesObj.aura_sphere
+            ]],
+            [pogemonsObj.moldy, 61, itemsObj.leftovers, abilitiesObj.tripped_Out, null, true, [
+              movesObj.giga_drain,
+              movesObj.shadow_ball,
+              movesObj.earth_power,
+              movesObj.confuse_ray
+            ]],
+            [pogemonsObj.mortdux, 65, itemsObj.life_Orb, abilitiesObj.shadow_Tag, null, true, [
+              movesObj.shadow_ball,
+              movesObj.flash_cannon,
+              movesObj.calm_mind,
+              movesObj.recover
+            ]],
+          ],
+          reward: 0,
         },
       },
     ],
@@ -1784,6 +1831,7 @@ export let mapsObj = {
         hidden: true
       },
     ],
+    
   },
 
   //sol_Path
@@ -1823,14 +1871,56 @@ export let mapsObj = {
         name: 'npc', // summoner
         sprite: "img/charSprites/solsticesummoner/solsticesummoner.png",
         info: {
+          name: 'Patrick',
           looking: 'Down',
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           dialogue:
           [
-            "The winds are pretty sandy around here."
+            "I have so many places to see.\n\nThe cage that is this wingless body is far too limiting..."
           ],
-          eventKey: 'twilightsummoner'
+          eventKey: 'solsticeSummoner'
         },
+        difficulty: 'optimalMove',
+        team: [
+          //                   lvl         item                    abili             shiny  ivs  move   gender
+          [pogemonsObj.antber, 57, itemsObj.rocky_Helmet, abilitiesObj.intimidate, null, true, [
+            movesObj.flamethrower,
+            movesObj.crunch,
+            movesObj.earthquake,
+            movesObj.fart
+          ], 'male'],
+          [pogemonsObj.thunderhopper, 59, itemsObj.expert_Belt, abilitiesObj.technician, null, true, [
+            movesObj.shock_wave,
+            movesObj.struggle,
+            movesObj.frost_breath,
+            movesObj.thunder_wave
+          ]],
+          [pogemonsObj.kampgooroo, 59, itemsObj.golden_banana, abilitiesObj.iron_Fist, null, true, [
+            movesObj.drain_punch,
+            movesObj.thunder_punch,
+            movesObj.ice_punch,
+            movesObj.bulk_up
+          ]],
+          [pogemonsObj.cataclysmus, 60, itemsObj.leftovers, abilitiesObj.intimidate, null, true, [
+            movesObj.fire_lash,
+            movesObj.scald,
+            movesObj.crunch,
+            movesObj.heat_wave
+          ]],
+          [pogemonsObj.soleo, 61, itemsObj.heat_Rock, abilitiesObj.drought, null, true, [
+            movesObj.flare_blitz,
+            movesObj.head_smash,
+            movesObj.earthquake,
+            movesObj.crunch
+          ]],
+          [pogemonsObj.caera, 65, itemsObj.life_Orb, abilitiesObj.solar_Power, null, true, [
+            movesObj.flamethrower,
+            movesObj.thunderbolt,
+            movesObj.aeroblast,
+            movesObj.roost
+          ]],
+        ],
+        reward: 0,
       },
     ],
     trainers: [
@@ -2154,11 +2244,36 @@ export let mapsObj = {
       {
         name: "Hermes", 
         team: [
-          [pogemonsObj.salvulpis, 29, itemsObj.twisted_Spoon, abilitiesObj.frozen_Soul, null, null], 
-          [pogemonsObj.wettie, 30, itemsObj.mystic_Water, null, true, null], 
-          [pogemonsObj.contamitoad, 31, itemsObj.black_Sludge, abilitiesObj.liquid_Voice, null, null],
-          [pogemonsObj.thunderhopper, 30, itemsObj.expert_Belt, abilitiesObj.galvanize, null, null],
-          [pogemonsObj.avorago, 34, itemsObj.life_Orb, abilitiesObj.drizzle, null, true],
+          [pogemonsObj.salvulpis, 29, itemsObj.twisted_Spoon, abilitiesObj.frozen_Soul, null, null, [
+            movesObj.frost_breath,
+            movesObj.mystical_power,
+            movesObj.mystical_fire,
+            movesObj.calm_mind
+          ]], 
+          [pogemonsObj.wettie, 30, itemsObj.damp_Rock, null, true, null, [
+            movesObj.surf,
+            movesObj.recover,
+            movesObj.aura_sphere,
+            movesObj.rainy_day
+          ]], 
+          [pogemonsObj.contamitoad, 31, itemsObj.black_Sludge, abilitiesObj.liquid_Voice, null, null, [
+            movesObj.extreme_speed,
+            movesObj.poison_jab,
+            movesObj.scald,
+            movesObj.puddle_break
+          ]],
+          [pogemonsObj.thunderhopper, 30, itemsObj.expert_Belt, abilitiesObj.galvanize, null, null, [
+            movesObj.thunder,
+            movesObj.hurricane,
+            movesObj.bug_buzz,
+            movesObj.hydro_pump
+          ]],
+          [pogemonsObj.avorago, 34, itemsObj.life_Orb, abilitiesObj.drizzle, null, true, [
+            movesObj.thunder,
+            movesObj.hurricane,
+            movesObj.bug_buzz,
+            movesObj.hydro_pump
+          ]],
         ],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:150}}},
         looking: 'Down', 
@@ -2167,7 +2282,8 @@ export let mapsObj = {
         reward: 2500,
         beaten: false,
         eventKey: 'hermesGym',
-        gymLeader: {name: "hermes", num: 2},
+        gymLeader: {name: "hermes", num: 2}, 
+        difficulty: 'gym',
       },
       {
         name: 'Saphir', 
@@ -2702,55 +2818,60 @@ export let mapsObj = {
     event: [
       {
         name: 'npc', // summoner
-        team: [
-          //                       lvl         item                  abili          shiny ivs  move   gender
-          [pogemonsObj.psyranea, 57, itemsObj.leftovers, abilitiesObj.magic_Bounce, null, true, [
-            movesObj.bug_buzz,
-            movesObj.psychic,
-            movesObj.earth_power,
-            movesObj.sticky_web
-          ]],
-          [pogemonsObj.avorago, 59, itemsObj.damp_Rock, abilitiesObj.drizzle, null, true, [
-            movesObj.hurricane,
-            movesObj.surf,
-            movesObj.roost,
-            movesObj.reflect
-          ]],
-          [pogemonsObj.tonifurr, 59, itemsObj.life_Orb, abilitiesObj.refrigirate, null, true, [
-            movesObj.thunder,
-            movesObj.boomburst,
-            movesObj.earth_power,
-            movesObj.volt_switch
-          ]],
-          [pogemonsObj.fruity, 61, itemsObj.black_Sludge, abilitiesObj.sand_Force, null, true, [
-            movesObj.rock_slide,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.crunch
-          ]],
-          [pogemonsObj.contamitoad, 60, itemsObj.leftovers, abilitiesObj.levitate, null, true, [
-            movesObj.shift_gear,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.dark_pulse
-          ]],
-          [pogemonsObj.papiens, 65, itemsObj.assault_Vest, abilitiesObj.scrappy, null, true, [
-            movesObj.drain_punch,
-            movesObj.knock_off,
-            movesObj.crunch,
-            movesObj.close_Combat
-          ]],
-        ],
         sprite: 'img/charSprites/dusksummoner/dusksummoner.png',
         info: {
+          name: 'Sophia',
+          dialogue:[
+            `I have such knowledge to acquire....\n\nA lifetime is only the beginning of gnosis.`
+          ],
+          team: [
+            //                       lvl         item                  abili          shiny ivs  move   gender
+            [pogemonsObj.psyranea, 57, itemsObj.light_Clay, abilitiesObj.magic_Bounce, null, true, [
+              movesObj.bug_buzz,
+              movesObj.psychic,
+              movesObj.reflect,
+              movesObj.sticky_web
+            ]],
+            [pogemonsObj.avorago, 58, itemsObj.damp_Rock, abilitiesObj.drizzle, null, true, [
+              movesObj.hurricane,
+              movesObj.surf,
+              movesObj.roost,
+              movesObj.thunder
+            ]],
+            [pogemonsObj.tonifurr, 59, itemsObj.life_Orb, abilitiesObj.refrigirate, null, true, [
+              movesObj.thunder,
+              movesObj.boomburst,
+              movesObj.earth_power,
+              movesObj.volt_switch
+            ]],
+            [pogemonsObj.fruity, 59, itemsObj.eviolite, abilitiesObj.tripped_Out, null, true, [
+              movesObj.spore,
+              movesObj.confuse_ray,
+              movesObj.leech_seed,
+              movesObj.dream_eater
+            ]],
+            [pogemonsObj.contamitoad, 60, itemsObj.assault_Vest, abilitiesObj.liquid_Voice, null, true, [
+              movesObj.sludge_bomb,
+              movesObj.hydro_pump,
+              movesObj.boomburst,
+              movesObj.thunderous_kick
+            ]],
+            [pogemonsObj.papiens, 65, itemsObj.leftovers, abilitiesObj.magic_Bounce, null, true, [
+              movesObj.giga_drain,
+              movesObj.scald,
+              movesObj.mystical_power,
+              movesObj.calm_mind
+            ]],
+          ],
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}}, 
           dialogue:[
             `You came looking for me at the beheast of my kukum?\n\n\nFor her to give you access to the crest means she sences\n\nsomething within you.`,
             `I'd be greatful to help you awaken the true potential dormant within you.\n\n\nI'll wait for that opportunity back in Scribble Town's Gym.`
           ], 
+          reward: 0,
           looking: 'Left',
           eventKey: 'duskSummoner',
-          faceToFace: false
+          difficulty: 'optimalMove'
         },
       },
     ],
@@ -3380,8 +3501,8 @@ export let mapsObj = {
     mapImg: './img/maps/set_House/set_House.png',
     FGImg: './img/maps/set_House/set_HouseFG.png',
     spawnPosition: {
-      x: -900,
-      y: -750
+      x: 100,
+      y: -150
     },
     height: 16,
     width: 24,
@@ -3425,9 +3546,26 @@ export let mapsObj = {
         sprite: 'img/charSprites/whiteelder/whiteelder.png',
         info: {
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
-          dialogue:[`This next area is a bit too strong for you right now..\n\n\nTell you what, if you bring me back one of those banana's from the eden forest\n\nsouth of here, i'll let you throught!`], 
+          dialogue:[
+            `I welcome you back.\n\n\nNow that we're here, let's get to the important matter.\n\nThere are these 4 items that i've lended to some trainers.\n\nI'll need you to go fetch them for me.`, 
+            `You'll probably have to defeat them in order to get these items back,\n\nso prepare accordingly.\n\n\nThere trainers are hiding, you'll have to find them yourself.`,
+            `I'll bestow this gift upon you to make this task a bit me realistic for you.`
+          ], 
+          fourcrystalwaiting:[
+            `You're here, but you havent brought back all of my gems?\n\nThen what are you doing here? Get back to it!`
+          ],
+          fourcrystalgive:[
+            `Wait, you really managed to get them back!\n\nI cannot believe the day has come... FINALLY!! HAHA.. ha..`,
+            `Well, hmmmm.. I hmm.. I greatly appreciated your help.\n\nNow give those to me!`,
+            `-The old man magically fuses all gems together-\n\n-the energy in the room starts to give you chills-`,
+            `I'll only need you for one last thing.`,
+          ],
+          corruptGemDialogue:[
+            `Carry this, i'll need my energy balaced before it happens.\n\n\nThe gem holds too much for me to handle and be stable at the same time.\n\n\nNow, come and meet me at the peak of mount transit.`
+          ],
+          itemsDialogue:[`This will allow you to travel the region in an instant.\n\nCome back to me once you have fetched all 4 items.`],
           looking: 'Down',
-          eventKey: 'evilElderFirstInteraction'
+          eventKey: 'setHouse'
         },
       },
     ],
@@ -3572,6 +3710,8 @@ export let mapsObj = {
       ]
     },
     changeMapLocations:[
+      {name: 'neo_Genesis', spawnPosition: {x:-1315, y: -1925}, eventKey: 'neoGenesisPortal'}, 
+
       {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, {name: 'end_Trail', spawnPosition: {x:-3225, y: -125}}, 
     ],
     trainers: [
@@ -3653,12 +3793,19 @@ export let mapsObj = {
         sprite: "img/charSprites/whiteelder/whiteelder.png",
         info: {
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
-          dialogue:
-          [
+          dialogue: [
             `Well met traveler, you must have been the one i was expecting.\n\n
             I knew the day would come when you'd step foot on this mountain.\n\n
             Your role is still yer undecided, meet me back at my lodge,\nthere i'll give you a simple task.`
-          ], 
+          ],
+          preTransformationDialogue: [
+            `Now, give me the gem!\n\nI'd advise not to follow me into the portal..`,
+            `If you're wise enought not to do so, please keep in mind that it will\n\nnot prevent your death, but only prolong it! HAHAHAHA`,
+          ],
+          postTransformation: [
+            `This feeling!!! hahahahahah\n\nHo how i want to see you step in that portal and face me now!`,
+            `Now step in you child, step in and see who fate's chosen truly is! hahahaha`
+          ],
           looking: 'Right',
           eventKey: 'setFirstMeet'
         },
@@ -3733,50 +3880,51 @@ export let mapsObj = {
         name: "Set",
         team: [
           //                       lvl         item                  abili             shiny  ivs  move   gender
-          [pogemonsObj.ouroboross, 60, itemsObj.black_Sludge, abilitiesObj.intimidate, true, true, [
+          [pogemonsObj.ouroboross, 1, itemsObj.black_Sludge, abilitiesObj.intimidate, true, true, [
             movesObj.knock_off,
             movesObj.sucker_punch,
             movesObj.gunk_shot,
             movesObj.taunt
           ]],
-          [pogemonsObj.steevil, 62, itemsObj.leftovers, abilitiesObj.levitate, true, true, [
-            movesObj.shift_gear,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.dark_pulse
-          ]],
-          [pogemonsObj.ferusand, 65, itemsObj.choice_Band, abilitiesObj.sand_Force, true, true, [
-            movesObj.rock_slide,
-            movesObj.earthquake,
-            movesObj.iron_head,
-            movesObj.crunch
-          ]],
-          [pogemonsObj.cataclysmus, 65, itemsObj.choice_Specs, abilitiesObj.intimidate, true, true, [
-            movesObj.fire_miss,
-            movesObj.flamethrower,
-            movesObj.surf,
-            movesObj.hydro_pump
-          ]],
-          [pogemonsObj.yaldabaoth, 67, itemsObj.expert_Belt, abilitiesObj.contrary, true, true, [
-            movesObj.overheat,
-            movesObj.leaf_storm,
-            movesObj.psycho_boost,
-            movesObj.draco_meteor
-          ]],
-          [pogemonsObj.malumtehk, 70, itemsObj.assault_Vest, abilitiesObj.scrappy, null, true, [
-            movesObj.drain_punch,
-            movesObj.knock_off,
-            movesObj.crunch,
-            movesObj.close_Combat
-          ]],
+          // [pogemonsObj.steevil, 62, itemsObj.leftovers, abilitiesObj.levitate, true, true, [
+          //   movesObj.shift_gear,
+          //   movesObj.earthquake,
+          //   movesObj.iron_head,
+          //   movesObj.dark_pulse
+          // ]],
+          // [pogemonsObj.ferusand, 65, itemsObj.choice_Band, abilitiesObj.sand_Force, true, true, [
+          //   movesObj.rock_slide,
+          //   movesObj.earthquake,
+          //   movesObj.iron_head,
+          //   movesObj.crunch
+          // ]],
+          // [pogemonsObj.cataclysmus, 65, itemsObj.choice_Specs, abilitiesObj.intimidate, true, true, [
+          //   movesObj.fire_miss,
+          //   movesObj.flamethrower,
+          //   movesObj.surf,
+          //   movesObj.hydro_pump
+          // ]],
+          // [pogemonsObj.yaldabaoth, 67, itemsObj.expert_Belt, abilitiesObj.contrary, true, true, [
+          //   movesObj.overheat,
+          //   movesObj.leaf_storm,
+          //   movesObj.psycho_boost,
+          //   movesObj.draco_meteor
+          // ]],
+          // [pogemonsObj.malumtehk, 70, itemsObj.assault_Vest, abilitiesObj.scrappy, null, true, [
+          //   movesObj.drain_punch,
+          //   movesObj.knock_off,
+          //   movesObj.crunch,
+          //   movesObj.close_Combat
+          // ]],
         ],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:150}}},
         looking: 'Down', 
         sprite: '../../img/charSprites/endelder/endelder.png',
-        dialogue: "Things come and go, all we can do for ourselves\n\nis to fullfil the duties of the heart.",
-        reward: 2500,
-        eventKey: 'goldenDiskGiver',
-        beaten: true
+        dialogue: "You might be the biggest treat before i end this world,\n\nremember how pathetic the rest humanity is\n\nonce your soul starts to rot! hahaha",
+        reward: 0,
+        eventKey: 'setFinalBoss',
+        beaten: false,
+        difficulty: 'optimalMove'
       },
     ],
     items: [
@@ -3958,10 +4106,10 @@ export let mapsObj = {
         {name:'TM154'},
         {name:'TM158'},
         {name:'TM159'},
-        {name:'TM172'},
         {name:'TM173'},
         {name:'TM174'},
-        {name:'TM176'},
+        {name:'TM175'},
+        {name:'TM177'},
       ],
 
       // battle shop

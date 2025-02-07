@@ -87,6 +87,7 @@ export class Boundary {
     name,
     collision,
     collisionInstance,
+    character,
   }){
     this.position = position
     this.type = type
@@ -98,6 +99,7 @@ export class Boundary {
     this.name = name
     this.collision = collision
     this.collisionInstance = collisionInstance
+    this.character = character
   }
 
   generateInfo(){
@@ -322,10 +324,31 @@ export class Pogemon extends Sprite{
       else gender = 'female'
     } else gender = predeterminedGender
 
+    switch(this.name){
+      case 'steeli':
+      case 'steeler':
+      case 'steevil':
+      case 'disso':
+      case 'niktamer':
+      case 'vignus':
+      case 'caera':
+      case 'papien':
+      case 'mortdux':
+      case 'sustiris':
+      case 'beeasis':
+      case 'malumtehk':
+      case 'daghua':
+        gender = null
+        break
+    }
+
     return gender
   }
 
   generateIVs(predeterminedIvs){
+
+    console.log(predeterminedIvs)
+
     let ivObj = {
       baseHp: 0,
       atk: 0,
@@ -2283,7 +2306,7 @@ export class Pogemon extends Sprite{
         } else recipient.hp -= damage
       } else recipient.hp -= damage
 
-      if(move.name == 'false_Swipe') recipient.hp = 1
+      if(move.name == 'false_Swipe' && recipient.hp <= 0) recipient.hp = 1
 
       if(move.effects != undefined){
         if(Object.keys(move.effects[0])[0] == 'recoil'){
@@ -5028,12 +5051,13 @@ export class Pogemon extends Sprite{
 
     if(this.choiceItem.move != null) if(this.affliction[2].active && this.choiceItem.move == 'status') move = movesObj.struggle
 
-    let tauntInteraction = false    
-    if(this.affliction[2].active && move.type == 'status') tauntInteraction = true
-
     const effectiveMovesArr = []
 
     this.moves.forEach(move =>{
+      let firstTypeVeryEffective = typesObj[move.element].veryEffective.includes(recipient.element[1])
+      let secondTypeVeryEffective = false
+      if(recipient.element[2] != null) secondTypeVeryEffective = typesObj[move.element].veryEffective.includes(recipient.element[2])
+
       let firstTypeNotEffective = typesObj[move.element].notEffective.includes(recipient.element[1])
       let secondTypeNotEffective = false
       if(recipient.element[2] != null) secondTypeNotEffective = typesObj[move.element].notEffective.includes(recipient.element[2])
@@ -5042,18 +5066,39 @@ export class Pogemon extends Sprite{
       let secondTypeImmuned = false
       if(recipient.element[2] != null) secondTypeImmuned = typesObj[move.element].immuned.includes(recipient.element[2])
 
-
       console.log(terrainConditions.static)
       console.log(move.name)
 
-      let preventRedundentStealthRocks = false
-      if(terrainConditions.static.stealth_rock.active.ally && move.name == 'stealth_rock') preventRedundentStealthRocks = true
+      let tauntInteraction = false    
+      if(this.affliction[2].active && move.type == 'status') tauntInteraction = true
 
-      let preventRedundentStickyWeb = false
-      if(terrainConditions.static.sticky_web.active.ally  && move.name == 'sticky_web') preventRedundentStickyWeb = true
+      let preventRedundantConfusion = false    
+      if(this.affliction[0].active && move.type == 'status' && Object.keys(move.effects[0]) == 'confusion') preventRedundantConfusion = true
 
-      let preventRedundentStatus = false
-      if(recipient.status.name != null && this.checkIfMoveEffectIsStatusAffliction(move.effect)) preventRedundentStatus = true
+      let preventRedundantSeeds = false    
+      if(this.affliction[1].active && move.name == 'leech_seed') preventRedundantSeeds = true
+
+      let preventRedundantTaunt = false    
+      if(this.affliction[2].active && move.name == 'taunt') preventRedundantTaunt = true
+
+      console.log(terrainConditions)
+      let preventRedundantReflect = false
+      if(terrainConditions.turns.etc.foe_reflect.active && move.name == 'reflect') preventRedundantReflect = true
+
+      let preventRedundantLightScreen = false
+      if(terrainConditions.turns.etc.foe_light_screen.active && move.name == 'light_screen') preventRedundantLightScreen = true
+
+      let preventRedundantTrickRoom = false
+      if(terrainConditions.turns.etc.trick_room.active && move.name == 'trick_room') preventRedundantTrickRoom = true
+
+      let preventRedundantStealthRocks = false
+      if(terrainConditions.static.stealth_rock.active.ally && move.name == 'stealth_rock') preventRedundantStealthRocks = true
+
+      let preventRedundantStickyWeb = false
+      if(terrainConditions.static.sticky_web.active.ally  && move.name == 'sticky_web') preventRedundantStickyWeb = true
+
+      let preventRedundantStatus = false
+      if(recipient.status.name != null && this.checkIfMoveEffectIsStatusAffliction(move.effect)) preventRedundantStatus = true
 
       let assaultVestInteraction = false
       if(move.type == 'status' && this.heldItem != null && this.heldItem.name == 'assault_Vest') assaultVestInteraction = true
@@ -5063,23 +5108,73 @@ export class Pogemon extends Sprite{
       console.log(`${move.element} : ${recipient.element[1]} ` + firstTypeImmuned)
       console.log(`${move.element} : ${recipient.element[2]} ` + secondTypeImmuned)
 
-      console.log(preventRedundentStealthRocks)
-      console.log(preventRedundentStickyWeb)
-      console.log(preventRedundentStatus)
+      console.log(preventRedundantStealthRocks)
+      console.log(preventRedundantStickyWeb)
+      console.log(preventRedundantStatus)
 
-      console.log(enemyTrainerInfo)
+      let difficulty
+      if(enemyTrainerInfo != undefined) if(enemyTrainerInfo.difficulty != undefined) difficulty = enemyTrainerInfo.difficulty
 
-      if(
-        !firstTypeNotEffective &&
-        !secondTypeNotEffective &&
-        !firstTypeImmuned && 
-        !secondTypeImmuned &&
-        !preventRedundentStealthRocks &&
-        !preventRedundentStickyWeb &&
-        !preventRedundentStatus &&
-        !assaultVestInteraction &&
-        !tauntInteraction
-      ) effectiveMovesArr.push(move)
+      switch(difficulty){
+        case null:
+          if(
+            !assaultVestInteraction &&
+            !tauntInteraction &&
+            !preventRedundantConfusion &&
+            !preventRedundantSeeds &&
+            !preventRedundantTaunt &&
+            !preventRedundantReflect &&
+            !preventRedundantLightScreen &&
+            !preventRedundantTrickRoom &&
+            !preventRedundantStealthRocks &&
+            !preventRedundantStickyWeb &&
+            !preventRedundantStatus 
+            
+          ) effectiveMovesArr.push(move)
+          break
+        case 'gym':
+          if(
+            !assaultVestInteraction &&
+            !tauntInteraction &&
+            !preventRedundantConfusion &&
+            !preventRedundantSeeds &&
+            !preventRedundantTaunt &&
+            !preventRedundantReflect &&
+            !preventRedundantLightScreen &&
+            !preventRedundantTrickRoom &&
+            !preventRedundantStealthRocks &&
+            !preventRedundantStickyWeb &&
+            !preventRedundantStatus &&
+
+            !firstTypeNotEffective &&
+            !secondTypeNotEffective &&
+            !firstTypeImmuned && 
+            !secondTypeImmuned
+          ) effectiveMovesArr.push(move)
+          break
+        case 'optimalMove':
+          if(
+            !assaultVestInteraction &&
+            !tauntInteraction &&
+            !preventRedundantConfusion &&
+            !preventRedundantSeeds &&
+            !preventRedundantTaunt &&
+            !preventRedundantReflect &&
+            !preventRedundantLightScreen &&
+            !preventRedundantTrickRoom &&
+            !preventRedundantStealthRocks &&
+            !preventRedundantStickyWeb &&
+            !preventRedundantStatus &&
+
+            !firstTypeNotEffective &&
+            !secondTypeNotEffective &&
+            !firstTypeImmuned && 
+            !secondTypeImmuned &&
+            firstTypeVeryEffective ||
+            secondTypeVeryEffective
+          ) effectiveMovesArr.push(move)
+          break
+      }
     })
 
     const newRNG = Math.floor(Math.random() * effectiveMovesArr.length)

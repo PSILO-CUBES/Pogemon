@@ -89,11 +89,14 @@ export async function generatePlayer(canvas){
         }
       }))  
 
-      player.catch(pogemonsObj.loko, true, mapsObj.lab)
+      player.catch(pogemonsObj.jleech, true, mapsObj.lab)
+
+      // worldEventData.set.defeated = true
+
       setTimeout(() =>{
         player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
         player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
-        player.bag.set("ability_Capsule", {item: {...itemsObj.ability_Capsule}, quantity: 999})
+        // player.bag.set("ability_Capsule", {item: {...itemsObj.ability_Capsule}, quantity: 999})
         // player.bag.set("super_Repel", {item: {...itemsObj.}, quantity: 999})
       }, 250)
 
@@ -688,6 +691,7 @@ export function itemPickUp(item, amount, msg){
   })
 
   player.team[0].dialogue('overworld', msg)
+  console.log('messageNow')
   
   gsap.to(document.querySelector('#overlapping'), {
     opacity: 0.5
@@ -695,6 +699,7 @@ export function itemPickUp(item, amount, msg){
   
   const itemImage = new Image()
   itemImage.src = item.img
+  console.log(item.img)
   itemImage.id = 'pickedUpItem'
         
   document.querySelector('#openWindow').replaceChildren()
@@ -724,7 +729,8 @@ export function itemPickUp(item, amount, msg){
       // console.log(data.mapsObjState.cross_Link)
     }
   
-    if(!player.interaction.info.hidden) itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
+    if(!player.interaction.info.hidden && player.interaction.info.team == undefined) 
+      itemSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.pogeballSprite.type) itemSpritesArr.splice(i, 1)})
   }
 }
 
@@ -756,15 +762,29 @@ function playerInteraction(e) {
         break
     case 'npc':
       if(interaction.initiated) return
+      if(player.interaction.info.eventKey == 'setFirstMeet' && worldEventData.set.postTransformation) return
       disableOWMenu.active = true
       console.log('here2')
 
       interaction.initiated = true
       player.disabled = true
 
-      document.querySelector('#overworldDialogueContainer').style.display = 'grid'
+      // document.querySelector('#overworldDialogueContainer').style.display = 'grid'
 
       let chosenDialogue = player.interaction.info.dialogue
+
+      function checkIfEveryGemInInventory(){
+        let pass = false
+
+        if(player.bag.get('dawn_Gem').quantity > 0) pass = true
+        if(player.bag.get('dusk_Gem').quantity > 0) pass = true
+        if(player.bag.get('twilight_Gem').quantity > 0) pass = true
+        if(player.bag.get('solstice_Gem').quantity > 0) pass = true
+
+        return pass
+      }
+
+      let cancelDialogue = false
 
       if(player.interaction.info.eventKey != undefined){
         switch(player.interaction.info.eventKey){
@@ -786,7 +806,7 @@ function playerInteraction(e) {
                 if(!worldEventData.heisenberg.slimieEvolutionShowed){
                   worldEventData.heisenberg.slimieEvolutionShowed = true
                   player.team.forEach(pogemon =>{
-                    if(pogemon.name == 'slimie' || pogemon.name == 'flamie'|| pogemon.name == 'wettie'|| pogemon.name == 'grassie'|| pogemon.name == 'statikie'|| pogemon.name == 'pukie') 
+                    if(pogemon.name == 'slimie' || pogemon.name == 'flamie' || pogemon.name == 'wettie' || pogemon.name == 'grassie' || pogemon.name == 'statikie' || pogemon.name == 'pukie') 
                       chosenDialogue = player.interaction.info.slimeDialogue
                   })
                 } else {
@@ -839,20 +859,50 @@ function playerInteraction(e) {
             worldEventData.kukum.permission = true
             break 
           case 'setFirstMeet':
-            worldEventData.set.met = true
+            if(worldEventData.set.postTransformation) {
+              cancelDialogue = true
+              console.log(cancelDialogue)
+              console.log('?????????')
+              break
+            }
+
+            if(!worldEventData.set.met)
+              worldEventData.set.met = true
+            else if(worldEventData.set.fourcrystals && !worldEventData.set.preTransformation){
+              worldEventData.set.preTransformation = true
+              chosenDialogue = player.interaction.info.preTransformationDialogue
+
+              console.log(player.interaction)
+            } else if(worldEventData.set.preTransformation){
+              worldEventData.set.postTransformation = true
+              chosenDialogue = player.interaction.info.postTransformation
+            }
+            break
+          case 'setHouse':
+            if(worldEventData.set.lodge && !checkIfEveryGemInInventory()) 
+              chosenDialogue = player.interaction.info.fourcrystalwaiting
+            if(worldEventData.set.lodge && checkIfEveryGemInInventory)
+              chosenDialogue = player.interaction.info.fourcrystalgive
             break
         }
       }
 
-      for(let i = 0; i < chosenDialogue.length; i++){
-        if(i == 0) player.dialogue('overworld', chosenDialogue[i])
-        else queue.push(() => {
-          player.dialogue('overworld', chosenDialogue[i])
-        })
-      }
+      console.log(worldEventData.set.preTransformation)
+      console.log(cancelDialogue)
 
-      openWindow.style.backgroundColor = 'transparent'
-      openWindow.replaceChildren()
+      if(!cancelDialogue){
+
+        console.log('now')
+        for(let i = 0; i < chosenDialogue.length; i++){
+          if(i == 0) player.dialogue('overworld', chosenDialogue[i])
+          else queue.push(() => {
+            player.dialogue('overworld', chosenDialogue[i])
+          })
+        }
+
+        openWindow.style.backgroundColor = 'transparent'
+        openWindow.replaceChildren()
+      }
 
       switch(player.interaction.info.type){
         case 'pogecenter':
@@ -1454,6 +1504,21 @@ function changeMapEvent(changeMap, currPos){
           }, 2000)
         }
         else player.disabled = false
+      } else if(currMap.name == 'transit_Peak' && changeMapIndex.info.eventKey == "neoGenesisPortal" && !worldEventData.set.preTransformation){
+
+        console.log(changeMapIndex)
+        player.disabled = true
+
+        if(!blockChangeMap) {
+          player.dialogue('overworld', `I have no idea what lies beyond this portal.\n\nI should speak to the old man Set before entering.`)
+          blockChangeMap = true
+
+          setTimeout(() =>{
+            blockChangeMap = false
+          }, 2000)
+        }
+        else player.disabled = false
+
       } else {
         audioObj.SFX.changeMap.play()
 
@@ -1541,6 +1606,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
+          console.log('messageNow')
 
         worldEventData.bananaGuy.bananaAsked = true
 
@@ -1551,6 +1617,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
+        console.log('messageNow')
 
         worldEventData.bananaGuy.bananaAsked = true
 
@@ -1561,6 +1628,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.bananaDialogue)
+        console.log('messageNow')
 
         worldEventData.bananaGuy.bananaGiven = true
       }
@@ -1570,6 +1638,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
+        console.log('messageNow')
 
         worldEventData.mousaCrest.ask = true
 
@@ -1580,6 +1649,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
+        console.log('messageNow')
 
         // console.log('block event')
         return
@@ -1588,6 +1658,7 @@ function eventZoneManagement(eventZones){
         
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.permissionDialogue)
+        console.log('messageNow')
 
         // console.log('block event')
         return
@@ -1637,6 +1708,7 @@ function eventZoneManagement(eventZones){
                 if(e.key == ' '){
                   player.disabled = true
                   player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                  console.log('messageNow')
                 }
               })
               if(!worldEventData.maat.firstMeet) return
@@ -1649,6 +1721,7 @@ function eventZoneManagement(eventZones){
                   if(e.key == ' '){
                     player.disabled = true
                     player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                    console.log('messageNow')
                   }
                 })
 
@@ -1662,6 +1735,7 @@ function eventZoneManagement(eventZones){
                   if(e.key == ' '){
                     player.disabled = true
                     player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                    console.log('messageNow')
                   }
                 })
 
@@ -1676,10 +1750,24 @@ function eventZoneManagement(eventZones){
           console.log('here2')
           
           player.disabled = true
+
+          console.log(eventZonesIndex.position)
+
+          let X = 0
+          let Y = -46
+
+          switch(player.direction){
+            case 2:
+              X = -8
+              break
+            case 4:
+              X = 16
+              break
+          }
           
           exclamation.style.display = 'block'
-          exclamation.style.left = eventZonesIndex.position.x
-          exclamation.style.top = eventZonesIndex.position.y - 46
+          exclamation.style.left = eventZonesIndex.position.x + X
+          exclamation.style.top = eventZonesIndex.position.y + Y
 
           audioObj.SFX.trainerEncounter.play()
     
@@ -1706,7 +1794,8 @@ function eventZoneManagement(eventZones){
                       break
                     case 'Down':
                       eventPos.x = eventZonesIndex.position.x
-                      eventPos.y = player.position.y - player.height
+                      if(player.position.y - player.height < eventZonesIndex.position.y) eventPos.y = eventZonesIndex.position.y
+                      else eventPos.y = player.position.y - player.height
                       break
                     case 'Left':
                       eventPos.x = player.position.x + player.width
@@ -1782,6 +1871,8 @@ function eventZoneManagement(eventZones){
 export let queue = []
 let queueEnabled = true
 
+let prevent2ItemsGiven = false
+
 document.querySelector('#overworldDialogue').addEventListener('click', (e) => {
   spendQueue()
 })
@@ -1790,14 +1881,17 @@ function spendQueue(){
   if(!queueEnabled) return
   // if(frozenJail) return
 
-  console.log(player.interaction.info.eventKey)
+  // console.log(player.interaction.info.eventKey)
 
   if(queue.length > 0){
     queue[0]()
     queue.shift()
     return
   } else { 
-    if(document.querySelector('#pickedUpItem') != undefined) document.querySelector('#pickedUpItem').src = ''
+    if(document.querySelector('#pickedUpItem') != undefined) {
+      disableOWMenu.active = false
+      document.querySelector('#pickedUpItem').src = ''
+    }
 
     if(!healProcess) {
       if(player.interaction != null){
@@ -1932,6 +2026,7 @@ function spendQueue(){
       worldEventData.baaull.awake = true
   
       player.dialogue('overworld', `The golden disk in your inventory started to glow.\n\nThe same thing happens to the statue in front of you.\n\nThe statue starts moving, you get ready for combat.`)
+      console.log('messageNow')
     } 
   
     if(player.interaction.info.eventKey == 'renamer' || player.interaction.info.eventKey == 'relearner') homouFamilyInteraction(player.interaction.info.eventKey)
@@ -1941,6 +2036,55 @@ function spendQueue(){
       // disableOWMenu.active = true
       player.disabled = true
       generatePogemartMenu(mapsObj.pogemart.productOptions[player.interaction.info.shopKey])
+    }
+
+    if(player.interaction.info.eventKey == 'setHouse' && !worldEventData.set.lodge){
+      worldEventData.set.lodge = true
+      prevent2ItemsGiven = true
+
+      itemPickUp(itemsObj.teleport_Gem, 1, player.interaction.info.itemsDialogue)
+    } else if(player.interaction.info.eventKey == 'setHouse' && worldEventData.set.lodge){
+      gsap.to('#overlapping', {
+        opacity: 0,
+        duration: 0.4,
+        onComplete:() =>{
+          prevent2ItemsGiven = false
+          scenes.set('pickingItem', {initiated: false})
+        }
+      })
+    }
+
+    console.log(player.interaction.info.eventKey)
+    console.log(worldEventData.set.lodge)
+    console.log(worldEventData.set.fourcrystals)
+    console.log(prevent2ItemsGiven)
+
+    if(player.interaction.info.eventKey == 'setHouse' && worldEventData.set.lodge && !worldEventData.set.fourcrystals && !prevent2ItemsGiven){
+      worldEventData.set.fourcrystals = true
+
+      itemPickUp(itemsObj.corrupt_Gem, 1, player.interaction.info.corruptGemDialogue)
+
+      player.bag.set('dawn_Gem', {item: {...itemsObj.dawn_Gem}, quantity: 0})
+      player.bag.set('dusk_Gem', {item: {...itemsObj.dusk_Gem}, quantity: 0})
+      player.bag.set('twilight_Gem', {item: {...itemsObj.twilight_Gem}, quantity: 0})
+      player.bag.set('solstice_Gem', {item: {...itemsObj.solstice_Gem}, quantity: 0})
+    } else if(player.interaction.info.eventKey == 'setHouse' && worldEventData.set.lodge && worldEventData.set.fourcrystals){
+      gsap.to('#overlapping', {
+        opacity: 0,
+        duration: 0.4,
+        onComplete:() =>{
+          scenes.set('pickingItem', {initiated: false})
+        }
+      })
+    }
+
+    if(player.interaction.info.eventKey == 'setFirstMeet' && worldEventData.set.preTransformation){
+      player.interaction.character.img.src = 'img/charSprites/endelder/endelder.png'
+    }
+
+    if(player.interaction.info.eventKey == 'setFirstMeet' && worldEventData.set.postTransformation){
+      player.interaction.character.img.src = 'img/charSprites/blank/blank.png'
+      player.interaction.collisionInstance.collision = false
     }
   }
 }

@@ -900,13 +900,13 @@ export const itemsObj = {
     price: 1,
     value: null
   },
-  teleport_Gem:{
-    name: 'teleport_Gem',
+  axe:{
+    name: 'axe',
     type: 'key',
-    effect: 'teleport',
+    effect: 'utility',
     pow: "---",
-    img: 'img/item_scene/items/key/teleport_Gem.png',
-    desc: "A very powerful gem, it allows you to teleport to places you've seen before in the blink of an eye!",
+    img: 'img/item_scene/items/key/axe.png',
+    desc: "Allows you to cut down small trees that are in your way.\n\nHope they don't hit me with a DMCA case for that one.",
     heldType: '---',
     consume: false,
     odds: 0,
@@ -925,7 +925,111 @@ export const itemsObj = {
     odds: 0,
     price: 1,
     value: null
-  }
+  },
+  hammer:{
+    name: 'hammer',
+    type: 'key',
+    effect: 'utility',
+    pow: "---",
+    img: 'img/item_scene/items/key/hammer.png',
+    desc: "Allows you to break rocks that are in your way.\n\nIt broky :()",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  surf_Saddle:{
+    name: 'surf_Saddle',
+    type: 'key',
+    effect: 'utility',
+    pow: "---",
+    img: 'img/item_scene/items/key/surf_Saddle.png',
+    desc: "Allows you to surf certain pogemons.\n\nIt looks pretty radical too 8)",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  teleport_Gem:{
+    name: 'teleport_Gem',
+    type: 'key',
+    effect: 'teleport',
+    pow: "---",
+    img: 'img/item_scene/items/key/teleport_Gem.png',
+    desc: "A very powerful gem.\n\nit allows you to teleport to places you've seen before in the blink of an eye!",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  dawn_Gem:{
+    name: 'dawn_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/dawn_Gem.png',
+    desc: "A gem containing ancient elemental energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  dusk_Gem:{
+    name: 'dusk_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/dusk_Gem.png',
+    desc: "A gem containing ancient elemental energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  twilight_Gem:{
+    name: 'twilight_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/twilight_Gem.png',
+    desc: "A gem containing ancient elemental energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  solstice_Gem:{
+    name: 'solstice_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/solstice_Gem.png',
+    desc: "A gem containing ancient elemental energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  corrupt_Gem:{
+    name: 'corrupt_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/corrupt_Gem.png',
+    desc: "Something feels very wrong about the energy eminating from this gem..",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
 }
 
 Object.values(movesObj).forEach((move, i) =>{
@@ -946,7 +1050,7 @@ Object.values(movesObj).forEach((move, i) =>{
     value: 2250
   }
 
-  // console.log(`TM${TMNum} : ${move.name}`)
+  console.log(`TM${TMNum} : ${move.name}`)
 
   itemsObj[`TM${TMNum}`] = TMObj
 })

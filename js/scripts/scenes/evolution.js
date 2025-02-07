@@ -135,8 +135,28 @@ document.querySelector('#evoNo').addEventListener('click', () => letEvolveChoice
 function initEvo(target, i){
   scenes.set('evolution', {initiated : true})
 
+  function jleechEvoTypeCalc() {
+    let chosenEvo = 'jlorox'
+    let [baseHP, atk, def, spatk, spdef, spd] = Object.values(target.ivs)
+
+    let defIVs = baseHP + def + spdef
+    let offIVs = atk + spatk + spd
+
+    if(defIVs > offIVs) chosenEvo = 'jleenex'  
+
+    if(defIVs == offIVs) {
+      const rng = Math.floor(Math.random() * 2)
+      if(rng == 1) chosenEvo = 'jleenex'  
+    }
+
+    console.log(pogemonsObj[chosenEvo])
+
+    return pogemonsObj[chosenEvo]
+  }
+
   targetMon = target
   if(pogemonsObj[target.evo.name] != undefined) targetEvo = pogemonsObj[target.evo.name]
+  else if(target.name == 'jleech') targetEvo = jleechEvoTypeCalc()
   else {
     if(evoItemUsed.item != null || target.heldItem != null) {
       target.evo.forEach(evoType =>{
@@ -145,7 +165,7 @@ function initEvo(target, i){
           targetEvo = pogemonsObj[evoType.name]
         }
 
-        if(evoType.type == 'held') if(target.heldItem != null) if(evoType.item == target.heldItem.name) targetEvo = pogemonsObj[evoType.name]
+        if(evoType.type == 'held') if(evoType.item == target.heldItem.name) targetEvo = pogemonsObj[evoType.name]
       })
     } else {
       target.evo.forEach(evoType =>{

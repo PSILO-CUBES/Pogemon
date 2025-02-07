@@ -62,6 +62,7 @@ export let worldEventData = {
     lodge: false,
     fourcrystals: false,
     preTransformation: false,
+    postTransformation: false,
     defeated: false
   },
   endPortal:{
@@ -147,7 +148,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.gene_Town}
+      currMap = {...mapsObj.pearly_Path}
       currMap.seen = true
     }
   } else {
@@ -281,7 +282,10 @@ async function generateBoundaries(nextMapInfo){
       changeMapMap.forEach((row, i) =>{
         row.forEach((type, j) =>{
           if(type === 0) return
+
           const mapInfo = defaultMapsObj[`${currMap.name}`].changeMapLocations[z]
+
+          if(mapInfo.eventKey == 'neoGenesisPortal' && !worldEventData.set.fourcrystals) return
 
           if(z == 0) z = z + 1
           else z++
@@ -316,6 +320,8 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${currMap.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${currMap.name}`].trainers[z]
 
+                console.log(trainerInfo)
+
                 if(trainerInfo == undefined) return
 
                 if(z == 0) z = z + 1
@@ -347,9 +353,32 @@ async function generateBoundaries(nextMapInfo){
                       if(!worldEventData.djed.meet && player.badges[1]) 
                         trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                       break
+                    case 'duskSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'dawnSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'twilightSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
+                    case 'solsticeSummoner':
+                      if(!worldEventData.endPortal.explained) return
+                      if(worldEventData.summoners.dawn) return
+                      break
                   }
                 }
 
+                if(currMap.name == 'transit_Peak'){
+                  if(worldEventData.set.fourcrystals) return
+                } else if(currMap.name == 'neo_Genesis'){
+                  if(worldEventData.set.defeated) return
+                }
+
+                console.log(trainerInfo)
               
                 let trainerTeam = []
 
@@ -373,13 +402,15 @@ async function generateBoundaries(nextMapInfo){
                       animate: true
                     })
 
+                    console.log()
+
                     let pogemonMoves
                     if(trainerInfo.team[i][6] != undefined) pogemonMoves = trainerInfo.team[i][6]
 
                     let pogemonGender
                     if(trainerInfo.team[i][7] != undefined) pogemonGender = trainerInfo.team[i][7]
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, pogemonGender, null, foeSprite))
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, trainerInfo.team[i][5], pogemonMoves, pogemonGender, null, foeSprite))
                   }
                 }
               
@@ -441,10 +472,10 @@ async function generateBoundaries(nextMapInfo){
               if(x == 0) x = x + 1
               else x++
 
-              console.log(worldEventData)
+              console.log(eventInfo.info)
 
-              if(nextMapInfo != undefined)
-                switch(nextMapInfo.name){
+              if(eventInfo != undefined)
+                switch(currMap.name){
                   case 'maat_House':
                     if(!worldEventData.maat.firstMeet) return
                     if(!player.badges[0]) return
@@ -461,47 +492,23 @@ async function generateBoundaries(nextMapInfo){
                     break
                 }
 
-                if(eventInfo.info.eventKey != undefined){
-                  switch(eventInfo.info.eventKey){
-                    case 'setFirstMeet':
-                      if(worldEventData.set.met && !worldEventData.set.fourcrystals) return
+              if(eventInfo.info.eventKey != undefined)
+                switch(eventInfo.info.eventKey){
+                  case 'setFirstMeet':
+                    if(worldEventData.set.met && !worldEventData.set.fourcrystals) return
+                    break
+                  case 'vignus':
+                    if(!worldEventData.vignus.catchable) return
+                    break
+                  case 'caera':
+                    if(!worldEventData.caera.catchable) return
+                    break
+                    case 'malumtehk':
+                      if(!worldEventData.malumtehk.catchable) return
                       break
-                    case 'duskSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
-                    case 'dawnSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
-                    case 'twilightSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
-                    case 'solsticeSummoner':
-                      if(!worldEventData.endPortal.explained) return
-                      if(worldEventData.summoners.dawn) return
-                      break
-                    case 'vignus':
-                      if(!worldEventData.vignus.catchable) return
-                      break
-                    case 'caera':
-                      if(!worldEventData.caera.catchable) return
-                      break
-                  }
                 }
 
-              eventZones.push(
-                new Boundary({
-                  position:{
-                    x: j * Boundary.width + currMap.spawnPosition.x,
-                    y: i * Boundary.height + currMap.spawnPosition.y
-                  },
-                  type: 5,
-                  name: eventInfo.name,
-                  info: eventInfo.info
-                })
-              )
+              let newCharacter = null
 
               if(eventInfo.sprite != undefined){
                 // console.log(eventInfo.sprite)
@@ -532,11 +539,38 @@ async function generateBoundaries(nextMapInfo){
                   null,
                   NPCSprite
                 )
+
+                newCharacter = NPCharacter
                 
                 NPCSpritesArr.push(NPCharacter)
               }
 
-              if(eventInfo.name == 'pc') return
+              const newBoundary = new Boundary({
+                position:{
+                  x: j * Boundary.width + currMap.spawnPosition.x,
+                  y: i * Boundary.height + currMap.spawnPosition.y
+                },
+                type: 1,
+                collision: true
+              })
+
+              if(eventInfo.name != 'pc') {
+                boundaries.push(newBoundary)
+              }
+
+              eventZones.push(
+                new Boundary({
+                  position:{
+                    x: j * Boundary.width + currMap.spawnPosition.x,
+                    y: i * Boundary.height + currMap.spawnPosition.y
+                  },
+                  type: 5,
+                  name: eventInfo.name,
+                  info: eventInfo.info,
+                  character: newCharacter,
+                  collisionInstance: newBoundary 
+                })
+              )
 
               // if(currMap.name == 'maat_House') {
               //   if(!worldEventData.maat.firstMeet) return
@@ -545,16 +579,7 @@ async function generateBoundaries(nextMapInfo){
 
               // console.log(`boundary pushed`)
 
-              boundaries.push(
-                new Boundary({
-                  position:{
-                    x: j * Boundary.width + currMap.spawnPosition.x,
-                    y: i * Boundary.height + currMap.spawnPosition.y
-                  },
-                  type: 1,
-                  collision: true
-                })
-              )
+
             break
             case 6:
               if(mapsObj[currMap.name].items == undefined) return
@@ -900,6 +925,8 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${nextMapInfo.name}`].trainers != undefined && mapsObj[`${nextMapInfo.name}`].trainers.length != 0) {
                 let trainerInfo = mapsObj[`${nextMapInfo.name}`].trainers[z]
 
+                console.log(trainerInfo)
+
                 if(trainerInfo == undefined) return
 
                 if(z == 0) z = z + 1
@@ -931,9 +958,29 @@ async function generateBoundaries(nextMapInfo){
                     if(!worldEventData.djed.meet && player.badges[1]) 
                       trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
                     break
+                  case 'duskSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'dawnSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'twilightSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
+                  case 'solsticeSummoner':
+                    if(!worldEventData.endPortal.explained) return
+                    if(worldEventData.summoners.dawn) return
+                    break
                 }
 
-                // console.log(worldEventData.maat)
+                if(currMap.name == 'transit_Peak'){
+                  if(worldEventData.set.fourcrystals) return
+                } else if(currMap.name == 'neo_Genesis'){
+                  if(worldEventData.set.defeated) return
+                }
               
                 let trainerTeam = []
 
@@ -1043,23 +1090,7 @@ async function generateBoundaries(nextMapInfo){
               if(eventInfo.info.eventKey != undefined){
                 switch(eventInfo.info.eventKey){
                   case 'setFirstMeet':
-                    if(worldEventData.set.met) return
-                    break
-                  case 'duskSummoner':
-                    if(!worldEventData.endPortal.explained) return
-                    if(worldEventData.summoners.dawn) return
-                    break
-                  case 'dawnSummoner':
-                    if(!worldEventData.endPortal.explained) return
-                    if(worldEventData.summoners.dawn) return
-                    break
-                  case 'twilightSummoner':
-                    if(!worldEventData.endPortal.explained) return
-                    if(worldEventData.summoners.dawn) return
-                    break
-                  case 'solsticeSummoner':
-                    if(!worldEventData.endPortal.explained) return
-                    if(worldEventData.summoners.dawn) return
+                    if(worldEventData.set.met && !worldEventData.set.fourcrystals) return
                     break
                   case 'vignus':
                     if(!worldEventData.vignus.catchable) return
@@ -1067,8 +1098,13 @@ async function generateBoundaries(nextMapInfo){
                   case 'caera':
                     if(!worldEventData.caera.catchable) return
                     break
+                  case 'malumtehk':
+                    if(!worldEventData.malumtehk.catchable) return
+                    break
                 }
               }
+
+              let newCharacter
 
               if(eventInfo.sprite != undefined){
                 const NPCImg = new Image()
@@ -1100,7 +1136,7 @@ async function generateBoundaries(nextMapInfo){
                   NPCSprite
                 )
 
-                console.log(NPCSprite)
+                newCharacter = NPCharacter
 
                 NPCSpritesArr.push(NPCharacter)
               }
@@ -1113,7 +1149,8 @@ async function generateBoundaries(nextMapInfo){
                   },
                   type: 5,
                   name: eventInfo.name,
-                  info: eventInfo.info
+                  info: eventInfo.info,
+                  character: newCharacter
                 })
               )
 
@@ -1517,6 +1554,16 @@ export async function generateMapData(nextMapInfo) {
   if(currMap.name == 'keme_Town'){
     if(worldEventData.baaull.awake) mapImg.src = 'img/maps/keme_Town/keme_Town.png'
     else mapImg.src = 'img/maps/keme_Town/keme_Town_baaull.png'
+  }
+
+  if(currMap.name == 'transit_Peak'){
+    if(!worldEventData.set.fourcrystals) {
+      mapImg.src = 'img/maps/transit_Peak/transit_Peak.png'
+      FGImg.src = 'img/maps/transit_Peak/transit_PeakFG.png'
+    } else {
+      mapImg.src = 'img/maps/transit_Peak/transit_Peak_Portal.png'
+      FGImg.src = 'img/maps/transit_Peak/transit_Peak_PortalFG.png'
+    }
   }
 
   printEncounterBox(currMap)

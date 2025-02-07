@@ -598,6 +598,27 @@ ma'at's berry shop?? no real other way to get berries otherwise x
 
 copy json file as save file and button to import during new game boot scene x
 
+import trainer in move method and set ai based on trainer difficulty x
+
+ai:{
+    prevent confuse
+    prevent leech seed
+    prevent reflect / lightscreen
+    prevent terrain
+} x
+
+do gym winning message and summoner winning message x
+
+evil monk rich guy / Solomon house -- gives teleport gem after explaining portal x
+
+key item for cut rock smash and surf x
+
+add jleech evo -- if atk + spatk + spd ivs > hp + def + spdef ivs x
+
+set no gender for steeli and legendaries x
+
+fix exclamation box x
+
 
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
@@ -606,14 +627,6 @@ copy json file as save file and button to import during new game boot scene x
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
 stuffToDo:{
-    battle: {
-        reduce hold when status afflicted
-    }
-
-    sprites:{
-        make npc get to me slower relative to how far away i am from them
-    }
-
     data: {
         set exp yeild for each pogemon correctly
 
@@ -631,39 +644,29 @@ stuffToDo:{
     }
 
     ideas:{
+        make legendary spots
+
+                once first 4 legendaries are seen make overworld dialogue explaining scribble town changes
+
+        make white flash after first 4 legendaries encounters
+
         alquima_Town:{
-            1rst house gives bait for regaligyne
-    
-            evil monk rich guy / Solomon house -- gives teleport gem after explaining portal
+            1st house gives bait for regaligyne
         }
-
-        put some story stuff
-
-        add jleech evo -- if atk + spatk + spd ivs > hp + def + spdef ivs
 
         add regaligyne evo -- feed royal jelly to female formal when party full of ants
 
         make multiple boxes for pc
 
-        name player scene before game start after new save file
+        name player scene before game start after new save file -- you feel comfrotable and warm. player, it's time to wake up!
 
         prevent TM learning of move is already in learntMove Arr
 
-        pacc isle map access giver -- after beating Solomon
- 
-        swap avatars
+        pacc isle map access giver -- after beating Solomon -- grandfather of solstice summoner
 
         drizzle wont start on second battle
 
-        key item for cut rock smash and surf
-
-        put weather in movables
-
-        fix exclamation box
-
-        set no gender for steeli and legendaries
-
-        import trainer in move method and set ai based on trainer difficulty
+        put some story stuff-- done?? i guess story isint done until daghua stuff has been added
 
         -- done!!!!
     }

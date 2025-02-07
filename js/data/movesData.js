@@ -2534,6 +2534,19 @@ export const movesObj = {
     animationType: 'status',
     desc: "Causes the target to fall asleep."
   },
+  calm_mind:{
+    name: 'calm_mind',
+    type: 'status',
+    element: 'psychic',
+    pow: '---',
+    acc: 100,
+    pp: 32,
+    effects: [{name: 'buff', target:'spatk', pow: 1, type: 'stats'}, {name: 'buff', target:'spatk', pow: 1, type: 'stats'}],
+    priority: 0,
+    sprite: '../../img/moves/calm_mind.png',
+    animationType: 'statsSelf',
+    desc: "Raises the user's Spatk. and Spdef. by 1."
+  },
   trick_room:{
     name: 'trick_room',
     type: 'status',

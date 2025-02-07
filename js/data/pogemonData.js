@@ -93,7 +93,7 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.false_Swipe, lvl: 1, seen: false},
-      // 2: {move: movesObj.breaking_swipe, lvl: 1, seen: false},
+      2: {move: movesObj.lokick, lvl: 1, seen: false},
       // 3: {move: movesObj.lokick, lvl: 1, seen: false},
       // 4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
       // 5: {move: movesObj.tackle, lvl: 1, seen: false},
@@ -509,7 +509,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 65,
+    yeild: 999,
     catchRate: 200,
     surfable: false
   },
@@ -1671,10 +1671,10 @@ export let pogemonsObj = {
     stats: {
       hp: 60,
       atk: 90,
-      def: 120,
+      def: 110,
       spatk: 50,
       spdef: 50,
-      spd: 40
+      spd: 50
     },
     evo: null,
     abilities: [
@@ -1717,7 +1717,7 @@ export let pogemonsObj = {
       def: 200,
       spatk: 60,
       spdef: 60,
-      spd: 40
+      spd: 50
     },
     evo: null,
     abilities: [
@@ -3001,12 +3001,12 @@ export let pogemonsObj = {
       spdef: 70,
       spd: 70,
     },
-    evo: null,
+    evo: {lvl: 1},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.draco_meteor, lvl: 1, seen: false},
     },
     sprites: {
       classic:{

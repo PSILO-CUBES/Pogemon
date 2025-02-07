@@ -256,10 +256,7 @@ function initBootMenuInteractionEvent(e){
             waitForNextBattle.initiated = true
             manageBootState(false)
             gsap.to('#overlapping', {
-                opacity: 0,
-                onComplete: () =>{
-                    // audioObj.music.map.play()
-                }
+                opacity: 0
             })
         }
     })

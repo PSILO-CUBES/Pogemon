@@ -853,7 +853,7 @@ function useItemOnClickEvent(e){
           itemUsed.used = true
           manageBagState(false, 'battle')
           gsap.to('#overlapping', {
-            opacity: 0,
+            opacity: 0
           })
         }
       })

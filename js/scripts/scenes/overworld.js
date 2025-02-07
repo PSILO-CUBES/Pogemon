@@ -2,7 +2,7 @@
 
 import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction, itemPickUp, queue as OWQueue } from '../player.js'
-import { currMap, encounterButtonState, flashContainerManagement, generateMapData, pogecenterReturnInfo, printEncounterBox, worldEventData } from '../maps.js'
+import { changeMapInfo, currMap, encounterButtonState, flashContainerManagement, generateMapData, pogecenterReturnInfo, printEncounterBox, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
 import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent, enemyTrainer } from './battle.js'
 import { manageTeamState } from './team.js'
@@ -113,8 +113,12 @@ export async function switchMap(nextMapInfo, preMapInfo){
 
   movables = [map, ...boundaries, ...battleZones, ...changeMap, ...eventZones, ...trainerSpritesArr, ...NPCSpritesArr, ...itemSpritesArr, ...obstacleSpritesArr]
 
+  let opacity = 0
+
+  if(player.interaction != null) if(player.interaction.info.eventKey == "setFinalBoss") opacity = 1
+
   gsap.to('#overlapping', {
-    opacity: 0,
+    opacity,
     duration: 0.4,
     onComplete(){
       player.disabled = false
@@ -718,6 +722,7 @@ function escapeKeyEventOptions(e) {
   } else if(e.key == '`'){
     console.log(player)
     console.log(battleQueue)
+    console.log(enemyTrainer)
   }
 }
 
@@ -883,6 +888,8 @@ export function manageOverWorldState(state, previousScene){
 
       if(!player.badges[0]) player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!\n\nYou can now cut down pesky tree that are in your way.")
       else if (!player.badges[1]) player.team[0].dialogue('overworld', "Congratulations, you've earned a second badge!\n\nNo rock will ever be in your way from now on.")
+
+        console.log('messageNow')
     }
 
     let teamPlaceHolder = []
@@ -928,21 +935,110 @@ export function manageOverWorldState(state, previousScene){
     menu.initiated = false
     overworldMenuDom.replaceChildren()
 
-    if(player.interaction != null) {
-      if(player.interaction.info.eventKey == 'mosesStaff') {
-        if(worldEventData.moses.staffGiven) return
-        if(enemyTrainer == undefined) return
+    // put gym winning message here here
 
-        worldEventData.moses.staffGiven = true
-        itemPickUp(itemsObj.guiding_Staff, 1, `Here, take this. It should help you along your journey towards truth.`)
+    if(player.interaction != null) {
+      if(enemyTrainer == undefined) return
+
+      switch(player.interaction.info.eventKey){
+        case 'maatGym':
+          if(worldEventData.maat.gym) return
+  
+          itemPickUp(itemsObj.axe, 1, `Congratulations on getting that first badge, im proud of you!\n\nHere, take this. Don't forget to visit the eden forest south of gene town.`)
+          break
+        case 'djedGym':
+          if(worldEventData.djed.gym) return
+  
+          itemPickUp(itemsObj.hammer, 1, `Yeah you won, big deal.\n\nTake this, it's pretty cool.`)
+          break
+        case 'mosesStaff':
+          if(worldEventData.moses.staffGiven) return
+  
+          worldEventData.moses.staffGiven = true
+          itemPickUp(itemsObj.guiding_Staff, 1, `Here, take this. It should help you along your journey towards truth.`)
+          break
+        case 'hermesGym':
+          if(worldEventData.hermes.gym) return
+  
+          itemPickUp(itemsObj.surf_Saddle, 1, `To think you became so strong so fast, commendable!\n\nThis should allow you to go back and reassess what you've missed.`)
+          break
+        case 'goldenDiskGiver':
+          if(worldEventData.baaull.goldenDisk) return
+  
+          worldEventData.baaull.goldenDisk = true
+          itemPickUp(itemsObj.golden_Disk, 1, `I want you to have this,\n\ni trust you'll make better use of it than i will.`)
+          break
+        case 'duskSummoner':
+          if(worldEventData.summoners.dusk) return
+
+          worldEventData.summoners.dusk = true
+          itemPickUp(itemsObj.dusk_Gem, 1, `Perhaps the chase for knowledge is what clouded my mind...\n\nWhat i needed the most was within me all along..\n\nEven in the hand of the wrong person, this will bring about good.\n\nIt must be..`)
+        break
+        case 'dawnSummoner':
+          if(worldEventData.summoners.dawn) return
+
+          worldEventData.summoners.dawn = true
+          itemPickUp(itemsObj.dawn_Gem, 1, `Could the prideful path really bring this much shame?..\n\nMaybe what i needed the most was within me all along..\n\nTake this, i won't need it anymore.`)
+          break
+        case 'twilightSummoner':
+          if(worldEventData.summoners.twilight) return
+
+          worldEventData.summoners.twilight = true
+          itemPickUp(itemsObj.twilight_Gem, 1, `In the end, is who i am this simple?..\n\nMaybe what i needed the most was within me all along..\n\nTake this, i won't need it anymore.`)
+          break
+        case 'solsticeSummoner':
+          if(worldEventData.summoners.solstice) return
+
+          worldEventData.summoners.solstice = true
+          itemPickUp(itemsObj.solstice_Gem, 1, `Even within a body free of limitations, could my heart still be caged?..\n\nMaybe what i needed the most was within me all along..\n\nTake this, i won't need it anymore.`)
+          break
+        case 'setFinalBoss':
+          player.disabled = true
+          disableOWMenu.active = true
+          worldEventData.set.defeated = true
+          setTimeout(() =>{
+            gsap.to('#overlapping', {
+              backgroundColor: 'white',
+              opacity: 1,
+              duration: 1.5,
+              onComplete: () =>{
+                gsap.to('#overlapping', {
+                  backgroundColor: 'black',
+                  duration: 0.5,
+                  onComplete: () =>{
+                    changeMapInfo({...mapsObj.bedroom}, currMap)
+                    player.disabled = true
+                    disableOWMenu.active = true
+                    document.querySelector('#overlapping').style.opacity = 1
+                    setTimeout(() => document.querySelector('#overlapping').innerText = 'For a moment, everything goes silent.', 750)
+                    setTimeout(() => document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nIt's as if a weight was lifted off of the world's shoulder.`, 5750)
+                    setTimeout(() => document.querySelector('#overlapping').innerText = 'You fell warm and comfortable.', 10750)
+                    setTimeout(() => document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\n${player.name}, it's time to wake up!`, 15750)
+                    setTimeout(() => {
+                      document.querySelector('#overlapping').innerText = ``
+                      document.querySelector('#overlapping').style.opacity = 1
+                      gsap.to('#overlapping', {
+                        opacity: 0,
+                        duration: 1,
+                        onComplete: () =>{
+                          player.disabled = false
+                          player.interaction = null
+                          disableOWMenu.active = false
+                        }
+                      })
+                    }, 20750)
+                  }
+                })
+              }
+            })
+          }, 1)
+
+          break
       }
 
-      if(player.interaction.info.eventKey == 'goldenDiskGiver') {
-        if(worldEventData.baaull.goldenDisk) return
-        if(enemyTrainer == undefined) return
-
-        worldEventData.baaull.goldenDisk
-        itemPickUp(itemsObj.golden_Disk, 1, `I want you to have this, i trust you'll make better\n\nuse of it than i will.`)
+      if(player.interaction.info.gymLeader != undefined) {
+        player.badges[player.interaction.info.gymLeader.num] = true
+        worldEventData[player.interaction.info.gymLeader.name].gym = true
       }
     }
 

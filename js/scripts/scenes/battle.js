@@ -1261,11 +1261,6 @@ function clearBattleScene(nextScene){
       if(trainer.name == player.interaction.info.name) trainer.beaten = true
     })
   }
-  
-  if(player.interaction != null) if(player.interaction.info.gymLeader != undefined) {
-    player.badges[player.interaction.info.gymLeader.num] = true
-    worldEventData[player.interaction.info.gymLeader.name].gym = true
-  }
 
   scenes.set('battle', {initiated : false})
   document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
@@ -2633,16 +2628,20 @@ function faintEvent(target){
     console.log('there')
 
     setTimeout(() =>{
-      target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
-      target.faint(queueFaintTrigger)
-
-      manageFaintingEvent(target)
+      queue.length = 0
 
       setTimeout(() =>{
-        queueProcess.disabled = false
-        console.log('here')
-      }, 750)
-    }, 750)
+        target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
+        target.faint(queueFaintTrigger)
+  
+        manageFaintingEvent(target)
+  
+        setTimeout(() =>{
+          queueProcess.disabled = false
+          console.log('here')
+        }, 750)
+      }, 250)
+    }, 1250)
   } else {
     queue.push(() =>{
       if(target.fainted) return
