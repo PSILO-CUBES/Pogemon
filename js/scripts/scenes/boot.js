@@ -146,6 +146,7 @@ function printBootMenu(){
     newGameImportContainer.appendChild(newGameJSONInputFieldContainer)
 
     const newGameJSONInputField = document.createElement('input')
+    newGameJSONInputField.placeholder = 'copy save file JSON here'
     newGameJSONInputField.id = 'newGameJSONInputField'
     newGameJSONInputFieldContainer.appendChild(newGameJSONInputField)
     newGameJSONInputField.addEventListener('input', e =>{

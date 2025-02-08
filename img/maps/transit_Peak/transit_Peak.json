@@ -121,7 +121,7 @@
                          "name":"Portal",
                          "opacity":1,
                          "type":"tilelayer",
-                         "visible":false,
+                         "visible":true,
                          "width":58,
                          "x":0,
                          "y":0
@@ -165,7 +165,7 @@
                  "name":"Map",
                  "opacity":1,
                  "type":"group",
-                 "visible":true,
+                 "visible":false,
                  "x":0,
                  "y":0
                 }, 
@@ -264,7 +264,7 @@
          "name":"Data",
          "opacity":0.3,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],

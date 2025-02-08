@@ -1042,6 +1042,47 @@ export function manageOverWorldState(state, previousScene){
       }
     }
 
+    if(
+      worldEventData.vignus.defeated &&
+      worldEventData.caera.defeated &&
+      worldEventData.papien.defeated &&
+      worldEventData.mortdux.defeated
+    ) {
+      setTimeout(() =>{
+        player.disabled = true
+        disableOWMenu.active = true
+
+        gsap.to('#overlapping', {
+          opacity: 1,
+          backgroundColor: 'white',
+          duration: 0.5, 
+          onComplete: () =>{
+            gsap.to('#overlapping', {
+              backgroundColor: 'black',
+              opacity: 1,
+              duration: 0.5, 
+              onComplete: () =>{
+                setTimeout(() =>{ document.querySelector('#overlapping').innerText = `The energy in the region shifted again.`}, 750)
+                setTimeout(() =>{ document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nYou see a glow dazzling from scribble town's direction.`}, 2750)
+                setTimeout(() =>{ document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nThere's an old friend there you should talk to.`}, 4750)
+                setTimeout(() =>{
+                  document.querySelector('#overlapping').innerText = ``
+                  gsap.to('#overlapping', {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () =>{
+                      worldEventData.scribbleTown.murale = true
+                      player.disabled = false
+                      disableOWMenu.active = false
+                    }
+                  })
+                }, 7750)
+              }
+            })
+          }
+        })
+      }, 1250)
+    }
   } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)

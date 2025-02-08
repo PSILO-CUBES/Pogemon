@@ -619,6 +619,25 @@ set no gender for steeli and legendaries x
 
 fix exclamation box x
 
+set correct move damage and acc x
+
+re enable trainers x
+
+data: {
+    set exp yeild
+    set catch rate
+    set abilities
+    set evo
+    set surfable
+    set moves
+} x
+
+switch pogemon in order if gym leader or summoner battle x
+
+make legendary spots x
+
+make white flash after first 4 legendaries encounters explaining scribble town changes x
+
 
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
@@ -627,29 +646,7 @@ fix exclamation box x
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
 stuffToDo:{
-    data: {
-        set exp yeild for each pogemon correctly
-
-        set catch rate for each pogemon correctly
-
-        set moves for each pogemon correctly
-
-        set abilities for each pogemon correctly
-
-        set pogemon evolution for each pogemon correctly
-
-        set who is surfable
-
-        re enable trainers
-    }
-
     ideas:{
-        make legendary spots
-
-                once first 4 legendaries are seen make overworld dialogue explaining scribble town changes
-
-        make white flash after first 4 legendaries encounters
-
         alquima_Town:{
             1st house gives bait for regaligyne
         }
@@ -662,11 +659,23 @@ stuffToDo:{
 
         prevent TM learning of move is already in learntMove Arr
 
-        pacc isle map access giver -- after beating Solomon -- grandfather of solstice summoner
-
         drizzle wont start on second battle
 
-        put some story stuff-- done?? i guess story isint done until daghua stuff has been added
+        put pogemon evolution moveset into learntMoves after evolution
+
+        synchronize natures
+
+        require hidden ability to be seen to switch to it
+
+        flame orb / toxic orb ?? make check happen in weather event?
+
+        ask kukum to make the perfect crystal -- requires beeasis and sustiris energy to make
+
+        pacc isle map access giver -- after beating Solomon -- grandfather of solstice summoner
+
+        put some story stuff-- done?? i guess story isint done until dahgua stuff has been added
+
+        add old pogemon maps for dahgua event -- fight hermes that has dahgua -- his team should be around 70 ~ 85
 
         -- done!!!!
     }

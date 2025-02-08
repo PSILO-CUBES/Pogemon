@@ -5102,6 +5102,9 @@ export class Pogemon extends Sprite{
 
       let assaultVestInteraction = false
       if(move.type == 'status' && this.heldItem != null && this.heldItem.name == 'assault_Vest') assaultVestInteraction = true
+
+      let preventRedundantKnockOff = false
+      if(this.heldItem == null && move.name == 'knock_Off') preventRedundantKnockOff = true
   
       console.log(`${move.element} : ${recipient.element[1]} ` + firstTypeNotEffective)
       console.log(`${move.element} : ${recipient.element[2]} ` + secondTypeNotEffective)
@@ -5128,7 +5131,8 @@ export class Pogemon extends Sprite{
             !preventRedundantTrickRoom &&
             !preventRedundantStealthRocks &&
             !preventRedundantStickyWeb &&
-            !preventRedundantStatus 
+            !preventRedundantStatus &&
+            !preventRedundantKnockOff
             
           ) effectiveMovesArr.push(move)
           break
@@ -5145,6 +5149,7 @@ export class Pogemon extends Sprite{
             !preventRedundantStealthRocks &&
             !preventRedundantStickyWeb &&
             !preventRedundantStatus &&
+            !preventRedundantKnockOff &&
 
             !firstTypeNotEffective &&
             !secondTypeNotEffective &&
@@ -5165,6 +5170,7 @@ export class Pogemon extends Sprite{
             !preventRedundantStealthRocks &&
             !preventRedundantStickyWeb &&
             !preventRedundantStatus &&
+            !preventRedundantKnockOff &&
 
             !firstTypeNotEffective &&
             !secondTypeNotEffective &&

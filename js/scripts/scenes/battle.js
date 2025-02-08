@@ -282,8 +282,6 @@ function initWildEncounter(tileInfo, info){
   let returnedFoe = foeRNGEncounter(tileInfo, info)
   if(returnedFoe == undefined) return
 
-  console.log(returnedFoe)
-
   let foeObj = returnedFoe.pogemon
 
   const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
@@ -302,16 +300,12 @@ function initWildEncounter(tileInfo, info){
     }
   }
 
-  console.log(rngLvl)
-
   let wildPogemonHeldItem = null
   if(returnedFoe.heldItem != null) {
     const rng = Math.floor(Math.random() * 100)
 
     if(rng <= returnedFoe.heldItem.odds) wildPogemonHeldItem = {...returnedFoe.heldItem.item}
   }
-
-  console.log(returnedFoe)
 
   let wildPogemonMoves = null
   if(returnedFoe.moves != undefined) wildPogemonMoves = returnedFoe.moves
@@ -320,8 +314,6 @@ function initWildEncounter(tileInfo, info){
   if(returnedFoe.gender != undefined) wildPogemonGender = returnedFoe.gender
 
   foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, null, foeSprite)
-
-  console.log(foe.moves)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -660,10 +652,15 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
   loadAlly(player.team[0])
 
+  console.log(prevScene)
+
   if(prevScene == 'overworld') {
     battlerArr = []
     evoArr = []
     lvlUpArr = []
+
+
+
     Object.values(terrainConditions).forEach(category =>{
       Object.entries(category).forEach(type =>{
         if(type[0] == 'etc' || type[0] == 'weather') Object.values(type[1]).forEach(terrainType =>{
@@ -709,6 +706,8 @@ export function initBattle(faintedTriggered, info, tileInfo){
     resetStats('both')
     console.log(tileInfo)
     console.log(info)
+
+    console.log(info.trainer)
 
     if(info == undefined) initWildEncounter(tileInfo, info)
     else {
@@ -1468,15 +1467,23 @@ function optionButtonInteraction(e) {
       case 'Run':
         if(enemyTrainer == undefined){
 
-          // if(player.interaction != null){
-          //   if(player.interaction.info.eventKey == 'frozenBaaull'){
-          //     document.querySelector('#textBox').innerText = "Can't run from this battle!"
-          //     setTimeout(() =>{
-          //       document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
-          //     }, 1250)
-          //     return
-          //   }
-          // }
+          if(player.interaction != null){
+            if(player.interaction.info.eventKey == 'frozenBaaull'){
+              document.querySelector('#textBox').innerText = "Can't run from this battle!"
+              setTimeout(() =>{
+                document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+              }, 1250)
+              return
+            }
+
+            if(player.interaction.info.legendary != undefined){
+              document.querySelector('#textBox').innerText = "Can't run from this battle!"
+              setTimeout(() =>{
+                document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+              }, 1250)
+              return
+            }
+          }
 
           C + 1
 
@@ -2185,27 +2192,45 @@ function enemyTeamWiped(enemyTrainerInfo){
   if(enemyTrainerInfo == undefined) return
 
   for(let i = 0; i < enemyTrainerInfo.team.length; i++){
-    if(enemyTrainerInfo.createdTrainer.team[i].fainted == false) teamFainted = false
+    if(enemyTrainerInfo.createdTrainer != undefined){
+      if(enemyTrainerInfo.createdTrainer.team[i].fainted == false) teamFainted = false
+    } else {
+      teamFainted = true
+    }
   }
 
   return teamFainted
 }
 
-function pickRandomPogemonOtherThanLast(){
-  let lastPogemon = foe
+function pickRandomPogemonOtherThanLast(type){
+
+  if(type == undefined){
+    let lastPogemon = foe
   
-  while(lastPogemon.id == foe.id){
-    let rng = Math.floor(Math.random() * enemyTrainerInfo.createdTrainer.team.length)
-    foe = enemyTrainerInfo.createdTrainer.team[rng]
+    while(lastPogemon.id == foe.id){
+      let rng = Math.floor(Math.random() * enemyTrainerInfo.createdTrainer.team.length)
+      foe = enemyTrainerInfo.createdTrainer.team[rng]
+    }
+  } else {
+    for(let i = 0; i < enemyTrainerInfo.createdTrainer.team.length; i++){{
+      if(!enemyTrainerInfo.createdTrainer.team[i].fainted){
+        foe = enemyTrainerInfo.createdTrainer.team[i]
+        break
+      }
+    }}
   }
+
+
 }
 
 function switchEnemyAfterFaint(type){
   if(enemyTrainerInfo == undefined) return
+
   let currTrainer = enemyTrainerInfo.createdTrainer
 
+
   if(type == 'move'){
-    pickRandomPogemonOtherThanLast()
+    pickRandomPogemonOtherThanLast(enemyTrainerInfo.difficulty)
   } else for(let i = 0; i < currTrainer.team.length; i++){
     if(currTrainer.team[i].fainted === false){
       foe = currTrainer.team[i]

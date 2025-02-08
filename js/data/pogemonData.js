@@ -8,6 +8,12 @@ import { movesObj } from "./movesData.js"
 // third stage : 180 ~ 250
 // legendary/high exp yeilders : 250 ~ 400
 
+// catch rate should look like
+// easy : 255 ~ 150
+// medium : 150 ~ 75
+// hard : 75 ~ 45
+// legendary : 3
+
 
 const animationPositionObj = {
   smallAnimationPos: {
@@ -79,24 +85,33 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 80,
-      atk: 999999,
+      atk: 75,
       def: 50,
       spatk: 30,
       spdef: 30,
       spd: 50
     },
-    evo: {name: 'lokol', lvl: 16, type: 'lvl'},
+    evo: {name: 'lokol', lvl: 20, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.drizzle, seen: false, hidden: false},
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
+      {ability : abilitiesObj.no_Guard, seen: false, hidden: false},
       {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.false_Swipe, lvl: 1, seen: false},
-      2: {move: movesObj.lokick, lvl: 1, seen: false},
-      // 3: {move: movesObj.lokick, lvl: 1, seen: false},
-      // 4: {move: movesObj.dark_pulse, lvl: 1, seen: false},
-      // 5: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.rock_smash, lvl: 7, seen: false},
+      4: {move: movesObj.fart, lvl: 10, seen: false},
+      5: {move: movesObj.rapid_spin, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.swift, lvl: 19, seen: false},
+      9: {move: movesObj.bulk_up, lvl: 22, seen: false},
+      8: {move: movesObj.nuzzle, lvl: 25, seen: false},
+      10: {move: movesObj.lokick, lvl: 28, seen: false},
+      11: {move: movesObj.headbutt, lvl: 31, seen: false},
+      12: {move: movesObj.thunderous_kick, lvl: 34, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 37, seen: false},
+      14: {move: movesObj.close_Combat, lvl: 41, seen: false},
     },
     sprites: {
       classic:{
@@ -116,8 +131,8 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.medAnimationPos,
     description: `It's dopamine receptors never build a tolerence, so it's always dopey and active.\n\nRegardless of how aloof it is, it never fails to be by it's friend's side.`,
-    yeild: 500,
-    catchRate: 75,
+    yeild: 65,
+    catchRate: 45,
     surfable: false
   },
   lokol: {
@@ -135,12 +150,27 @@ export let pogemonsObj = {
       spdef: 50,
       spd: 65
     },
-    evo: {name: 'lokump', lvl: 31, type: 'lvl'},
+    evo: {name: 'lokump', lvl: 40, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
+      {ability : abilitiesObj.no_Guard, seen: false, hidden: false},
+      {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
-    movepool: {
+    movepool:{
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.rock_smash, lvl: 7, seen: false},
+      4: {move: movesObj.fart, lvl: 10, seen: false},
+      5: {move: movesObj.rapid_spin, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.bulk_up, lvl: 19, seen: false},
+      8: {move: movesObj.nuzzle, lvl: 22, seen: false},
+      9: {move: movesObj.crunch, lvl: 26, seen: false},
+      10: {move: movesObj.lokick, lvl: 31, seen: false},
+      11: {move: movesObj.headbutt, lvl: 34, seen: false},
+      12: {move: movesObj.thunderous_kick, lvl: 39, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 45, seen: false},
+      14: {move: movesObj.close_Combat, lvl: 52, seen: false},
     },
     sprites: {
       classic:{
@@ -159,8 +189,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 1000,
-    catchRate: 75,
+    yeild: 145,
+    catchRate: 45,
     surfable: false
   },
   lokump: {
@@ -180,10 +210,27 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.last_Ditch_Effort, seen: false, hidden: false},
+      {ability : abilitiesObj.draconic_Aura, seen: false, hidden: false},
+      {ability : abilitiesObj.no_Guard, seen: false, hidden: false},
+      {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
-    movepool: {
+    movepool:{
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.rock_smash, lvl: 7, seen: false},
+      4: {move: movesObj.fart, lvl: 10, seen: false},
+      5: {move: movesObj.rapid_spin, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.swift, lvl: 19, seen: false},
+      8: {move: movesObj.bulk_up, lvl: 23, seen: false},
+      9: {move: movesObj.nuzzle, lvl: 25, seen: false},
+      10: {move: movesObj.crunch, lvl: 29, seen: false},
+      11: {move: movesObj.lokick, lvl: 32, seen: false},
+      12: {move: movesObj.headbutt, lvl: 35, seen: false},
+      13: {move: movesObj.thunderous_kick, lvl: 43, seen: false},
+      14: {move: movesObj.dragon_rush, lvl: 50, seen: false},
+      15: {move: movesObj.close_Combat, lvl: 58, seen: false},
+      16: {move: movesObj.double_Edge, lvl: 65, seen: false},
     },
     sprites: {
       classic:{
@@ -202,9 +249,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 1000,
-    catchRate: 75,
-    surfable: false
+    yeild: 265,
+    catchRate: 45,
+    surfable: true
   },
 
   // #4 - #6 steel starter
@@ -223,12 +270,27 @@ export let pogemonsObj = {
       spdef: 65,
       spd: 35
     },
-    evo: {name: 'steeler', lvl: 17, type: 'lvl'},
+    evo: {name: 'steeler', lvl: 20, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.prankster, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.metal_claw, lvl: 7, seen: false},
+      4: {move: movesObj.protect, lvl: 10, seen: false},
+      5: {move: movesObj.snarl, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.bulldoze, lvl: 19, seen: false},
+      9: {move: movesObj.dark_pulse, lvl: 22, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 25, seen: false},
+      10: {move: movesObj.knock_off, lvl: 28, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 31, seen: false},
+      12: {move: movesObj.iron_head, lvl: 34, seen: false},
+      13: {move: movesObj.flash_cannon, lvl: 37, seen: false},
+      14: {move: movesObj.shift_gear, lvl: 42, seen: false},
     },
     sprites: {
       classic:{
@@ -247,8 +309,8 @@ export let pogemonsObj = {
       },
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 500,
-    catchRate: 75,
+    yeild: 65,
+    catchRate: 45,
     surfable: false
   },
   steeler: {
@@ -266,12 +328,27 @@ export let pogemonsObj = {
       spdef: 95,
       spd: 45
     },
-    evo: {name: 'steevil', lvl: 30, type: 'lvl'},
+    evo: {name: 'steevil', lvl: 40, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.prankster, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.metal_claw, lvl: 7, seen: false},
+      4: {move: movesObj.protect, lvl: 10, seen: false},
+      5: {move: movesObj.snarl, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.bulldoze, lvl: 19, seen: false},
+      9: {move: movesObj.dark_pulse, lvl: 25, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 28, seen: false},
+      10: {move: movesObj.knock_off, lvl: 32, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 35, seen: false},
+      12: {move: movesObj.iron_head, lvl: 39, seen: false},
+      13: {move: movesObj.flash_cannon, lvl: 45, seen: false},
+      14: {move: movesObj.shift_gear, lvl: 52, seen: false},
     },
     sprites: {
       classic:{
@@ -290,8 +367,8 @@ export let pogemonsObj = {
       },
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 1000,
-    catchRate: 75,
+    yeild: 145,
+    catchRate: 45,
     surfable: false
   },
   steevil: {
@@ -311,10 +388,26 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.sharpened_Edges, seen: false, hidden: false},
+      {ability : abilitiesObj.modernize, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.prankster, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.metal_claw, lvl: 7, seen: false},
+      4: {move: movesObj.protect, lvl: 10, seen: false},
+      5: {move: movesObj.snarl, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.bulldoze, lvl: 19, seen: false},
+      9: {move: movesObj.dark_pulse, lvl: 25, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 28, seen: false},
+      10: {move: movesObj.knock_off, lvl: 32, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 35, seen: false},
+      12: {move: movesObj.iron_head, lvl: 44, seen: false},
+      13: {move: movesObj.flash_cannon, lvl: 51, seen: false},
+      14: {move: movesObj.shift_gear, lvl: 58, seen: false},
+      15: {move: movesObj.extreme_speed, lvl: 65, seen: false},
     },
     sprites: {
       classic:{
@@ -354,12 +447,27 @@ export let pogemonsObj = {
       spdef: 70,
       spd: 60
     },
-    evo: {name: 'maaphett', lvl: 15, type: 'lvl'},
+    evo: {name: 'maaphett', lvl: 20, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.synchronize, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.ghastly_whisper, lvl: 7, seen: false},
+      4: {move: movesObj.confuse_ray, lvl: 10, seen: false},
+      5: {move: movesObj.confusion, lvl: 13, seen: false},
+      6: {move: movesObj.charm, lvl: 16, seen: false},
+      7: {move: movesObj.draining_kiss, lvl: 19, seen: false},
+      9: {move: movesObj.reflect, lvl: 22, seen: false},
+      8: {move: movesObj.hex, lvl: 25, seen: false},
+      10: {move: movesObj.calm_mind, lvl: 28, seen: false},
+      11: {move: movesObj.dark_pulse, lvl: 31, seen: false},
+      12: {move: movesObj.nasty_plot, lvl: 34, seen: false},
+      13: {move: movesObj.shadow_ball, lvl: 37, seen: false},
+      14: {move: movesObj.moonblast, lvl: 41, seen: false},
     },
     sprites: {
       classic:{
@@ -378,8 +486,8 @@ export let pogemonsObj = {
       },
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 1000,
-    catchRate: 75,
+    yeild: 145,
+    catchRate: 45,
     surfable: false
   },
   maaphett: {
@@ -397,12 +505,27 @@ export let pogemonsObj = {
       spdef: 100,
       spd: 80
     },
-    evo: {name: 'maapheeno', lvl: 32, type: 'lvl'},
+    evo: {name: 'maapheeno', lvl: 40, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.synchronize, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.ghastly_whisper, lvl: 7, seen: false},
+      4: {move: movesObj.confuse_ray, lvl: 10, seen: false},
+      5: {move: movesObj.confusion, lvl: 13, seen: false},
+      6: {move: movesObj.charm, lvl: 16, seen: false},
+      7: {move: movesObj.draining_kiss, lvl: 19, seen: false},
+      9: {move: movesObj.reflect, lvl: 25, seen: false},
+      8: {move: movesObj.hex, lvl: 29, seen: false},
+      10: {move: movesObj.calm_mind, lvl: 33, seen: false},
+      11: {move: movesObj.dark_pulse, lvl: 36, seen: false},
+      12: {move: movesObj.nasty_plot, lvl: 41, seen: false},
+      13: {move: movesObj.shadow_ball, lvl: 46, seen: false},
+      14: {move: movesObj.moonblast, lvl: 51, seen: false},
     },
     sprites: {
       classic:{
@@ -442,10 +565,27 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
+      {ability : abilitiesObj.pixilate, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.ghastly_whisper, lvl: 7, seen: false},
+      4: {move: movesObj.confuse_ray, lvl: 10, seen: false},
+      5: {move: movesObj.confusion, lvl: 13, seen: false},
+      6: {move: movesObj.charm, lvl: 16, seen: false},
+      7: {move: movesObj.draining_kiss, lvl: 19, seen: false},
+      9: {move: movesObj.reflect, lvl: 25, seen: false},
+      8: {move: movesObj.hex, lvl: 29, seen: false},
+      10: {move: movesObj.calm_mind, lvl: 33, seen: false},
+      11: {move: movesObj.dark_pulse, lvl: 36, seen: false},
+      12: {move: movesObj.nasty_plot, lvl: 41, seen: false},
+      13: {move: movesObj.shadow_ball, lvl: 48, seen: false},
+      14: {move: movesObj.moonblast, lvl: 55, seen: false},
+      15: {move: movesObj.moonlight, lvl: 62, seen: false},
+      16: {move: movesObj.puppet_realm, lvl: 69, seen: false}
     },
     sprites: {
       classic:{
@@ -464,8 +604,8 @@ export let pogemonsObj = {
       },
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 1000,
-    catchRate: 75,
+    yeild: 265,
+    catchRate: 45,
     surfable: false
   },
 
@@ -487,10 +627,26 @@ export let pogemonsObj = {
     },
     evo: {name: 'fruity', lvl: 22, type: 'lvl',},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.overgrow, seen: false, hidden: false},
+      {ability : abilitiesObj.tripped_Out, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.leech_seed, lvl: 1, seen: false},
+      3: {move: movesObj.absorb, lvl: 7, seen: false},
+      4: {move: movesObj.confuse_ray, lvl: 10, seen: false},
+      5: {move: movesObj.confusion, lvl: 13, seen: false},
+      6: {move: movesObj.poison_powder, lvl: 15, seen: false},
+      7: {move: movesObj.stun_spore, lvl: 16, seen: false},
+      8: {move: movesObj.sleep_powder, lvl: 17, seen: false},
+      9: {move: movesObj.giga_drain, lvl: 20, seen: false},
+      10: {move: movesObj.mystical_power, lvl: 23, seen: false},
+      11: {move: movesObj.calm_mind, lvl: 25, seen: false},
+      12: {move: movesObj.trick_room, lvl: 28, seen: false},
+      13: {move: movesObj.giga_drain, lvl: 31, seen: false},
+      14: {move: movesObj.spore, lvl: 34, seen: false},
+      15: {move: movesObj.dream_eater, lvl: 37, seen: false}
     },
     sprites: {
       classic:{
@@ -509,8 +665,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 999,
-    catchRate: 200,
+    yeild: 55,
+    catchRate: 255,
     surfable: false
   },
   fruity: {
@@ -530,10 +686,26 @@ export let pogemonsObj = {
     },
     evo: {name: 'moldy', type:'item', item:'leaf_Stone'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.overgrow, seen: false, hidden: false},
+      {ability : abilitiesObj.tripped_Out, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.leech_seed, lvl: 1, seen: false},
+      3: {move: movesObj.absorb, lvl: 7, seen: false},
+      4: {move: movesObj.confuse_ray, lvl: 10, seen: false},
+      5: {move: movesObj.confusion, lvl: 13, seen: false},
+      6: {move: movesObj.poison_powder, lvl: 16, seen: false},
+      7: {move: movesObj.stun_spore, lvl: 17, seen: false},
+      8: {move: movesObj.sleep_powder, lvl: 18, seen: false},
+      9: {move: movesObj.giga_drain, lvl: 21, seen: false},
+      10: {move: movesObj.mystical_power, lvl: 26, seen: false},
+      11: {move: movesObj.calm_mind, lvl: 30, seen: false},
+      12: {move: movesObj.trick_room, lvl: 35, seen: false},
+      13: {move: movesObj.giga_drain, lvl: 41, seen: false},
+      14: {move: movesObj.spore, lvl: 47, seen: false},
+      15: {move: movesObj.dream_eater, lvl: 52, seen: false},
     },
     sprites: {
       classic:{
@@ -552,8 +724,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 138,
+    catchRate: 125,
     surfable: false
   },
   moldy: {
@@ -573,10 +745,27 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.overgrow, seen: false, hidden: false},
+      {ability : abilitiesObj.tripped_Out, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.absorb, lvl: 1, seen: false},
+      2: {move: movesObj.leech_seed, lvl: 1, seen: false},
+      3: {move: movesObj.confuse_ray, lvl: 7, seen: false},
+      4: {move: movesObj.confusion, lvl: 10, seen: false},
+      5: {move: movesObj.mega_drain, lvl: 13, seen: false},
+      6: {move: movesObj.poison_powder, lvl: 16, seen: false},
+      7: {move: movesObj.stun_spore, lvl: 17, seen: false},
+      8: {move: movesObj.sleep_powder, lvl: 18, seen: false},
+      9: {move: movesObj.giga_drain, lvl: 21, seen: false},
+      10: {move: movesObj.mystical_power, lvl: 26, seen: false},
+      11: {move: movesObj.calm_mind, lvl: 32, seen: false},
+      12: {move: movesObj.trick_room, lvl: 38, seen: false},
+      13: {move: movesObj.giga_drain, lvl: 44, seen: false},
+      14: {move: movesObj.spore, lvl: 50, seen: false},
+      15: {move: movesObj.dream_eater, lvl: 56, seen: false},
+      16: {move: movesObj.leaf_storm, lvl: 62, seen: false},
     },
     sprites: {
       classic:{
@@ -595,8 +784,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 245,
+    catchRate: 45,
     surfable: false
   },
 
@@ -618,10 +807,25 @@ export let pogemonsObj = {
     },
     evo: {name: 'venophibian', lvl: 19, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.torrent, seen: false, hidden: false},
+      {ability : abilitiesObj.rain_Dish, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.water_gun, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.clear_smog, lvl: 7, seen: false},
+      4: {move: movesObj.aqua_jet, lvl: 10, seen: false},
+      5: {move: movesObj.swift, lvl: 13, seen: false},
+      6: {move: movesObj.rainy_day, lvl: 16, seen: false},
+      7: {move: movesObj.sludge, lvl: 19, seen: false},
+      9: {move: movesObj.scald, lvl: 22, seen: false},
+      8: {move: movesObj.bulk_up, lvl: 25, seen: false},
+      10: {move: movesObj.waterfall, lvl: 28, seen: false},
+      11: {move: movesObj.sludge_bomb, lvl: 31, seen: false},
+      12: {move: movesObj.puddle_break, lvl: 34, seen: false},
+      13: {move: movesObj.surf, lvl: 37, seen: false},
+      14: {move: movesObj.gunk_shot, lvl: 41, seen: false},
     },
     sprites: {
       classic:{
@@ -641,8 +845,8 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
-    catchRate: 200,
-    surfable: true
+    catchRate: 255,
+    surfable: false
   },
   venophibian: {
     pogedex: 14,
@@ -661,10 +865,26 @@ export let pogemonsObj = {
     },
     evo: {name: 'contamitoad', type: 'item', item:'water_Stone'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.torrent, seen: false, hidden: false},
+      {ability : abilitiesObj.rain_Dish, seen: false, hidden: false},
+      {ability : abilitiesObj.liquid_Voice, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.water_gun, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.clear_smog, lvl: 7, seen: false},
+      4: {move: movesObj.aqua_jet, lvl: 10, seen: false},
+      5: {move: movesObj.swift, lvl: 13, seen: false},
+      6: {move: movesObj.rainy_day, lvl: 16, seen: false},
+      7: {move: movesObj.sludge, lvl: 19, seen: false},
+      9: {move: movesObj.scald, lvl: 25, seen: false},
+      8: {move: movesObj.bulk_up, lvl: 28, seen: false},
+      10: {move: movesObj.waterfall, lvl: 32, seen: false},
+      11: {move: movesObj.sludge_bomb, lvl: 36, seen: false},
+      12: {move: movesObj.puddle_break, lvl: 39, seen: false},
+      13: {move: movesObj.surf, lvl: 42, seen: false},
+      14: {move: movesObj.gunk_shot, lvl: 46, seen: false},
+      15: {move: movesObj.hydro_pump, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -683,8 +903,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 135,
+    catchRate: 120,
     surfable: true
   },
   contamitoad: {
@@ -704,12 +924,26 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.torrent, seen: false, hidden: false},
+      {ability : abilitiesObj.rain_Dish, seen: false, hidden: false},
+      {ability : abilitiesObj.liquid_Voice, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.water_gun, lvl: 1, seen: false},
-      2: {move: movesObj.fire_ball, lvl: 1, seen: false},
-
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.clear_smog, lvl: 7, seen: false},
+      4: {move: movesObj.aqua_jet, lvl: 10, seen: false},
+      5: {move: movesObj.swift, lvl: 13, seen: false},
+      6: {move: movesObj.rainy_day, lvl: 16, seen: false},
+      7: {move: movesObj.sludge, lvl: 19, seen: false},
+      9: {move: movesObj.scald, lvl: 28, seen: false},
+      8: {move: movesObj.bulk_up, lvl: 32, seen: false},
+      10: {move: movesObj.waterfall, lvl: 36, seen: false},
+      11: {move: movesObj.sludge_bomb, lvl: 41, seen: false},
+      12: {move: movesObj.puddle_break, lvl: 46, seen: false},
+      13: {move: movesObj.surf, lvl: 51, seen: false},
+      14: {move: movesObj.gunk_shot, lvl: 56, seen: false},
+      15: {move: movesObj.hydro_pump, lvl: 62, seen: false},
     },
     sprites: {
       classic:{
@@ -728,8 +962,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 255,
+    catchRate: 45,
     surfable: true
   },
 
@@ -751,10 +985,24 @@ export let pogemonsObj = {
     },
     evo: {name: 'Antber', type: 'item', item:'fire_Stone'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.swarm, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.adaptability, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.struggle_bug, lvl: 7, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 10, seen: false},
+      5: {move: movesObj.withdraw, lvl: 13, seen: false},
+      6: {move: movesObj.pounce, lvl: 16, seen: false},
+      7: {move: movesObj.swift, lvl: 19, seen: false},
+      9: {move: movesObj.sharpen, lvl: 22, seen: false},
+      8: {move: movesObj.headbutt, lvl: 25, seen: false},
+      10: {move: movesObj.bug_buzz, lvl: 28, seen: false},
+      11: {move: movesObj.tail_glow, lvl: 31, seen: false},
+      12: {move: movesObj.double_Edge, lvl: 34, seen: false},
+      13: {move: movesObj.megahorn, lvl: 37, seen: false},
     },
     sprites: {
       classic:{
@@ -773,8 +1021,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 50,
+    catchRate: 255,
     surfable: false
   },
   antber: {
@@ -794,10 +1042,24 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.blaze, seen: false, hidden: false},
+      {ability : abilitiesObj.hot_Stuff, seen: false, hidden: false},
+      {ability : abilitiesObj.adaptability, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.struggle_bug, lvl: 7, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 10, seen: false},
+      5: {move: movesObj.withdraw, lvl: 13, seen: false},
+      6: {move: movesObj.pounce, lvl: 16, seen: false},
+      7: {move: movesObj.flame_charge, lvl: 23, seen: false},
+      9: {move: movesObj.sharpen, lvl: 27, seen: false},
+      8: {move: movesObj.mystical_fire, lvl: 31, seen: false},
+      10: {move: movesObj.bug_buzz, lvl: 35, seen: false},
+      11: {move: movesObj.fire_lash, lvl: 40, seen: false},
+      12: {move: movesObj.megahorn, lvl: 45, seen: false},
+      13: {move: movesObj.flare_blitz, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -816,8 +1078,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 198,
+    catchRate: 45,
     surfable: false
   },
   regaligyne: {
@@ -837,10 +1099,24 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.fairy_Tale, seen: false, hidden: false},
+      {ability : abilitiesObj.queen_Lair, seen: false, hidden: false},
+      {ability : abilitiesObj.adaptability, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.growl, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.struggle_bug, lvl: 7, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 10, seen: false},
+      5: {move: movesObj.withdraw, lvl: 13, seen: false},
+      6: {move: movesObj.pounce, lvl: 16, seen: false},
+      7: {move: movesObj.dazzling_gleam, lvl: 23, seen: false},
+      9: {move: movesObj.fart, lvl: 27, seen: false},
+      8: {move: movesObj.protect, lvl: 31, seen: false},
+      10: {move: movesObj.bug_buzz, lvl: 35, seen: false},
+      11: {move: movesObj.leech_seed, lvl: 40, seen: false},
+      12: {move: movesObj.quiver_dance, lvl: 45, seen: false},
+      13: {move: movesObj.moonblast, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -859,9 +1135,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 55,
-    catchRate: 200,
-    surfable: false
+    yeild: 255,
+    catchRate: 45,
+    surfable: true
   },
 
   // #19 - #20 ant eater line
@@ -880,12 +1156,26 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 30
     },
-    evo: {name: 'sterra', lvl: 25, type: 'lvl'},
+    evo: {name: 'sterra', lvl: 28, type: 'lvl'},
     abilities: [
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
+      4: {move: movesObj.metal_claw, lvl: 10, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 13, seen: false},
+      6: {move: movesObj.protect, lvl: 16, seen: false},
+      7: {move: movesObj.slash, lvl: 19, seen: false},
+      9: {move: movesObj.bulldoze, lvl: 21, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 24, seen: false},
+      10: {move: movesObj.headbutt, lvl: 27, seen: false},
+      11: {move: movesObj.iron_head, lvl: 30, seen: false},
+      12: {move: movesObj.earthquake, lvl: 33, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 36, seen: false},
     },
     sprites: {
       classic:{
@@ -905,7 +1195,7 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.medAnimationPos,
     yeild: 55,
-    catchRate: 200,
+    catchRate: 235,
     surfable: false
   },
   sterra: {
@@ -925,10 +1215,24 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.mold_Breaker, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
+      4: {move: movesObj.metal_claw, lvl: 10, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 13, seen: false},
+      6: {move: movesObj.protect, lvl: 16, seen: false},
+      7: {move: movesObj.slash, lvl: 19, seen: false},
+      9: {move: movesObj.bulldoze, lvl: 21, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 29, seen: false},
+      10: {move: movesObj.headbutt, lvl: 34, seen: false},
+      11: {move: movesObj.iron_head, lvl: 39, seen: false},
+      12: {move: movesObj.earthquake, lvl: 44, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 49, seen: false},
     },
     sprites: {
       classic:{
@@ -947,8 +1251,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 200,
+    catchRate: 45,
     surfable: false
   },
 
@@ -961,22 +1265,33 @@ export let pogemonsObj = {
       2: 'normal'
     },
     stats: {
-      hp: 40,
-      atk: 60,
+      hp: 50,
+      atk: 55,
       def: 40,
       spatk: 40,
       spdef: 40,
-      spd: 10
+      spd: 65
     },
-    evo: {name: 'kampgooroo', lvl: 27, type: 'lvl'},
+    evo: {name: 'kampgooroo', lvl: 29, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.iron_Fist, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.quick_attack, lvl: 1, seen: false},
-      // 2: {move: movesObj.water_gun, lvl: 1, seen: false},
-      // 3: {move: movesObj.close_Combat, lvl: 1, seen: false},
-      // 4: {move: movesObj.heat_wave, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
+      4: {move: movesObj.mach_punch, lvl: 10, seen: false},
+      5: {move: movesObj.feather_weight, lvl: 13, seen: false},
+      6: {move: movesObj.shadow_punch, lvl: 16, seen: false},
+      7: {move: movesObj.eerie_impulse, lvl: 19, seen: false},
+      8: {move: movesObj.fire_punch, lvl: 21, seen: false},
+      9: {move: movesObj.thunder_punch, lvl: 24, seen: false},
+      10: {move: movesObj.ice_punch, lvl: 27, seen: false},
+      11: {move: movesObj.bulk_up, lvl: 31, seen: false},
+      12: {move: movesObj.drain_punch, lvl: 34, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 49, seen: false},
     },
     sprites: {
       classic:{
@@ -995,8 +1310,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 999,
-    catchRate: 200,
+    yeild: 200,
+    catchRate: 245,
     surfable: false
   },
   kampgooroo: {
@@ -1016,10 +1331,24 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.statik, seen: false, hidden: false},
+      {ability : abilitiesObj.galvanize, seen: false, hidden: false},
+      {ability : abilitiesObj.iron_Fist, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
+      4: {move: movesObj.mach_punch, lvl: 10, seen: false},
+      5: {move: movesObj.feather_weight, lvl: 13, seen: false},
+      6: {move: movesObj.shadow_punch, lvl: 16, seen: false},
+      7: {move: movesObj.eerie_impulse, lvl: 19, seen: false},
+      8: {move: movesObj.fire_punch, lvl: 21, seen: false},
+      9: {move: movesObj.thunder_punch, lvl: 24, seen: false},
+      10: {move: movesObj.ice_punch, lvl: 27, seen: false},
+      11: {move: movesObj.bulk_up, lvl: 31, seen: false},
+      12: {move: movesObj.drain_punch, lvl: 34, seen: false},
+      13: {move: movesObj.double_Edge, lvl: 49, seen: false},
     },
     sprites: {
       classic:{
@@ -1038,8 +1367,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 45,
-    catchRate: 200,
+    yeild: 210,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1052,19 +1381,33 @@ export let pogemonsObj = {
       2: 'normal'
     },
     stats: {
-      hp: 40,
-      atk: 60,
+      hp: 50,
+      atk: 30,
       def: 40,
-      spatk: 30,
-      spdef: 40,
-      spd: 70
+      spatk: 60,
+      spdef: 70,
+      spd: 40
     },
-    evo: {name: 'sophistaves', lvl: 26, type: 'lvl'},
+    evo: {name: 'sophistaves', lvl: 27, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sweet_Veil, seen: false, hidden: false},
+      {ability : abilitiesObj.serene_Grace, seen: false, hidden: false},
+      {ability : abilitiesObj.aerilate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.feather_weight, lvl: 1, seen: false},
+      3: {move: movesObj.draining_kiss, lvl: 7, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 10, seen: false},
+      5: {move: movesObj.sweet_kiss, lvl: 13, seen: false},
+      6: {move: movesObj.gust, lvl: 16, seen: false},
+      7: {move: movesObj.defog, lvl: 19, seen: false},
+      8: {move: movesObj.charm, lvl: 21, seen: false},
+      9: {move: movesObj.swift, lvl: 24, seen: false},
+      10: {move: movesObj.air_slash, lvl: 27, seen: false},
+      11: {move: movesObj.boomburst, lvl: 31, seen: false},
+      12: {move: movesObj.calm_mind, lvl: 34, seen: false},
+      13: {move: movesObj.aeroblast, lvl: 39, seen: false},
     },
     sprites: {
       classic:{
@@ -1084,7 +1427,7 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 45,
-    catchRate: 200,
+    catchRate: 255,
     surfable: false
   },
   sophistaves: {
@@ -1104,10 +1447,26 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sweet_Veil, seen: false, hidden: false},
+      {ability : abilitiesObj.serene_Grace, seen: false, hidden: false},
+      {ability : abilitiesObj.aerilate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.feather_weight, lvl: 1, seen: false},
+      3: {move: movesObj.draining_kiss, lvl: 7, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 10, seen: false},
+      5: {move: movesObj.sweet_kiss, lvl: 13, seen: false},
+      6: {move: movesObj.gust, lvl: 16, seen: false},
+      7: {move: movesObj.defog, lvl: 19, seen: false},
+      8: {move: movesObj.charm, lvl: 21, seen: false},
+      9: {move: movesObj.swift, lvl: 24, seen: false},
+      10: {move: movesObj.air_slash, lvl: 27, seen: false},
+      11: {move: movesObj.aura_sphere, lvl: 31, seen: false},
+      12: {move: movesObj.roost, lvl: 36, seen: false},
+      13: {move: movesObj.calm_mind, lvl: 41, seen: false},
+      14: {move: movesObj.moonblast, lvl: 46, seen: false},
+      15: {move: movesObj.aeroblast, lvl: 51, seen: false},
     },
     sprites: {
       classic:{
@@ -1126,8 +1485,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 45,
-    catchRate: 200,
+    yeild: 200,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1147,12 +1506,26 @@ export let pogemonsObj = {
       spdef: 50,
       spd: 50
     },
-    evo: {name: 'kampgooroo', lvl: 24, type: 'lvl'},
+    evo: {name: 'ouroboross', lvl: 30, type: 'lvl'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.poison_touch, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.infiltrator, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.poison_fang, lvl: 7, seen: false},
+      4: {move: movesObj.mud_shot, lvl: 10, seen: false},
+      5: {move: movesObj.fart, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.brutal_swing, lvl: 19, seen: false},
+      8: {move: movesObj.sludge, lvl: 21, seen: false},
+      9: {move: movesObj.confuse_ray, lvl: 24, seen: false},
+      10: {move: movesObj.poison_jab, lvl: 27, seen: false},
+      11: {move: movesObj.crunch, lvl: 31, seen: false},
+      12: {move: movesObj.psychic_fang, lvl: 34, seen: false},
+      13: {move: movesObj.gunk_shot, lvl: 39, seen: false},
     },
     sprites: {
       classic:{
@@ -1192,10 +1565,25 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.poison_touch, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.infiltrator, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.poison_fang, lvl: 7, seen: false},
+      4: {move: movesObj.mud_shot, lvl: 10, seen: false},
+      5: {move: movesObj.fart, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.brutal_swing, lvl: 19, seen: false},
+      8: {move: movesObj.sludge, lvl: 21, seen: false},
+      9: {move: movesObj.confuse_ray, lvl: 24, seen: false},
+      10: {move: movesObj.poison_jab, lvl: 27, seen: false},
+      11: {move: movesObj.knock_off, lvl: 34, seen: false},
+      12: {move: movesObj.earthquake, lvl: 39, seen: false},
+      13: {move: movesObj.bulk_up, lvl: 44, seen: false},
+      14: {move: movesObj.gunk_shot, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1214,9 +1602,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 45,
-    catchRate: 200,
-    surfable: false
+    yeild: 210,
+    catchRate: 45,
+    surfable: true
   },
 
   // #27 - #33 slimes
@@ -1244,10 +1632,21 @@ export let pogemonsObj = {
       {name: 'godlie', type: 'event'},
     ],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.normalize, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.fart, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.sludge, lvl: 21, seen: false},
+      9: {move: movesObj.eerie_impulse, lvl: 24, seen: false},
+      10: {move: movesObj.sludge_bomb, lvl: 27, seen: false},
     },
     sprites: {
       classic:{
@@ -1266,8 +1665,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 50,
+    catchRate: 150,
     surfable: false
   },
   flamie: {
@@ -1287,10 +1686,23 @@ export let pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.calcinate, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.heat_wave, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.flame_charge, lvl: 25, seen: false},
+      9: {move: movesObj.sunny_day, lvl: 31, seen: false},
+      10: {move: movesObj.mystical_fire, lvl: 37, seen: false},
+      11: {move: movesObj.fire_lash, lvl: 43, seen: false},
+      12: {move: movesObj.flamethrower, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1309,8 +1721,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 150,
+    catchRate: 45,
     surfable: false
   },
   wettie: {
@@ -1330,10 +1742,23 @@ export let pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.liquid_Voice, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.puddle_break, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.scald, lvl: 25, seen: false},
+      9: {move: movesObj.rainy_day, lvl: 31, seen: false},
+      10: {move: movesObj.waterfall, lvl: 37, seen: false},
+      11: {move: movesObj.surf, lvl: 43, seen: false},
+      12: {move: movesObj.hydro_pump, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1352,8 +1777,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 150,
+    catchRate: 45,
     surfable: true
   },
   grassie: {
@@ -1373,10 +1798,23 @@ export let pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.chlorokinesis, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.morning_sun, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.giga_drain, lvl: 25, seen: false},
+      9: {move: movesObj.leech_seed, lvl: 31, seen: false},
+      10: {move: movesObj.leaf_storm, lvl: 37, seen: false},
+      11: {move: movesObj.energy_ball, lvl: 43, seen: false},
+      12: {move: movesObj.leaf_storm, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1395,8 +1833,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 150,
+    catchRate: 45,
     surfable: false
   },
   statikie: {
@@ -1416,10 +1854,23 @@ export let pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.galvanize, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.charge_beam, lvl: 25, seen: false},
+      9: {move: movesObj.eerie_impulse, lvl: 31, seen: false},
+      10: {move: movesObj.volt_switch, lvl: 37, seen: false},
+      11: {move: movesObj.thunderbolt, lvl: 43, seen: false},
+      12: {move: movesObj.volt_tackle, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1438,8 +1889,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 150,
+    catchRate: 45,
     surfable: false
   },
   pukie: {
@@ -1459,10 +1910,23 @@ export let pogemonsObj = {
     },
     evo: [{name: 'godlie', type: 'event'},],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.disgustify, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 7, seen: false},
+      4: {move: movesObj.swift, lvl: 10, seen: false},
+      5: {move: movesObj.fart, lvl: 13, seen: false},
+      6: {move: movesObj.taunt, lvl: 16, seen: false},
+      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      8: {move: movesObj.sludge, lvl: 25, seen: false},
+      9: {move: movesObj.clear_smog, lvl: 31, seen: false},
+      10: {move: movesObj.poison_jab, lvl: 37, seen: false},
+      11: {move: movesObj.sludge_bomb, lvl: 43, seen: false},
+      12: {move: movesObj.gunk_shot, lvl: 50, seen: false},
     },
     sprites: {
       classic:{
@@ -1481,8 +1945,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
+    yeild: 150,
+    catchRate: 45,
     surfable: false
   },
   godlie: {
@@ -1502,10 +1966,13 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.adaptability, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+      {ability : abilitiesObj.slimie_regeneration, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -1524,9 +1991,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 5000,
-    catchRate: 200,
-    surfable: false
+    yeild: 150,
+    catchRate: 45,
+    surfable: true
   },
 
   // #34 - #35 ma'at signature pogemon
@@ -1547,10 +2014,23 @@ export let pogemonsObj = {
       },
       evo: {name: 'harmonium', type: 'lvl', lvl: 50},
       abilities: [
-        {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+        {ability : abilitiesObj.natural_Cure, seen: false, hidden: false},
+        {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+        {ability : abilitiesObj.synchronize, seen: false, hidden: true},
       ],
       movepool: {
         1: {move: movesObj.tackle, lvl: 1, seen: false},
+        2: {move: movesObj.withdraw, lvl: 1, seen: false},
+        3: {move: movesObj.protect, lvl: 7, seen: false},
+        4: {move: movesObj.swift, lvl: 10, seen: false},
+        5: {move: movesObj.confusion, lvl: 13, seen: false},
+        6: {move: movesObj.headbutt, lvl: 16, seen: false},
+        7: {move: movesObj.calm_mind, lvl: 19, seen: false},
+        8: {move: movesObj.psycho_cut, lvl: 25, seen: false},
+        9: {move: movesObj.headbutt, lvl: 31, seen: false},
+        10: {move: movesObj.earth_power, lvl: 37, seen: false},
+        11: {move: movesObj.mystical_power, lvl: 43, seen: false},
+        12: {move: movesObj.boomburst, lvl: 50, seen: false},
       },
       sprites: {
         classic:{
@@ -1569,8 +2049,8 @@ export let pogemonsObj = {
         }
       },
       animationPositions: animationPositionObj.medAnimationPos,
-      yeild: 85,
-      catchRate: 200,
+      yeild: 100,
+      catchRate: 125,
       surfable: false
   },
   harmonium: {
@@ -1590,10 +2070,24 @@ export let pogemonsObj = {
       },
       evo: null,
       abilities: [
-        {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+        {ability : abilitiesObj.natural_Cure, seen: false, hidden: false},
+        {ability : abilitiesObj.regenerator, seen: false, hidden: false},
+        {ability : abilitiesObj.magic_Bounce, seen: false, hidden: true},
       ],
       movepool: {
         1: {move: movesObj.tackle, lvl: 1, seen: false},
+        2: {move: movesObj.withdraw, lvl: 1, seen: false},
+        3: {move: movesObj.protect, lvl: 7, seen: false},
+        4: {move: movesObj.swift, lvl: 10, seen: false},
+        5: {move: movesObj.confusion, lvl: 13, seen: false},
+        6: {move: movesObj.headbutt, lvl: 16, seen: false},
+        7: {move: movesObj.calm_mind, lvl: 19, seen: false},
+        8: {move: movesObj.psycho_cut, lvl: 25, seen: false},
+        9: {move: movesObj.headbutt, lvl: 31, seen: false},
+        10: {move: movesObj.earth_power, lvl: 37, seen: false},
+        11: {move: movesObj.mystical_power, lvl: 43, seen: false},
+        12: {move: movesObj.boomburst, lvl: 50, seen: false},
+        13: {move: movesObj.roost, lvl: 55, seen: false},
       },
       sprites: {
         classic:{
@@ -1612,9 +2106,9 @@ export let pogemonsObj = {
         }
       },
       animationPositions: animationPositionObj.largeAnimationPos,
-      yeild: 85,
-      catchRate: 200,
-      surfable: false
+      yeild: 220,
+      catchRate: 45,
+      surfable: true
   },
 
   // #36 - #38 rock type guy
@@ -1633,12 +2127,26 @@ export let pogemonsObj = {
       spdef: 35,
       spd: 50
     },
-    evo: null,
+    evo: [{name:'punbreakable', type: 'lvl', lvl: 24}],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Stream, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.mud_shot, lvl: 12, seen: false},
+      6: {move: movesObj.stealth_rock, lvl: 14, seen: false},
+      7: {move: movesObj.power_gem, lvl: 17, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 20, seen: false},
+      9: {move: movesObj.rock_slide, lvl: 23, seen: false},
+      10: {move: movesObj.bulldoze, lvl: 27, seen: false},
+      11: {move: movesObj.rock_polish, lvl: 31, seen: false},
+      12: {move: movesObj.head_smash, lvl: 35, seen: false},
+      13: {move: movesObj.shell_smash, lvl: 39, seen: false},
     },
     sprites: {
       classic:{
@@ -1657,8 +2165,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 100,
-    catchRate: 200,
+    yeild: 60,
+    catchRate: 230,
     surfable: false
   },
   punbreakable: {
@@ -1676,12 +2184,27 @@ export let pogemonsObj = {
       spdef: 50,
       spd: 50
     },
-    evo: null,
+    evo: [{name:'infragice', type: 'event'}],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Stream, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.mud_shot, lvl: 12, seen: false},
+      6: {move: movesObj.stealth_rock, lvl: 14, seen: false},
+      7: {move: movesObj.power_gem, lvl: 17, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 20, seen: false},
+      9: {move: movesObj.rock_slide, lvl: 23, seen: false},
+      10: {move: movesObj.bulldoze, lvl: 27, seen: false},
+      11: {move: movesObj.ice_punch, lvl: 33, seen: false},
+      11: {move: movesObj.rock_polish, lvl: 38, seen: false},
+      12: {move: movesObj.head_smash, lvl: 43, seen: false},
+      13: {move: movesObj.shell_smash, lvl: 48, seen: false},
     },
     sprites: {
       classic:{
@@ -1700,8 +2223,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 165,
+    catchRate: 130,
     surfable: false
   },
   infragice: {
@@ -1721,10 +2244,26 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sturdy, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Stream, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.protect, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.mud_shot, lvl: 12, seen: false},
+      6: {move: movesObj.stealth_rock, lvl: 14, seen: false},
+      7: {move: movesObj.power_gem, lvl: 17, seen: false},
+      8: {move: movesObj.iron_defence, lvl: 20, seen: false},
+      9: {move: movesObj.rock_slide, lvl: 23, seen: false},
+      10: {move: movesObj.bulldoze, lvl: 31, seen: false},
+      11: {move: movesObj.ice_punch, lvl: 37, seen: false},
+      12: {move: movesObj.icicle_crash, lvl: 43, seen: false},
+      13: {move: movesObj.head_smash, lvl: 49, seen: false},
+      14: {move: movesObj.shell_smash, lvl: 55, seen: false},
+      15: {move: movesObj.ice_hammer, lvl: 61, seen: false},
     },
     sprites: {
       classic:{
@@ -1743,8 +2282,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 255,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1764,12 +2303,26 @@ export let pogemonsObj = {
       spdef: 60,
       spd: 40
     },
-    evo: null,
+    evo: [{name:'mower', type: 'lvl', lvl: 32}],
     abilities: [
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.fluffy_Coat, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.charm, lvl: 1, seen: false},
+      3: {move: movesObj.absorb, lvl: 6, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 9, seen: false},
+      5: {move: movesObj.milk_drink, lvl: 12, seen: false},
+      6: {move: movesObj.leech_seed, lvl: 14, seen: false},
+      7: {move: movesObj.magical_leaf, lvl: 17, seen: false},
+      8: {move: movesObj.headbutt, lvl: 20, seen: false},
+      9: {move: movesObj.leech_seed, lvl: 23, seen: false},
+      10: {move: movesObj.earth_power, lvl: 27, seen: false},
+      11: {move: movesObj.giga_drain, lvl: 31, seen: false},
+      12: {move: movesObj.stealth_rock, lvl: 35, seen: false},
+      13: {move: movesObj.head_smash, lvl: 39, seen: false},
     },
     sprites: {
       classic:{
@@ -1788,7 +2341,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 55,
+    yeild: 70,
     catchRate: 200,
     surfable: false
   },
@@ -1800,19 +2353,34 @@ export let pogemonsObj = {
       2: 'ground'
     },
     stats: {
-      hp: 120,
+      hp: 110,
       atk: 100,
-      def: 110,
+      def: 90,
       spatk: 70,
-      spdef: 90,
+      spdef: 110,
       spd: 70
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sap_Sipper, seen: false, hidden: false},
+      {ability : abilitiesObj.chlorophyll, seen: false, hidden: false},
+      {ability : abilitiesObj.fluffy_Coat, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.charm, lvl: 1, seen: false},
+      3: {move: movesObj.absorb, lvl: 6, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 9, seen: false},
+      5: {move: movesObj.milk_drink, lvl: 12, seen: false},
+      6: {move: movesObj.leech_seed, lvl: 14, seen: false},
+      7: {move: movesObj.magical_leaf, lvl: 17, seen: false},
+      8: {move: movesObj.headbutt, lvl: 20, seen: false},
+      9: {move: movesObj.leech_seed, lvl: 23, seen: false},
+      10: {move: movesObj.earthquake, lvl: 35, seen: false},
+      11: {move: movesObj.horn_leech, lvl: 40, seen: false},
+      12: {move: movesObj.stealth_rock, lvl: 45, seen: false},
+      13: {move: movesObj.head_smash, lvl: 50, seen: false},
+      14: {move: movesObj.leaf_storm, lvl: 55, seen: false},
     },
     sprites: {
       classic:{
@@ -1831,8 +2399,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1845,19 +2413,34 @@ export let pogemonsObj = {
       2: 'electric'
     },
     stats: {
-      hp: 40,
+      hp: 30,
       atk: 50,
       def: 40,
       spatk: 50,
       spdef: 40,
-      spd: 70
+      spd: 80
     },
-    evo: null,
+    evo: {name: 'thunderhopper', type: 'item', item: 'thunder_Stone'},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.volt_Absorb, seen: false, hidden: false},
+      {ability : abilitiesObj.technician, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.charge_beam, lvl: 6, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 9, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 12, seen: false},
+      6: {move: movesObj.pounce, lvl: 15, seen: false},
+      7: {move: movesObj.shock_wave, lvl: 18, seen: false},
+      8: {move: movesObj.nuzzle, lvl: 21, seen: false},
+      9: {move: movesObj.u_turn, lvl: 24, seen: false},
+      10: {move: movesObj.volt_switch, lvl: 27, seen: false},
+      11: {move: movesObj.tail_glow, lvl: 30, seen: false},
+      12: {move: movesObj.thunderbolt, lvl: 33, seen: false},
+      13: {move: movesObj.bug_buzz, lvl: 36, seen: false},
+      14: {move: movesObj.thunder, lvl: 39, seen: false},
     },
     sprites: {
       classic:{
@@ -1876,8 +2459,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 50,
+    catchRate: 255,
     surfable: false
   },  
   thunderhopper: {
@@ -1897,10 +2480,25 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.statik, seen: false, hidden: false},
+      {ability : abilitiesObj.volt_Absorb, seen: false, hidden: false},
+      {ability : abilitiesObj.technician, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.charge_beam, lvl: 6, seen: false},
+      4: {move: movesObj.quick_attack, lvl: 9, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 12, seen: false},
+      6: {move: movesObj.pounce, lvl: 14, seen: false},
+      7: {move: movesObj.shock_wave, lvl: 17, seen: false},
+      8: {move: movesObj.nuzzle, lvl: 20, seen: false},
+      9: {move: movesObj.u_turn, lvl: 27, seen: false},
+      10: {move: movesObj.volt_switch, lvl: 34, seen: false},
+      11: {move: movesObj.tail_glow, lvl: 41, seen: false},
+      12: {move: movesObj.thunderbolt, lvl: 48, seen: false},
+      13: {move: movesObj.bug_buzz, lvl: 55, seen: false},
+      14: {move: movesObj.thunder, lvl: 62, seen: false},
     },
     sprites: {
       classic:{
@@ -1919,8 +2517,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 198,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1933,19 +2531,28 @@ export let pogemonsObj = {
       2: 'fighting'
     },
     stats: {
-      hp: 100,
-      atk: 110,
-      def: 120,
-      spatk: 80,
+      hp: 110,
+      atk: 120,
+      def: 130,
+      spatk: 60,
       spdef: 70,
       spd: 80
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.defiant, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.super_Power, lvl: 1, seen: false},
+      3: {move: movesObj.iron_head, lvl: 1, seen: false},
+      4: {move: movesObj.thunderous_kick, lvl: 1, seen: false},
+      5: {move: movesObj.bulk_up, lvl: 1, seen: false},
+      6: {move: movesObj.earthquake, lvl: 50, seen: false},
+      7: {move: movesObj.iron_defence, lvl: 55, seen: false},
+      8: {move: movesObj.close_Combat, lvl: 60, seen: false},
+      9: {move: movesObj.shell_smash, lvl: 65, seen: false},
     },
     sprites: {
       classic:{
@@ -1964,8 +2571,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -1987,10 +2594,19 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.arena_Trap, seen: false, hidden: false},
+      {ability : abilitiesObj.guts, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.shore_up, lvl: 1, seen: false},
+      3: {move: movesObj.drill_run, lvl: 1, seen: false},
+      4: {move: movesObj.rock_slide, lvl: 1, seen: false},
+      5: {move: movesObj.ancient_power, lvl: 1, seen: false},
+      6: {move: movesObj.earthquake, lvl: 50, seen: false},
+      7: {move: movesObj.bulk_up, lvl: 55, seen: false},
+      8: {move: movesObj.close_Combat, lvl: 60, seen: false},
+      9: {move: movesObj.swords_dance, lvl: 65, seen: false},
     },
     sprites: {
       classic:{
@@ -2009,8 +2625,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 55,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2019,8 +2635,8 @@ export let pogemonsObj = {
     pogedex: 45,
     name: 'cobbird',
     element:{
-      1: 'normal',
-      2: 'rock'
+      1: 'rock',
+      2: 'normal'
     },
     stats: {
       hp: 50,
@@ -2030,12 +2646,27 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 40
     },
-    evo: {name: 'Rokwil', type: 'lvl', lvl: 30},
+    evo: {name: 'rockwil', type: 'lvl', lvl: 31},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.big_Pecks, seen: false, hidden: false},
+      {ability : abilitiesObj.desert_Embrace, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Stream, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.accelerock, lvl: 6, seen: false},
+      4: {move: movesObj.gust, lvl: 9, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 12, seen: false},
+      6: {move: movesObj.ancient_power, lvl: 15, seen: false},
+      7: {move: movesObj.slash, lvl: 17, seen: false},
+      8: {move: movesObj.rock_polish, lvl: 20, seen: false},
+      9: {move: movesObj.rock_slide, lvl: 23, seen: false},
+      10: {move: movesObj.taunt, lvl: 26, seen: false},
+      11: {move: movesObj.drill_peck, lvl: 29, seen: false},
+      12: {move: movesObj.stone_miss, lvl: 32, seen: false},
+      13: {move: movesObj.shell_smash, lvl: 35, seen: false},
+      14: {move: movesObj.head_smash, lvl: 38, seen: false},
     },
     sprites: {
       classic:{
@@ -2054,7 +2685,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
+    yeild: 65,
     catchRate: 200,
     surfable: false
   },
@@ -2069,16 +2700,32 @@ export let pogemonsObj = {
       hp: 100,
       atk: 110,
       def: 120,
-      spatk: 60,
+      spatk: 70,
       spdef: 70,
       spd: 80
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.big_Pecks, seen: false, hidden: false},
+      {ability : abilitiesObj.desert_Embrace, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Stream, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.roost, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.sharpen, lvl: 1, seen: false},
+      3: {move: movesObj.accelerock, lvl: 6, seen: false},
+      4: {move: movesObj.gust, lvl: 9, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 12, seen: false},
+      6: {move: movesObj.ancient_power, lvl: 15, seen: false},
+      7: {move: movesObj.slash, lvl: 17, seen: false},
+      8: {move: movesObj.rock_polish, lvl: 20, seen: false},
+      9: {move: movesObj.rock_slide, lvl: 23, seen: false},
+      10: {move: movesObj.taunt, lvl: 26, seen: false},
+      11: {move: movesObj.drill_peck, lvl: 29, seen: false},
+      12: {move: movesObj.stone_miss, lvl: 38, seen: false},
+      13: {move: movesObj.brave_bird, lvl: 41, seen: false},
+      14: {move: movesObj.head_smash, lvl: 47, seen: false},
+      15: {move: movesObj.shell_smash, lvl: 53, seen: false},
     },
     sprites: {
       classic:{
@@ -2097,8 +2744,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 210,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2118,12 +2765,27 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 70
     },
-    evo: null,
+    evo: {name: 'psyranea', type: 'lvl', lvl: 34},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.swarm, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.synchronize, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.struggle_bug, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.hypnosis, lvl: 12, seen: false},
+      6: {move: movesObj.pounce, lvl: 15, seen: false},
+      7: {move: movesObj.swift, lvl: 17, seen: false},
+      8: {move: movesObj.poison_powder, lvl: 20, seen: false},
+      9: {move: movesObj.mystical_power, lvl: 23, seen: false},
+      10: {move: movesObj.taunt, lvl: 26, seen: false},
+      11: {move: movesObj.x_scissor, lvl: 29, seen: false},
+      12: {move: movesObj.psychic_fang, lvl: 32, seen: false},
+      13: {move: movesObj.quiver_dance, lvl: 35, seen: false},
+      14: {move: movesObj.bug_buzz, lvl: 38, seen: false},
     },
     sprites: {
       classic:{
@@ -2142,8 +2804,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 60,
+    catchRate: 225,
     surfable: false
   },
   psyranea: {
@@ -2163,10 +2825,27 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.swarm, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.string_shot, lvl: 1, seen: false},
+      3: {move: movesObj.struggle_bug, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.hypnosis, lvl: 12, seen: false},
+      6: {move: movesObj.pounce, lvl: 15, seen: false},
+      7: {move: movesObj.swift, lvl: 17, seen: false},
+      8: {move: movesObj.poison_powder, lvl: 20, seen: false},
+      9: {move: movesObj.mystical_power, lvl: 23, seen: false},
+      10: {move: movesObj.taunt, lvl: 26, seen: false},
+      11: {move: movesObj.x_scissor, lvl: 29, seen: false},
+      12: {move: movesObj.psychic_fang, lvl: 32, seen: false},
+      14: {move: movesObj.sticky_web, lvl: 39, seen: false},
+      15: {move: movesObj.trick_room, lvl: 44, seen: false},
+      16: {move: movesObj.bug_buzz, lvl: 49, seen: false},
+      17: {move: movesObj.quiver_dance, lvl: 54, seen: false},
     },
     sprites: {
       classic:{
@@ -2185,8 +2864,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2206,12 +2885,27 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 60
     },
-    evo: null,
+    evo: [{name:'purdustus', type: 'lvl', lvl: 25}],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.blaze, seen: false, hidden: false},
+      {ability : abilitiesObj.weak_Armor, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.fire_ball, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.heat_wave, lvl: 12, seen: false},
+      6: {move: movesObj.ancient_power, lvl: 15, seen: false},
+      7: {move: movesObj.flame_charge, lvl: 17, seen: false},
+      8: {move: movesObj.stealth_rock, lvl: 20, seen: false},
+      9: {move: movesObj.sunny_day, lvl: 23, seen: false},
+      10: {move: movesObj.fire_lash, lvl: 26, seen: false},
+      11: {move: movesObj.rock_slide, lvl: 29, seen: false},
+      12: {move: movesObj.rock_polish, lvl: 32, seen: false},
+      13: {move: movesObj.morning_sun, lvl: 35, seen: false},
+      14: {move: movesObj.head_smash, lvl: 38, seen: false},
     },
     sprites: {
       classic:{
@@ -2231,7 +2925,7 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
-    catchRate: 200,
+    catchRate: 125,
     surfable: false
   },
   purdustus: {
@@ -2249,12 +2943,29 @@ export let pogemonsObj = {
       spdef: 50,
       spd: 80
     },
-    evo: null,
+    evo: [{name:'soleo', type: 'lvl', lvl: 50}],
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.blaze, seen: false, hidden: false},
+      {ability : abilitiesObj.weak_Armor, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.fire_ball, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.heat_wave, lvl: 12, seen: false},
+      6: {move: movesObj.ancient_power, lvl: 15, seen: false},
+      7: {move: movesObj.flame_charge, lvl: 17, seen: false},
+      8: {move: movesObj.stealth_rock, lvl: 20, seen: false},
+      9: {move: movesObj.sunny_day, lvl: 23, seen: false},
+      10: {move: movesObj.fire_lash, lvl: 25, seen: false},
+      11: {move: movesObj.scorching_sands, lvl: 29, seen: false},
+      12: {move: movesObj.rock_slide, lvl: 33, seen: false},
+      13: {move: movesObj.rock_polish, lvl: 37, seen: false},
+      14: {move: movesObj.morning_sun, lvl: 41, seen: false},
+      15: {move: movesObj.head_smash, lvl: 46, seen: false},
+      16: {move: movesObj.flare_blitz, lvl: 51, seen: false},
     },
     sprites: {
       classic:{
@@ -2273,8 +2984,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 165,
+    catchRate: 75,
     surfable: false
   },
   soleo: {
@@ -2294,10 +3005,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.drought, seen: false, hidden: false},
+      {ability : abilitiesObj.weak_Armor, seen: false, hidden: false},
+      {ability : abilitiesObj.rock_Head, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.fire_ball, lvl: 6, seen: false},
+      4: {move: movesObj.accelerock, lvl: 9, seen: false},
+      5: {move: movesObj.heat_wave, lvl: 12, seen: false},
+      6: {move: movesObj.ancient_power, lvl: 15, seen: false},
+      7: {move: movesObj.flame_charge, lvl: 17, seen: false},
+      8: {move: movesObj.stealth_rock, lvl: 20, seen: false},
+      9: {move: movesObj.sunny_day, lvl: 23, seen: false},
+      10: {move: movesObj.fire_lash, lvl: 25, seen: false},
+      11: {move: movesObj.scorching_sands, lvl: 29, seen: false},
+      12: {move: movesObj.rock_slide, lvl: 33, seen: false},
+      13: {move: movesObj.rock_polish, lvl: 37, seen: false},
+      14: {move: movesObj.morning_sun, lvl: 41, seen: false},
+      15: {move: movesObj.head_smash, lvl: 46, seen: false},
+      16: {move: movesObj.sand_storm, lvl: 52, seen: false},
+      17: {move: movesObj.flare_blitz, lvl: 58, seen: false},
     },
     sprites: {
       classic:{
@@ -2316,8 +3045,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 265,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2337,12 +3066,26 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 70
     },
-    evo: null,
+    evo: {name: 'volaticus', type: 'lvl', lvl: 33},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.cheeck_Pouch, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.charm, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 6, seen: false},
+      4: {move: movesObj.razor_leaf, lvl: 9, seen: false},
+      5: {move: movesObj.feather_weight, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.mud_shot, lvl: 17, seen: false},
+      8: {move: movesObj.leech_seed, lvl: 20, seen: false},
+      9: {move: movesObj.theif, lvl: 23, seen: false},
+      10: {move: movesObj.giga_drain, lvl: 26, seen: false},
+      11: {move: movesObj.thunderous_kick, lvl: 29, seen: false},
+      12: {move: movesObj.leaf_blade, lvl: 32, seen: false},
+      13: {move: movesObj.morning_sun, lvl: 35, seen: false},
     },
     sprites: {
       classic:{
@@ -2361,8 +3104,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 60,
+    catchRate: 225,
     surfable: false
   },
   volaticus: {
@@ -2373,19 +3116,37 @@ export let pogemonsObj = {
       2: 'flying'
     },
     stats: {
-      hp: 70,
-      atk: 100,
+      hp: 110,
+      atk: 110,
       def: 70,
-      spatk: 90,
-      spdef: 90,
+      spatk: 70,
+      spdef: 70,
       spd: 120
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.cheeck_Pouch, seen: false, hidden: false},
+      {ability : abilitiesObj.technician, seen: false, hidden: false},
+      {ability : abilitiesObj.aerilate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.charm, lvl: 1, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 6, seen: false},
+      4: {move: movesObj.razor_leaf, lvl: 9, seen: false},
+      5: {move: movesObj.feather_weight, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.mud_shot, lvl: 17, seen: false},
+      8: {move: movesObj.leech_seed, lvl: 20, seen: false},
+      9: {move: movesObj.theif, lvl: 23, seen: false},
+      10: {move: movesObj.giga_drain, lvl: 26, seen: false},
+      11: {move: movesObj.thunderous_kick, lvl: 29, seen: false},
+      12: {move: movesObj.leaf_blade, lvl: 32, seen: false},
+      13: {move: movesObj.morning_sun, lvl: 38, seen: false},
+      14: {move: movesObj.extreme_speed, lvl: 43, seen: false},
+      15: {move: movesObj.leaf_storm, lvl: 48, seen: false},
+      16: {move: movesObj.aeroblast, lvl: 53, seen: false},
+      17: {move: movesObj.double_Edge, lvl: 58, seen: false},
     },
     sprites: {
       classic:{
@@ -2404,8 +3165,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2415,22 +3176,36 @@ export let pogemonsObj = {
     name: 'adibis',
     element:{
       1: 'water',
-      2: 'normal'
+      2: 'flying'
     },
     stats: {
-      hp: 60,
+      hp: 50,
       atk: 30,
-      def: 30,
+      def: 40,
       spatk: 60,
       spdef: 70,
       spd: 40
     },
-    evo: null,
+    evo: {name: 'avorago', type: 'lvl', lvl: 36},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.big_Pecks, seen: false, hidden: false},
+      {ability : abilitiesObj.water_Absorb, seen: false, hidden: false},
+      {ability : abilitiesObj.drizzle, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.gust, lvl: 1, seen: false},
+      2: {move: movesObj.feather_weight, lvl: 1, seen: false},
+      3: {move: movesObj.aqua_jet, lvl: 6, seen: false},
+      4: {move: movesObj.water_gun, lvl: 9, seen: false},
+      5: {move: movesObj.defog, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.rainy_day, lvl: 17, seen: false},
+      8: {move: movesObj.drill_peck, lvl: 20, seen: false},
+      9: {move: movesObj.charge_beam, lvl: 23, seen: false},
+      10: {move: movesObj.scald, lvl: 26, seen: false},
+      11: {move: movesObj.roost, lvl: 29, seen: false},
+      12: {move: movesObj.aura_sphere, lvl: 32, seen: false},
+      13: {move: movesObj.air_slash, lvl: 35, seen: false},
     },
     sprites: {
       classic:{
@@ -2449,8 +3224,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 65,
+    catchRate: 195,
     surfable: false
   },
   avorago: {
@@ -2462,18 +3237,35 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 100,
-      atk: 60,
-      def: 60,
+      atk: 70,
+      def: 70,
       spatk: 110,
       spdef: 120,
-      spd: 90
+      spd: 80
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.big_Pecks, seen: false, hidden: false},
+      {ability : abilitiesObj.water_Absorb, seen: false, hidden: false},
+      {ability : abilitiesObj.drizzle, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.gust, lvl: 1, seen: false},
+      2: {move: movesObj.feather_weight, lvl: 1, seen: false},
+      3: {move: movesObj.aqua_jet, lvl: 6, seen: false},
+      4: {move: movesObj.water_gun, lvl: 9, seen: false},
+      5: {move: movesObj.defog, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.rainy_day, lvl: 17, seen: false},
+      8: {move: movesObj.drill_peck, lvl: 20, seen: false},
+      9: {move: movesObj.charge_beam, lvl: 23, seen: false},
+      10: {move: movesObj.scald, lvl: 26, seen: false},
+      11: {move: movesObj.roost, lvl: 29, seen: false},
+      12: {move: movesObj.aura_sphere, lvl: 32, seen: false},
+      13: {move: movesObj.air_slash, lvl: 35, seen: false},
+      14: {move: movesObj.surf, lvl: 42, seen: false},
+      15: {move: movesObj.aeroblast, lvl: 48, seen: false},
+      16: {move: movesObj.thunder, lvl: 55, seen: false},
     },
     sprites: {
       classic:{
@@ -2492,9 +3284,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
-    surfable: false
+    yeild: 210,
+    catchRate: 45,
+    surfable: true
   },
 
   // #56 - #57 ice ferret
@@ -2506,19 +3298,33 @@ export let pogemonsObj = {
       2: 'electric'
     },
     stats: {
-      hp: 30,
+      hp: 40,
       atk: 50,
-      def: 30,
+      def: 40,
       spatk: 60,
       spdef: 40,
-      spd: 70
+      spd: 60
     },
-    evo: null,
+    evo: {name: 'tonifurr', type: 'lvl', lvl: 35},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.statik, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.refrigirate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.ice_shard, lvl: 6, seen: false},
+      4: {move: movesObj.charge_beam, lvl: 9, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.eerie_impulse, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.nuzzle, lvl: 23, seen: false},
+      10: {move: movesObj.frost_breath, lvl: 26, seen: false},
+      11: {move: movesObj.volt_switch, lvl: 29, seen: false},
+      12: {move: movesObj.icicle_crash, lvl: 32, seen: false},
+      13: {move: movesObj.boomburst, lvl: 36, seen: false},
     },
     sprites: {
       classic:{
@@ -2537,8 +3343,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 55,
+    catchRate: 225,
     surfable: false
   },
   tonifurr: {
@@ -2558,15 +3364,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.statik, seen: false, hidden: false},
+      {ability : abilitiesObj.snow_Warning, seen: false, hidden: false},
+      {ability : abilitiesObj.refrigirate, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
-      2: {move: movesObj.swift, lvl: 1, seen: false},
-      3: {move: movesObj.nuzzle, lvl: 1, seen: false},
-      4: {move: movesObj.ice_punch, lvl: 1, seen: false},
-      5: {move: movesObj.stare, lvl: 1, seen: false},
-
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.ice_shard, lvl: 6, seen: false},
+      4: {move: movesObj.charge_beam, lvl: 9, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 12, seen: false},
+      6: {move: movesObj.swift, lvl: 15, seen: false},
+      7: {move: movesObj.eerie_impulse, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.nuzzle, lvl: 23, seen: false},
+      10: {move: movesObj.frost_breath, lvl: 26, seen: false},
+      11: {move: movesObj.volt_switch, lvl: 29, seen: false},
+      12: {move: movesObj.icicle_crash, lvl: 32, seen: false},
+      13: {move: movesObj.earth_power, lvl: 40, seen: false},
+      14: {move: movesObj.ice_beam, lvl: 45, seen: false},
+      15: {move: movesObj.thunderbolt, lvl: 50, seen: false},
+      16: {move: movesObj.blizzard, lvl: 55, seen: false},
+      17: {move: movesObj.thunder, lvl: 60, seen: false},
     },
     sprites: {
       classic:{
@@ -2585,8 +3404,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 210,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2606,12 +3425,27 @@ export let pogemonsObj = {
       spdef: 70,
       spd: 60
     },
-    evo: null,
+    evo: {name: 'gelidatis', type: 'lvl', lvl: 35},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.frozen_Soul, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.synchronize, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.ice_shard, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.hypnosis, lvl: 12, seen: false},
+      6: {move: movesObj.icy_wind, lvl: 15, seen: false},
+      7: {move: movesObj.frost_wave, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.snow_storm, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.mystical_fire, lvl: 29, seen: false},
+      12: {move: movesObj.freeze_dry, lvl: 32, seen: false},
+      13: {move: movesObj.mystical_power, lvl: 35, seen: false},
+      14: {move: movesObj.ice_beam, lvl: 38, seen: false},
     },
     sprites: {
       classic:{
@@ -2630,8 +3464,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 75,
+    catchRate: 175,
     surfable: false
   },
   gelidatis: {
@@ -2651,10 +3485,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.frozen_Soul, seen: false, hidden: false},
+      {ability : abilitiesObj.snow_Warning, seen: false, hidden: false},
+      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.ice_shard, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.hypnosis, lvl: 12, seen: false},
+      6: {move: movesObj.icy_wind, lvl: 15, seen: false},
+      7: {move: movesObj.frost_wave, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.snow_storm, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.mystical_fire, lvl: 29, seen: false},
+      12: {move: movesObj.freeze_dry, lvl: 32, seen: false},
+      13: {move: movesObj.mystical_power, lvl: 35, seen: false},
+      14: {move: movesObj.reflect, lvl: 43, seen: false},
+      14: {move: movesObj.ice_beam, lvl: 48, seen: false},
+      14: {move: movesObj.blizzard, lvl: 53, seen: false},
+      14: {move: movesObj.psycho_boost, lvl: 58, seen: false},
     },
     sprites: {
       classic:{
@@ -2673,8 +3525,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 225,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2694,12 +3546,28 @@ export let pogemonsObj = {
       spdef: 60,
       spd: 40
     },
-    evo: null,
+    evo: {name: 'ferusand', type: 'lvl', lvl: 36},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Rush, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.mud_shot, lvl: 6, seen: false},
+      4: {move: movesObj.snarl, lvl: 9, seen: false},
+      5: {move: movesObj.sharpen, lvl: 12, seen: false},
+      6: {move: movesObj.bulldoze, lvl: 15, seen: false},
+      7: {move: movesObj.accelerock, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.charm, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.sand_storm, lvl: 29, seen: false},
+      12: {move: movesObj.crunch, lvl: 32, seen: false},
+      13: {move: movesObj.earth_power, lvl: 35, seen: false},
+      14: {move: movesObj.knock_off, lvl: 38, seen: false},
+      15: {move: movesObj.sucker_punch, lvl: 24, seen: false},
     },
     sprites: {
       classic:{
@@ -2719,7 +3587,7 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.medAnimationPos,
     yeild: 85,
-    catchRate: 200,
+    catchRate: 125,
     surfable: false
   },
   ferusand: {
@@ -2739,10 +3607,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Rush, seen: false, hidden: false},
+      {ability : abilitiesObj.sand_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.mud_shot, lvl: 6, seen: false},
+      4: {move: movesObj.snarl, lvl: 9, seen: false},
+      5: {move: movesObj.sharpen, lvl: 12, seen: false},
+      6: {move: movesObj.bulldoze, lvl: 15, seen: false},
+      7: {move: movesObj.accelerock, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.charm, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.sand_storm, lvl: 29, seen: false},
+      12: {move: movesObj.crunch, lvl: 32, seen: false},
+      13: {move: movesObj.earth_power, lvl: 35, seen: false},
+      14: {move: movesObj.knock_off, lvl: 42, seen: false},
+      15: {move: movesObj.sucker_punch, lvl: 48, seen: false},
+      16: {move: movesObj.earthquake, lvl: 54, seen: false},
+      17: {move: movesObj.head_smash, lvl: 59, seen: false},
     },
     sprites: {
       classic:{
@@ -2761,8 +3647,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 235,
+    catchRate: 45,
     surfable: false
   },
 
@@ -2782,12 +3668,28 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 60
     },
-    evo: null,
+    evo: {name: 'ferusand', type: 'lvl', lvl: 36},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.swift_Swim, seen: false, hidden: false},
+      {ability : abilitiesObj.solar_Power, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.water_gun, lvl: 6, seen: false},
+      4: {move: movesObj.snarl, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.rainy_day, lvl: 15, seen: false},
+      7: {move: movesObj.aqua_jet, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.taunt, lvl: 29, seen: false},
+      12: {move: movesObj.crunch, lvl: 32, seen: false},
+      13: {move: movesObj.scald, lvl: 35, seen: false},
+      14: {move: movesObj.surf, lvl: 38, seen: false},
+      15: {move: movesObj.hydro_pump, lvl: 41, seen: false},
     },
     sprites: {
       classic:{
@@ -2807,7 +3709,7 @@ export let pogemonsObj = {
     },
     animationPositions: animationPositionObj.smallAnimationPos,
     yeild: 85,
-    catchRate: 200,
+    catchRate: 125,
     surfable: false
   },
   cataclysmus: {
@@ -2827,10 +3729,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.swift_Swim, seen: false, hidden: false},
+      {ability : abilitiesObj.solar_Power, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.water_gun, lvl: 6, seen: false},
+      4: {move: movesObj.snarl, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.rainy_day, lvl: 15, seen: false},
+      7: {move: movesObj.aqua_jet, lvl: 17, seen: false},
+      8: {move: movesObj.theif, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.psychic_fang, lvl: 26, seen: false},
+      11: {move: movesObj.taunt, lvl: 29, seen: false},
+      12: {move: movesObj.crunch, lvl: 32, seen: false},
+      13: {move: movesObj.scald, lvl: 35, seen: false},
+      14: {move: movesObj.fire_lash, lvl: 42, seen: false},
+      15: {move: movesObj.flamethrower, lvl: 48, seen: false},
+      16: {move: movesObj.hydro_pump, lvl: 52, seen: false},
+      17: {move: movesObj.overheat, lvl: 58, seen: false},
     },
     sprites: {
       classic:{
@@ -2849,9 +3769,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 85,
-    catchRate: 200,
-    surfable: false
+    yeild: 235,
+    catchRate: 45,
+    surfable: true
   },
 
   // #64 - #65 demiurge line
@@ -2870,12 +3790,28 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 40
     },
-    evo: null,
+    evo: {name: 'yaldabaoth', type: 'event', lvl: 36},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.prankster, seen: false, hidden: false},
+      {ability : abilitiesObj.contrary, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.snarl, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.taunt, lvl: 15, seen: false},
+      7: {move: movesObj.brutal_swing, lvl: 17, seen: false},
+      8: {move: movesObj.slash, lvl: 20, seen: false},
+      9: {move: movesObj.sludge, lvl: 23, seen: false},
+      10: {move: movesObj.mystical_power, lvl: 26, seen: false},
+      11: {move: movesObj.crunch, lvl: 29, seen: false},
+      12: {move: movesObj.scald, lvl: 32, seen: false},
+      13: {move: movesObj.aura_sphere, lvl: 35, seen: false},
+      14: {move: movesObj.dark_pulse, lvl: 42, seen: false},
+      15: {move: movesObj.nasty_plot, lvl: 48, seen: false},
     },
     sprites: {
       classic:{
@@ -2894,8 +3830,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 85,
-    catchRate: 200,
+    yeild: 75,
+    catchRate: 125,
     surfable: false
   },
   yaldabaoth: {
@@ -2915,10 +3851,29 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.levitate, seen: false, hidden: false},
+      {ability : abilitiesObj.contrary, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.snarl, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.taunt, lvl: 15, seen: false},
+      7: {move: movesObj.brutal_swing, lvl: 17, seen: false},
+      8: {move: movesObj.slash, lvl: 20, seen: false},
+      9: {move: movesObj.sludge, lvl: 23, seen: false},
+      10: {move: movesObj.mystical_power, lvl: 26, seen: false},
+      11: {move: movesObj.crunch, lvl: 29, seen: false},
+      12: {move: movesObj.scald, lvl: 32, seen: false},
+      13: {move: movesObj.aura_sphere, lvl: 35, seen: false},
+      14: {move: movesObj.dark_pulse, lvl: 45, seen: false},
+      15: {move: movesObj.nasty_plot, lvl: 50, seen: false},
+      15: {move: movesObj.overheat, lvl: 55, seen: false},
+      15: {move: movesObj.super_Power, lvl: 60, seen: false},
+      15: {move: movesObj.psycho_boost, lvl: 65, seen: false},
     },
     sprites: {
       classic:{
@@ -2958,12 +3913,28 @@ export let pogemonsObj = {
       spdef: 60,
       spd: 1,
     },
-    evo: {name: 'jleech', type:'lvl', lvl: 11,},
+    evo: {name: 'jleech', type:'lvl', lvl: 26,},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.guts, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.dragon_breath, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.breaking_swipe, lvl: 15, seen: false},
+      7: {move: movesObj.rapid_spin, lvl: 17, seen: false},
+      8: {move: movesObj.charm, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.headbutt, lvl: 26, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 29, seen: false},
+      12: {move: movesObj.dragon_pulse, lvl: 32, seen: false},
+      13: {move: movesObj.dragon_claw, lvl: 35, seen: false},
+      14: {move: movesObj.dragon_dance, lvl: 42, seen: false},
+      15: {move: movesObj.dragon_rush, lvl: 48, seen: false},
     },
     sprites: {
       classic:{
@@ -2982,8 +3953,8 @@ export let pogemonsObj = {
       },
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 85,
+    catchRate: 125,
     surfable: false
   },
   jleech: {
@@ -3001,12 +3972,28 @@ export let pogemonsObj = {
       spdef: 70,
       spd: 70,
     },
-    evo: {lvl: 1},
+    evo: {lvl: 52},
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.guts, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.draco_meteor, lvl: 1, seen: false},
+      1: {move: movesObj.thunderous_kick, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.dragon_breath, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.breaking_swipe, lvl: 15, seen: false},
+      7: {move: movesObj.rapid_spin, lvl: 17, seen: false},
+      8: {move: movesObj.charm, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.headbutt, lvl: 26, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 32, seen: false},
+      12: {move: movesObj.dragon_pulse, lvl: 37, seen: false},
+      13: {move: movesObj.dragon_claw, lvl: 42, seen: false},
+      14: {move: movesObj.dragon_dance, lvl: 48, seen: false},
+      15: {move: movesObj.dragon_rush, lvl: 52, seen: false},
     },
     sprites: {
       classic:{
@@ -3025,7 +4012,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 70,
+    yeild: 165,
     catchRate: 75,
     surfable: false
   },
@@ -3046,10 +4033,29 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.poison_touch, seen: false, hidden: false},
+      {ability : abilitiesObj.guts, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.dragon_breath, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.breaking_swipe, lvl: 15, seen: false},
+      7: {move: movesObj.rapid_spin, lvl: 17, seen: false},
+      8: {move: movesObj.charm, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.headbutt, lvl: 26, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 32, seen: false},
+      12: {move: movesObj.dragon_pulse, lvl: 37, seen: false},
+      13: {move: movesObj.dragon_claw, lvl: 42, seen: false},
+      14: {move: movesObj.dragon_dance, lvl: 48, seen: false},
+      15: {move: movesObj.dragon_rush, lvl: 52, seen: false},
+      16: {move: movesObj.poison_jab, lvl: 54, seen: false},
+      17: {move: movesObj.draco_meteor, lvl: 59, seen: false},
+      18: {move: movesObj.gunk_shot, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3068,8 +4074,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 255,
+    catchRate: 35,
     surfable: false
   },
   jleenex: {
@@ -3089,10 +4095,29 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.poison_touch, seen: false, hidden: false},
+      {ability : abilitiesObj.guts, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.dragon_breath, lvl: 6, seen: false},
+      4: {move: movesObj.theif, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.breaking_swipe, lvl: 15, seen: false},
+      7: {move: movesObj.rapid_spin, lvl: 17, seen: false},
+      8: {move: movesObj.charm, lvl: 20, seen: false},
+      9: {move: movesObj.poison_fang, lvl: 23, seen: false},
+      10: {move: movesObj.headbutt, lvl: 26, seen: false},
+      11: {move: movesObj.nasty_plot, lvl: 32, seen: false},
+      12: {move: movesObj.dragon_pulse, lvl: 37, seen: false},
+      13: {move: movesObj.dragon_claw, lvl: 42, seen: false},
+      14: {move: movesObj.dragon_dance, lvl: 48, seen: false},
+      15: {move: movesObj.dragon_rush, lvl: 52, seen: false},
+      16: {move: movesObj.play_rought, lvl: 54, seen: false},
+      17: {move: movesObj.draco_meteor, lvl: 59, seen: false},
+      18: {move: movesObj.moonlight, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3111,10 +4136,12 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
+    yeild: 255,
     catchRate: 75,
-    surfable: false
+    surfable: true
   },
+
+  // vv rendu la vis a vis les stats vv
 
   // #70 horus legendary
   vignus: {
@@ -3128,16 +4155,34 @@ export let pogemonsObj = {
       hp: 110,
       atk: 135,
       def: 75,
-      spatk: 90,
+      spatk: 100,
       spdef: 75,
       spd: 135,
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.frisk, seen: false, hidden: false},
+      {ability : abilitiesObj.no_Guard, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.bulldoze, lvl: 6, seen: false},
+      4: {move: movesObj.wing_attack, lvl: 9, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 12, seen: false},
+      6: {move: movesObj.feather_weight, lvl: 15, seen: false},
+      7: {move: movesObj.drill_peck, lvl: 17, seen: false},
+      8: {move: movesObj.drill_run, lvl: 20, seen: false},
+      9: {move: movesObj.defog, lvl: 23, seen: false},
+      10: {move: movesObj.sand_storm, lvl: 26, seen: false},
+      11: {move: movesObj.ancient_power, lvl: 32, seen: false},
+      12: {move: movesObj.aeroblast, lvl: 37, seen: false},
+      13: {move: movesObj.scorching_sands, lvl: 42, seen: false},
+      14: {move: movesObj.roost, lvl: 48, seen: false},
+      15: {move: movesObj.stone_miss, lvl: 52, seen: false},
+      16: {move: movesObj.earthquake, lvl: 54, seen: false},
+      17: {move: movesObj.hurricane, lvl: 59, seen: false},
+      18: {move: movesObj.brave_bird, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3158,7 +4203,7 @@ export let pogemonsObj = {
     animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
-    surfable: true
+    surfable: false
   },
 
   // #71 anubis legendary
@@ -3171,18 +4216,36 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 100,
-      atk: 120,
-      def: 140,
+      atk: 100,
+      def: 160,
       spatk: 110,
       spdef: 80,
       spd: 70,
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.prankster, seen: false, hidden: false},
+      {ability : abilitiesObj.shadow_Tag, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.metal_claw, lvl: 6, seen: false},
+      4: {move: movesObj.shadow_claw, lvl: 9, seen: false},
+      5: {move: movesObj.stealth_rock, lvl: 12, seen: false},
+      6: {move: movesObj.heat_wave, lvl: 15, seen: false},
+      7: {move: movesObj.frost_wave, lvl: 17, seen: false},
+      8: {move: movesObj.brutal_swing, lvl: 20, seen: false},
+      9: {move: movesObj.iron_defence, lvl: 23, seen: false},
+      10: {move: movesObj.reflect, lvl: 26, seen: false},
+      11: {move: movesObj.flash_cannon, lvl: 32, seen: false},
+      12: {move: movesObj.hex, lvl: 37, seen: false},
+      13: {move: movesObj.light_screen, lvl: 42, seen: false},
+      14: {move: movesObj.calm_mind, lvl: 48, seen: false},
+      15: {move: movesObj.iron_head, lvl: 52, seen: false},
+      16: {move: movesObj.shadow_ball, lvl: 54, seen: false},
+      17: {move: movesObj.aura_sphere, lvl: 59, seen: false},
+      18: {move: movesObj.nasty_plot, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3201,9 +4264,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
-    surfable: true
+    yeild: 300,
+    catchRate: 10,
+    surfable: false
   },
 
   // #72 ra legendary
@@ -3224,10 +4287,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.levitate, seen: false, hidden: false},
+      {ability : abilitiesObj.solar_Power, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.fire_ball, lvl: 6, seen: false},
+      4: {move: movesObj.nuzzle, lvl: 9, seen: false},
+      5: {move: movesObj.thunder_wave, lvl: 12, seen: false},
+      6: {move: movesObj.sunny_day, lvl: 15, seen: false},
+      7: {move: movesObj.charge_beam, lvl: 17, seen: false},
+      8: {move: movesObj.flame_charge, lvl: 20, seen: false},
+      9: {move: movesObj.feather_weight, lvl: 23, seen: false},
+      10: {move: movesObj.heat_wave, lvl: 26, seen: false},
+      11: {move: movesObj.shock_wave, lvl: 32, seen: false},
+      12: {move: movesObj.mystical_fire, lvl: 37, seen: false},
+      13: {move: movesObj.dazzling_gleam, lvl: 42, seen: false},
+      14: {move: movesObj.aeroblast, lvl: 48, seen: false},
+      15: {move: movesObj.roost, lvl: 52, seen: false},
+      16: {move: movesObj.flamethrower, lvl: 54, seen: false},
+      17: {move: movesObj.thunder, lvl: 59, seen: false},
+      18: {move: movesObj.fire_miss, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3248,7 +4329,7 @@ export let pogemonsObj = {
     animationPositions: animationPositionObj.largeAnimationPos,
     yeild: 70,
     catchRate: 75,
-    surfable: true
+    surfable: false
   },
 
   // #73 thoth legendary
@@ -3260,19 +4341,37 @@ export let pogemonsObj = {
       2: 'psychic'
     },
     stats: {
-      hp: 100,
+      hp: 120,
       atk: 70,
       def: 110,
       spatk: 120,
       spdef: 130,
-      spd: 90,
+      spd: 70,
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.magic_Bounce, seen: false, hidden: false},
+      {ability : abilitiesObj.liquid_Voice, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.stare, lvl: 1, seen: false},
+      3: {move: movesObj.water_gun, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.hypnosis, lvl: 12, seen: false},
+      6: {move: movesObj.reflect, lvl: 15, seen: false},
+      7: {move: movesObj.mystical_power, lvl: 17, seen: false},
+      8: {move: movesObj.charge_beam, lvl: 20, seen: false},
+      9: {move: movesObj.aura_sphere, lvl: 23, seen: false},
+      10: {move: movesObj.light_screen, lvl: 26, seen: false},
+      11: {move: movesObj.recover, lvl: 32, seen: false},
+      12: {move: movesObj.mystical_fire, lvl: 37, seen: false},
+      13: {move: movesObj.scald, lvl: 42, seen: false},
+      14: {move: movesObj.psychic, lvl: 48, seen: false},
+      15: {move: movesObj.calm_mind, lvl: 52, seen: false},
+      16: {move: movesObj.hydro_pump, lvl: 54, seen: false},
+      17: {move: movesObj.psycho_boost, lvl: 59, seen: false},
+      18: {move: movesObj.boomburst, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3291,8 +4390,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 300,
+    catchRate: 10,
     surfable: true
   },
 
@@ -3314,10 +4413,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.photosynthesis, seen: false, hidden: false},
+      {ability : abilitiesObj.bitter_Comfort, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.absorb, lvl: 6, seen: false},
+      4: {move: movesObj.confusion, lvl: 9, seen: false},
+      5: {move: movesObj.frost_wave, lvl: 12, seen: false},
+      6: {move: movesObj.leech_seed, lvl: 15, seen: false},
+      7: {move: movesObj.frost_breath, lvl: 17, seen: false},
+      8: {move: movesObj.mega_drain, lvl: 20, seen: false},
+      9: {move: movesObj.sunny_day, lvl: 23, seen: false},
+      10: {move: movesObj.freeze_dry, lvl: 26, seen: false},
+      11: {move: movesObj.snow_storm, lvl: 32, seen: false},
+      12: {move: movesObj.giga_drain, lvl: 37, seen: false},
+      13: {move: movesObj.earth_power, lvl: 42, seen: false},
+      14: {move: movesObj.spore, lvl: 48, seen: false},
+      15: {move: movesObj.ice_beam, lvl: 52, seen: false},
+      16: {move: movesObj.iron_defence, lvl: 54, seen: false},
+      17: {move: movesObj.light_screen, lvl: 59, seen: false},
+      18: {move: movesObj.blizzard, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3336,8 +4453,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 400,
+    catchRate: 5,
     surfable: true
   },
 
@@ -3359,10 +4476,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.adaptability, seen: false, hidden: false},
+      {ability : abilitiesObj.sheer_Force, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.ghastly_whisper, lvl: 6, seen: false},
+      4: {move: movesObj.clear_smog, lvl: 9, seen: false},
+      5: {move: movesObj.fart, lvl: 12, seen: false},
+      6: {move: movesObj.snarl, lvl: 15, seen: false},
+      7: {move: movesObj.shadow_sneak, lvl: 17, seen: false},
+      8: {move: movesObj.confuse_ray, lvl: 20, seen: false},
+      9: {move: movesObj.taunt, lvl: 23, seen: false},
+      10: {move: movesObj.hex, lvl: 26, seen: false},
+      11: {move: movesObj.calm_mind, lvl: 32, seen: false},
+      12: {move: movesObj.crunch, lvl: 37, seen: false},
+      13: {move: movesObj.shadow_claw, lvl: 42, seen: false},
+      14: {move: movesObj.nasty_plot, lvl: 48, seen: false},
+      15: {move: movesObj.aura_sphere, lvl: 52, seen: false},
+      16: {move: movesObj.dark_pulse, lvl: 54, seen: false},
+      17: {move: movesObj.shadow_ball, lvl: 59, seen: false},
+      18: {move: movesObj.psycho_boost, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3381,9 +4516,9 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
-    surfable: true
+    yeild: 400,
+    catchRate: 5,
+    surfable: false
   },
 
   // #76 set legendary
@@ -3404,10 +4539,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
+      {ability : abilitiesObj.scrappy, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.swift, lvl: 1, seen: false},
+      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.rock_smash, lvl: 6, seen: false},
+      4: {move: movesObj.snarl, lvl: 9, seen: false},
+      5: {move: movesObj.stare, lvl: 12, seen: false},
+      6: {move: movesObj.brutal_swing, lvl: 15, seen: false},
+      7: {move: movesObj.mach_punch, lvl: 17, seen: false},
+      8: {move: movesObj.taunt, lvl: 20, seen: false},
+      9: {move: movesObj.vacuum_wave, lvl: 23, seen: false},
+      10: {move: movesObj.shadow_punch, lvl: 26, seen: false},
+      11: {move: movesObj.thunder_punch, lvl: 32, seen: false},
+      12: {move: movesObj.fire_punch, lvl: 37, seen: false},
+      13: {move: movesObj.ice_punch, lvl: 42, seen: false},
+      14: {move: movesObj.drain_punch, lvl: 48, seen: false},
+      15: {move: movesObj.sucker_punch, lvl: 52, seen: false},
+      16: {move: movesObj.bulk_up, lvl: 54, seen: false},
+      17: {move: movesObj.crunch, lvl: 59, seen: false},
+      18: {move: movesObj.close_Combat, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3426,8 +4579,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 400,
+    catchRate: 5,
     surfable: true
   },
 
@@ -3449,10 +4602,28 @@ export let pogemonsObj = {
     },
     evo: null,
     abilities: [
-      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      {ability : abilitiesObj.natural_Cure, seen: false, hidden: false},
+      {ability : abilitiesObj.regenerator, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
+      3: {move: movesObj.water_gun, lvl: 6, seen: false},
+      4: {move: movesObj.draining_kiss, lvl: 9, seen: false},
+      5: {move: movesObj.withdraw, lvl: 12, seen: false},
+      6: {move: movesObj.charm, lvl: 15, seen: false},
+      7: {move: movesObj.aqua_jet, lvl: 17, seen: false},
+      8: {move: movesObj.puddle_break, lvl: 20, seen: false},
+      9: {move: movesObj.vacuum_wave, lvl: 23, seen: false},
+      10: {move: movesObj.charge_beam, lvl: 26, seen: false},
+      11: {move: movesObj.dazzling_gleam, lvl: 32, seen: false},
+      12: {move: movesObj.scald, lvl: 37, seen: false},
+      13: {move: movesObj.calm_mind, lvl: 42, seen: false},
+      14: {move: movesObj.mystical_power, lvl: 48, seen: false},
+      15: {move: movesObj.mystical_fire, lvl: 52, seen: false},
+      16: {move: movesObj.surf, lvl: 54, seen: false},
+      17: {move: movesObj.moonblast, lvl: 59, seen: false},
+      18: {move: movesObj.hydro_pump, lvl: 63, seen: false},
     },
     sprites: {
       classic:{
@@ -3471,8 +4642,8 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.largeAnimationPos,
-    yeild: 70,
-    catchRate: 75,
+    yeild: 400,
+    catchRate: 5,
     surfable: true
   },
 
@@ -3529,8 +4700,10 @@ if(data != null) {
     })
 
     
+    // console.log(pogemon)
     Object.values(pogemon.movepool).forEach((move, j) =>{
-      move.seen = Object.values(Object.values(data.pogemonsObjState)[i]['moves'])[j].seen
+      if(Object.keys(Object.values(data.pogemonsObjState)[i]['moves'])[j] != undefined)
+        move.seen = Object.values(Object.values(data.pogemonsObjState)[i]['moves'])[j].seen
     })
   })
 

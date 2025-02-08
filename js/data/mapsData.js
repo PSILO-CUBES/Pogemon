@@ -292,7 +292,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: 'slither_Road NPC',
         reward: 0,
-        beaten: true,
+        beaten: false,
       }, 
       {
         name: 'NPC', 
@@ -302,7 +302,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/guy2/guy2.png',
         dialogue: 'banishment_Road NPC',
         reward: 0,
-        beaten: true,
+        beaten: false,
       },   
       {
         name: 'Jah', 
@@ -418,7 +418,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
         reward: 0,
-        beaten: true
+        beaten: false
       },
       {
         name: 'May', 
@@ -438,7 +438,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: 'pearly_Path NPC',
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Dakota', 
@@ -501,7 +501,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "cross_Link NPC",
         reward: 0,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Marley', 
@@ -511,7 +511,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/youngwoman/youngwoman.png',
         dialogue: "slither_Road NPC",
         reward: 0,
-        beaten: true
+        beaten: false
       },
     ],
     changeMapLocations:[
@@ -569,11 +569,11 @@ export let mapsObj = {
         name: "Ma'at", 
         team: [
           [pogemonsObj.flailegant, 14, null, null, null, null], 
-          [pogemonsObj.slimie, 15, null, null, null, true], 
-          [pogemonsObj.balancia, 17, itemsObj.leftovers, null, null, true, [
+          [pogemonsObj.slimie, 15, null, itemsObj.leftovers, abilitiesObj.slimie_regeneration, true], 
+          [pogemonsObj.balancia, 17, itemsObj.rocky_Helmet, abilitiesObj.synchronize, null, true, [
             movesObj.headbutt,
             movesObj.mystical_power,
-            movesObj.protect,
+            movesObj.roost,
             movesObj.flame_charge,
           ]]
         ],
@@ -804,7 +804,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/woman/woman.png',
         dialogue: "It smells wonderful here, i wish i could've stayed longer...",
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Shitil', 
@@ -829,10 +829,22 @@ export let mapsObj = {
     ],
     event: [
       {
-        name: 'vignus',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/vignusPortal.png",
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          looking: 'Down',
+          name: 'Vignus',
+          reward: 0,
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.vignus, [1,1], null, null, null, true,[
+            movesObj.roost,
+            movesObj.earthquake,
+            movesObj.brave_bird,
+            movesObj.stone_miss
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-Vignus stares at you calmly-"
@@ -923,7 +935,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "pearly_Path",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },  
       {
         name: 'Splinter', 
@@ -1024,8 +1036,10 @@ export let mapsObj = {
         sprite: "img/charSprites/blank/blank.png",
         info: {
           looking: 'Down',
+          name: 'Baaull',
+          reward: 0,
           direction: {reach: {pos:{x:60, y:60}, neg:{x:60, y:60}}}, 
-          team: [[pogemonsObj.baaull, [45,45], null, null, null, null]],
+          team: [[pogemonsObj.baaull, [45,45], null, null, null, true]],
           trainer: false,
           dialogue:
           [
@@ -1067,7 +1081,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "Both my pogemons can't stand each other, i'm not sure why...",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
     ],
   },
@@ -1182,12 +1196,12 @@ export let mapsObj = {
             movesObj.accelerock
           ]], 
           [pogemonsObj.purdustus, 24, null, null, null, null, null], 
-          [pogemonsObj.punbreakable, 23, null, abilitiesObj.sand_Stream, null, null], 
+          [pogemonsObj.punbreakable, 23, itemsObj.smooth_Rock, abilitiesObj.sand_Stream, null, null], 
           [pogemonsObj.rockwil, 25, itemsObj.rocky_Helmet, abilitiesObj.desert_Embrace, null, true, [
             movesObj.roost,
             movesObj.brave_bird,
             movesObj.sand_storm,
-            movesObj.iron_defence,
+            movesObj.rock_slide,
           ]]
         ],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:70}}},
@@ -1290,7 +1304,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/malebirdkeeper/malebirdkeeper.png',
         dialogue: "A shock and a burn to get those.. 'Twas all worth it of course!\n\nI wonder if i'm missing one?..",
         reward: 150,
-        beaten: true,
+        beaten: false,
       },
     ],
     items: [
@@ -1345,7 +1359,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/sage/sage.png',
         dialogue: "If you close your eyes to the world, you can open your mind to nirvana.",
         reward: 0,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Projecto', 
@@ -1355,7 +1369,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/youngman3/youngman3.png',
         dialogue: "I tell everyone that Djed is a fake looser, but i'm actualy just\n\nvery insecure about myself....\n\n\nI try not to make it too obvious tho.",
         reward: 200,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Candice', 
@@ -1365,7 +1379,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/cowgirl/cowgirl.png',
         dialogue: "fa sowme rayeson thowse powgayman's down't sayem ta wawnt to\n\nhang 'rowund thays pletfoarm 'ere...",
         reward: 400,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Lisa', 
@@ -1375,7 +1389,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/brownlady/brownlady.png',
         dialogue: "This bear thingy must be pretty rare, i've never seen one of them before\n\nbefriending this one today!",
         reward: 250,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Gabriel', // summoner
@@ -1388,42 +1402,42 @@ export let mapsObj = {
         ],
         team: [
           //                   lvl         item                  abili               shiny ivs  move   gender
-          [pogemonsObj.sterra, 1, itemsObj.rocky_Helmet, abilitiesObj.mold_Breaker, true, true, [
+          [pogemonsObj.sterra, 56, itemsObj.rocky_Helmet, abilitiesObj.mold_Breaker, true, true, [
             movesObj.iron_head,
             movesObj.earthquake,
             movesObj.icicle_crash,
             movesObj.stealth_rock
           ]],
-          // [pogemonsObj.volaticus, 57, itemsObj.expert_Belt, abilitiesObj.aerilate, null, true, [
-          //   movesObj.extreme_speed,
-          //   movesObj.double_Edge,
-          //   movesObj.leaf_blade,
-          //   movesObj.u_turn
-          // ]],
-          // [pogemonsObj.mower, 59, itemsObj.golden_banana, abilitiesObj.fluffy_Coat, null, true, [
-          //   movesObj.bulk_up,
-          //   movesObj.milk_drink,
-          //   movesObj.earthquake,
-          //   movesObj.horn_leech
-          // ]],
-          // [pogemonsObj.rockwil, 60, itemsObj.black_Sludge, abilitiesObj.sand_Stream, null, true, [
-          //   movesObj.rock_slide,
-          //   movesObj.earthquake,
-          //   movesObj.iron_head,
-          //   movesObj.crunch
-          // ]],
-          // [pogemonsObj.infragice, 62, itemsObj.leftovers, abilitiesObj.rock_Head, null, true, [
-          //   movesObj.shell_smash,
-          //   movesObj.earthquake,
-          //   movesObj.head_smash,
-          //   movesObj.icicle_crash
-          // ]],
-          // [pogemonsObj.vignus, 65, itemsObj.life_Orb, abilitiesObj.no_Guard, null, true, [
-          //   movesObj.stone_miss,
-          //   movesObj.fire_miss,
-          //   movesObj.roost,
-          //   movesObj.earthquake
-          // ]],
+          [pogemonsObj.volaticus, 57, itemsObj.expert_Belt, abilitiesObj.aerilate, null, true, [
+            movesObj.extreme_speed,
+            movesObj.double_Edge,
+            movesObj.leaf_blade,
+            movesObj.u_turn
+          ]],
+          [pogemonsObj.mower, 59, itemsObj.golden_banana, abilitiesObj.fluffy_Coat, null, true, [
+            movesObj.bulk_up,
+            movesObj.milk_drink,
+            movesObj.earthquake,
+            movesObj.horn_leech
+          ]],
+          [pogemonsObj.rockwil, 60, itemsObj.black_Sludge, abilitiesObj.sand_Stream, null, true, [
+            movesObj.rock_slide,
+            movesObj.earthquake,
+            movesObj.iron_head,
+            movesObj.crunch
+          ]],
+          [pogemonsObj.infragice, 62, itemsObj.leftovers, abilitiesObj.rock_Head, null, true, [
+            movesObj.shell_smash,
+            movesObj.earthquake,
+            movesObj.head_smash,
+            movesObj.icicle_crash
+          ]],
+          [pogemonsObj.vignus, 65, itemsObj.life_Orb, abilitiesObj.no_Guard, null, true, [
+            movesObj.stone_miss,
+            movesObj.hurricane,
+            movesObj.roost,
+            movesObj.earthquake
+          ]],
         ],
         reward: 0,
         eventKey: 'dawnSummoner',
@@ -1437,7 +1451,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/rangermale/rangermale.png',
         dialogue: "Careful not to get sand in your eyes!",
         reward: 200,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Bugzzy', 
@@ -1447,7 +1461,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/bugman/bugman.png',
         dialogue: "OTHER MAP",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Kim', 
@@ -1457,7 +1471,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/femaleacetrainer/femaleacetrainer.png',
         dialogue: "OTHER MAP",
         reward: 100,
-        beaten: true,
+        beaten: false,
       },
     ],
     items: [
@@ -1567,10 +1581,22 @@ export let mapsObj = {
     ],
     event: [
       {
-        name: 'beeasis',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/beeasisPortal.png",
         info: {
+          looking: 'Down',
+          name: 'beeasis',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.beeasis, [65,65], null, null, null, true, [
+            movesObj.sludge_bomb,
+            movesObj.shadow_ball,
+            movesObj.aura_sphere,
+            movesObj.nasty_plot
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-Beeasis smiles at you mischievously-"
@@ -1697,10 +1723,22 @@ export let mapsObj = {
     ],
     event: [
       {
-        name: 'mortdux',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/mortduxPortal.png",
         info: {
+          looking: 'Down',
+          name: 'mortdux',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.mortdux, [65,65], null, null, null, true, [
+            movesObj.flash_cannon,
+            movesObj.shadow_claw,
+            movesObj.recover,
+            movesObj.calm_mind
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-You can feel aura emminating from mortdux-"
@@ -1942,7 +1980,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/blackbelt/blackbelt.png',
         dialogue: "I'm trying to train but this dude is just... drooling everywhere.....",
         reward: 0,
-        beaten: true
+        beaten: false
       },
     ],
     obstaclesInfo: [
@@ -2179,9 +2217,11 @@ export let mapsObj = {
         name: 'npc',
         sprite: 'img/charSprites/ruinmaniac/ruinmaniac.png',
         info: {
-          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}}, 
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           dialogue:[`This mountain face has been venerated for as long as\n\nthis village has existed.`], 
-          looking: 'Left'
+          muraleDialogue:[`Wow, what happend!? This murale has never glown like this before!\n\nI wonder what made all this happen.`],
+          looking: 'Left',
+          eventKey: 'muraleGuy'
         },
       },
       {
@@ -2295,7 +2335,7 @@ export let mapsObj = {
         OWdialogue: "...",
         reward: 650,
         eventKey: 'hermesGymTrainer',
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Stza',
@@ -2307,7 +2347,7 @@ export let mapsObj = {
         OWdialogue: "People call Saphir scary, but cousin Ruby is even worst!",
         reward: 0,
         eventKey: 'hermesGymTrainer',
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Quartz',
@@ -2319,7 +2359,7 @@ export let mapsObj = {
         OWdialogue: "Have you met my little sister yet?\n\nShe had a strong connection to pogemons ever since she was very little..\n\nHermes, our cousin, even took her as his pupil.\n\nShe grew to be strong and free, i'm proud of her for that.",
         reward: 600,
         eventKey: 'hermesGymTrainer',
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Ruby',
@@ -2331,7 +2371,7 @@ export let mapsObj = {
         OWdialogue: "The sister Saphir is.. Well, she's... great.. Haha..",
         reward: 550,
         eventKey: 'hermesGymTrainer',
-        beaten: true,
+        beaten: false,
       },
       {
         name: 'Hurley',
@@ -2343,7 +2383,7 @@ export let mapsObj = {
         OWdialogue: "My bike fell in the water, so i'm stuck here now..",
         reward: 500,
         eventKey: 'hermesGymTrainer',
-        beaten: true,
+        beaten: false,
       },
     ],
     obstaclesInfo: [
@@ -2531,10 +2571,22 @@ export let mapsObj = {
         },
       },
       {
-        name: 'caera',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/caeraPortal.png",
         info: {
+          looking: 'Down',        
+          name: 'caera',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.caera, [65,65], null, null, null, true, [
+            movesObj.flamethrower,
+            movesObj.thunderbolt,
+            movesObj.dazzling_gleam,
+            movesObj.roost
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-Caera unleashes a wild screesh!!-"
@@ -2564,7 +2616,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/midagewoman/midagewoman.png',
         dialogue: "I got lonely.. So i made friends with the spiders! :)",
         reward: 350,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Wyrm', 
@@ -2574,7 +2626,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/maledragontamer/maledragontamer.png',
         dialogue: "I've raised those twins since they were only small Jlissue's.",
         reward: 400,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Martin', 
@@ -2584,7 +2636,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/youngman/youngman.png',
         dialogue: "I've left my home in fair town for a while now..\n\nI wonder how my dad is doing.",
         reward: 400,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Jah', 
@@ -2594,7 +2646,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oldman1/oldman1.png',
         dialogue: "Gud tuh si yuh again!",
         reward: 350,
-        beaten: true
+        beaten: false
       },
     ],
     obstaclesInfo: [
@@ -2659,7 +2711,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/brownhatguy/brownhatguy.png',
         dialogue: "Starts to get pretty cold from now on..\n\n\nI hope you brought supplies with ya.",
         reward: 650,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Hazel', 
@@ -2669,7 +2721,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/rangerfemale/rangerfemale.png',
         dialogue: "I've played in these woods since whole childhood,\n\nbeing a ranger just allowed me to keep doing it!.",
         reward: 550,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Luwis', 
@@ -2679,7 +2731,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "everybody waits to get the 3rd badge to get here.\n\n\ni just jumped across the water..\n\n\nwhat a bunch of nerds! haha 8)",
         reward: 600,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -2769,7 +2821,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/brownhatguy/brownhatguy.png',
         dialogue: "I just teleported haha :)",
         reward: 650,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Pearl', 
@@ -2779,7 +2831,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/pastelgirl/pastelgirl.png',
         dialogue: "i'm trying not to get wet! I'll head home once the rain stops.",
         reward: 850,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Cuddy', 
@@ -2789,7 +2841,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/kid/kid.png',
         dialogue: "I bet you didin't see me! hehe :p",
         reward: 550,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -2939,7 +2991,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/engineerguy/engineerguy.png',
         dialogue: "Starts to get pretty cold from now on..\n\n\nI hope you brought supplies with ya.",
         reward: 500,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Marty McFly',
@@ -2949,7 +3001,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/mcfly/mcfly.png',
         dialogue: "Doc fucking crashed the car, were stuck here bro.....",
         reward: 650,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Arden',
@@ -2959,7 +3011,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/brownhatguy/brownhatguy.png',
         dialogue: "This can't still be funny, right?..",
         reward: 650,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Doc',
@@ -2969,7 +3021,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/doc/doc.png',
         dialogue: "Idk why i look like this but i'm supposed to be the doc...\n\n\nHe wanted me to be there so whatever..\n\n\nI'm kinda drunk ngl.",
         reward: 0,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Clair',
@@ -2979,7 +3031,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/purpleprof/purpleprof.png',
         dialogue: "I think those two guys are having a psychosis and\n\nthink they are rick and morty or something...\n\n\nI'm just here looking for fossils tbh..",
         reward: 700,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3062,7 +3114,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/ruinmaniac/ruinmaniac.png',
         dialogue: "Don't get lost kid, there's still a good way before\n\nyou're out of this cave.",
         reward: 750,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Geranthine',
@@ -3072,7 +3124,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oldlady/oldlady.png',
         dialogue: "You made it!\n\nI always believed in you dear. <3",
         reward: 1000,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Spritz',
@@ -3082,7 +3134,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/femaleathlete/femaleathlete.png',
         dialogue: "They still don't like each other at all..",
         reward: 800,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Elizabeth',
@@ -3092,7 +3144,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/artist2/artist2.png',
         dialogue: "How facinating, the polarities of life and death...",
         reward: 900,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3167,7 +3219,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/guitarist/guitarist.png',
         dialogue: "No ghost pogemon joke i swear.",
         reward: 850,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Cromagnon',
@@ -3177,7 +3229,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/oogabooga/oogabooga.png',
         dialogue: "BOUGABOUGA!\n\nNOOTNOOT!\n\nOOUGABOOUGA!\n\nWOMPWOMP!",
         reward: 0,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3229,15 +3281,27 @@ export let mapsObj = {
         },
       },
       {
-        name: 'papien',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/papiensPortal.png",
         info: {
+          looking: 'Down',
+          name: 'papiens',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.papiens, [65,65], null, null, null, true, [
+            movesObj.scald,
+            movesObj.mystical_power,
+            movesObj.aura_sphere,
+            movesObj.calm_mind
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
-            "-It's as if papien was telling you something telepathicaly-"
+            "-It's as if papiens was telling you something telepathicaly-"
           ],
-          eventKey: 'papien'
+          eventKey: 'papiens'
         },
       },
     ],
@@ -3282,7 +3346,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/bikerguy/bikerguy.png',
         dialogue: "Some dude from the scribble town gym stole my bike..\n\n\nIf i see this motherfucker again i'll rip his head off!",
         reward: 1200,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Lavender',
@@ -3292,7 +3356,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/purplehairgirl/purplehairgirl.png',
         dialogue: "Don't think you're done quite yet.\n\nI'll make sure you don't progress further!",
         reward: 1000,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3346,7 +3410,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/whitelady/whitelady.png',
         dialogue: "To have made it this far means you are strong.\n\n\nBeating me is the rite required to pass\n\nto walk the grounds of alquima.",
         reward: 1750,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Ophelia',
@@ -3356,7 +3420,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/pastelgirl/pastelgirl.png',
         dialogue: "This snow here is lovely.\n\n\nAnd it's hot enought not to be cold,\n\nbut cold enought not to be hot!",
         reward: 1050,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Meowth',
@@ -3366,7 +3430,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/meowth/meowth.png',
         dialogue: "Wtf am i doing here?\n\n\nI'm definetly in the wrong game...\n\n\nHow am i supposed to get back home? ;-;",
         reward: 0,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3387,10 +3451,22 @@ export let mapsObj = {
     ],
     event: [
       {
-        name: 'sustiris',
-        sprite: "img/charSprites/blank/blank.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/sustirisPortal.png",
         info: {
+          looking: 'Down',
+          name: 'sustiris',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.sustiris, [65,65], null, null, null, true, [
+            movesObj.giga_drain,
+            movesObj.blizzard,
+            movesObj.earth_power,
+            movesObj.leech_seed
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-Sustiris looks at you in panic-"
@@ -3611,7 +3687,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/maleswimmer/maleswimmer.png',
         dialogue: "Can't a man swim in the snow without people glaring!?\n\n\nJesus.....",
         reward: 2000,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Ocean',
@@ -3621,7 +3697,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/femalepsychic/femalepsychic.png',
         dialogue: "As one...",
         reward: 1500,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Andromeda',
@@ -3631,7 +3707,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/malepsychic/malepsychic.png',
         dialogue: "As one...",
         reward: 1500,
-        beaten: true
+        beaten: false
       },
       {
         name: 'Bardy',
@@ -3641,7 +3717,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/blackbelt/blackbelt.png',
         dialogue: "I train barefoot in the snow,\n\njust like my pogemons!",
         reward: 1200,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3724,7 +3800,7 @@ export let mapsObj = {
         dialogue: "Things come and go, all we can do for ourselves\n\nis to fullfil the duties of the heart.",
         reward: 2500,
         eventKey: 'goldenDiskGiver',
-        beaten: true
+        beaten: false
       },
       {
         name: "Yol'ne",
@@ -3734,7 +3810,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/greenhairguy/greenhairguy.png',
         dialogue: "Some weird corrupted new species of pogemon started appearing around here..\n\n\nKah'nu has only got stronger through all the confusion.\n\n\nHer poise is commendable.",
         reward: 2000,
-        beaten: true
+        beaten: false
       },
       {
         name: "Que'fi",
@@ -3744,7 +3820,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/greenhairgirl/greenhairgirl.png',
         dialogue: "These mountains have been sacred to us for centuries..\n\n\nThings have never been has unstable has they are now..",
         reward: 2250,
-        beaten: true
+        beaten: false
       },
       {
         name: "Nee'ya",
@@ -3754,7 +3830,7 @@ export let mapsObj = {
         sprite: '../../img/charSprites/greenhairgirl3/greenhairgirl3.png',
         dialogue: "Everything is weird with this mountain top!\n\nThe snow stopped falling, and now a portal!?\n\n",
         reward: 2000,
-        beaten: true
+        beaten: false
       },
     ],
     items: [
@@ -3931,10 +4007,22 @@ export let mapsObj = {
     ],
     event: [
       {
-        name: 'malumtehk',
-        sprite: "img/charSprites/ma'at/ma'at.png",
+        name: 'npc',
+        sprite: "img/charSprites/legendaryPortal/malumtehkPortal.png",
         info: {
+          looking: 'Down',
+          name: 'malumtehk',
+          reward: 0,
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
+          team: [[pogemonsObj.malumtehk, [65,65], null, null, null, true, [
+            movesObj.knock_off,
+            movesObj.crunch,
+            movesObj.drain_punch,
+            movesObj.bulk_up
+          ]]],
+          trainer: false,
+          legendary: true,
+          difficulty: 'optimalMove',
           dialogue:
           [
             "-malumtehk intends on destroying you-"
@@ -4140,6 +4228,11 @@ export let mapsObj = {
         {name:'heat_Rock'},
         {name:'icy_Rock'},
         {name:'smooth_Rock'},
+
+        {name: 'fire_Stone'},
+        {name: 'water_Stone'},
+        {name: 'leaf_Stone'},
+        {name: 'thunder_Stone'},
 
         {name:'light_Clay'},
 

@@ -164,4 +164,8 @@
 
 #newGameJSONInputField{
     background-color: rgba(128, 128, 128, 0.25);
+    text-align: center;
+    height: 30;
+    width: 500;
+    font-size: 16;
 }

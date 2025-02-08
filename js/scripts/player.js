@@ -12,7 +12,7 @@ import { scenes } from "./canvas.js"
 import { changeMapInfo, currMap, generateMapData, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
 
 import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
-import { changeMap, disableOWMenu, manageOverWorldState, menu, playerTeamItemsState, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
+import { changeMap, disableOWMenu, manageOverWorldState, menu, playerTeamItemsState, prevScene, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
 import { managePcState } from "./scenes/pc.js"
 import { switchStatsTargetWithKeys, switchUnderScoreForSpace } from "./scenes/stats.js"
 import { abilitiesObj } from "../data/abilitiesData.js"
@@ -91,10 +91,11 @@ export async function generatePlayer(canvas){
 
       player.catch(pogemonsObj.jleech, true, mapsObj.lab)
 
-      // worldEventData.set.defeated = true
+      worldEventData.scribbleTown.murale = true
 
       setTimeout(() =>{
         player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
+        player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 999})
         player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
         // player.bag.set("ability_Capsule", {item: {...itemsObj.ability_Capsule}, quantity: 999})
         // player.bag.set("super_Repel", {item: {...itemsObj.}, quantity: 999})
@@ -884,6 +885,12 @@ function playerInteraction(e) {
             if(worldEventData.set.lodge && checkIfEveryGemInInventory)
               chosenDialogue = player.interaction.info.fourcrystalgive
             break
+          case 'muraleGuy':
+            if(worldEventData.scribbleTown.murale) 
+              chosenDialogue = player.interaction.info.muraleDialogue
+            else 
+              chosenDialogue = player.interaction.info.dialogue
+            break
         }
       }
 
@@ -956,7 +963,7 @@ function playerInteraction(e) {
   
         // console.log(itemSpritesArr)
   
-        player.disabled = true
+        // player.disabled = true
   
         openWindow.replaceChildren()
         openWindow.style.backgroundColor = 'rgba(0,0,0,0.75)'
@@ -2015,6 +2022,7 @@ function spendQueue(){
     }
   
     if(player.interaction.info.eventKey == 'frozenBaaull' && worldEventData.baaull.awake){
+      returnPrevScene('overworld')
       manageBattleState(true, null, null, player.interaction.info)
       manageOverWorldState(false)
   
@@ -2054,11 +2062,6 @@ function spendQueue(){
       })
     }
 
-    console.log(player.interaction.info.eventKey)
-    console.log(worldEventData.set.lodge)
-    console.log(worldEventData.set.fourcrystals)
-    console.log(prevent2ItemsGiven)
-
     if(player.interaction.info.eventKey == 'setHouse' && worldEventData.set.lodge && !worldEventData.set.fourcrystals && !prevent2ItemsGiven){
       worldEventData.set.fourcrystals = true
 
@@ -2085,6 +2088,15 @@ function spendQueue(){
     if(player.interaction.info.eventKey == 'setFirstMeet' && worldEventData.set.postTransformation){
       player.interaction.character.img.src = 'img/charSprites/blank/blank.png'
       player.interaction.collisionInstance.collision = false
+    }
+
+    if(player.interaction.info.legendary != undefined && !worldEventData[player.interaction.info.eventKey].defeated){
+      returnPrevScene('overworld')
+      manageBattleState(true, null, null, player.interaction.info)
+      manageOverWorldState(false)
+
+      worldEventData[player.interaction.info.eventKey].catchable = false
+      worldEventData[player.interaction.info.eventKey].defeated = true
     }
   }
 }

@@ -48,6 +48,9 @@ export let worldEventData = {
   moses:{
     staffGiven: false
   },
+  scribbleTown:{
+    murale: false
+  },
   mousaCrest:{
     ask: false,
   },
@@ -77,31 +80,35 @@ export let worldEventData = {
   },
   vignus:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   caera:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   mortdux:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   papien:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   sustiris:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   beeasis:{
     catchable:false,
-    caught:false
+    defeated:false
   },
   malumtehk:{
     catchable:false,
-    caught:false
+    defeated:false
+  },
+  dahgua:{
+    catchable:false,
+    defeated:false
   },
 }
 
@@ -148,7 +155,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.pearly_Path}
+      currMap = {...mapsObj.scribble_Town}
       currMap.seen = true
     }
   } else {
@@ -499,12 +506,15 @@ async function generateBoundaries(nextMapInfo){
                     break
                   case 'vignus':
                     if(!worldEventData.vignus.catchable) return
+                    if(worldEventData.vignus.defeated) return
                     break
                   case 'caera':
                     if(!worldEventData.caera.catchable) return
+                    if(worldEventData.caera.defeated) return
                     break
                     case 'malumtehk':
                       if(!worldEventData.malumtehk.catchable) return
+                      if(worldEventData.malumtehk.defeated) return
                       break
                 }
 
@@ -1094,6 +1104,7 @@ async function generateBoundaries(nextMapInfo){
                     break
                   case 'vignus':
                     if(!worldEventData.vignus.catchable) return
+                    if(worldEventData.vignus.defeated) return
                     break
                   case 'caera':
                     if(!worldEventData.caera.catchable) return
@@ -1554,6 +1565,11 @@ export async function generateMapData(nextMapInfo) {
   if(currMap.name == 'keme_Town'){
     if(worldEventData.baaull.awake) mapImg.src = 'img/maps/keme_Town/keme_Town.png'
     else mapImg.src = 'img/maps/keme_Town/keme_Town_baaull.png'
+  }
+
+  if(currMap.name == 'scribble_Town'){
+    if(worldEventData.scribbleTown.murale) mapImg.src = 'img/maps/scribble_Town/scribble_Town_Glow.png'
+    else mapImg.src = 'img/maps/scribble_Town/scribble_Town.png'
   }
 
   if(currMap.name == 'transit_Peak'){
