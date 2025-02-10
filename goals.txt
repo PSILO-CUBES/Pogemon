@@ -638,6 +638,35 @@ make legendary spots x
 
 make white flash after first 4 legendaries encounters explaining scribble town changes x
 
+require hidden ability to be seen to switch to it x
+
+prevent TM learning of move is already in learntMove Arr x
+
+put pogemon evolution moveset into learntMoves after evolution x
+
+flame orb / toxic orb x
+
+synchronize natures x
+
+drizzle wont start on second battle x
+
+alquima_Town:{
+    1st house gives bait for regaligyne
+} x
+
+add regaligyne evo -- royal jelly held by female formal when party full of ants then talk to rock in melchi cave x
+
+make skopt evolve level up in neo_Genesis at lvl 50 x
+
+make pick up harder x
+
+save pc thru saves -- currently deletes everything that is in PC x
+
+make multiple boxes for pc x
+
+opponent debuff sprite position is bad x
+
+pacc isle map access giver -- after making illuminated gem -- grandfather of solstice summoner x
 
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
@@ -647,35 +676,17 @@ make white flash after first 4 legendaries encounters explaining scribble town c
 
 stuffToDo:{
     ideas:{
-        alquima_Town:{
-            1st house gives bait for regaligyne
-        }
+        ask hermes to make the perfect crystal -- requires beeasis and sustiris energy to make -- fight hermes that has dahgua -- his team should be around 75 ~ 85
 
-        add regaligyne evo -- feed royal jelly to female formal when party full of ants
-
-        make multiple boxes for pc
-
-        name player scene before game start after new save file -- you feel comfrotable and warm. player, it's time to wake up!
-
-        prevent TM learning of move is already in learntMove Arr
-
-        drizzle wont start on second battle
-
-        put pogemon evolution moveset into learntMoves after evolution
-
-        synchronize natures
-
-        require hidden ability to be seen to switch to it
-
-        flame orb / toxic orb ?? make check happen in weather event?
-
-        ask kukum to make the perfect crystal -- requires beeasis and sustiris energy to make
-
-        pacc isle map access giver -- after beating Solomon -- grandfather of solstice summoner
+        add boolean on guardians to check for hermes fight
 
         put some story stuff-- done?? i guess story isint done until dahgua stuff has been added
 
-        add old pogemon maps for dahgua event -- fight hermes that has dahgua -- his team should be around 70 ~ 85
+        put all trainers back to beaten : false
+
+        fix enemy pogemon hold when switching
+
+        name player scene before game start after new save file -- you feel comfrotable and warm. player, it's time to wake up!
 
         -- done!!!!
     }
@@ -692,10 +703,17 @@ stuffToDo:{
         teleport gem teleports to weird ass places when tping -- related spawnPosition being reassinged when there is a save file or pogecenterReturnInfo stuff found
 
         put looking direction on changeMap collisions so i dont get in by accident
+
+
+
+
+                level caps x        level caps x        level caps x        level caps x        level caps x
     }
 }
 
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+add description for every pogemon 
 
 MUSIC AND MOVE SOUNDS
 

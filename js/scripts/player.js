@@ -89,21 +89,27 @@ export async function generatePlayer(canvas){
         }
       }))  
 
-      player.catch(pogemonsObj.jleech, true, mapsObj.lab)
+      player.catch(pogemonsObj.piny, true, mapsObj.lab)
 
-      worldEventData.scribbleTown.murale = true
+      worldEventData.hermes.finalBoss = true
 
       setTimeout(() =>{
         player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
+        player.bag.set("map", {item: {...itemsObj.map}, quantity: 1})
         player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 999})
         player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
-        // player.bag.set("ability_Capsule", {item: {...itemsObj.ability_Capsule}, quantity: 999})
-        // player.bag.set("super_Repel", {item: {...itemsObj.}, quantity: 999})
+        player.bag.set("rare_Candy", {item: {...itemsObj.rare_Candy}, quantity: 999})
+        player.bag.set("regina_Esca", {item: {...itemsObj.regina_Esca}, quantity: 999})
       }, 250)
 
       player.pogedexInfo.forEach(pogedex =>{
         // pogedex.seen = true
         // pogedex.caught = true
+      })
+
+      Object.values(mapsObj).forEach((map,i) =>{
+        // if(i != 0) map.seen = true
+
       })
 
       // player.badges[0] = true
@@ -141,7 +147,7 @@ export async function generatePlayer(canvas){
           animate: true
         })
 
-        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, pogemon, pogemonSprite)
+        let remodeledPogemon = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, null, pogemon, pogemonSprite)
 
         remodeledPogemon.moves.length = 0
 
@@ -715,7 +721,7 @@ export function itemPickUp(item, amount, msg){
 
     } else player.interaction.info.pickedUp = true
 
-    mapsObj[currMap.name].items.forEach(item =>{
+    if(mapsObj[currMap.name].items != undefined)mapsObj[currMap.name].items.forEach(item =>{
       // console.log(item.name == player.interaction.info.name)
       if(player.interaction.info.eventKey == 'bananacopia') return
       if(item.name == player.interaction.info.name) item.pickedUp = true
@@ -890,6 +896,27 @@ function playerInteraction(e) {
               chosenDialogue = player.interaction.info.muraleDialogue
             else 
               chosenDialogue = player.interaction.info.dialogue
+            break
+          case 'paccIsleGiver':
+            if(worldEventData.scribbleTown.murale){
+              if(!worldEventData.thymatai.paccIsleSeen){
+                worldEventData.thymatai.paccIsleSeen = true
+                mapsObj.key_Town.seen = true
+
+                chosenDialogue = player.interaction.info.dialoguePostGame
+              } else chosenDialogue = player.interaction.info.dialoguePostIsland
+            } else chosenDialogue = player.interaction.info.dialogue
+            break
+          case 'hermesHouse':
+            if(!worldEventData.hermes.guardianQuest){
+              worldEventData.hermes.guardianQuest = true
+              chosenDialogue = player.interaction.info.dialogue
+            } else if(worldEventData.hermes.guardianQuest && !worldEventData.hermes.preFight){
+              worldEventData.hermes.preFight = true
+              chosenDialogue = player.interaction.info.dialogueIllumination
+            } else if(worldEventData.hermes.preFight){
+              chosenDialogue = player.interaction.info.dialoguePostFight
+            }
             break
         }
       }
@@ -1305,8 +1332,8 @@ function engageBattle(animationId, battleZones) {
 export let lastDirection = 'Down'
 
 function pickUpAbility(){
-  // 19999
-  const pickUpOdds = 1
+  // 1999
+  const pickUpOdds = 1999
 
   for(let i = 0; i < player.team.length; i++){
     if(player.team[i].abilityInfo.ability == null) continue
@@ -1330,6 +1357,8 @@ function pickUpAbility(){
   }
 
   function pickUpAnimation(pogemon, item){
+    if(item == undefined) return
+    
     const pickUpContainer = document.createElement('div')
     pickUpContainer.id = 'pickUpContainer'
     document.querySelector('#overworldSceneContainer').appendChild(pickUpContainer)
@@ -1353,15 +1382,19 @@ function pickUpAbility(){
       pickUpContainer.appendChild(img)
     })
 
+    let top = 10
+    if(window.innerHeight == 1080) top = 65
+
     gsap.to(pickUpContainer, {
       opacity: 1,
-      top: 10,
+      top,
       duration: 0.75,
       onComplete: () =>{
         setTimeout(() =>{3
           gsap.to(pickUpContainer, {
             opacity: 0,
-            duration: 0.5
+            duration: 0.5,
+            onComplete: () => pickUpContainer.remove()
           })
         }, 750)
       }
@@ -1755,7 +1788,7 @@ function eventZoneManagement(eventZones){
           
           disableOWMenu.active = true
           console.log('here2')
-          
+
           player.disabled = true
 
           console.log(eventZonesIndex.position)
@@ -1801,7 +1834,10 @@ function eventZoneManagement(eventZones){
                       break
                     case 'Down':
                       eventPos.x = eventZonesIndex.position.x
-                      if(player.position.y - player.height < eventZonesIndex.position.y) eventPos.y = eventZonesIndex.position.y
+                      if(player.position.y - player.height < eventZonesIndex.position.y) {
+                        eventZonesIndex.info.createdTrainer.animate = false
+                        eventPos.y = eventZonesIndex.position.y
+                      }
                       else eventPos.y = player.position.y - player.height
                       break
                     case 'Left':
@@ -1829,8 +1865,8 @@ function eventZoneManagement(eventZones){
                       eventZonesIndex.info.createdTrainer.animate = false
             
                       queue.push(() =>{
+                        console.log('here2')
                         manageOverWorldState(false, 'battle')
-            
                         gsap.to('#overlapping', {
                           opacity: 1,
                           duration: 0.4,
@@ -1899,6 +1935,9 @@ function spendQueue(){
       disableOWMenu.active = false
       document.querySelector('#pickedUpItem').src = ''
     }
+
+    player.disabled = false
+    disableOWMenu.active = false
 
     if(!healProcess) {
       if(player.interaction != null){
@@ -2039,7 +2078,12 @@ function spendQueue(){
   
     if(player.interaction.info.eventKey == 'renamer' || player.interaction.info.eventKey == 'relearner') homouFamilyInteraction(player.interaction.info.eventKey)
   
-    if(player.interaction.info.eventKey == 'Tms' || player.interaction.info.eventKey == 'battleItems' || player.interaction.info.eventKey == 'maatBerryShop') {
+    if(
+      player.interaction.info.eventKey == 'Tms' || 
+      player.interaction.info.eventKey == 'battleItems' || 
+      player.interaction.info.eventKey == 'maatBerryShop' || 
+      player.interaction.info.eventKey == 'darwin'
+    ) {
       if(document.querySelector('#overworldDialogue').innerText == 'Have a good day! :D') return
       // disableOWMenu.active = true
       player.disabled = true
@@ -2098,6 +2142,23 @@ function spendQueue(){
       worldEventData[player.interaction.info.eventKey].catchable = false
       worldEventData[player.interaction.info.eventKey].defeated = true
     }
+
+    if(player.interaction.info.eventKey == 'reginaEscaGiver' && player.bag.get('regina_Esca').quantity > 0){
+      scenes.set('pickingItem', {initiated: false})
+    }
+
+    if(player.interaction.info.eventKey == 'ultimballGiver' && !worldEventData.ultimball.given){
+      worldEventData.ultimball.given = true
+      itemPickUp(itemsObj.ultimball, 1, `I bet it can't even catch a measly formal. hahaha.`)
+    } else if(player.interaction.info.eventKey == 'ultimballGiver' && worldEventData.ultimball.given){
+      gsap.to('#overlapping', {
+        opacity: 0,
+        duration: 0.4,
+        onComplete:() =>{
+          scenes.set('pickingItem', {initiated: false})
+        }
+      })
+    }
   }
 }
 
@@ -2120,6 +2181,7 @@ partyInteractionContainer.addEventListener('click', e =>{
 
 function homouFamilyInteraction(type){
   disableOWMenu.active = true
+  console.log('here2')
   player.disabled = true
 
   const partyInteractionContentContainer = document.querySelector('#partyInteractionContentContainer')

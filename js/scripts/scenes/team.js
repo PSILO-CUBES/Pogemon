@@ -108,14 +108,27 @@ function switchProcessEvent(first, second){
         pogemonTeamDomArr[i].childNodes[1].childNodes[1].children[2].style.display = 'block'
         pogemonTeamDomArr[i].childNodes[1].childNodes[1].children[2].src = `img/status/${player.team[i].status.name}.png`
       }
-      
-      let xOffset = 72.5
-      let yOffset = 30.15
+    
+      let xOffset
+      let yOffset
+    
+      xOffset = 72.5
+      yOffset = 30.15
     
       if(i % 2 != 0) xOffset = 1032
     
       if(i > 1 && i < 4) yOffset = 364.5
       if(i > 3) yOffset = 697.5
+    
+      if(window.innerHeight == 1080){
+        xOffset = 72.5
+        yOffset = 5
+      
+        if(i % 2 != 0) xOffset = 1032
+      
+        if(i > 1 && i < 4) yOffset = 364.5
+        if(i > 3) yOffset = 725
+      }
     
       player.team[i].position = {
         x: xOffset,
@@ -398,13 +411,26 @@ function printTeamInfo(i, teamMenuContainerDom){
 }
 
 function definePogemonSprites(i){
-  let xOffset = 72.5
-  let yOffset = 30.15
+  let xOffset
+  let yOffset
+
+  xOffset = 72.5
+  yOffset = 30.15
 
   if(i % 2 != 0) xOffset = 1032
 
   if(i > 1 && i < 4) yOffset = 364.5
   if(i > 3) yOffset = 697.5
+
+  if(window.innerHeight == 1080){
+    xOffset = 72.5
+    yOffset = 5
+  
+    if(i % 2 != 0) xOffset = 1032
+  
+    if(i > 1 && i < 4) yOffset = 364.5
+    if(i > 3) yOffset = 725
+  }
 
   player.team[i].position = {
     x: xOffset,

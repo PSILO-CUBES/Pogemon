@@ -5,8 +5,9 @@ import { manageOverWorldState } from "./overworld.js"
 import { manageLearnedMoves, learnMoveMenu, manageLvlUpDisplay } from "./battle.js"
 import { player } from "../player.js"
 import { mapsObj } from "../../data/mapsData.js"
-import { evoItemUsed } from "./bag.js"
+import { currItem, evoItemUsed } from "./bag.js"
 import { itemsObj } from "../../data/itemsData.js"
+import { currMap } from "../maps.js"
 
 export const queue = []
 export const queueProcess = {
@@ -47,8 +48,13 @@ function pogemonTransition(target){
   target.name = targetEvo.name
   target.element = targetEvo.element
   target.evo = targetEvo.evo
-  target.movepool = targetEvo.movepool
+  // target.movepool = targetEvo.movepool
   target.stats = target.generateStats()
+
+  Object.values(targetEvo.movepool).forEach(moveInfo =>{
+    if(!target.learntMoves.includes(moveInfo.move.name) && target.lvl >= moveInfo.lvl)
+      target.learntMoves.push(moveInfo.move.name)
+  })
 
   for(let i = 0; i < player.team.length; i++){
     if(target.id != player.team[i].id) return
@@ -157,6 +163,7 @@ function initEvo(target, i){
   targetMon = target
   if(pogemonsObj[target.evo.name] != undefined) targetEvo = pogemonsObj[target.evo.name]
   else if(target.name == 'jleech') targetEvo = jleechEvoTypeCalc()
+  else if(target.name == 'formal' && currItem.name == 'regina_Esca') targetEvo = pogemonsObj.regaligyne
   else {
     if(evoItemUsed.item != null || target.heldItem != null) {
       target.evo.forEach(evoType =>{

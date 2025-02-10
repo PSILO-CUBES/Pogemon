@@ -4,7 +4,7 @@ import { player, repelObj } from "../player.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { prevScene, returnPrevScene, transitionScenes } from "./overworld.js"
 import { itemsObj } from "../../data/itemsData.js"
-import { manageBattleState } from "./battle.js"
+import { addToEvoArr, evoArr, manageBattleState } from "./battle.js"
 import { mapsObj } from "../../data/mapsData.js"
 import { manageEvolutionState } from "./evolution.js"
 import { switchUnderScoreForSpace } from "./stats.js"
@@ -31,7 +31,7 @@ function spendQueue(){
 
 let currItemsArr = []
 
-let currItem
+export let currItem
 let currItemDom
 
 let itemChosen = false
@@ -161,11 +161,15 @@ function printMap(type){
     {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
     {name: 'end_Trail', x: 240, y: 130, height: 110, width: 178}, 
     {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
-    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93}
+    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93},
+    {name: 'key_Town', x: 323, y: 698, height: 77, width: 89},
+    {name: 'ghost_Woods', x: 318, y: 775, height: 96, width: 89},
+    {name: 'pacc_Isle', x: 407, y: 787, height: 84, width: 95},
+    {name: 'edicule_Cave', x: 447, y: 873, height: 45, width: 89},
   ]
 
   mapsBlockArr.forEach(node =>{
-    let hidden = false
+    let hidden = true
 
     Object.values(mapsObj).forEach(map =>{
       if(node.name == map.name && map.seen == true) hidden = false
@@ -186,12 +190,44 @@ function printMap(type){
   })
 
   if(type == 'teleport'){
-    const mapsBlockArr = [
+    // const mapsBlockArr = [
+    //   {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
+    //   {name: 'pearly_Path', x: 120, y: 632, height: 92, width: 68}, 
+    //   {name: 'slither_Road', x: 188, y: 582, height: 142, width: 63}, 
+    //   {name: 'fair_Town', x: 251, y: 663, height: 70, width: 45}, 
+    //   {name: 'cross_Link', x: 251, y: 593, height: 81, width: 45}, 
+    //   {name: 'eden_Forest', x: 114, y: 772, height: 103, width: 96}, 
+    //   {name: 'banishment_Road', x: 47, y: 664, height: 56, width: 73}, 
+    //   {name: 'keme_Town', x: 27, y: 593, height: 71, width: 93}, 
+    //   {name: 'exodus_Road', x: 17, y: 530, height: 64, width: 103}, 
+    //   {name: 'sinai_Desert', x: 17, y: 432, height: 98, width: 103}, 
+    //   {name: 'melchi_Cave', x: 67, y: 392, height: 40, width: 51} , 
+    //   {name: 'luna_Mountain_Entrance', x: 268, y: 572, height: 75, width: 113}, 
+    //   {name: 'luna_Mountain', x: 269, y: 466, height: 107, width: 121}, 
+    //   {name: 'sol_Path', x: 390, y: 473, height: 59, width: 104}, 
+    //   {name: 'commandment_Road', x: 389, y: 338, height: 136, width: 104}, 
+    //   {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
+    //   {name: 'mousa_Crest', x: 282, y: 404, height: 63, width: 107}, 
+    //   {name: 'revelation_Road', x: 120, y: 573, height: 59, width: 68}, 
+    //   {name: 'bellum_Way', x: 120, y: 480, height: 102, width: 109}, 
+    //   {name: 'stasis_Cave', x: 119, y: 382, height: 99, width: 110}, 
+    //   {name: 'stasis_Cave_Lower_Level', x: 30, y: 234, height: 128, width: 106},  
+    //   {name: 'stasis_Cave_Upper_Level', x: 28, y: 146, height: 88, width: 112},
+    //   {name: 'stasis_Cave_Top_Level', x: 93, y: 67, height: 81, width: 47}, 
+    //   {name: 'ascension_Path', x: 178, y: 297, height: 91, width: 101}, 
+    //   {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
+    //   {name: 'end_Trail', x: 240, y: 130, height: 110, width: 178}, 
+    //   {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
+    //   {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93}
+    // ]
+
+    const mapsTeleportArr = [
       {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
       {name: 'fair_Town', x: 251, y: 663, height: 61, width: 45}, 
-      {name: 'keme_Town', x: 27, y: 593, height: 71, width: 93}, 
+      {name: 'keme_Town', x: 138, y: 604, height: 55, width: 55}, 
       {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
       {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101},
+      {name: 'key_Town', x: 319, y: 695, height: 78, width: 78},
     ]
 
     function teleportToClickedArea(e){
@@ -221,7 +257,7 @@ function printMap(type){
       }, 250)
     }
 
-    mapsBlockArr.forEach(node =>{
+    mapsTeleportArr.forEach(node =>{
       let hidden = false
   
       Object.values(mapsObj).forEach(map =>{
@@ -440,6 +476,47 @@ function useItemOnClickEvent(e){
                 targetPogemon.dialogue('bag', "This item can't be used on this pogemon.")
                 return
               }
+
+              function formalCanBeQueen(){
+                let pass = true
+
+                player.team.forEach(pogemon =>{
+                  console.log(pogemon.pogemon.pogedex)
+                  if(
+                    pogemon.pogemon.pogedex != 16 &&
+                    pogemon.pogemon.pogedex != 17
+                  ) pass = false
+                })
+
+                if(player.team.length != 6) pass = false
+
+                return pass
+              }
+
+              if(currItem.name == 'regina_Esca') {
+                if(targetPogemon.pogemon.name == 'formal'){
+                  if(targetPogemon.gender == 'female'){
+                    if(formalCanBeQueen()){
+                      manageBagState(false, prevScene)
+                      manageEvolutionState(true, [targetPogemon])
+                      gsap.to('#overlapping', {
+                        opacity: 1,
+                        onComplete: () =>{
+                          gsap.to('#overlapping', {
+                            opacity: 0
+                          })
+                        }
+                      })
+                    }
+                    else targetPogemon.dialogue('bag', 'This formal doesnt feel safe enought to\n\nuse this item.')
+                    return
+                  } else {
+                    targetPogemon.dialogue('bag', 'Only female formals can use this item.')
+                    return
+                  }
+                }
+              }
+
               if(targetPogemon.evo.length == undefined){
                 if(targetPogemon.evo.item == currItem.name){
                   if(currItem.friendliness != undefined) targetPogemon.manageFriendliness(currItem.friendliness)
@@ -481,6 +558,9 @@ function useItemOnClickEvent(e){
             case 'level':
               console.log(e.target)
 
+              if(targetPogemon.lvl + 1 >= lvlCap) player.dialogue('battle', `This pogemon has reached your current level cap.`)
+              else this.lvl = this.generateLevel()
+
               let nextLvl = targetPogemon.lvl + 1
               let nextLvlExp = Math.pow(nextLvl, 3)
 
@@ -512,6 +592,18 @@ function useItemOnClickEvent(e){
 
               player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
               currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
+
+              itemUsed.used = true
+
+              setTimeout(() =>{
+                itemUsed.used = false
+                addToEvoArr(targetPogemon)
+
+                if(evoArr.length > 0){
+                  manageEvolutionState(true, evoArr)
+                  manageBagState(false, prevScene)
+                }
+              }, 1250)
               break
             case 'ability':
                 bagSceneItemDialogueContainer.innerText = `Which ability should ${targetPogemon.switchUnderScoreForSpace(targetPogemon.nickname)} have instead?`
@@ -555,6 +647,8 @@ function useItemOnClickEvent(e){
               }
             
               targetPogemon.pogemon.abilities.forEach((abilityInfo, i) =>{
+                if(abilityInfo.hidden == true && abilityInfo.seen == false) return
+
                 const TMMoveContainer = document.createElement('div')
                 TMMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
                 restoreMovePPContainer.appendChild(TMMoveContainer)
@@ -749,7 +843,10 @@ function useItemOnClickEvent(e){
           dialogueInterfaceDom.innerText = `Can't use this.`
           break
         case 'tm':
-          console.log('?????????????????')
+          if(targetPogemon.learntMoves.includes(currItem.TMName)){
+            player.dialogue('bag', `${targetPogemon.switchUnderScoreForSpace(targetPogemon.nickname)} already knows this move...`)
+            return
+          }
 
           const TMContainerBackground = document.createElement('div')
           TMContainerBackground.id = 'restoreMovePPContainerBackground'
@@ -781,6 +878,10 @@ function useItemOnClickEvent(e){
             player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
             e.target.innerText = `${switchUnderScoreForSpace(currItem.TMName)}`
             currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+
+            Object.values(targetPogemon.pogemon.movepool).forEach(move =>{
+              if(move.name == currItem.TMName) move.seen = true
+            })
 
             itemUsed.item = currItem
 
@@ -997,6 +1098,11 @@ function printBagScene(){
       bagSceneTeamSectionDom.addEventListener('mouseover', e => bagSceneHoverEvent(e, true))
       bagSceneTeamSectionDom.addEventListener('mouseout', e => bagSceneHoverEvent(e, false))
       bagSceneTeamSectionDom.addEventListener('click', e => bagSceneSectionOnClickEvent(e, false))
+
+      const bagSceneTeamSectionGenderDom = document.createElement('img')
+      if(player.team[i].gender == null) bagSceneTeamSectionGenderDom.src = `img/blank.png`
+      else bagSceneTeamSectionGenderDom.src = `img/${player.team[i].gender}_icon.png`
+      bagSceneTeamSectionGenderDom.classList.add('bagSceneTeamSectionGender')
   
       const bagSceneTeamSectionImgContainerDom = document.createElement('div')
       bagSceneTeamSectionImgContainerDom.classList.add('bagSceneTeamSectionImgContainer')
@@ -1036,6 +1142,7 @@ function printBagScene(){
         bagSceneTeamSectionItemDom.style.backgroundColor = 'transparent'
       })
 
+      bagSceneTeamSectionImgContainerDom.appendChild(bagSceneTeamSectionGenderDom)
       bagSceneTeamSectionImgContainerDom.appendChild(bagSceneTeamSectionItemDom)
   
       const bagSceneTeamSectionInfoContainerDom = document.createElement('div')
@@ -1237,10 +1344,18 @@ function initBagScene(prevScene){
   returnPrevScene(prevScene)
   scenes.set('bag', {initiated: true})
 
+  let y = 5
+  let multi = 142.5
+
+  if(window.innerHeight == 1080) {
+    y = 35
+    multi = 154
+  }
+
   for(let i = 0; i < player.team.length; i++){
     player.team[i].position = {
-      x: 43,
-      y: window.innerHeight / 10 + 150 * i
+      x: 40,
+      y: (window.innerHeight / 10 + multi * i) - y
     }
 
     if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite

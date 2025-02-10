@@ -640,7 +640,7 @@ export let pogemonsObj = {
       6: {move: movesObj.poison_powder, lvl: 15, seen: false},
       7: {move: movesObj.stun_spore, lvl: 16, seen: false},
       8: {move: movesObj.sleep_powder, lvl: 17, seen: false},
-      9: {move: movesObj.giga_drain, lvl: 20, seen: false},
+      9: {move: movesObj.mega_drain, lvl: 20, seen: false},
       10: {move: movesObj.mystical_power, lvl: 23, seen: false},
       11: {move: movesObj.calm_mind, lvl: 25, seen: false},
       12: {move: movesObj.trick_room, lvl: 28, seen: false},
@@ -1638,7 +1638,7 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
-      2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      2: {move: movesObj.recover, lvl: 1, seen: false},
       3: {move: movesObj.protect, lvl: 7, seen: false},
       4: {move: movesObj.swift, lvl: 10, seen: false},
       5: {move: movesObj.fart, lvl: 13, seen: false},
@@ -1973,6 +1973,7 @@ export let pogemonsObj = {
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
       2: {move: movesObj.withdraw, lvl: 1, seen: false},
+      3: {move: movesObj.boomburst, lvl: 1, seen: false},
     },
     sprites: {
       classic:{
@@ -3790,11 +3791,11 @@ export let pogemonsObj = {
       spdef: 40,
       spd: 40
     },
-    evo: {name: 'yaldabaoth', type: 'event', lvl: 36},
+    evo: {name: 'yaldabaoth', type: 'lvl', lvl: 50},
     abilities: [
-      {ability : abilitiesObj.intimidate, seen: false, hidden: false},
-      {ability : abilitiesObj.prankster, seen: false, hidden: false},
-      {ability : abilitiesObj.contrary, seen: false, hidden: true},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
+      // {ability : abilitiesObj.prankster, seen: false, hidden: false},
+      // {ability : abilitiesObj.contrary, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
@@ -4657,18 +4658,18 @@ export let pogemonsObj = {
     },
     stats: {
       hp: 48,
-      atk: 1,
-      def: 9999,
+      atk: 999,
+      def: 999,
       spatk: 1,
       spdef: 48,
-      spd: 1
+      spd: 999
     },
     evo: {name: 'evo1', lvl: 20},
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.headbutt, lvl: 1, seen: false},
     },
     sprites: {
       classic:{

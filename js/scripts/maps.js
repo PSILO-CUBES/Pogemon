@@ -55,10 +55,18 @@ export let worldEventData = {
     ask: false,
   },
   kukum:{
-    permission: false
+    permission: false,
+    illuminatedGem: false,
+    completeGem: false
   },
   hermes:{
     met: false,
+    guardianQuest: false,
+    preFight: false,
+    finalBoss: false
+  },
+  thymatai:{
+    paccIsleSeen: false
   },
   set:{
     met: false,
@@ -90,7 +98,7 @@ export let worldEventData = {
     catchable:false,
     defeated:false
   },
-  papien:{
+  papiens:{
     catchable:false,
     defeated:false
   },
@@ -105,6 +113,15 @@ export let worldEventData = {
   malumtehk:{
     catchable:false,
     defeated:false
+  },
+  ultimball: {
+    given: false
+  },
+  ordo:{
+    defeated: false
+  },
+  entropia:{
+    defeated: false
   },
   dahgua:{
     catchable:false,
@@ -155,7 +172,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.scribble_Town}
+      currMap = {...mapsObj.key_Town}
       currMap.seen = true
     }
   } else {
@@ -193,7 +210,7 @@ async function generateBoundaries(nextMapInfo){
     const eventZonesMap = []
     const obstaclesMap = []
 
-    if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+    if(currMap.name == 'luna_Mountain_Entrance' || currMap.name == 'ghost_Woods') flashContainerManagement('shade')
     else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
     else flashContainerManagement('none')
 
@@ -292,6 +309,8 @@ async function generateBoundaries(nextMapInfo){
 
           const mapInfo = defaultMapsObj[`${currMap.name}`].changeMapLocations[z]
 
+          console.log(mapInfo)
+
           if(mapInfo.eventKey == 'neoGenesisPortal' && !worldEventData.set.fourcrystals) return
 
           if(z == 0) z = z + 1
@@ -376,6 +395,10 @@ async function generateBoundaries(nextMapInfo){
                       if(!worldEventData.endPortal.explained) return
                       if(worldEventData.summoners.dawn) return
                       break
+                      case 'hermesFinalBoss':
+                        if(!worldEventData.hermes.preFight) return
+                        if(worldEventData.hermes.finalBoss) return
+                        break
                   }
                 }
 
@@ -417,7 +440,7 @@ async function generateBoundaries(nextMapInfo){
                     let pogemonGender
                     if(trainerInfo.team[i][7] != undefined) pogemonGender = trainerInfo.team[i][7]
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, trainerInfo.team[i][5], pogemonMoves, pogemonGender, null, foeSprite))
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, trainerInfo.team[i][5], pogemonMoves, pogemonGender, null, null, foeSprite))
                   }
                 }
               
@@ -497,6 +520,9 @@ async function generateBoundaries(nextMapInfo){
                     if(!worldEventData.set.met) return
                     if(worldEventData.set.fourcrystals) return
                     break
+                  case 'hermes_House':
+                    if(worldEventData.hermes.preFight) return
+                    break
                 }
 
               if(eventInfo.info.eventKey != undefined)
@@ -504,17 +530,39 @@ async function generateBoundaries(nextMapInfo){
                   case 'setFirstMeet':
                     if(worldEventData.set.met && !worldEventData.set.fourcrystals) return
                     break
-                  case 'vignus':
-                    if(!worldEventData.vignus.catchable) return
-                    if(worldEventData.vignus.defeated) return
-                    break
-                  case 'caera':
-                    if(!worldEventData.caera.catchable) return
-                    if(worldEventData.caera.defeated) return
-                    break
+                    case 'vignus':
+                      if(!worldEventData.vignus.catchable) return
+                      if(worldEventData.vignus.defeated) return
+                      break
+                    case 'mortdux':
+                      if(!worldEventData.mortdux.catchable) return
+                      if(worldEventData.mortdux.defeated) return
+                      break
+                    case 'papiens':
+                      if(!worldEventData.papiens.catchable) return
+                      if(worldEventData.papiens.defeated) return
+                      break
+                    case 'caera':
+                      if(!worldEventData.caera.catchable) return
+                      if(worldEventData.caera.defeated) return
+                      break
+                    case 'sustiris':
+                      if(!worldEventData.sustiris.catchable) return
+                      if(worldEventData.sustiris.defeated) return
+                      break
+                    case 'beeasis':
+                      if(!worldEventData.beeasis.catchable) return
+                      if(worldEventData.beeasis.defeated) return
+                      break
                     case 'malumtehk':
                       if(!worldEventData.malumtehk.catchable) return
+                      if(!worldEventData.sustiris.defeated) return
+                      if(!worldEventData.beeasis.defeated) return
                       if(worldEventData.malumtehk.defeated) return
+                      break
+                    case 'dahgua':
+                      if(!worldEventData.dahgua.catchable) return
+                      if(worldEventData.dahgua.defeated) return
                       break
                 }
 
@@ -984,6 +1032,10 @@ async function generateBoundaries(nextMapInfo){
                     if(!worldEventData.endPortal.explained) return
                     if(worldEventData.summoners.dawn) return
                     break
+                  case 'hermesFinalBoss':
+                    if(!worldEventData.hermes.preFight) return
+                    if(worldEventData.hermes.finalBoss) return
+                    break
                 }
 
                 if(currMap.name == 'transit_Peak'){
@@ -1021,7 +1073,7 @@ async function generateBoundaries(nextMapInfo){
                     let pogemonGender
                     if(trainerInfo.team[i][7] != undefined) pogemonGender = trainerInfo.team[i][7]
 
-                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, pogemonGender, null, foeSprite))
+                    trainerTeam.push(new Pogemon(pogemonInfo, Math.pow(trainerInfo.team[i][1], 3), true, null, trainerInfo.team[i][2], null, null, null, pogemonMoves, pogemonGender, null, null, foeSprite))
                   }
                 }
               
@@ -1095,6 +1147,9 @@ async function generateBoundaries(nextMapInfo){
                   if(!worldEventData.set.met) return
                   if(worldEventData.set.fourcrystals) return
                   break
+                case 'hermes_House':
+                  if(worldEventData.hermes.preFight) return
+                  break
               }
 
               if(eventInfo.info.eventKey != undefined){
@@ -1106,11 +1161,33 @@ async function generateBoundaries(nextMapInfo){
                     if(!worldEventData.vignus.catchable) return
                     if(worldEventData.vignus.defeated) return
                     break
+                  case 'mortdux':
+                    if(!worldEventData.mortdux.catchable) return
+                    if(worldEventData.mortdux.defeated) return
+                    break
+                  case 'papiens':
+                    if(!worldEventData.papiens.catchable) return
+                    if(worldEventData.papiens.defeated) return
+                    break
                   case 'caera':
                     if(!worldEventData.caera.catchable) return
+                    if(worldEventData.caera.defeated) return
+                    break
+                  case 'sustiris':
+                    if(!worldEventData.sustiris.catchable) return
+                    if(worldEventData.sustiris.defeated) return
+                    break
+                  case 'beeasis':
+                    if(!worldEventData.beeasis.catchable) return
+                    if(worldEventData.beeasis.defeated) return
                     break
                   case 'malumtehk':
                     if(!worldEventData.malumtehk.catchable) return
+                    if(worldEventData.malumtehk.defeated) return
+                    break
+                  case 'dahgua':
+                    if(!worldEventData.dahgua.catchable) return
+                    if(worldEventData.dahgua.defeated) return
                     break
                 }
               }
@@ -1537,7 +1614,7 @@ export function changeMapInfo(nextMapInfo, currMapInfo){
 
   //deal with flash container stuff
 
-  if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+  if(currMap.name == 'luna_Mountain_Entrance' || currMap.name == 'ghost_Woods') flashContainerManagement('shade')
   else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
   else flashContainerManagement('none')
   

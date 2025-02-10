@@ -18,6 +18,8 @@ import { pc } from "./pc.js"
 import { typesObj } from "../../data/typesData.js"
 import { switchUnderScoreForSpace } from "./stats.js"
 import { weatherObj } from "../../data/weatherData.js"
+import { loadData } from "../../save.js"
+import { data } from "./boot.js"
 
 // after the first battle, queues start being skipped after the pogemon death ?? naniiii
 export let queue = []
@@ -40,7 +42,7 @@ const battleBackground = new Sprite({
   img: battleBackgroundImage
 })
 
-let foe
+export let foe
 let ally
 
 let renderedSprites
@@ -268,7 +270,7 @@ const foeSprite = new Sprite({
   },
   frames: {
     max: 4,
-    hold: 50
+    hold: 60
   },
   img: foeImage,
   animate: true
@@ -313,7 +315,10 @@ function initWildEncounter(tileInfo, info){
   let wildPogemonGender = null
   if(returnedFoe.gender != undefined) wildPogemonGender = returnedFoe.gender
 
-  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, null, foeSprite)
+  let predeterminedNature = null
+  if(player.team[0].abilityInfo.ability.name == 'synchronize') predeterminedNature = player.team[0].nature.name
+
+  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, predeterminedNature, null, foeSprite)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -458,7 +463,6 @@ function startWeather(type, info, timing, user){
     const tl = gsap.timeline()
     const fieldEffect = document.querySelector('#fieldEffect')
     tl.to(fieldEffect, {
-      
       backgroundColor: `#${info.color}40`,
       duration: 1
     }).to(fieldEffect, {
@@ -548,6 +552,8 @@ function manageWeatherState(type, info, timing, user, activeTerrain){
     else clearWeather(activeTerrain)
     return
   }
+
+  console.log(activeTerrain)
 
   if(timing == 'init' || timing == 'startOfBattle'){
     startWeather(type, info, timing, user)
@@ -707,7 +713,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
     console.log(tileInfo)
     console.log(info)
 
-    console.log(info.trainer)
+    // console.log(info.trainer)
 
     if(info == undefined) initWildEncounter(tileInfo, info)
     else {
@@ -834,11 +840,10 @@ export function initBattle(faintedTriggered, info, tileInfo){
   if(!itemUsed.used){
     if(prevScene == 'overworld') {
       if(info == null) player.dialogue('battle', `a wild ${switchUnderScoreForSpace(foe.nickname)} appeared!`)
-      else if(info.name == undefined) player.dialogue('battle', `${switchUnderScoreForSpace(foe.nickname)} attacks!`)
+      else if(info.name == foe.name) player.dialogue('battle', `${switchUnderScoreForSpace(foe.nickname)} attacks!`)
       else player.dialogue('battle', `${info.name} sent out ${switchUnderScoreForSpace(foe.nickname)}!`)
 
       if(foe.abilityInfo.ability.name == 'frisk'){
-
         let itemName
         if(ally.heldItem == null) itemName = 'nothing'
         if(ally.heldItem != null) itemName = `a ${switchUnderScoreForSpace(ally.heldItem.name)}`
@@ -1573,7 +1578,10 @@ function optionButtonInteraction(e) {
                   audioObj.SFX.flee.stop()
                   gsap.to('#overlapping', {
                     opacity: 0,
-                    duration: 0.4
+                    duration: 0.4,
+                    onComplete: () =>{
+                      ranAway = false
+                    }
                   })
                 }
               })
@@ -1916,11 +1924,12 @@ function checkSpeed(e) {
     slowerMove = selectedMove
   }
 
-  if(foe.heldItem != null) if(foe.heldItem.effect == 'choice')
+  if(foe.heldItem != null) if(foe.heldItem.effect == 'choice'){
     if(foe.choiceItem.move == null) foe.choiceItem.move = foeRNGMove
     else foeRNGMove = foe.choiceItem.move
+  }
 
-    console.log(foeRNGMove)
+  console.log(foeRNGMove)
 
   if(terrainConditions.turns.etc.trick_room.active){
     let placeHolder
@@ -2187,6 +2196,20 @@ function manageEvolution(evoArr){
 
 let lvlBeforeExpGained
 
+export const levelCapObj = {
+  level: 15
+}
+
+async function loadLevelCap(){
+ const data = await loadData('saveFile')
+ 
+ if(data != null) levelCapObj.level = data.levelCap.level
+
+ console.log(levelCapObj.level)
+}
+
+loadLevelCap()
+
 function enemyTeamWiped(enemyTrainerInfo){
   let teamFainted = true
   if(enemyTrainerInfo == undefined) return
@@ -2310,7 +2333,7 @@ function switchEnemyAfterFaint(type){
 
 export let evoArr = []
 
-function addToEvoArr(battler){
+export function addToEvoArr(battler){
   let pass = true
 
   if(battler.evo == null) return
@@ -2328,7 +2351,10 @@ function addToEvoArr(battler){
     if(battler.evo.type !== 'lvl') return
     if(battler.lvl >= battler.pogemon.evo.lvl){
       if(evoArr.length == 0) {
-        evoArr.push(battler)
+        if(battler.name == 'skopt') {
+          if(currMap.name == 'neo_Genesis') evoArr.push(battler)
+        } else evoArr.push(battler)
+        
         pass = false
       } else {
         for(let i = 0; i < evoArr.length; i++){
@@ -2340,9 +2366,11 @@ function addToEvoArr(battler){
     }
   }
   
-
-
-  if(pass) evoArr.push(battler)
+  if(pass) {
+    if(battler.name == 'skopt') {
+      if(currMap.name == 'neo_Genesis') evoArr.push(battler)
+    } else evoArr.push(battler)
+  }
 }
 
 let lvlUpArr = []
@@ -2362,12 +2390,21 @@ function manageFaintingEvent(target){
   }
 
   if(battleType == 'trainer'){
-    for(let i = 0; i < document.querySelectorAll('.foeTeamShowcaseIndividual').length; i++){
-      const node = document.querySelectorAll('.foeTeamShowcaseIndividual')[i]
-  
-      if(node.childNodes[1].src == 'http://localhost:3000/img/item_scene/items/ball/pogeball.png'){
-        node.childNodes[1].style.filter = 'brightness(20%)'
-        break
+    console.log(enemyTrainerInfo)
+    if(enemyTrainerInfo.createdTrainer != undefined){
+      for(let i = 0; i < enemyTrainerInfo.createdTrainer.team.length; i++){
+
+        const node = document.querySelectorAll('.foeTeamShowcaseIndividual')[i]
+        const pogemon = enemyTrainerInfo.createdTrainer.team[i]
+
+        console.log(node)
+    
+        if(pogemon == undefined) node.childNodes[1].style.filter = 'brightness(0%)'
+        else {
+          if(pogemon.fainted) if(node.childNodes[1].src == 'http://localhost:3000/img/item_scene/items/ball/pogeball.png'){
+            node.childNodes[1].style.filter = 'brightness(20%)'
+          }
+        }
       }
     }
   }
@@ -2379,7 +2416,8 @@ function manageFaintingEvent(target){
 
     if(battlerArr.length == 1) {
       oldStats = {...battler.stats}
-      battler.expGain(target, battleType, battlerArr, true)
+
+      battler.expGain(target, battleType, battlerArr, true, levelCapObj.lvl)
 
       // vvv checking if can add to evoArr in there vvv
 
@@ -2433,7 +2471,9 @@ function manageFaintingEvent(target){
           // fires too early sometimes
           // battler.expGain(target, battleType, battlerArr, true)
           oldStats = {...battler.stats}
-          battler.expGain(foe, battleType, battlerArr, false)
+
+          battler.expGain(target, battleType, battlerArr, true, levelCapObj.lvl)
+
           battler.teamExpEvent(queue, prevLvl, queueProcess)
           addToEvoArr(battler)
           // HEHEHEHEHEHE
@@ -2503,7 +2543,9 @@ function manageFaintingEvent(target){
 
         if(i == 0) {
           oldStats = {...battler.stats}
-          battler.expGain(target, battleType, battlerArr, false)
+
+          battler.expGain(target, battleType, battlerArr, true, levelCapObj.lvl)
+
           addToEvoArr(battler)
 
           if(battler.lvl > prevLvl) {
@@ -2515,7 +2557,9 @@ function manageFaintingEvent(target){
           queue.push(() => {
             prevLvl = battler.lvl
             oldStats = {...battler.stats}
-            battler.expGain(target, battleType, battlerArr, false)
+
+            battler.expGain(target, battleType, battlerArr, true, levelCapObj.lvl)
+
             addToEvoArr(battler)
           })
 
@@ -3364,12 +3408,19 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       let recipientMove
       let targetMove
 
+      console.log(allyMove)
+      console.log(foeRNGMove)
+
       if(!recipient.isEnemy) {
         recipientMove = allyMove
         targetMove = foeRNGMove
+
+        console.log(targetMove)
       } else {
         recipientMove = foeRNGMove
         targetMove = allyMove
+
+        console.log(targetMove)
       }
 
       if(targetMove.name == 'dream_eater' && recipient.status.name != 'slp') {
@@ -3387,7 +3438,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       if(target.status.name == 'slp') return
 
       target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
-      console.log('YAYA')
+      // console.log('YAYA')
     } else {
       if(target.hp <= 0) return
       target.miss('missed', renderedSprites, queueProcess)
@@ -4154,6 +4205,7 @@ function pushRecipientEndOfTurnBattleItemEvent(target, targetHpBeforeMove, recip
     itemEvent = true
     inBattleCharacters.ally = ally
     inBattleCharacters.foe = foe
+
     console.log('lmao')
     queue.push(() => target.useBattleItem(queueProcess, queue, faintEvent, targetHpBeforeMove, recipientHpBeforeMove, moves, inBattleCharacters, renderedSprites, critLanded, terrainConditions, queueFaintTrigger, manageWeatherState))
   }

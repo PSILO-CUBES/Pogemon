@@ -182,18 +182,20 @@ function createPogedexMenu(){
     let lastSeeableIndex = 0
 
     for(let i = 0; i < player.pogedexInfo.length; i++){
-        console.log(player.pogedexInfo[i])
+        // console.log(player.pogedexInfo[i])
         if(player.pogedexInfo[i].seen == true) lastSeeableIndex = player.pogedexInfo[i].pogedexIndex
         if(player.pogedexInfo[i].caught == true) lastSeeableIndex = player.pogedexInfo[i].pogedexIndex
     }
 
-    console.log(lastSeeableIndex)
+    // console.log(lastSeeableIndex)
 
     for(let i = 0; i < lastSeeableIndex; i++){
         let currPogemon
 
         if(data != null) currPogemon = data.playerInfo.player.pogedexInfo[i]
         else currPogemon = player.pogedexInfo[i]
+
+        if(currPogemon == undefined) return
 
         const pogedexSceneScrollContent = document.createElement('div')
         pogedexSceneScrollContent.setAttribute('class', 'pogedexSceneScrollContent') 
@@ -203,7 +205,7 @@ function createPogedexMenu(){
         const pogedexSceneScrollPogemonImg = document.createElement('img')
         pogedexSceneScrollPogemonImg.setAttribute('class', 'pogedexSceneScrollPogemonImg')
 
-
+        console.log(currPogemon)
         if(currPogemon.seen) {
             // if seen here
             pogedexSceneScrollPogemonImg.src = currPogemon.sprite
@@ -266,7 +268,7 @@ function createInfoMenu(){
 
                 const mapsEncounterArr = [
                     {name: 'gene_Town', x: 131, y: 722, height: 51, width: 51}, 
-                    {name: 'pearly_Path', x: 165, y: 668, height: 67, width: 54}, 
+                    {name: 'pearly_Path', x: 130, y: 640, height: 67, width: 54}, 
                     {name: 'slither_Road', x: 188, y: 659, height: 60, width: 57}, 
                     {name: 'cross_Link', x: 252, y: 620, height: 40, width: 39}, 
                     {name: 'eden_Forest', x: 118, y: 794, height: 73, width: 89}, 
@@ -288,13 +290,16 @@ function createInfoMenu(){
                     {name: 'ascension_Path', x: 191, y: 310, height: 72, width: 77},
                     {name: 'end_Trail', x: 271, y: 148, height: 72, width: 102},
                     {name: 'transit_Peak', x: 336, y: 55, height: 79, width: 51},
-                    {name: 'neo_Genesis', x: 226, y: 52, height: 57, width: 60}
+                    {name: 'neo_Genesis', x: 226, y: 52, height: 57, width: 60},
+                    {name: 'ghost_Woods', x: 336, y: 795, height: 55, width: 53},
+                    {name: 'pacc_Isle', x: 428, y: 801, height: 66, width: 58},
+                    {name: 'edicule_Cave', x: 452, y: 872, height: 45, width: 44},
                 ]
 
                 const mapsBlockArr = [
                     {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
                     {name: 'pearly_Path', x: 120, y: 632, height: 92, width: 68}, 
-                    {name: 'slither_Road', x: 188, y: 582, height: 142, width: 63}, 
+                    {name: 'slither_Road', x: 188, y: 581, height: 143, width: 63}, 
                     {name: 'fair_Town', x: 251, y: 663, height: 70, width: 45}, 
                     {name: 'cross_Link', x: 251, y: 593, height: 81, width: 45}, 
                     {name: 'eden_Forest', x: 114, y: 772, height: 103, width: 96}, 
@@ -308,10 +313,10 @@ function createInfoMenu(){
                     {name: 'sol_Path', x: 390, y: 473, height: 59, width: 104}, 
                     {name: 'commandment_Road', x: 389, y: 338, height: 136, width: 104}, 
                     {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
-                    {name: 'mousa_Crest', x: 282, y: 404, height: 63, width: 107}, 
+                    {name: 'mousa_Crest', x: 282, y: 403, height: 63, width: 107}, 
                     {name: 'revelation_Road', x: 120, y: 573, height: 59, width: 68}, 
                     {name: 'bellum_Way', x: 120, y: 480, height: 102, width: 109}, 
-                    {name: 'stasis_Cave', x: 119, y: 382, height: 99, width: 110}, 
+                    {name: 'stasis_Cave', x: 119, y: 381, height: 99, width: 110}, 
                     {name: 'stasis_Cave_Lower_Level', x: 30, y: 234, height: 128, width: 106},  
                     {name: 'stasis_Cave_Upper_Level', x: 28, y: 146, height: 88, width: 112},
                     {name: 'stasis_Cave_Top_Level', x: 93, y: 67, height: 81, width: 47}, 
@@ -319,7 +324,11 @@ function createInfoMenu(){
                     {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
                     {name: 'end_Trail', x: 240, y: 130, height: 108, width: 178}, 
                     {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
-                    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93}
+                    {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93},
+                    {name: 'key_Town', x: 323, y: 696, height: 90, width: 77},
+                    {name: 'ghost_Woods', x: 321, y: 785, height: 86, width: 87},
+                    {name: 'pacc_Isle', x: 408, y: 785, height: 86, width: 94},
+                    {name: 'edicule_Cave', x: 451, y: 871, height: 47, width: 45},
                 ]
 
                 const mapsEncounterContainer = document.createElement('DIV')
@@ -539,19 +548,25 @@ function createInfoMenu(){
                                             document.querySelector('#rightInfoMovesContainer').style.display = 'flex'
 
                                             function printMoveInfo(move){
+                                                console.log(move)
                                                 const infoContainerArr = document.querySelectorAll('.moveInfo')
                                                 if(typeof move == 'string') {
                                                     for(let i = 0; i < infoContainerArr.length; i++){
                                                         infoContainerArr[i].style.color = `white`
                                                         if(i != 5) infoContainerArr[i].innerText = `${infoScequece[i]}`
                                                         else infoContainerArr[i].childNodes[0].src = ''
+
+                                                        if(targetPogemon.desc != undefined) document.querySelector('#bottomInfoContainer').innerText = targetPogemon.desc
+                                                        else document.querySelector('#bottomInfoContainer').innerText = ``
                                                     }
                                                 } else {
+                                                    document.querySelector('#bottomInfoContainer').innerText = move.desc
+
                                                     function returnCorrectInfo(type){
                                                         let correctInfo
 
                                                         Object.keys(move).forEach((info, i) =>{
-                                                            console.log(Object.values(move)[i])
+                                                            // console.log(Object.values(move)[i])
                                                             if(info == type) correctInfo = Object.values(move)[i]
                                                         })
 
@@ -611,14 +626,13 @@ function createInfoMenu(){
                                                 const pogedexInfoMoveHR = document.createElement('hr')
                                                 pogedexInfoMoveContainer.setAttribute('class', 'pogedexInfoMoveContainer')
 
-
                                                 if(Object.values(targetPogemon.movepool)[i] == undefined) break
 
-                                                if(moveInfo.seen) {
-                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ${switchUnderScoreForSpace(moveInfo.move.name)}`
+                                                if(moveInfo.seen || targetPogemon.learntMoves.includes(moveInfo.move.name)) {
+                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl}\n\n${switchUnderScoreForSpace(moveInfo.move.name)}`
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
                                                 } else {
-                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl} \n\n ???`
+                                                    pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl}\n\n???`
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo('---'))
                                                     lastMove = true
                                                 }
@@ -759,10 +773,22 @@ function setCaptureAreas(){
         if(i == 0) continue
 
         let map = Object.values(mapsObj)[i]
+
+        console.log(map)
         
         const mapDom = document.querySelector(`#${map.name}`)
 
-        document.querySelectorAll('.encounterBackground').forEach(node => {if(node.id == `${map.name}_Background`) if(map.seen) node.style.opacity = 0})
+
+        document.querySelectorAll('.encounterBackground').forEach(node => {
+            if(node.id == `${map.name}_Background`) 
+                if(map.seen) {
+                    node.style.opacity = 0
+                    node.style.display = 'none'
+                } else {
+                    node.style.opacity = 1
+                    node.style.display = 'block'
+                }
+        })
 
         // if(document.querySelector(`#${map.name}_Background`) != null) if(map.seen) document.querySelector(`#${map.name}_Background`).style.opacity = 0
 
@@ -771,12 +797,15 @@ function setCaptureAreas(){
 
         if(mapDom != null){
             if(map.encounters != undefined) {
+                console.log(map.encounters)
                 Object.values(map.encounters).forEach((encounterTypeArr, j) =>{
                     if(encounterTypeArr.length == 0) return
                     encounterTypeArr.forEach((encounter, i2) =>{
+                        console.log(encounter)
                         // console.log(document.querySelector(`#${map.name}_Background`).style.opacity)
                         // console.log(targetPogemon.name == encounter.pogemon.name)
                         if(targetPogemon.name == encounter.pogemon.name) {
+                            console.log(map.name)
                             if(document.querySelector(`#${map.name}_Background`).style.opacity == 0){
                                 mapSeen = true
                                 pogemonCatchable = true
@@ -822,7 +851,8 @@ function setInfoMenu(){
     document.querySelector('#pogemonNameContainer').innerText = targetPogemon.name
 
     if(pogedexInfoState.type == 'INFO+') {
-        document.querySelector('#bottomInfoContainer').innerText = targetPogemon.description
+        if(targetPogemon.desc != undefined) document.querySelector('#bottomInfoContainer').innerText = targetPogemon.desc
+        else document.querySelector('#bottomInfoContainer').innerText = ``
 
         for(let i = 0; i < 2; i++){
             document.querySelectorAll('.pogemonInfoType')[i].textContent = ''

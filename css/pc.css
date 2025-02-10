@@ -66,12 +66,23 @@
     height: 100%;
 }
 
-#pcSceneNavContent{
-    font-size: 14px;
+.pcSceneNavContent{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+    word-break: keep-all;
+
+    height: 50;
+    width: 150;
+}.pcSceneNavContent:nth-child(odd):hover{
+    cursor: pointer;
+    background-color: rgba(25,25,25,0.5);
 }
 
 .pcSceneBoxContent{
-    border: rgba(125,125,125,0.5) 1px solid;
+    border: rgba(25,25,25,0.5) 1px solid;
 }
 
 #pcSceneInteractionButtonContainer{

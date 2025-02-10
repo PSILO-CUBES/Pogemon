@@ -1,4 +1,5 @@
 import { Pogemon, Sprite } from "../../classes.js"
+import { movesObj } from "../../data/movesData.js"
 import { pogemonsObj } from "../../data/pogemonData.js"
 import { loadData } from "../../save.js"
 import { scenes, backgroundSprite } from "../canvas.js"
@@ -6,7 +7,7 @@ import { player } from "../player.js"
 import { manageOverWorldState } from "./overworld.js"
 import { manageStatsState, switchUnderScoreForSpace } from "./stats.js"
 
-const data = await loadData()
+const data = await loadData('saveFile')
 
 let pcAnimationId
 
@@ -55,33 +56,92 @@ export let pc = [
         null, null, null, null, null, null,
         null, null, null, null, null, null,
         null, null, null, null, null, null,
+    ],
+    [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+    ],
+    [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+    ],
+    [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+    ],
+    [
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
+        null, null, null, null, null, null,
     ]
 ]
 
-if(data != null){
-    data.pc.forEach((box, i) =>{
-        box.forEach((pogemon, j) =>{
-            if(pogemon == null) return
+async function printSavedBox(){
+    if(await data != null){
+        data.pc.forEach((box, i) =>{
+            box.forEach((pogemon, j) =>{
+                if(pogemon == null) return
+    
+                let pogemonImg = new Image()
+                let pogemonSprite = new Sprite({
+                    type: 'pogemon',
+                    position: pogemon.position,
+                    img: pogemonImg,
+                    frames: {
+                      max: 4,
+                      hold: 50
+                    },
+                    animate: true
+                })
 
-            let pogemonImg = new Image()
-            let pogemonSprite = new Sprite({
-                type: 'pogemon',
-                position: pogemon.position,
-                img: pogemonImg,
-                frames: {
-                  max: 4,
-                  hold: 50
-                },
-                animate: true
+                const newPogemon = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, null, pogemon, pogemonSprite)
+                newPogemon.learntMoves = [...box[j].learntMoves]
+                if(box[j].moves[0] != null) newPogemon.moves = [...box[j].moves]
+
+                console.log(box[j].moves)
+
+                // need to implement for more than 1 box at a time
+                box[j] = {...newPogemon}
             })
-
-            // need to implement for more than 1 box at a time
-            box[j] = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, pogemon, pogemonSprite)
         })
-    })
 
-    pc = data.pc
+        console.log()
+    
+        pc = data.pc
+
+        data.playerInfo.pcMovesInfo.forEach(box =>{
+            if(box.length > 0) box.forEach(movesInfo =>{
+                movesInfo.forEach((move,i) =>{
+                    pc[move[2]][move[3]].moves[i] = movesObj[move[0]]
+                    pc[move[2]][move[3]].moves[i].pp = move[1]
+                })
+            })
+        })
+
+        data.playerInfo.pcLearntMovesInfo.forEach(box =>{
+            if(box.length > 0) box.forEach(movesInfo =>{
+                movesInfo.forEach((move,i) =>{
+                    pc[move[1]][move[2]].learntMoves = move[0]
+                    // pc[move[1]][move[2]].learntMoves.push(move[0])
+                    console.log(pc[move[1]][move[2]])
+                })
+            })
+        })
+    }
 }
+
+printSavedBox()
 
 let defaultBox = 0
 let currBox = defaultBox
@@ -160,10 +220,19 @@ function initPcMenu(){
 
     pcAnimation()
 
+    let yOffset = 250
+    if(window.innerHeight == 1080) yOffset = 300
+
+    selectedPogemonSprite.position = {
+        x: 1525,
+        y: window.innerHeight / 2 - yOffset
+    },
+
     selectedEvent = {initiated: false, target: null}
 }
 
 let oldDOM
+let targetPogemon
 
 function hoverEvent(state, DOM, target, i, type){
     if(selectedEvent.initiated){
@@ -191,7 +260,6 @@ function hoverEvent(state, DOM, target, i, type){
         if(type == 'box' && pc[currBox][i] == null) return
         oldDOM = DOM
 
-        let targetPogemon
         if(type == 'team') targetPogemon = player.team[i]
         else if(type == 'box') targetPogemon = pc[currBox][i]
 
@@ -214,7 +282,9 @@ function hoverEvent(state, DOM, target, i, type){
 
             if(targetPogemon == null || targetPogemon == undefined) return
 
-            if(player.team[i].isShiny) selectedPogemonImg.src = targetPogemon.pogemon.sprites.shiny.frontSprite
+            console.log(i)
+
+            if(targetPogemon.isShiny) selectedPogemonImg.src = targetPogemon.pogemon.sprites.shiny.frontSprite
             else selectedPogemonImg.src = targetPogemon.pogemon.sprites.classic.frontSprite
         }
     } else {
@@ -276,11 +346,14 @@ function rearrangeTeam(first, second){
                 onComplete:() =>{                    
                     let node = document.querySelectorAll('.pcScenePogemonContainer')[i]
 
+                    console.log(player.team[i])
+
                     if(player.team[i] == null || player.team[i] == undefined){
                         teamSprites[i].img.src = 'img/blank.png'
                         node.childNodes[0].childNodes[0].textContent = ''
                         node.childNodes[0].childNodes[1].src = `img/blank.png`
                         node.childNodes[1].textContent = ''
+
                     } else {
                         node.childNodes[0].childNodes[0].textContent = `LV${player.team[i].lvl}`
                         node.childNodes[0].childNodes[1].src = `img/${player.team[i].gender}_icon.png`
@@ -301,11 +374,10 @@ function rearrangeTeam(first, second){
 
     //if second slot selected is empty
     if(second.pogemon == undefined || second.pogemon == null){
-        
-        if(player.team[i].isShiny) second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.shiny.bagSprite
+        if(first.pogemon.isShiny) second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.shiny.bagSprite
         else second.type.animationArr[second.i].img.src = first.pogemon.pogemon.sprites.classic.bagSprite
 
-        
+
         first.type.animationArr[first.i].img.src = 'img/blank.png'
 
         if(first.type.name == 'team'){
@@ -324,7 +396,6 @@ function rearrangeTeam(first, second){
 }
 
 function pcSwitchEvent(first, second){
-
     disableClickEvent = true
     if(player.team.length == 1){
         if(first.type.name == 'team' && second.pogemon == null) {
@@ -347,6 +418,9 @@ function pcSwitchEvent(first, second){
     function switchPogemonInfo(){
         let placeHolder
 
+        console.log(first)
+        console.log(second)
+
         if(second.pogemon == null){
             second.type.obj[second.i] = first.type.obj[first.i]
             
@@ -354,6 +428,27 @@ function pcSwitchEvent(first, second){
             else first.type.obj[first.i] = null
 
             rearrangeTeam(first, second)
+
+            if(second.type.name == 'team' && first.type.name == 'box'){
+                const pogemon = first.pogemon
+
+                const pogemonImg = new Image()
+
+                const pogemonSprite = new Sprite({
+                  type: 'pogemon',
+                  position: pogemon.position,
+                  img: pogemonImg,
+                  frames: {
+                    max: 4,
+                    hold: 60
+                  },
+                  animate: true
+                })
+
+                player.team[second.i] = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, null, pogemon, pogemonSprite)
+
+                console.log(player.team[second.i])
+            }
             return
         } else {
             if(first.type.name == 'team'){
@@ -366,6 +461,25 @@ function pcSwitchEvent(first, second){
                 document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[0].textContent = `Lv${first.pogemon.lvl}`
                 document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[0].childNodes[1].src = `img/${first.pogemon.gender}_icon.png`
                 document.querySelectorAll('.pcScenePogemonContainer')[second.i].childNodes[1].childNodes[0].textContent = switchUnderScoreForSpace(second.pogemon.nickname)
+            }
+
+            if(second.type.name == 'team' && first.type.name == 'box'){
+                const pogemon = first.pogemon
+
+                const pogemonImg = new Image()
+
+                const pogemonSprite = new Sprite({
+                  type: 'pogemon',
+                  position: pogemon.position,
+                  img: pogemonImg,
+                  frames: {
+                    max: 4,
+                    hold: 60
+                  },
+                  animate: true
+                })
+
+                player.team[second.i] = new Pogemon(pogemonsObj[`${pogemon.name}`], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, null, pogemon, pogemonSprite)
             }
         }
 
@@ -437,11 +551,9 @@ function clickPogemonEvent(state, e, DOM, target, i, type){
     if(state){
         if(selectedEvent.initiated){
             if(target != null) {
-
-                if(player.team[i].isShiny) selectedPogemonImg.src = target.pogemon.sprites.shiny.frontSprite
+                if(target.isShiny) selectedPogemonImg.src = target.pogemon.sprites.shiny.frontSprite
                 else selectedPogemonImg.src = target.pogemon.sprites.classic.frontSprite
 
-                
                 target.animate = true
     
                 switchEvent.target.second.i = i
@@ -523,6 +635,7 @@ function clickPogemonEvent(state, e, DOM, target, i, type){
 
         selectedEvent.initiated = true
         selectedEvent.target = target
+        console.log(selectedEvent.target)
 
         document.querySelector('#pcSceneSelectedPogemonSection').style.display = 'block'
         document.querySelector('#pcSceneInteractionButtonContainer').style.display = 'grid'
@@ -545,11 +658,10 @@ function switchToStatsScene(){
         onComplete: () =>{
             managePcState(false)
             scenes.set('overworld', {initiated: false})
+            console.log(selectedEvent.target)
             manageStatsState(true, selectedEvent.target, 'pc')
             gsap.to('#overlapping',{
-                opacity: 0,
-                onComplete: () =>{
-                }
+                opacity: 0
             })
         }
     })
@@ -636,11 +748,20 @@ function printPcMenu(){
 
                     const pogemonImg = new Image()
 
+
+                    let yOffset = 100
+                    let yMulti = 132.13
+                    
+                    if(window.innerHeight == 1080){
+                        yOffset = 60
+                        yMulti = 144.5
+                    }
+
                     const pogemonSprite = new Sprite({
                         type: 'pc',
                         position: {
                             x: 259,
-                            y: 100 + i * 132.13
+                            y: yOffset + i * yMulti
                         },
                         frames:{
                             max: 4,
@@ -683,6 +804,8 @@ function printPcMenu(){
                         pcSceneTeamContainerSection.appendChild(pcSceneTeamPogemonSection)
                     }
 
+                    console.log(player.team[i])
+
                     pcSceneTeamContainerSection.addEventListener('mouseover', e => hoverEvent(true, pcSceneTeamContainerSection, pogemonSprite, i, 'team'))
                     pcSceneTeamContainerSection.addEventListener('mouseout', e => hoverEvent(false, pcSceneTeamContainerSection, pogemonSprite, i, 'team'))
                     pcSceneTeamContainerSection.addEventListener('click', e => clickPogemonEvent(true, e, pcSceneTeamContainerSection, player.team[i], i, 'team'))
@@ -700,18 +823,59 @@ function printPcMenu(){
                 pcSceneNavSectionContainer.id = 'pcSceneNavSectionContainer'
                 pcSceneGridContainerSection.appendChild(pcSceneNavSectionContainer)
 
+                function updateBoxSprites(box){
+                    for(let i = 0; i< box.length; i++) {
+                        console.log(boxSprites[i].img)
+
+                        if(box[i] == null) {
+                            boxSprites[i].img.src = 'img/blank.png'
+                        } else {
+                            if(box[i].isShiny) boxSprites[i].img.src = box[i].pogemon.sprites.shiny.bagSprite
+                            else boxSprites[i].img.src = box[i].pogemon.sprites.classic.bagSprite
+                        }
+                    }
+
+
+                    console.log(box)
+                }
+
                 for(let i = 0; i < 3; i++){
                     const pcSceneNavContent = document.createElement('div')
-                    pcSceneNavContent.id = 'pcSceneNavContent'
+                    pcSceneNavContent.setAttribute('class', 'pcSceneNavContent')
                     switch(i){
                         case 0:
-                            pcSceneNavContent.innerText = 'left'
+                            pcSceneNavContent.innerText = '<'
+                            pcSceneNavContent.id == 'decreaseBox'
+                            pcSceneNavContent.addEventListener('click', e =>{
+                                const boxNum = document.querySelector('#boxNum')
+
+                                currBox--
+
+                                if(currBox < 0) currBox = 9
+
+                                boxNum.innerText = `Box ${currBox + 1}`
+
+                                updateBoxSprites(pc[currBox])
+                            })
                             break
                         case 1:
                             pcSceneNavContent.innerText = 'box 1'
+                            pcSceneNavContent.id = 'boxNum'
                             break
                         case 2:
-                            pcSceneNavContent.innerText = 'right'
+                            pcSceneNavContent.innerText = '>'
+                            pcSceneNavContent.id == 'increaseBox'
+                            pcSceneNavContent.addEventListener('click', e =>{
+                                const boxNum = document.querySelector('#boxNum')
+
+                                currBox++
+
+                                if(currBox > 9) currBox = 0
+
+                                boxNum.innerText = `Box ${currBox + 1}`
+
+                                updateBoxSprites(pc[currBox])
+                            })
                             break
                     }
                     pcSceneNavSectionContainer.appendChild(pcSceneNavContent)
@@ -730,11 +894,10 @@ function printPcMenu(){
                     const boxPogemonImg = new Image()
 
                     if(pc[currBox][i] != null) {
-                        if(player.team[i].isShiny) boxPogemonImg.src = pc[currBox][i].pogemon.sprites.shiny.bagSprite
+                        if(pc[currBox][i].isShiny) boxPogemonImg.src = pc[currBox][i].pogemon.sprites.shiny.bagSprite
                         else boxPogemonImg.src = pc[currBox][i].pogemon.sprites.classic.bagSprite
                     }
                         
-
                     switch(i){
                         case 6:
                             x = 0
@@ -754,11 +917,25 @@ function printPcMenu(){
                             break
                     }
 
+                    let xOffset = 410
+                    let yOffset = 112.5
+
+                    let xMulti = 175
+                    let yMulti = 159
+
+                    if(window.innerHeight == 1080){
+                        xOffset = 410
+                        yOffset = 112.5
+
+                        yOffset = 80
+                        yMulti = 172.5
+                    }
+
                     const boxPogemonSprite = new Sprite({
                         type:'box',
                         position: {
-                            x: 410 + x * 175,
-                            y: 112.5 + j * 157.5
+                            x: xOffset + x * xMulti,
+                            y: yOffset + j * yMulti
                         },
                         img: boxPogemonImg,
                         frames:{
@@ -850,10 +1027,8 @@ function clearPcMenu(){
     document.querySelector('#pcScene').replaceChildren()
     document.querySelector('#pcScene').style.display = 'none'
     scenes.set('pc', {initiated: false})
-    scenes.set('overworld', {initiated: true})
     selectedPogemonImg.src = 'img/Template.png'
     window.cancelAnimationFrame(pcAnimationId)
-    manageOverWorldState(true, 'pc')
 }
 
 export function managePcState(state){

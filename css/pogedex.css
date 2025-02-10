@@ -127,7 +127,7 @@
    /* transform: translate(-50%, -50%); */
 
    border: 2.5px solid rgba(128, 128, 128, 0.125);
-   background-color: rgba(128, 128, 128, 0.25);
+   background-color: rgb(30.75,30.75,30.75);
 
    padding: 17.5 0 17.5 0;
 }
@@ -438,7 +438,9 @@
 
    background-color: rgb(30.75,30.75,30.75);
 
-   display: none;
+   opacity: 1;
+
+   /* display: none; */
 }
 
 @keyframes blinker {

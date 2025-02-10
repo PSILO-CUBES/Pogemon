@@ -244,8 +244,8 @@ function createMenu(){
 						const statsSceneCatchContainer = document.createElement('div')
 						statsSceneCatchContainer.id = 'statsSceneGridSectionInfoCatch'
 
+						console.log(selectedPogemon.caughtMap.name)
 						console.log(selectedPogemon.nature.name)
-						console.log(selectedPogemon.caughtMap)
 
 						statsSceneCatchContainer.innerText = `${switchUnderScoreForSpace(selectedPogemon.nickname)} was met at ${switchUnderScoreForSpace(selectedPogemon.caughtMap.name)} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 
@@ -412,7 +412,7 @@ function createMenu(){
 												for(let i = 0; i < 2; i++){
 													const statsSceneGridSectionPogemonSectionHpBar = document.createElement('div')
 													statsSceneGridSectionPogemonSectionHpBar.setAttribute('class', 'statsSceneHealthBars')
-													
+														
 													switch(i){
 														case 0:
 															statsSceneGridSectionPogemonSectionHpBar.setAttribute('id', 'statsSceneGridSectionPogemonSectionHpGreenBar')
@@ -612,6 +612,7 @@ export function switchStatsTargetWithKeys(key){
 export function manageStatsState(state, target, prevScene, i){
 	returnPrevScene(prevScene)
   	selectedPogemon = target
+	console.log(selectedPogemon)
 	selectedPogemonTeamIndex = i
   	if(state) initStatsMenu()
   	else clearStatsMenu(prevScene)

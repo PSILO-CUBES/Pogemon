@@ -4,7 +4,7 @@ import { printImages, scenes } from '../canvas.js'
 import { playerMovement, player, interaction, lastDirection, pogemartInteraction, itemPickUp, queue as OWQueue } from '../player.js'
 import { changeMapInfo, currMap, encounterButtonState, flashContainerManagement, generateMapData, pogecenterReturnInfo, printEncounterBox, worldEventData } from '../maps.js'
 import { _preventActionSpam } from '../../app.js'
-import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent, enemyTrainer } from './battle.js'
+import { faintedTriggered, manageBattleState, moveLearning, moveProcess, queue as battleQueue, learnMoveOptionEvent, learningMove, learningType, learningTarget, evoArr, catchEventObj, moveSwitchEvent, enemyTrainer, foe, levelCapObj } from './battle.js'
 import { manageTeamState } from './team.js'
 import { itemUsed, manageBagState } from './bag.js'
 import { manageStatsState, switchSpaceForUnderScore, switchUnderScoreForSpace } from './stats.js'
@@ -294,6 +294,7 @@ function overworldMenuClickEvent(e){
 
       player.team.forEach(pogemon =>{
         let pogemonLearntMoves = []
+        console.log(pogemon.learntMoves)
         pogemon.learntMoves.forEach(learntMove =>{
           pogemonLearntMoves.push(learntMove)
         })
@@ -301,6 +302,7 @@ function overworldMenuClickEvent(e){
 
         let pogemonMovesInfo = []
         pogemon.moves.forEach(move =>{
+          console.log(move)
           pogemonMovesInfo.push([move.name, move.pp])
         })
         teamMovesInfo.push(pogemonMovesInfo)
@@ -313,6 +315,47 @@ function overworldMenuClickEvent(e){
           y: null
         }
       }
+
+      let savePCObj = [...pc]
+      let pcMovesInfo = []
+      let pcLearntMovesInfo = []
+
+      pc.forEach((box, i) =>{
+        // console.log(box)
+        let pcMovesBoxArr = []
+        pcMovesInfo.push(pcMovesBoxArr)
+        
+        let pcLearntMovesArr = []
+        pcLearntMovesInfo.push(pcLearntMovesArr)
+
+        box.forEach((pogemon, j) =>{
+          if(pogemon != null) {
+            console.log(pogemon)
+
+            // if pc save fails it's probably 'cuze i need to ass shit here
+            
+            let indivMonMoves = []
+            let indivMonLearntMoves = []
+
+            if(pogemon.moves[0] != null) {
+              savePCObj[i][j].moves.forEach(move =>{
+                indivMonMoves.push([move.name, move.pp, i, j])
+                move = {...movesObj[pogemon.moves[i].name]}
+              })
+            }
+
+            let pogemonLearntMoves = []
+            savePCObj[i][j].learntMoves.forEach(move =>{
+              pogemonLearntMoves.push(move)
+            })
+
+            indivMonLearntMoves.push([pogemonLearntMoves, i, j])
+
+            pcMovesBoxArr.push(indivMonMoves)
+            pcLearntMovesArr.push(indivMonLearntMoves)
+          }
+        })
+      })
       
       if(currMap.name == 'pogecenter' || currMap.name == 'pogemart') {
         if(nextMapInfo.name != null){
@@ -425,7 +468,7 @@ function overworldMenuClickEvent(e){
             if(mapValue == undefined) return
             if(mapValue.length == undefined) {
               currMapSaveObj[Object.keys(currMap)[i]] = {...mapValue}
-              console.log(currMapSaveObj[Object.keys(currMap)[i]])
+              // console.log(currMapSaveObj[Object.keys(currMap)[i]])
 
             }
             else {
@@ -446,7 +489,7 @@ function overworldMenuClickEvent(e){
         }
       })
 
-      console.log(currMapSaveObj, mapsObj[currMapSaveObj.name])
+      // console.log(currMapSaveObj, mapsObj[currMapSaveObj.name])
 
       setSaveData(
         'saveFile',
@@ -454,7 +497,9 @@ function overworldMenuClickEvent(e){
           playerInfo: {
             player,
             teamMovesInfo,
-            teamLearntMovesInfo
+            teamLearntMovesInfo,
+            pcMovesInfo,
+            pcLearntMovesInfo
           },
           currMapName: currMap.name,
           currMapObj: currMapSaveObj,
@@ -465,10 +510,11 @@ function overworldMenuClickEvent(e){
           interactionFlags: interaction.flags,
           volumeValues,
           bag: bagSave,
-          pc: pc,
+          pc: [...savePCObj],
           timeObj,
           worldEventData,
-          currId: id
+          currId: id,
+          levelCap: levelCapObj.level
         }
       )
 
@@ -492,6 +538,8 @@ function manageMenuSections(state){
 }
 
 function manageMenuState(state){
+  console.log(optionMenuState)
+
   if(optionMenuState) return
 
   const overworldSceneDom = document.querySelector('#overworldScene').style
@@ -501,6 +549,8 @@ function manageMenuState(state){
 
   player.disabled = !state
   menu.initiated = !state
+
+  console.log(menu.initiated)
 
   if(menu.initiated) {
     manageMenuSections(menu.initiated)
@@ -619,7 +669,6 @@ function escapeKeyEventOptions(e) {
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
       if(scenes.get('stats').initiated) return
-      // console.log(optionMenuState)
       if(optionMenuState) manageOptionMenuState(false)
       if(pogemartInteraction.initiated) {
         pogemartInteraction.initiated = false
@@ -648,6 +697,7 @@ function escapeKeyEventOptions(e) {
       }
 
       if(scenes.get('pickingItem').initiated == true) return
+
 
       // opens OW menu
       if(player.interaction != null) if(player.interaction.info.starter) if(player.disabled) return
@@ -712,7 +762,11 @@ function escapeKeyEventOptions(e) {
         opacity: 1,
         onComplete: () =>{
           managePcState(false)
-          transitionScenes('overworld', 'pc')
+          // transitionScenes('overworld', 'pc')
+
+          manageOverWorldState(true, 'pc')
+          scenes.set('overworld', {initiated: true})
+
           gsap.to('#overlapping',{
             opacity: 0,
           })
@@ -722,7 +776,7 @@ function escapeKeyEventOptions(e) {
   } else if(e.key == '`'){
     console.log(player)
     console.log(battleQueue)
-    console.log(enemyTrainer)
+    console.log(foe)
   }
 }
 
@@ -894,7 +948,7 @@ export function manageOverWorldState(state, previousScene){
 
     let teamPlaceHolder = []
     
-    if(previousScene != 'boot' && previousScene != 'team'){
+    if(previousScene != 'boot' && previousScene != 'team' && previousScene != 'pc'){
       // console.log(teamOrder)
       // console.log(player.team)
 
@@ -921,7 +975,7 @@ export function manageOverWorldState(state, previousScene){
 
     printEncounterBox(currMap)
 
-    if(currMap.name == 'luna_Mountain_Entrance') flashContainerManagement('shade')
+    if(currMap.name == 'luna_Mountain_Entrance' || currMap.name == 'ghost_Woods') flashContainerManagement('shade')
     else if(currMap.name == 'luna_Mountain') flashContainerManagement('full')
     else flashContainerManagement('none')
 
@@ -939,16 +993,17 @@ export function manageOverWorldState(state, previousScene){
 
     if(player.interaction != null) {
       if(enemyTrainer == undefined) return
-
       switch(player.interaction.info.eventKey){
         case 'maatGym':
           if(worldEventData.maat.gym) return
   
+          levelCapObj.level = 25
           itemPickUp(itemsObj.axe, 1, `Congratulations on getting that first badge, im proud of you!\n\nHere, take this. Don't forget to visit the eden forest south of gene town.`)
           break
         case 'djedGym':
           if(worldEventData.djed.gym) return
   
+          levelCapObj.level = 35
           itemPickUp(itemsObj.hammer, 1, `Yeah you won, big deal.\n\nTake this, it's pretty cool.`)
           break
         case 'mosesStaff':
@@ -960,7 +1015,15 @@ export function manageOverWorldState(state, previousScene){
         case 'hermesGym':
           if(worldEventData.hermes.gym) return
   
+          levelCapObj.level = 70
           itemPickUp(itemsObj.surf_Saddle, 1, `To think you became so strong so fast, commendable!\n\nThis should allow you to go back and reassess what you've missed.`)
+          break
+        case 'reginaEscaGiver':
+          itemPickUp(itemsObj.regina_Esca, 1, 
+            `Only when she feels safe enought will the queen evolve.\n\n
+            I thought the queen only needed to be surrounded by minions to evolve,\nbut i was wrong!.\n\n
+            The only thing i was missing was making it hold this!! Now take it.`
+          )
           break
         case 'goldenDiskGiver':
           if(worldEventData.baaull.goldenDisk) return
@@ -995,6 +1058,7 @@ export function manageOverWorldState(state, previousScene){
         case 'setFinalBoss':
           player.disabled = true
           disableOWMenu.active = true
+          console.log('here2')
           worldEventData.set.defeated = true
           setTimeout(() =>{
             gsap.to('#overlapping', {
@@ -1009,7 +1073,10 @@ export function manageOverWorldState(state, previousScene){
                     changeMapInfo({...mapsObj.bedroom}, currMap)
                     player.disabled = true
                     disableOWMenu.active = true
+                    console.log('here2')
                     document.querySelector('#overlapping').style.opacity = 1
+                    worldEventData.malumtehk.catchable = true
+                    levelCapObj.level = 85
                     setTimeout(() => document.querySelector('#overlapping').innerText = 'For a moment, everything goes silent.', 750)
                     setTimeout(() => document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nIt's as if a weight was lifted off of the world's shoulder.`, 5750)
                     setTimeout(() => document.querySelector('#overlapping').innerText = 'You fell warm and comfortable.', 10750)
@@ -1032,7 +1099,34 @@ export function manageOverWorldState(state, previousScene){
               }
             })
           }, 1)
+          break
+        case 'entropia':
+          if(worldEventData.entropia.defeated) return
 
+          worldEventData.entropia.defeated = true
+          worldEventData.beeasis.catchable = true
+          itemPickUp(itemsObj.fleeting_Gem, 1, `Even within a body free of limitations, could my heart still be caged?..\n\nMaybe what i needed the most was within me all along..\n\nTake this, i won't need it anymore.`)
+          break
+        case 'ordo':
+          if(worldEventData.ordo.defeated) return
+
+          worldEventData.ordo.defeated = true
+          worldEventData.sustiris.catchable = true
+          itemPickUp(itemsObj.stasis_Gem, 1, `Even within a body free of limitations, could my heart still be caged?..\n\nMaybe what i needed the most was within me all along..\n\nTake this, i won't need it anymore.`)
+          break
+        case 'hermesFinalBoss': 
+        if(worldEventData.hermes.finalBoss) return
+
+          levelCapObj.level = 100
+
+          worldEventData.hermes.finalBoss = true
+          worldEventData.dahgua.catchable = true
+
+          player.bag.set('stasis_Gem', {item: {...itemsObj.stasis_Gem}, quantity: 0})
+          player.bag.set('fleeting_Gem', {item: {...itemsObj.fleeting_Gem}, quantity: 0})
+          player.bag.set('corrupt_Gem', {item: {...itemsObj.corrupt_Gem}, quantity: 0})
+          
+          itemPickUp(itemsObj.illuminated_Gem, 1, `With this in your possession, all doors of this realm are open to you.`)
           break
       }
 
@@ -1045,12 +1139,13 @@ export function manageOverWorldState(state, previousScene){
     if(
       worldEventData.vignus.defeated &&
       worldEventData.caera.defeated &&
-      worldEventData.papien.defeated &&
+      worldEventData.papiens.defeated &&
       worldEventData.mortdux.defeated
     ) {
       setTimeout(() =>{
         player.disabled = true
         disableOWMenu.active = true
+        console.log('here2')
 
         gsap.to('#overlapping', {
           opacity: 1,
@@ -1064,7 +1159,7 @@ export function manageOverWorldState(state, previousScene){
               onComplete: () =>{
                 setTimeout(() =>{ document.querySelector('#overlapping').innerText = `The energy in the region shifted again.`}, 750)
                 setTimeout(() =>{ document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nYou see a glow dazzling from scribble town's direction.`}, 2750)
-                setTimeout(() =>{ document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nThere's an old friend there you should talk to.`}, 4750)
+                setTimeout(() =>{ document.querySelector('#overlapping').innerText = `${document.querySelector('#overlapping').innerText}\n\nThere's someone you should talk to there.`}, 4750)
                 setTimeout(() =>{
                   document.querySelector('#overlapping').innerText = ``
                   gsap.to('#overlapping', {

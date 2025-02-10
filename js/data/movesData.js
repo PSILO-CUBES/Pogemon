@@ -2005,7 +2005,7 @@ export const movesObj = {
     type: 'status',
     element: 'grass',
     pow: '---',
-    acc: 75,
+    acc: 85,
     pp: 56,
     effects: [{psn: 100}],
     priority: 0,

@@ -52,7 +52,7 @@ export const itemsObj = {
     effect: 'evo',
     pow: '---',
     img: 'img/item_scene/items/misc/regina_Esca.png',
-    desc: "Can trigger a certain pogemon's evolution, also quite tasty.",
+    desc: "Can trigger a certain pogemon's evolution,\n\nalso quite tasty.",
     consume: true,
     price: 1,
     value: null
@@ -698,6 +698,26 @@ export const itemsObj = {
     price: 25000,
     value: 725
   },
+  flame_Orb:{
+    name: 'flame_Orb',
+    type: 'battle',
+    heldType: 'burn',
+    img: 'img/item_scene/items/battle/flame_Orb.png',
+    desc: "An item to be held by a Pokémon. It is a bizarre orb that inflicts a burn on the holder in battle.",
+    consume: false,
+    price: 10000,
+    value: 725
+  },
+  toxic_Orb:{
+    name: 'toxic_Orb',
+    type: 'battle',
+    heldType: 'psn',
+    img: 'img/item_scene/items/battle/toxic_Orb.png',
+    desc: "An item to be held by a Pokémon. It is a bizarre orb that badly poisons the holder in battle.",
+    consume: false,
+    price: 10000,
+    value: 725
+  },
   rocky_Helmet:{
     name: 'rocky_Helmet',
     type: 'battle',
@@ -1030,6 +1050,45 @@ export const itemsObj = {
     price: 1,
     value: null
   },
+  stasis_Gem:{
+    name: 'stasis_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/stasis_Gem.png',
+    desc: "A gem containing ancient a fundemental form of energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  fleeting_Gem:{
+    name: 'fleeting_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/fleeting_Gem.png',
+    desc: "A gem containing ancient a fundemental form of energy.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
+  illuminated_Gem:{
+    name: 'illuminated_Gem',
+    type: 'key',
+    effect: 'summoning',
+    pow: "---",
+    img: 'img/item_scene/items/key/illuminated_Gem.png',
+    desc: "The energy emitted from this gem feels whole.",
+    heldType: '---',
+    consume: false,
+    odds: 0,
+    price: 1,
+    value: null
+  },
 }
 
 Object.values(movesObj).forEach((move, i) =>{
@@ -1050,7 +1109,7 @@ Object.values(movesObj).forEach((move, i) =>{
     value: 2250
   }
 
-  console.log(`TM${TMNum} : ${move.name}`)
+  // console.log(`TM${TMNum} : ${move.name}`)
 
   itemsObj[`TM${TMNum}`] = TMObj
 })

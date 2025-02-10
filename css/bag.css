@@ -54,6 +54,8 @@
 }
 
 .bagSceneTeamContainer{
+  height: 95%;
+
   display: grid;
   grid-template-rows: repeat(6, 16.666666%);
 }
@@ -115,6 +117,16 @@
   position: relative;
 
   height: 35px;
+
+  pointer-events: all !important;
+}
+
+.bagSceneTeamSectionGender{
+  position: relative;
+  height: 15px;
+
+  top: -92px;
+  left: 25;
 
   pointer-events: all !important;
 }

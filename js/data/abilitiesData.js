@@ -382,7 +382,7 @@ export const abilitiesObj = {
     photosynthesis:{
         name: 'photosynthesis',
         type: 'weatherHeal',
-        desc: "Heals 1/16 of max HP while sun is active.",
+        desc: "Heals 1/4 of max HP while sun is active.",
         info: 'sun'
     },
     rain_Dish:{

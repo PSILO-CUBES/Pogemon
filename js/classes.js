@@ -200,6 +200,7 @@ export class Pogemon extends Sprite{
     predeterminedIvs,
     predeterminedMoves,
     predeterminedGender,
+    predeterminedNature,
     preBuilt,
     {
       type, 
@@ -244,7 +245,7 @@ export class Pogemon extends Sprite{
     if(preBuilt == null){
       this.exp = exp
       this.lvl = this.generateLevel()
-      this.nature = this.generateNature()
+      this.nature = this.generateNature(predeterminedNature)
       this.gender = this.generateGender(predeterminedGender)
       this.ivs = this.generateIVs(predeterminedIvs)
       this.stats = this.generateStats()
@@ -265,10 +266,11 @@ export class Pogemon extends Sprite{
       this.heldItem = heldItem
       this.friendliness = 0
       this.catchInfo = this.generateCatchInfo(new Date())
-      this.caughtMap = map
+      this.caughtMap = {...map}
     } else {
       this.id = preBuilt.id
       this.nickname = preBuilt.nickname
+      this.learntMoves = preBuilt.learntMoves
       this.exp = preBuilt.exp
       this.lvl = preBuilt.lvl
       this.nature = preBuilt.nature
@@ -292,7 +294,7 @@ export class Pogemon extends Sprite{
         date: new Date(preBuilt.catchInfo.date),
         lvl: preBuilt.catchInfo.lvl
       }
-      this.caughtMap = preBuilt.caughtMap
+      this.caughtMap = {...preBuilt.caughtMap}
       this.preBuilt = null
     }
   }
@@ -307,10 +309,20 @@ export class Pogemon extends Sprite{
     return currId
   }
 
-  generateNature(){
-    const rng = Math.floor(Math.random() * Object.keys(natureObj).length)
-    const name = Object.keys(natureObj)[rng]
-    const values = natureObj[name]
+  generateNature(predeterminedNature){
+    let name
+    let values
+
+    if(predeterminedNature == null){
+      const rng = Math.floor(Math.random() * Object.keys(natureObj).length)
+
+      name = Object.keys(natureObj)[rng]
+    } else {
+      name = predeterminedNature
+    }
+
+    values = natureObj[name]
+
     return {name, values}
   }
 
@@ -346,9 +358,6 @@ export class Pogemon extends Sprite{
   }
 
   generateIVs(predeterminedIvs){
-
-    console.log(predeterminedIvs)
-
     let ivObj = {
       baseHp: 0,
       atk: 0,
@@ -448,12 +457,16 @@ export class Pogemon extends Sprite{
   
             moves.push({...movepool[key].move})
             if(!this.isEnemy) movepool[key].seen = true
+
+            console.log(movepool[key])
           } else {
             // isint an array when trying to push things to it
             if(this.learntMoves.includes(movepool[key].move.name)) return
   
             this.learntMoves.push(movepool[key].move.name)
             if(!this.isEnemy) movepool[key].seen = true
+
+            console.log(movepool[key])
             
   
             if(moves.length == 4) moves.splice(0, 1)
@@ -473,8 +486,7 @@ export class Pogemon extends Sprite{
   generateCatchInfo(date){
     const catchInfo = {
       lvl: this.lvl,
-      date,
-      caughtMap: this.caughtMap
+      date
     }
     
     return catchInfo
@@ -715,8 +727,8 @@ export class Pogemon extends Sprite{
             } else {
               if(this.isEnemy){
                 statsAnimationSprite.position = {
-                  x: recipient.position.x,
-                  y: recipient.position.y
+                  x: recipient.position.x + this.width / 2,
+                  y: recipient.position.y + this.height * 3
                 }
               } else {
                 statsAnimationSprite.position = {
@@ -1910,8 +1922,8 @@ export class Pogemon extends Sprite{
       let frozen = 1
 
       // determins stab
-      if(this.status.name == 'burn') burn = 0.5
-      if(this.status.name == 'frz') frozen = 0.5
+      if(this.status.name == 'burn' && this.abilityInfo.ability.name != 'guts') burn = 0.5
+      if(this.status.name == 'frz' && this.abilityInfo.ability.name != 'guts') frozen = 0.5
 
       let factor
       
@@ -2119,9 +2131,7 @@ export class Pogemon extends Sprite{
             abilityDamage = 1.3
           break
         case 'guts':
-          if(this.status.name == null) break
-          burn = 1
-          abilityDamage = 1.5
+          if(this.status.name != null) abilityDamage = 1.5
           break
         case 'technician':
           if(movePow <= 60) movePow = movePow * 1.5
@@ -4175,7 +4185,8 @@ export class Pogemon extends Sprite{
           queue.push(() =>{
             target.dialogue('battle', `${target.nickname} was healed by the ${weatherName}.`)
 
-            const healAmount = Math.floor(target.stats.baseHp / 16)
+            let healAmount = Math.floor(target.stats.baseHp / 16)
+            if(this.abilityInfo.ability.name == 'photosynthesis') healAmount = Math.floor(target.stats.baseHp / 4)
             target.hp += healAmount
             if(target.hp > target.stats.baseHp) target.hp = target.stats.baseHp
 
@@ -4640,7 +4651,7 @@ export class Pogemon extends Sprite{
     hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
   }
 
-  expGain(yeilder, battleType, battlerArr, inBattle){
+  expGain(yeilder, battleType, battlerArr, inBattle, lvlCap){
     if(this.fainted) return
     if(this.lvl >= 100) return
     let a = 1
@@ -4666,7 +4677,8 @@ export class Pogemon extends Sprite{
 
     this.expBarProgress(inBattle)
 
-    this.lvl = this.generateLevel()
+    if(this.lvl >= lvlCap) player.dialogue('battle', `This pogemon has reached your current level cap.`)
+    else this.lvl = this.generateLevel()
   }
 
   teamExpEvent(queue, prevLvl, queueProcess){
@@ -5022,6 +5034,37 @@ export class Pogemon extends Sprite{
         break
     }
 
+    console.log(item)
+
+    let recipientStatus
+
+    if(item.name == 'flame_Orb' || item.name == 'toxic_Orb'){
+      if(this.status.name != null) return
+      // need to work on this
+
+      // burn
+
+      let statusName = 'burnt'
+      if(item.heldType == 'psn') statusName = 'poisoned'
+
+      this.status.name = `${item.heldType}`
+      this.statusEffectAnimation(`${item.heldType}`, renderedSprites, queueProcess)
+      this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} was ${statusName}!`)
+
+      if(!this.isEnemy) recipientStatus = document.querySelector('#allyStatus')
+      else recipientStatus = document.querySelector('#foeStatus')
+
+      recipientStatus.style.display = 'block'
+      recipientStatus.src = `img/status/${item.heldType}.png`
+
+      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} was ${statusName} by the ${this.switchUnderScoreForSpace(this.heldItem.name)} it's holding.`)
+
+      setTimeout(() =>{
+        queueProcess.disabled = false
+        console.log('there')
+      }, 1250)
+    }
+
     if(item.consume) this.heldItem = null
   }
 
@@ -5185,7 +5228,7 @@ export class Pogemon extends Sprite{
 
     const newRNG = Math.floor(Math.random() * effectiveMovesArr.length)
 
-    if(effectiveMovesArr.length == 0) move = pastMove
+    if(effectiveMovesArr.length == 0) move = this.moves[newRNG]
     else move = effectiveMovesArr[newRNG]
 
     if(!this.affliction[2].active){
@@ -5532,8 +5575,8 @@ export class Character extends Sprite{
         },
         animate: true
       })
-      //                                                             // held item      //ability          //shiny//ivs//moves//gender              
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, null, pogemonSprite)
+      //                                                              held item        ability              shiny ivs  moves gender nature              
+      newPogemon = new Pogemon(pogemon, Math.pow(50, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, null, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)
