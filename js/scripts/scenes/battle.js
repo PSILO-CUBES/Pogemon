@@ -287,12 +287,10 @@ function initWildEncounter(tileInfo, info){
 
   let foeObj = returnedFoe.pogemon
 
-  console.log()
+  let difference = returnedFoe.lvls[1] - returnedFoe.lvls[0]
+  if(difference == 1) difference = 2 
 
-  console.log((returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
-
-
-  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0] + 1) + returnedFoe.lvls[0])
+  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0])+ 1 + returnedFoe.lvls[0])
   console.log(rngLvl)
 
   let encounterLevel = Math.pow(rngLvl, 3)
@@ -328,7 +326,7 @@ function initWildEncounter(tileInfo, info){
   let shinyCharm = 0
   if(player.bag.get('illuminated_Gem') != null) shinyCharm = player.bag.get('illuminated_Gem').quantity
 
-  foe = new Pogemon(foeObj, encounterLevel, true, currMap.name, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, predeterminedNature, shinyCharm, null, foeSprite)
+  foe = new Pogemon(foeObj, encounterLevel, true, currMap, wildPogemonHeldItem, null, null, null, wildPogemonMoves, wildPogemonGender, predeterminedNature, shinyCharm, null, foeSprite)
 
   document.querySelector("#foeGenderImg").src = `../../../img/${foe.gender}_icon.png`
 }
@@ -2609,7 +2607,7 @@ function manageFaintingEvent(target){
     if(enemyTrainerInfo == undefined){
       if(ally.name != battlerArr[battlerArr.length - 1].name) return
       oldStats = {...battler.stats}
-  
+
       if(lvlBeforeExpGained < ally.lvl) {
         if(ally.pogemon.evo == null) {
           queue.push(() => {
@@ -2689,6 +2687,8 @@ function checkIfTeamWipedOut(){
   player.team.forEach(pogemon =>{
     if(!pogemon.fainted) wiped = false
   })
+
+
 
   return wiped
 }

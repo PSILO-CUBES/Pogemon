@@ -7,6 +7,7 @@ import { typesObj } from "./data/typesData.js"
 import { c } from "./scripts/canvas.js"
 import { loadData } from "./save.js"
 import { abilitiesObj } from "./data/abilitiesData.js"
+import { mapsObj } from "./data/mapsData.js"
 
 export class Sprite {
   constructor({
@@ -267,7 +268,7 @@ export class Pogemon extends Sprite{
       this.heldItem = heldItem
       this.friendliness = 0
       this.catchInfo = this.generateCatchInfo(new Date())
-      this.caughtMap = {...map}
+      this.caughtMap = map
     } else {
       this.id = preBuilt.id
       this.nickname = preBuilt.nickname
@@ -5606,7 +5607,7 @@ export class Character extends Sprite{
       if(player != undefined) if(player.bag.get('illuminated_Gem') != null) shinyCharm = player.bag.get('illuminated_Gem').quantity
 
       //                                                              held item        ability              shiny ivs  moves gender nature              
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, currMap, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, {...mapsObj[currMap]}, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)

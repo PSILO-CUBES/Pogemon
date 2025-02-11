@@ -707,7 +707,7 @@ export let mapsObj = {
         name: 'npc',
         sprite: "img/charSprites/ma'at/ma'at.png",
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}}, 
           looking: 'Down',
           dialogue:
           [

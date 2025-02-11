@@ -753,6 +753,14 @@ stuffToDo:{
         maat gym can talk when shes not there
 
         heisenberg wrong dialogue
+
+        spamming player interaction forces chosenDialogue to pop
+
+        player.interaction stays stuck for some reason
+
+        switch without opponent attacking
+
+        return to over world after team ally exp scene wont happen
     }
 }
 
