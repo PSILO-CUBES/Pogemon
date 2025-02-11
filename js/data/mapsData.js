@@ -468,7 +468,7 @@ export let mapsObj = {
         hidden: true
       },
       {
-        name: 'silk_scarf',
+        name: 'silk_Scarf',
         amount: 1,
         direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
         pickedUp: false,

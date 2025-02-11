@@ -745,6 +745,14 @@ stuffToDo:{
         remove spaces before letters
 
         keep trees and rocks destroyed, also starter pogeball reappears for some reason
+
+        fair town pogemart dont show correct item
+
+        program no button in pogemart
+
+        maat gym can talk when shes not there
+
+        heisenberg wrong dialogue
     }
 }
 

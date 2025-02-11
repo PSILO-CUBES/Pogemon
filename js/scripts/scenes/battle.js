@@ -287,7 +287,13 @@ function initWildEncounter(tileInfo, info){
 
   let foeObj = returnedFoe.pogemon
 
-  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
+  console.log()
+
+  console.log((returnedFoe.lvls[1] - returnedFoe.lvls[0]) + returnedFoe.lvls[0])
+
+
+  const rngLvl = Math.floor(Math.random() * (returnedFoe.lvls[1] - returnedFoe.lvls[0] + 1) + returnedFoe.lvls[0])
+  console.log(rngLvl)
 
   let encounterLevel = Math.pow(rngLvl, 3)
 
