@@ -1,0 +1,131 @@
+#trainerScene{
+    display: none;
+    
+    position: absolute;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+}
+
+#trainerCardContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+}
+
+hr{
+    width: 35%;
+}
+
+#trainerCardHeaderContent{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    height: 100%;
+}
+
+#trainerCardHeaderText{
+    display: table;
+    margin: 0 auto;
+
+    word-break: keep-all;
+
+    width: 722.45px;
+
+    font-size: xxx-large;
+}
+
+#trainerCard{
+    display: grid;
+    grid-template-rows: 20% 60% 20%;
+
+    height: 75%;
+    width: 75%;
+
+    border-radius: 20px;
+
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+#trainerCardBody{
+    display: grid;
+    grid-template-columns: 75% 25%;
+
+    height: 100%;
+    width: 100%;
+}
+
+#trainerCardBodyInfoSection{
+    display: grid;
+    align-items: center;
+    grid-template-rows: repeat(4, 25%);
+
+    height: 100%;
+    width: 100%;
+}
+
+#trainerCardBodyTrainerSection{
+    display: grid;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+}
+
+.trainerCardBodyInfoSectionContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    align-items: center;
+}
+
+.trainerCardBodyInfoSectionContainerLabel{
+    height: 100%;
+    width: 100%;
+
+    padding-left: 55px;
+    
+    font-size: xx-large;
+}
+
+.trainerCardBodyInfoSectionContainerContent{
+    position: relative;
+
+    display: flex;
+    justify-content: flex-end;
+
+    height: 100%;
+    width: 100%;
+
+    font-size: xx-large;
+}
+
+#trainerCardTrainerImg{
+    width: 100%;
+}
+
+#trainerCardFooter{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+.trainerBadgeContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trainerBlackedOutBadge{
+    height: 100px;
+}
+
+.trainerBadge{
+    position: absolute;
+
+    height: 100px;
+    z-index: 100;
+}

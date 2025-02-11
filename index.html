@@ -1,0 +1,518 @@
+<link rel="stylesheet" href="css/overworld.css">
+<link rel="stylesheet" href="css/battle.css">
+<link rel="stylesheet" href="css/evolution.css">
+<link rel="stylesheet" href="css/team.css">
+<link rel="stylesheet" href="css/bag.css">
+<link rel="stylesheet" href="css/stats.css">
+<link rel="stylesheet" href="css/pogedex.css">
+<link rel="stylesheet" href="css/trainer.css">
+<link rel="stylesheet" href="css/boot.css">
+<link rel="stylesheet" href="css/pc.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/app.js" defer type="module"></script>
+
+<div id="content">
+  <div id="overlapping"></div>
+
+  <div id="flashContainer">
+    <div class="flashContainerEdgeSegment"></div>
+    <div id="flashContainerMidSegment">
+      <div class="flashContainerMidSegments"></div>
+      <div class="flashContainerMidSegments"></div>
+      <div class="flashContainerMidSegments"></div>
+    </div>
+    <div class="flashContainerEdgeSegment"></div>
+  </div>
+  
+  <canvas></canvas>
+
+  <div id="overworldScene">
+    <div id="overworldSceneContainer">
+      <div id="overworldMenu"></div>
+      <div id="overworldDialogueContainer">
+        <div id="openWindow"></div>
+        <div id="overworldDialogue"></div>
+      </div>
+      <div id="optionsMenuContainer">
+        <div id="optionsMenu">
+          <div id="optionsMenuMusicVolume" class="optionsMenuButtons"><span class="volumeTag">Music Volume : </span><input type="range" id="musicVolume" class="volumeRange"></div>
+          <div id="optionsMenuSFXVolume" class="optionsMenuButtons"><span class="volumeTag">SFX Volume : </span><input type="range" id="SFXVolume" class="volumeRange"></div>
+          <div id="optionsMenuLoadBackup" class="optionsMenuButtons">LOAD BACKUP SAVE FILE</div>
+          <div id="optionsMenuCopySave" class="optionsMenuButtons">COPY JSON SAVE FILE TO CLIPBOARD</div>
+        </div>
+      </div>
+      <div id="pogemartContainer">
+        <div id="pogemartMenuContainer">
+          <div id="pogemartMenuUpperContainer">
+            <div id="pogemartMoneyContainer">
+              <img id="pogemartMoneyPogebucksIcon" src="img/item_scene/pogebuck.png">
+              <div id="pogemartMoneyAmountContainer"></div>
+            </div>
+            <div id="pogemartItemsContainer"></div>
+            <div id="pogemartSellItemsContainer"></div>
+          </div>
+          <div id="pogemartMenuLowerContainer">
+            <div id="pogemartBuyItemsButton"></div>
+            <div id="pogemartSellItemsButton"></div>
+            <div id="pogemartMenuDescripion"></div>
+            <div id="pogemartBuyMenu">
+              <div id="pogemartBuyMenuTextContainer" class="pogemartBuyMenuContent"></div>
+              <div id="pogemartBuyMenuInteractionContainer" class="pogemartBuyMenuContent">
+                <input class="pogemonBuyMenuInteraction" id="pogemonBuyMenuInput" type="number">
+                <div class="pogemonBuyMenuInteraction"  id="pogemonBuyMenuArrowContainer">
+                  <div class="pogemonBuyMenuArrows" id="pogemonBuyMenuUpArrow">
+                    <img class="pogemonBuyMenuArrow" src="img/item_scene/upPointingIcon.png">
+                  </div>
+                  <div class="pogemonBuyMenuArrows" id="pogemonBuyMenuDownArrow">
+                    <img class="pogemonBuyMenuArrow" src="img/item_scene/downPointingIcon.png">
+                  </div>
+                </div>
+                <div class="pogemonBuyMenuInteraction" id="pogemonBuyMenuBuyInteraction">Buy</div>
+              </div>
+            </div>
+            <div id="pogemartBuyConfirmationMenu">
+              <div class="pogemartBuyConfirmationMenuContent" id="pogemartBuyConfirmationMenuText"></div>
+              <div class="pogemartBuyConfirmationMenuContent" id="pogemartBuyConfirmationMenuOptionContainer">
+                <div class="pogemartBuyConfirmationOptions">yes</div>
+                <div class="pogemartBuyConfirmationOptions">no</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="weatherContainer"></div>
+    <div id="changeMapContainer"></div>
+    <div id="mapEncounterContentContainer">
+      <div id="manageEncounterStateButton"><img id="manageEncounterStateButtonImg" src="img/downArrow.png"></div>
+      <div id="mapEncounterContainer"></div>
+    </div>
+    <div id="partyInteractionContainer">
+      <div id="partyInteractionContainerBackground"></div>
+      <div id="partyInteractionContentContainer">
+        <!-- <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div>
+        <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div>
+        <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div>
+        <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div>
+        <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div>
+        <div class="partyInteractionContent"><img src="" alt="" class="partyInteractionContentImg"></div> -->
+      </div>
+    </div>
+    <div id="relearnMoveContentContainer">
+      <div id="relearnMoveLearntMovesContainer">
+        <div id="relearnMoveLearntMovesListContainer"></div>
+      </div>
+      <div id="relearnMoveContentPogemonInfoContainer">
+        <div id="relearnMoveContentPogemonImgContainer">
+          <img src="" alt="" id="relearnMoveContentPogemonImg">
+        </div>
+        <div id="relearnMoveContentMovesContainer">
+          <div id="relearnMoveContentMovesContentContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="battleScene">
+    <div id="scene">
+      <div id="sceneInterface">
+        <div id="foeHealthBarContainer">
+          <div class="infoContainer">
+            <div id="foeName" class="battleName"></div>
+            <img id="foeStatus" class="status"/>
+            <div id="foeGenderIconContainer" class="genderImgContainer">
+              <img id="foeGenderImg" class="genderImg">
+            </div>
+            <div id="foeLvl" class="battleLvl"></div>
+          </div>
+          <div class="healthContainer">
+            <div id="foeHp" class="hp"></div>
+            <div id="foeHealthBarAjustment"class="statusContainer">
+              <div class="healthBarContainer">
+                <div id="foeHealthBar" class="healthBar"></div>
+                <div class="healthBarBackground"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="foeTeamShowcase">
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+          <div class="foeTeamShowcaseIndividual"> <img src="img/transparent_pogeball.png" class="foeTeamShowcaseBalls"> </div>
+        </div>
+
+        <div id="lvlUpWindow">
+          <div id="lvlUpLvl" class="lvlUpDisplay"></div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Hp : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Spd : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Atk : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">Def : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">SpAtk : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+          <div class="lvlUpStatsContainer">
+            <div class="lvlUpStatsName lvlUpDisplay">SpDef : </div>
+            <div class="lvlUpStats lvlUpDisplay"></div>
+          </div>
+        </div>
+
+        <div id="teamLvlUpWindow">
+          <img src="" alt="" class="teamLvlUpImg">
+          <div id="teamLvlUpExpDetailsContainer">
+            <div id="teamLvlUpExpDetailsLvl"></div>
+            <div class="teamLvlUpExpContainer">
+              <div class="teamLvlUpExpBar"></div>
+              <div class="teamLvlUpExpBackBar"></div>
+            </div>
+          </div>
+        </div>
+    
+        <div id="allyHealthBarContainer">
+          <div class="infoContainer">
+            <div id="allyName" class="battleName"></div>
+            <img id="allyStatus" class="status"/>
+            <div id="allyGenderIconContainer" class="genderImgContainer">
+              <img id="allyGenderImg" class="genderImg">
+            </div>
+            <div id="allyLvl" class="battleLvl"></div>
+          </div>
+          <div class="healthContainer">
+            <div id="allyHp" class="hp"></div>
+            <div class="statusContainer">
+              <div class="healthBarContainer">
+                <div id="allyHealthBar" class="healthBar"></div>
+                <div class="healthBarBackground"></div>
+              </div>
+              <div class="expBarContainer">
+                <div id="expBar" class="expBar"></div>
+                <div class="expBarBackground"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="foeScreenContainer">
+          <div id="foeReflectIndicatorContainer">
+            <span id="foeReflectTurnIndicator">5</span>
+            <img src="img/field/reflect.png" alt="" id="reflectIcon">
+          </div>
+          <div id="foeLightScreenIndicatorContainer">
+            <span id="foeLightScreenTurnIndicator">5</span>
+            <img src="img/field/light_screen.png" alt="" id="lightScreenIcon">
+          </div>
+        </div>
+
+        <div id="allyScreenContainer">
+          <div id="allyReflectIndicatorContainer">
+            <span id="allyReflectTurnIndicator">5</span>
+            <img src="img/field/reflect.png" alt="" id="reflectIcon">
+          </div>
+          <div id="allyLightScreenIndicatorContainer">
+            <span id="allyLightScreenTurnIndicator">5</span>
+            <img src="img/field/light_screen.png" alt="" id="lightScreenIcon">
+          </div>
+        </div>
+
+        <div id="fieldEffect">
+          <div id="fieldEffectContainer">
+            <span id="fieldEffectTurnIndicator"></span>
+            <img id="fieldEffectIcon" src="img/field/sun.png">
+          </div>
+          <div id="trickRoomIndicatorContainer">
+            <span id="trickRoomTurnIndicator"></span>
+            <img src="img/field/trick_room.png" alt="" id="trickRoomIcon">
+          </div>
+        </div>
+
+        <div id="allyHazardsContainer" class="hazardContainer">
+          <div class="hazardType" id="allyTaunt"><img src="img/field/taunt.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyWebs"><img src="img/field/webs.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyConfused"><img src="img/field/confused.png" id="hazardImg"></div>
+          <div class="hazardType" id="allyRocks"><img src="img/field/rocks.png" id="hazardImg"></div>
+          <div class="hazardType" id="allySeeds"><img src="img/field/seeds.png" id="hazardImg"></div>
+        </div>
+
+        <div id="foeHazardsContainer" class="hazardContainer">
+          <div class="hazardType" id="foeTaunt"><img src="img/field/taunt.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeWebs"><img src="img/field/webs.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeConfused"><img src="img/field/confused.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeRocks"><img src="img/field/rocks.png" id="hazardImg"></div>
+          <div class="hazardType" id="foeSeeds"><img src="img/field/seeds.png" id="hazardImg"></div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div id="menu">
+      <div id="encounterInterface" class="menuInterface">
+        <div id="textBox"></div>
+        <div id="optionBox">
+        </div>
+      </div>
+      
+      <div id="movesInterface" class="menuInterface">
+        <div id="movesBox"></div>
+        <div id="movesDesc">
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="moveDescPow">Pow : --</div>
+              <div id="moveDescAcc">Acc : --</div>
+              <div id="moveDescPP">PP : --</div>
+            </div>
+          </div>
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="moveDescElement">--</div>
+              <div id="moveDescTypeContainer">
+                <img id="moveDescType" class="battleCategoryIcon"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="learnMoveInfo">
+        <div id="learnMovesDesc">
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="learnMoveDescPow">Pow : --</div>
+              <div id="learnMoveDescAcc">Acc : --</div>
+              <div id="learnMoveDescPP">PP : --</div>
+            </div>
+          </div>
+          <div class="movesDescContainer">
+            <div class="descContainer">
+              <div id="learnMoveDescElement">--</div>
+              <div id="learnMoveDescTypeContainer">
+                <img id="learnMoveDescType" class="battleCategoryIcon"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="learnMoveName">YAYA</div>
+      </div>
+
+      <div id="learnMoveInterface" class="menuInterface">
+        <div id="learnMoveDialogue"></div>
+        <div id="learnMoveOptionButtonContainer">
+        </div>
+      </div>
+
+      <div id="proceedImgContainer"><img id="proceedImg" src="img/proceedArrow.png"></div>
+    </div>
+  </div>
+
+  <div id="evolutionScene">
+
+    <div></div>
+    
+    <div id="evolutionInterface">
+      <div id="evolutionDialogue"></div>
+      <div id="evoConfirmButtonContainer">
+        <div id="evoYes" class="evoChoice">yes</div>
+        <div id="evoNo" class="evoChoice">no</div>
+      </div>
+    </div>
+
+    <div id="evolutionMovesInterface" class="evoMenuInterface">
+      <div id="evolutionMovesBox"></div>
+      <div id="movesDesc">
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoMoveDescPow">Pow : --</div>
+            <div id="evoMoveDescAcc">Acc : --</div>
+            <div id="evoMoveDescPP">PP : --</div>
+          </div>
+        </div>
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoMoveDescElement">--</div>
+            <div id="evoMoveDescTypeContainer">
+              <img id="evoMoveDescType" class="battleCategoryIcon"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="evolutionLearnMovesInterface" class="evoMenuInterface">
+      <div id="evolutionLearnMoveDialogue"></div>
+      <div id="evolutionLearnMoveOptionButtonContainer">
+      </div>
+    </div>
+
+    <div id="evoLearnMoveInfo">
+      <div id="evoLearnMovesDesc">
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoLearnMoveDescPow">Pow : --</div>
+            <div id="evoLearnMoveDescAcc">Acc : --</div>
+            <div id="evoLearnMoveDescPP">PP : --</div>
+          </div>
+        </div>
+        <div class="movesDescContainer">
+          <div class="descContainer">
+            <div id="evoLearnMoveDescElement">--</div>
+            <div id="evoLearnMoveDescTypeContainer">
+              <img id="evoLearnMoveDescType" class="battleCategoryIcon"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="evoLearnMoveName">YAYA</div>
+    </div>
+
+    <div id="evoLvlUpWindow">
+      <div id="evoLvlUpLvl" class="evoLvlUpDisplay"></div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">Hp : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">Spd : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">Atk : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">Def : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">SpAtk : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+      <div class="evoLvlUpStatsContainer">
+        <div class="evoLvlUpStatsName evoLvlUpDisplay">SpDef : </div>
+        <div class="evoLvlUpStats evoLvlUpDisplay"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pogedexScene"></div>
+
+  <div id="teamScene"></div>
+
+  <div id="bagScene"></div>
+
+  <div id="statsScene"></div>
+
+  <div id="pogemonNamingScene">
+    <div id="pogemonNamingSceneContainer">
+      <div id="pogemonNamingSceneDisplayContainer">
+        <div id="pogemonNamingSceneDisplayImgContainer">
+          <img id="pogemonNamingSceneDisplayImg">
+        </div>
+        <div id="pogemonNamingSceneDisplayTextContainer"></div>
+      </div>
+      <div id="pogemonNamingSceneInputContainer">
+        <div id="pogemonNamingSceneInputChoiceContainer">
+          <div id="pogemonNamingSceneInputChoiceYes">Yes</div>
+          <div id="pogemonNamingSceneInputChoiceNo">No</div>
+        </div>
+        <div id="pogemonNamingSceneInputNamingContainer">
+          <div id="pogemonNamingSceneInputNamingCenteringContainer">
+            <input type="text" id="pogemonNamingSceneInputNaming" maxlength="16">
+          </div>
+          <div id="pogemonNamingSceneInputNamingConfirmationContainer">
+            <div id="pogemonNamingSceneInputNamingConfirmationYes">Confirm Name</div>
+            <div id="pogemonNamingSceneInputNamingConfirmationNo">Cancel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="confirmPogemonNameButtonsContainerBackground">
+      <div id="confirmPogemonNameContainer">
+        <div id="confirmPogemonNameTextDisplayContainer"></div>
+          <div id="confirmPogemonNameButtonsContainer">
+            <div id="confirmPogemonNameYes">Keep Name</div>
+            <div id="confirmPogemonNameNo">Change Name</div>
+          </div>
+      </div>
+      <div id="confirmPogemonInfoDisplayContainer">
+
+      </div>
+    </div>
+  </div>
+
+  <div id="bootScene">
+    <div id="interactionContainer"></div>
+    <div id="bootInfoContainer">
+      <div id="badgeContainer"></div>
+      <div id="trainerInfoContainer"></div>
+      <div id="trainerTeamContainer"></div>
+    </div>
+
+    <div id="namePlayerContainer">
+      <div id="namePlayerDialogueContainer"></div>
+      <div id="namePlayerInputContainer"><input type="text" id="namePlayerInput" maxlength="12"></div>
+      <div id="namePlayerConfirmContainer">
+        <div id="namePlayerConfirmButton"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pcScene"></div>
+
+  <div id="trainerScene">
+    <div id="trainerCardContainer">
+      <div id="trainerCard">
+        <div id="trainerCardHeader">
+          <div id="trainerCardHeaderContent">
+            <hr>
+            <span id="trainerCardHeaderText">Trainer Card</span>
+            <hr>
+          </div>
+        </div>
+        <div id="trainerCardBody">
+          <div id="trainerCardBodyInfoSection">
+            <div id="trainerCardBodyInfoNameContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoNameContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Name :</div>
+              <div id="trainerCardBodyInfoNameContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoMoneyContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoMoneyContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Money :</div>
+              <div id="trainerCardBodyInfoMoneyContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoPogedexContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoPogedexContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Pogedex :</div>
+              <div id="trainerCardBodyInfoPogedexContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+            <div id="trainerCardBodyInfoTimeContainer" class="trainerCardBodyInfoSectionContainer">
+              <div id="trainerCardBodyInfoTimeContainerLabel" class="trainerCardBodyInfoSectionContainerLabel">Time :</div>
+              <div id="trainerCardBodyInfoTimeContainerContent" class="trainerCardBodyInfoSectionContainerContent"></div>
+            </div>
+          </div>
+          <div id="trainerCardBodyTrainerSection">
+            <img id="trainerCardTrainerImg">
+          </div>
+        </div>
+        <div id="trainerCardFooter"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="checkbox" style="display: none;" id="scroll-check" checked>
+<input type="checkbox" style="display: none;" id="keyboard-check" checked>

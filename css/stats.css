@@ -1,0 +1,490 @@
+:root{
+  --default-font-size: 18px
+}
+
+#statsScene{
+  display: none;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: 999;
+}
+
+#statsSceneContainer{
+  width: 100%;
+}
+
+#statsSceneMovesInterface{
+  display: none;
+  grid-template-rows: auto 190px;
+
+  position: absolute;
+  bottom: 0;
+  
+  height: 100%;
+  width: 33.33%;
+
+  background-color: black;
+}
+
+#statsSceneMovesInterfaceSwitchButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}#statsSceneMovesInterfaceSwitchButton:hover{
+  background-color: rgba(128, 128, 128, 0.50);
+  cursor: pointer;
+}
+
+#statsSceneMovesInterfaceDescContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  justify-items: center;
+  align-items: center;
+
+  height: 100%;
+
+  z-index: 5;
+  background-color: black;
+}
+
+.statsSceneMovesInterfaceMoveDescContent{
+  font-size: 16;
+}
+
+#statsSceneMoveDescContainer{
+  width: 200%;
+  height: 100%;
+  transform: translateX(25%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+#statsSceneGridContainer{
+  display: grid;
+  grid-template-columns: repeat(3, 33.33%);
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: -10px;
+}
+
+/* info section */
+
+.statsSceneGridSectionInfo{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionInfoContainer{
+  display: grid;
+  grid-template-rows: 35% 42.5% 12.5% 10%;
+
+  height: 100%;
+  width: 100%
+}
+
+#statsSceneGridSectionInfoCatch{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 83%;
+
+  margin-left: 10;
+  padding: 7.5;
+  /* margin: 42px;
+  margin-bottom: 115px; */
+
+  line-height: 2;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+
+  font-size: (var(--default-font-size));
+}
+
+#statsSceneGridSectionInfo{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statsSceneGridSectionInfoAbility{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionInfoAbilityContainer{
+  position: relative;
+
+  display: grid;
+  grid-template-rows: 20% 80%;
+
+  height: 85%;
+  width: 85%;
+
+  margin-left: 50px;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+#statsSceneGridSectionInfoAbilityDesc{
+  line-height: 2;
+
+  width: 97.5%;
+
+  padding: 7.5;
+}
+
+#statsSceneGridSectionInfoTypeContainer{
+  display: grid;
+  grid-template-columns: 40% 60%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionInfoTypeSection{
+  padding-left: 50px;
+}
+
+#statsSceneGridSectionInfoTypeSectionType{
+  font-size: var(--default-font-size);
+  padding: 7.5;
+
+  text-align: center;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+#statsSceneGridSectionInfoTypeSectionElementsContainer{
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionInfoTypeSectionElements{
+  display: flex;
+  justify-content: center;
+
+  font-size: var(--default-font-size);
+
+  height: 18px;
+  width: 75%;
+
+  margin-left: 15%;
+}
+
+#statsSceneGridSectionInfoFriendship{
+  margin-left: 50px;
+  margin-right: 175;
+  margin-bottom: 65;
+
+  padding: 7.5;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+/* pogemon section */
+
+#statsSceneGridSectionPogemonContainer{
+  display: grid;
+  grid-template-rows: 20% 50% 30%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.statsSceneGridSectionPogemonData{
+  font-size: var(--default-font-size);
+}
+
+#statsSceneGridSectionPogemonDataContainer{
+  display: grid;
+  grid-template-columns: 20% 60% 20%;
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: 100px;
+}
+
+#statsSceneGridSectionPogemonDataName{
+  justify-self: center;
+
+  padding: 7.5;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+
+  height: 20;
+}
+
+#statsSceneGridSectionPogemonDataGender{
+  justify-self: center;
+}
+
+#statsSceneGridSectionPogemonHP, #statsSceneGridSectionPogemonExp{
+  display: flex;
+
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+ 
+#statsSceneGridSectionPogemonHPContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+  width: 100%;
+  
+  margin-top: 10px;
+}
+
+#statsSceneGridSectionPogemonSectionHpContainer, #statsSceneGridSectionPogemonSectionExpContainer{
+  align-self: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionHpBarContainer, #statsSceneGridSectionPogemonSectionExpBarContainer{
+  display: grid;
+
+  align-items: center;
+
+  grid-template-columns: 30% 70%;
+
+  height: 75%;
+  width: 100%;
+
+  margin: 25;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+#statsSceneGridSectionPogemonSectionHpBarAmount, #statsSceneGridSectionPogemonSectionExpBarAmount{
+  justify-self: start;
+  font-size: var(--default-font-size);
+
+  padding-left: 25;
+}
+
+#statsSceneGridSectionPogemonSectionHpBarContentContainer, #statsSceneGridSectionPogemonSectionExpBarContentContainer{
+  justify-self: end;
+  font-size: var(--default-font-size);
+
+  width: 100%;
+
+  position: relative;
+
+  right: 15;
+}
+
+.statsSceneHealthBars, .statsSceneExperienceBars{
+  position: absolute;
+  
+  height: 15%;
+  width: 100%;
+
+  clip-path: polygon(100% 100%, 0% 100%, 35px 0%, 100% 0%);
+}
+
+#statsSceneGridSectionPogemonSectionHpGreenBar{
+  height: 100%;
+
+  background-color: green;
+
+  z-index: 2;
+
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionHpGreyBar{
+  position: relative;
+  top: -50%;
+
+  background-color: grey;
+
+  z-index: 1;
+}
+
+#statsSceneGridSectionPogemonSectionExpTopBar{
+  height: 100%;
+
+  background-color: cyan;
+
+  z-index: 2;
+
+  width: 100%;
+}
+
+#statsSceneGridSectionPogemonSectionExpBottomBar{
+  position: relative;
+  top: -50%;
+
+  background-color: aquamarine;
+
+  z-index: 1;
+}
+
+#statsSceneGenderImg{
+  height: 18px;
+
+  padding: 7.5;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+/* data section */
+
+#statsSceneGridSectionDataContainer{
+  display: grid;
+  grid-template-rows: 70% 30%;
+
+  height: 100%;
+  width: 100%;
+
+  margin-top: 100px;
+}
+
+#statsSceneGridSectionDataStatsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  height: 90%;
+  width: 100%;
+}
+
+.statsSceneGridSectionDataStats{
+  display: flex;
+
+  justify-content: center;
+
+  font-size: var(--default-font-size);
+
+  text-align: center;
+
+  flex-direction: column;
+
+  transform: translateY(-12.5%)
+}.statsSceneGridSectionDataStats>*{
+  padding: 25;
+}
+
+#statsSceneGridSectionDataMovesContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+  align-items: center;
+  position: relative;
+  top: -22.5%;
+}
+
+.statsSceneGridSectionDataMoves{
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  font-size: var(--default-font-size);
+
+  height: 75%;
+
+  position: relative;
+  top: -25;
+
+  margin: 5px;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+}.statsSceneGridSectionDataMoves:hover{
+  background-color: rgba(75, 75, 75, 0.5) !important; 
+  cursor: pointer;
+}
+
+#statsSceneGridSectionPogemonImg{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.statsHeldItemImg{
+  position: relative;
+  left: -74%;
+  top: 20px;
+
+  width: 75px;
+}
+
+.statusStatusImg{
+  position: relative;
+  left: -24px;
+
+  height: 24px;
+}
+
+.statusShinyImg{
+  position: relative;
+  top: -100%;
+  right: 50;
+
+  height: 24;
+
+  padding: 2;
+}
+
+.statsSceneGridSectionDataStatsTag{
+  margin: 5px;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+.statsSceneGridSectionDataStatsNumber{
+  margin: 5px;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
+#statsSceneGridSectionPogemonDataLvl{
+  font-size: large;
+  word-break: break-all;
+
+  padding: 7.5;
+
+  border: 2.5px solid rgba(128, 128, 128, 0.125);
+  background-color: rgba(128, 128, 128, 0.25);
+
+  height: 20;
+  width: 100%;
+}
+
+#statsSceneGridSectionInfoAbilityName{
+  width: 100%;
+
+  padding: 7.5;
+  padding-top: 25;
+  margin-bottom: 25;
+}

@@ -1,0 +1,133 @@
+#pcScene{
+    display: none;
+    position: absolute;
+    top: 0;
+
+    height: 100%;
+    width: 100%;
+}
+
+#pcSceneGridContainer{
+    display: grid;
+    grid-template-columns: 20% 55% 25%;
+
+    height: 100%;
+    width: 100%;
+}
+
+.pcSceneSection{
+    display: grid;
+
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    height: 80%;
+}
+
+.pcScenePogemonContainer{
+    position: relative;
+    
+    display: grid;
+    grid-template-rows: 50% 50%;
+
+    height: 132.133px;
+    width: 100%;
+}
+
+.pcSceneTeamPogemonSection{
+    display: flex;
+    align-items: center;
+    padding-left: 7px;
+
+    font-size: 14px;
+
+    height: 100%;
+    width: 100%;
+}
+
+#pcSceneNavSectionContainer{
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    justify-items: center;
+    align-items: center;
+
+    position: absolute;
+    top: -98.5px;
+
+    height: 98.5px;
+    width: 100%;
+}
+
+#pcSceneBoxSectionContainer{
+    display: grid;
+    grid-template-columns: repeat(6, 16.6667%);
+
+    height: 100%;
+}
+
+.pcSceneNavContent{
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+    word-break: keep-all;
+
+    height: 50;
+    width: 150;
+}.pcSceneNavContent:nth-child(odd):hover{
+    cursor: pointer;
+    background-color: rgba(25,25,25,0.5);
+}
+
+.pcSceneBoxContent{
+    border: rgba(25,25,25,0.5) 1px solid;
+}
+
+#pcSceneInteractionButtonContainer{
+    display: none;
+    grid-template-rows: repeat(3, 33.33%);
+
+    position: relative;
+    top: 67.5%;
+
+    height: 32.5%;
+}
+
+.pcSceneInteractionButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 14px;
+}.pcSceneInteractionButton:hover{
+    background-color: rgba(211, 211, 211, 0.25) !important;
+    cursor: pointer;
+}
+
+#pcSceneSelectedPogemonInfoContainer{
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+
+    justify-items: center;
+    align-items: center;
+
+    position: absolute;
+    top: 0;
+
+    height: 20%;
+    width: 100%;
+}
+
+.pcSceneSelectedPogemonInfoContent{
+    font-size: 14px;
+}
+
+#pcSceneSelectedPogemonInfoContentGender{
+    height: 14px;
+}
+
+#pcSceneTeamPogemonSectionLvl{
+    font-size: 14px;
+}

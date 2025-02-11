@@ -1,0 +1,760 @@
+experience and stat growth x
+
+evolutions x
+
+general overworld menu x
+
+team scene x
+
+bag scene x
+item menu x
+pogeballs x
+
+team management x
+
+attack effects x
+super effective x
+
+pogedex scene x
+
+change maps x
+
+held items x
+
+make trainers x
+
+pc x
+
+evolution items x
+
+talkable NPC's x
+
+trainer card scene x
+
+save state x
+
+options x
+
+pogemart x
+
+pogecenter x
+
+SHINYS x
+
+split exp when multiple pogemons were in battle x
+
+prevent pogemon from gaining exp if fainted x
+
+Show exp split x
+
+odds of meeting certain wild pogemon x
+
+button to see the info of the move being learned x
+
+cancel evolution x
+
+make burn halve physical dmg x
+
+moves can effect stats change x
+
+make stats changing moves have animations x
+
+more status conditions {
+    burn x
+    para x
+    psn x
+    slp x
+    frz x
+    afflictions: {
+        flinch x
+        confused x
+        leech seed x
+        trick room x
+    }
+    substitute x
+    protect x
+    swagger????
+}
+
+set status condition icon in bag scene x
+
+pick up items on the ground x
+
+up and down option in stats scene x
+
+held items effect in battle {
+    - before damage is taken
+    elemental item x
+    quick claw?
+
+    - after damage has been taken
+    focus band x
+    focus sash x
+    banana x
+    sitrus berry x
+
+    evo held items
+    outside of battle
+}
+
+HM : {
+    cut x
+    rock smash x
+    surf x
+    fly
+    flash?
+    cascade?
+    dive?
+
+    actual moves not done : {
+        cut 
+        rock smash 
+        surf 
+        fly
+        flash?
+        cascade?
+        dive?
+    }
+}
+
+weather : {
+    sun x
+    rain x
+    sandstorm x
+    hail x
+
+    make move x
+    make weather affect stats x
+    overworld animation for weather : {
+        background-color x
+        particle effects : {
+            rain x
+            sun x
+            sand x
+            snow x
+        }
+    }
+}
+
+prevent item giving during battle x
+
+Abilities : {
+    pick up x
+
+    starter abilities x
+
+    Hot stuff - 10% to burn
+    At home - moves of the same type heals 1/16
+    Tripped out - Confused target on field receive 1.25x more dmg (stacks)
+
+    will make abilities as i make new pogemons, no point in making a shit load of ability with only 16 mons to choose from
+
+    intimidate
+    flame body
+    rock head
+    arena trap
+    water compaction
+}
+
+friendship : {
+    adding and subtracting friendliness x
+} x
+
+make pogedex count x
+
+fix trainer card x
+
+fix start menu x
+
+make character sprint again after getting off of surf x
+
+fix maps that have already been made {
+    fix edge of map x
+    add surf tiles  x
+    add change map where water connects x
+} x
+
+show map name when map switch x
+
+shiny sparkle: {
+    on enemy x
+    on player x
+} x
+
+make enought mons to have an interesting gym fight x
+
+make more maps to reach first gym x
+ 
+make first gym x
+
+first team trainers : {
+    trainer 1: {
+        wallafi - lvl 8
+    }
+
+    trainer 2: {
+        allingua - lvl 9
+        formal - lvl 10
+    }
+
+    gym leader : {
+        flailegant - lvl 11
+        slimie - lvl 14
+    }
+} x
+
+finish cross link map : {
+    add trainer to cross link x
+
+    make ma'at event in cross link x
+} x
+
+finish events in sol town: {
+    gym: need to add ma'at's real team x
+
+    heisenberg x
+} x
+
+remaining pogemon on enemy team indicator x
+
+exodus road x
+
+put desert map after exodus road to introduce more wild mons instead of having them
+all concentrated on one map x
+
+make map below gene town x
+
+test if rock smash works after 2nd gym x
+
+modify obstacles collisions x
+
+eden forest collisions are fucked up x
+
+take items from pogemon by clicking on it in teams and bag menu x
+
+prevent battle from happening 1.5 seconds after combat and after boot x
+
+sell function for pogemart x
+
+put flag on rock smash sound x
+
+backup save and give option to load it from options menu x
+
+prevent items from being picked up multiple times between saves : {
+    all items become leaf stones x
+}
+
+gym order : {
+    normal x
+    rock x
+    water x
+}
+
+moses event x
+
+maps : {
+    cross link cave : going up mountain in darkness x
+    sol road : leads so commending path x
+    commending path : leads to scribe town x
+    musa peak: goes up the mountain at commending path, gains fly x
+    scrible town : 3rd gym, gain surf x
+    revelation road : gain acces to it from pearly path x
+    bellum way : leads to glatial cave - rain map x
+    stagnation cave : leads to end trail - ice cave x
+    end trail : strong pogemon, leads to last challenge - snow map x
+    alqiama town : last resting place before last challenge x
+    neo-gene : maybe have a trinity of fighters that lead to one last very powerful trainer
+    gg, you finished all maps :-]
+}
+
+hidden items have collisions
+
+finish all sprites from sheets reference : {
+    Ibis 1 x
+    Ibis 2 x
+
+    ice ferret 1 x
+    ice ferret 2 x
+
+    snow fox 1 x
+    snow fox 2 x
+
+    Uthrsa x
+    Scarletrum x
+
+    Aquerio x
+    Leonidas x
+
+    Skopt x
+    Yaldabaoth x
+
+    Jlorox - BackSprite x
+    Jleenex x
+
+    Horus x
+    Anubis x
+    Ra x
+    Thoth x
+
+    Osiris x
+    Isis x
+    Set x
+
+    Dahgha x
+}
+
+pogedex {
+    blank out unchaught pogemons in pogedex x
+
+    info + {
+
+        show base stats x
+
+        show moves learn lvl x
+
+        show catching areas x
+    }
+}
+
+starter pogeball sprite removed x
+
+damage goes negative BIG L x
+
+put info+ for seen but not caught pogemon x
+
+reset image when picking up items x
+
+save and load pogedex info
+
+stats scene move info fucked up
+
+burn status locks the queue progress
+
+cant find this pogemon yet and pogemon cannot be found in the wild interactions in pogedex
+
+trick room crashed the game
+
+Jah's wallafi's growl deosnt display attack reduced message x
+
+stats change queueing is fugged
+
+item img doesnt disapear after pickup ????
+
+prev level during lvl up is wrong????
+
+pogemart didint set spawn position in fair_Town
+
+obstacles {
+    cut trees disapear after: {
+        battle x
+        save x
+    }
+}
+
+leave rock disabled between saves, VERY FUCKY FOR SOME REASON HOLY FUCKING SHIT THIS IS DUMB x -- answer was very easy i was just tilted lmao take a break bro :3
+
+set block to banishment_Road x
+
+burn timing is wacked x -- burn queue disabling should be ok now, now 100% sure tho -- make sure to keep console.log('here') next to queueProcess.disabled = true
+
+rain already active doesnt let queueProgress go x
+
+sometimes end turn when hit by confusion if first x
+
+confusion is totaly fuuuuuucked -- when attacking during confusion, deals so much more damage -- doesnt do more damage, attacks twice x
+
+pogemon wont faint after headbutt / tackle fights lmao? x
+
+status isint checked on first turn, checked normaly on second and goes ape shit on 3rd x
+
+felt the burn is fucked, seed event wont play after it x
+
+check seeds and confusion, second turn fires status event thingy multiple times for some reason x
+
+seed event only checks first / ally x
+
+was burnt queues in too fast x
+
+weather happens before seed and burn if seeded and burnt x
+
+weather skips a turn -- classes.js:2734 x
+
+was burnt shows up late x
+
+is already burnt doestn show up -- think is fixed x
+
+when wallafi did rainy_day on first turn, no weather even happend -- used trickroom x
+
+when wallafi did heat_wave on 2nd turn, weather happend twice -- used heat_wave x
+
+weather + status + trickroom + leech seed + confusion probably doesnt show in proper order x
+
+change confusion turn from 99 to 3 again x
+
+buff / debuff arrow needs to be ajusted AGAIN XDDDD x
+
+fix shiny sparkle position -- fixed ifself???????????? x
+
+PARA DOESNT HAPPEN AFTER CONFUSION x
+
+sleep is all kinds of fucked up x
+
+check flinch with confuse + sleep combo x
+
+stat change happens after weather x
+
+fix move rotations x
+
+potion during battle doesnt make opponent move happen x
+
+battle items needs testing x
+
+test switch with confuse and para x
+
+pogemon id changes x
+
+affliction status when i run away x
+
+cut weatherState if succefully ran away x
+
+pogemon confusion after switch happens after weather event x
+
+status lowered goes between trickroom and rain for slower mon x
+
+paralyze turn makes opponent always go last x
+
+sometimes foe hits itself in confused and then enemy x
+
+should test more with trickroom, some end turn stuff seems funky like sleep being animated at the same time as confusion x
+
+slower pogemon confusion hit can be skipped beacuse queueProcess is renabled durin confusion process x
+
+catch and switch needs testing x
+
+finish pogemon renaming after catch x 
+
+bad time thru saves -- always save new time x
+
+pogemon healing item event doesnt trigger often enought x
+
+put weather event before grided x
+
+overworld display box that shows met encounter in the current map x
+
+prevent menu when renaming x
+
+set level cap if Xth gym isint beaten??? maybe half exp gained after Xth level -- only 3 gym, level difference should make it challenging enought
+
+reduce hold when health is low x
+
+change animation selection from name to animaitonType on MovesObj x
+
+change animation for priority moves x
+
+fix move hit location x
+
+self debuff should happen right after user attack and not after foe attack -- just unshift unto the queue
+
+when both are frozen only ally takes frozen dmg x
+
+add sound check attribute to moves so they can pass thru sub and be immuned to sound proof x
+
+if(sprite.name != sub) dont remove it !!!! -- should be good
+
+prevent queue proceed during u-turn event x
+
+check if crit chance bonus on attack is coded in x
+
+quiver dance only boosts 1 stat x
+
+hold isint set back after quiver dance animation x
+
+setTimeout buff instead of queuing it -- think i tried this and fucked it up x
+
+acient power increases infinitly x
+
+trainer team wrong after save -- only last mon is saved and made first, the rest become null x
+
+html indicators for sticky web and rocks x
+
+stealth rock / sticky web interaction x
+
+fix status sprite position x
+
+screens x
+
+defog screens away x
+
+psychic fang screens away x
+
+weatherSpent changed and is fucked again, need to work on it a tad bit so its not as fucky x
+
+weather doesnt change when using weather move x
+
+specialMoveEffects breaks when trying to run away -- recipientMove is set as null so it broky x
+
+u-turn is fucked -- after my u-turn, enemy u-turn's twice, once with animation hitting itself x
+
+make scrappy immuned to intimidate x
+
+make more moves x
+
+terrainArr always return with only one entry -- if(terrainArr.length = 1) instead of if(terrainArr.length == 1) XDDDD
+
+make npc not use not very effective moves x
+
+magicBounce:{
+    afflictions :{
+     confused x
+     seed x
+     taunt x
+    }
+    stats : {
+     debuff x
+     recipentBuff ???
+    }
+    status : {
+     burn x
+     para x
+     psn x
+     slp x
+     frz x
+    }
+    terrain : {
+     webs x
+     rocks x
+     defog x
+    }
+} x
+
+eat berry sprite x
+
+slide in animations for mons and healthbars x
+
+recover pp when move drops to 0pp holding berry in battle x
+
+move takes 2 pp x
+
+make more items x
+
+TMS -- make opacity menu in the middle of bag scene to change one of your pogemon's moves with the selected tm's move x
+
+tms for everyone? x
+
+add move description somewhere x
+
+make fly / teleport x
+
+held items effect in battle {
+    leftovers
+    life orb
+} x
+
+dude in eden forest that gives a banana if you dont already have one x
+
+make sure baaull isint on altar after battle x
+
+keme_Town:{
+    dude in keme town that gives the sand plankton to find duney
+
+    2nd house in keme could just be djed's house
+} x
+
+fix change map name display -- disable map change while display still happening?? x
+
+make faint happen after damage animation x
+
+chance for wild encouter to have held item x
+
+set premade moveset for gym leader pogemons / static encouters / legendaries / boss / whatever x
+
+make lucky egg x
+
+make weather and screen items x
+
+repels x
+
+scribble_Town:{
+    set encounters in prev areas
+    set items in prev areas
+    set trainers in prev areas
+    
+    hermes house in scribble town -- add kukum that give permission to go on mountain peak
+
+    move relearner and renamer
+} x
+
+split exp gain between combatants???? -- not sure if it works properly, was done a LONNNNGGG time ago x
+
+manage what pogemart shows properly x
+
+false swipe x
+
+make ability capsule x
+
+battle item shop - tm shop x
+
+ma'at's berry shop?? no real other way to get berries otherwise x
+
+copy json file as save file and button to import during new game boot scene x
+
+import trainer in move method and set ai based on trainer difficulty x
+
+ai:{
+    prevent confuse
+    prevent leech seed
+    prevent reflect / lightscreen
+    prevent terrain
+} x
+
+do gym winning message and summoner winning message x
+
+evil monk rich guy / Solomon house -- gives teleport gem after explaining portal x
+
+key item for cut rock smash and surf x
+
+add jleech evo -- if atk + spatk + spd ivs > hp + def + spdef ivs x
+
+set no gender for steeli and legendaries x
+
+fix exclamation box x
+
+set correct move damage and acc x
+
+re enable trainers x
+
+data: {
+    set exp yeild
+    set catch rate
+    set abilities
+    set evo
+    set surfable
+    set moves
+} x
+
+switch pogemon in order if gym leader or summoner battle x
+
+make legendary spots x
+
+make white flash after first 4 legendaries encounters explaining scribble town changes x
+
+require hidden ability to be seen to switch to it x
+
+prevent TM learning of move is already in learntMove Arr x
+
+put pogemon evolution moveset into learntMoves after evolution x
+
+flame orb / toxic orb x
+
+synchronize natures x
+
+drizzle wont start on second battle x
+
+alquima_Town:{
+    1st house gives bait for regaligyne
+} x
+
+add regaligyne evo -- royal jelly held by female formal when party full of ants then talk to rock in melchi cave x
+
+make skopt evolve level up in neo_Genesis at lvl 50 x
+
+make pick up harder x
+
+save pc thru saves -- currently deletes everything that is in PC x
+
+make multiple boxes for pc x
+
+opponent debuff sprite position is bad x
+
+pacc isle map access giver -- after making illuminated gem -- grandfather of solstice summoner x
+
+put all trainers back to beaten : false x
+
+ask hermes to make the perfect crystal -- requires beeasis and sustiris energy to make -- fight hermes that has dahgua -- his team should be around 75 ~ 85 x
+
+add boolean on guardians to check for hermes fight x
+
+GUARDIAN QUEST CHECK FOR GEMS x
+
+put some story stuff-- done?? i guess story isint done until dahgua stuff has been added x
+
+set shiny rate back to something sensible x
+
+shiny charm x
+
+fix enemy pogemon hold when switching x
+
+level caps x
+
+↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
+
+stuffToDo:{
+    ideas:{
+        name player scene before game start after new save file -- you feel comfrotable and warm. player, it's time to wake up!
+
+        -- done!!!!
+    }
+
+    bugs:{
+        remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
+
+        didint test unaware but 80% sure it works
+
+        80% sure magic bounce / synchronize interaction works properly
+
+        didint test black sludge
+
+        teleport gem teleports to weird ass places when tping -- related spawnPosition being reassinged when there is a save file or pogecenterReturnInfo stuff found
+
+        put looking direction on changeMap collisions so i dont get in by accident
+    }
+}
+
+------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+add description for every pogemon 
+
+MUSIC AND MOVE SOUNDS
+
+print battle info in chrome console and refresh it when battle ends
+
+at least 1 overworld encounter?
+
+heabutt for trees?
+
+sand and ice should damage????
+
+Infinite EV's??????
+if i add EVS i need to add ev reducing berries
+
+stats menu number tags to see how much EVS have been collected
+
+spikes
+
+grid walking?
+
+make league?
+
+NPC trading?
+
+fishing?
+
+breeding??
+
+multiplayer?????
+
+online trading?????
+
+online battle?????
+
+skeleton t-rex mon ???
+
+rival????????????????
+
+disso ability / evo
+
+frozen jail lmao

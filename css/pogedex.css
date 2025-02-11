@@ -1,0 +1,493 @@
+#pogedexScene{
+   display: none;
+   position: absolute;
+   top: 0;
+
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneContainer{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneGrid{
+   display: grid;
+   grid-template-columns: 55% 45%;
+
+   height: 100%;
+   width: 100%;
+}
+
+.pogedexSceneSection{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneDetail{
+   display: grid;
+   grid-template-rows: 17.5% 65% 17.5%;
+}
+
+#pogedexSceneTargetSectionDetailsContainer{
+   display: grid;
+   grid-template-columns: 50% 50%;
+}
+
+.pogedexSceneTargetSectionDetail{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.pogedexSceneTargetSectionDetails{
+   height: 100%;
+   width: 100%;
+}
+
+.pogedexSceneTargetSectionDetail{
+   height: 100%;
+   width: 100%;
+}
+
+#pogedexSceneTargetMoreInfoButton{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.infoHover:hover{
+   background-color: rgba(211, 211, 211, 0.25);
+   cursor: pointer;
+}
+
+#pogedexSceneScroll{
+   position: absolute;
+
+   overflow-y: scroll;
+
+   height: 100%;
+   width: 45%;
+}
+
+.pogedexSceneScrollContent{
+   display: grid;
+   grid-template-columns: 160px 250px auto;
+
+   margin-top: 10px;
+
+   height: 150px;
+   width: 97.25%;
+   background-color: rgba(75, 75, 75, 1);
+}
+
+.pogedexHover:hover{
+   background-color: rgba(150, 150, 150, 1) !important;
+   cursor: pointer !important;
+}
+
+.pogedexSceneScrollPogemonImg{
+   position: relative;
+
+   height: 100%;
+   max-height: 155px;
+   width: 160px;
+}
+
+.pogedexPogemonInfo{
+   display: flex;
+
+   align-items: center;
+   justify-content: center;
+}
+
+#infoMainContainer{
+   position: absolute;
+   top: 0;
+
+   display: none;
+   grid-template-columns: 30% 70%;
+
+   height: 100%;
+   width: 100%;
+}
+
+.infoSegment{
+   position: relative;
+
+   width: 100%;
+   height: 100%;
+}
+
+#pogedexInfoMap{
+   position: relative;
+   top: 50%;
+   /* left: 50%; */
+   /* transform: translate(-50%, -50%); */
+
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgb(30.75,30.75,30.75);
+
+   padding: 17.5 0 17.5 0;
+}
+
+#infoSection{
+   display: grid;
+
+   grid-template-rows: 22.5% 55% 22.5%;
+}
+
+#pogemonInfoImg{
+   position: relative;
+   left: 50%;
+   top: 300;
+   transform: translate(-50%, -50%);
+
+   width: 80%;
+}
+
+#bottomInfoContainer{
+   display: flex;
+   align-self: center;
+
+   padding: 8;
+
+   margin-right: 13;
+
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgba(128, 128, 128, 0.25);
+
+   height: 145px;
+
+   line-height: 30px;
+}
+
+#middleInfoContainer{
+   display: grid;
+   grid-template-columns:  45% 55%;
+}
+
+#rightInfoContainer{
+   display: grid;
+   grid-template-columns: 60% 40%;
+
+   float: right;
+
+   height: 100%;
+   width: 97.5%;
+}
+
+.rightInfoContainer{
+   display: none;
+   flex-direction: column;
+
+   align-items: center;
+   /* justify-content: center; */
+   
+   height: 100%;
+   width: 100%;
+
+   /* overflow-y: scroll; */
+}
+
+#rightInfoStatsContainer{
+   border: 5px white solid
+}
+
+.bottomInfoSegment{
+   height: 100%;
+   width: 100%;
+}
+
+#pogemonInfoContainer{
+   display: grid;
+   grid-template-columns: 45% 55%;
+}
+
+.pogemonInfoSegment{
+   height: 100%;
+   width: 100%;
+}
+
+#pogemonInfoSegment{
+   display: grid;
+   grid-template-rows: 50% 50%;
+}
+
+#pogedexInfoTypeSection{
+   display: grid;
+   grid-template-columns: 50% 50%;
+}
+
+.pogedexInfoTypeContainer{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   margin: 15px;
+}.pogedexInfoTypeContainer>*{
+   font-size: 16px;
+}
+
+.pogemonInfoType{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   height: 18px;
+   width: 140px;
+}
+
+#pogedexInfoNameContainer{
+   display: flex;
+   align-items: end;
+   justify-content: center;
+}
+
+#pogemonNameContainer{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   height: 50%;
+   width: 50%;
+   
+   text-align: center;
+
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgba(128, 128, 128, 0.25);
+}
+
+#pogemonStatsSegment{
+   display: grid;
+   grid-template-rows: 50% 50%;
+}
+
+.pogedexInfoStatContainer{
+   display: grid;
+   grid-template-columns: repeat(3, 33.33%);
+}
+
+.pogedexInfoStatContent{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   text-align: center;
+
+   margin: 12.5px;
+
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgba(128, 128, 128, 0.25);
+}
+
+#rightInfoContentContainer{
+   height: 100%;
+
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgba(128, 128, 128, 0.25);
+
+   margin: 12.5px;
+
+   max-height: 546px;
+}
+
+#rightInfoRightContainer{
+   border: 2.5px solid rgba(128, 128, 128, 0.125);
+   background-color: rgba(128, 128, 128, 0.25);
+
+   height: 100%;
+   width: 90%;
+
+   margin: 12.5px;
+
+   max-height: 546px;
+}
+
+#rightInfoSelectionContainer{
+   display: grid;
+   grid-template-rows: 50% 50%;
+
+   height: 100%;
+   width: 100%;
+}
+
+#rightInfoReturnContainer{
+   display: none;
+
+   position: relative;
+   top: -100%;
+
+   height: 48;
+   width: 48;
+}
+
+.rightInfoSelectionButton{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   height: 100%;
+   width: 100%;
+}.rightInfoSelectionButton:hover, #rightInfoReturnContainer:hover{
+   cursor: pointer;
+
+   background-color: rgba(77, 77, 77, 0.35);
+}
+
+.pogedexInfoMoveContainer{
+   text-align: center;
+
+   height: auto;
+   width: 100%;
+
+   font-size: 22;
+
+   padding: 25 0 25 0;
+}.pogedexInfoMoveContainer:hover{
+   cursor: pointer;
+   background-color: rgba(77, 77, 77, 0.35);
+}
+
+.pogedexInfoAbilityContainer{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
+
+   height: 33.33%;
+   width: 100%;
+
+   font-size: 22;
+}.pogedexInfoAbilityContainer:hover{
+   cursor: pointer;
+   background-color: rgba(77, 77, 77, 0.35);
+}
+
+.leftInfoContainer{
+   display: none;
+   flex-wrap: wrap;
+
+   height: 100%;
+   width: 100%;
+}
+
+#abilityInfoContainer{
+   align-items: center;
+   justify-content: center;
+
+   text-align: center;
+
+   line-height: 300%;
+}
+
+.moveInfo{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+
+   height: 33.33%;
+   min-width: 50%;
+   max-width: 50%;
+
+   font-size: 16;
+
+   text-align: center;
+}
+
+#pogedexEffectsContainer{
+   display: grid;
+   grid-template-rows: 40% 60%;
+
+   justify-content: center;
+   align-items: end;
+}
+
+#pogedexEffectsTitle{
+   display: flex;
+   justify-content: center;
+   align-items: end;
+
+   font-size: 16;
+
+   height: 100%;
+}
+
+#pogedexEffectsContent{
+   display: flex;
+   justify-content: center;
+   align-items: start;
+   flex-direction: column;
+
+   font-size: 12;
+
+   height: 100%;
+}
+
+.encounterArea{
+   position: absolute;
+
+   animation: blinker 2s step-start infinite;
+
+   opacity: 0;
+}
+
+.encounterBackground{
+   position: absolute;
+
+   background-color: rgb(30.75,30.75,30.75);
+
+   opacity: 1;
+
+   /* display: none; */
+}
+
+@keyframes blinker {
+   50% {
+      opacity: 0;
+   }
+}
+
+#rightInfoAbilitiesContainer{
+   justify-content: center;
+}
+
+#rightInfoMovesContainer{
+   overflow-y: scroll;
+}
+
+#pogedexMapOverlappingContainer{
+   display: none;
+   justify-content: center;
+   align-items: center;
+
+   position: absolute;
+   top: 0;
+
+   height: 100%;
+   width: 87.5%;
+
+   background-color: rgba(5, 5, 5, 0.975);
+}
+
+#pogedexMapOverlappingTextContainer{
+   display: flex;
+   align-items: center;
+
+   position: absolute;
+
+   height: 150px;
+   width: 300px;
+
+   text-align: center;
+
+   background-color: rgba(128, 128, 128, 0.125);
+}
+
+#pogedexLeftContainerContent{
+   position: relative;
+   top: 50%;
+   left: 55.5%;
+   transform: translate(-50%, -50%);
+}

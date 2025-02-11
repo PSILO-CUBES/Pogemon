@@ -1,0 +1,465 @@
+#bagScene{
+  display: none;
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 100%;
+
+  z-index: 999;
+
+  pointer-events: none;
+}
+
+#bagSceneContainer{
+  display: none;
+  grid-template-columns: 40% 60%;
+  
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneMiscContainer{
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+
+.bagSceneMiscHeaderContainer{
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 86% 14%;
+}
+
+.bagSceneMiscSection{
+  text-align: end;
+  align-self: center;
+}
+
+.bagScenePogebuckIcon{
+  text-align: start;
+}
+
+.bagSceneSortIcon{
+  position: relative;
+  top: 50%;
+  left: 90%;
+  transform: translate(-50%,-50%);
+}
+
+.bagSceneTeamContainer{
+  height: 95%;
+
+  display: grid;
+  grid-template-rows: repeat(6, 16.666666%);
+}
+
+.bagSceneTeamSection{
+  display: grid;
+  grid-template-columns: 125px auto;
+
+  position: relative;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  
+  height: 80%;
+  width: 87.5%;
+}.bagSceneTeamSection > * {
+  pointer-events: none;
+}
+
+.bagSceneTeamSectionInfoContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+  
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneTeamSectionInfoTopContainer{
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+
+  padding: 12.5px;
+}
+
+.bagSceneTeamSectionInfoBottomContainer{
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.bagSceneTeamSectionImgContainer{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.bagSceneTeamSectionLvl{
+  position: relative;
+  left: -125px;
+  width: 0;
+
+  word-break: keep-all;
+
+  font-size: medium;
+}
+
+.bagSceneTeamSectionItem{
+  position: relative;
+
+  height: 35px;
+
+  pointer-events: all !important;
+}
+
+.bagSceneTeamSectionGender{
+  position: relative;
+  height: 15px;
+
+  top: -92px;
+  left: 25;
+
+  pointer-events: all !important;
+}
+
+.bagSceneTeamSectionHP{
+  padding-left: 15px;
+  font-size: large;
+}
+
+.bagSceneTeamSectionHealthBarContainer{
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneTeamSectionHealthBar{
+  height: 40%;
+  width: 75%;
+  clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
+}
+
+.bagSceneTeamSectionGreenBar{
+  height: 100%;
+  width: 100%;
+
+  float: left;
+  
+  background-color: green;
+
+  transition: ease-out 1s;
+}
+
+.bagSceneTeamSectionGreyBar{
+  height: 100%;
+  width: 100%;
+
+  background-color: grey;
+}
+
+.bagSceneTeamSectionStatusImg{
+  position: absolute;
+  top: 65;
+  right: 0;
+
+  height: 15%;
+}
+
+.bagSceneItemsMenu{
+  display: grid;
+  grid-template-rows: 10% 75% 15%;
+}
+
+.bagSceneItemTypeContainer{
+  display: grid;
+  grid-template-columns: repeat(8, auto);
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneItemTypeImg{
+  border-radius: 5px;
+} .bagSceneItemTypeImg:hover{
+  cursor: pointer;
+  background-color: rgb(128, 128, 128, 0.15);
+}
+
+.bagSceneItemType{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneItemListContainer{
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneItemContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 20%;
+  width: 100%;
+}
+
+.bagSceneItem{
+  display: grid;
+  grid-template-columns: 125px auto;
+  
+  height: 83.3%;
+  width: 90%;
+}.bagSceneItem:hover{
+  cursor: pointer;
+}.bagSceneItem > * {
+  pointer-events: none;
+}
+
+.bagSceneItemImgDom{
+  height: 115px;
+  width: auto;
+  max-width: 124px;
+}
+
+.bagSceneItemImgContainerDom{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneItemInterfaceContainer{
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneItemInfoContainer{
+  display: grid;
+  grid-template-columns: 100% 10%;
+
+  justify-items: center;
+  align-items: center;
+}
+
+.bagSceneItemInfoQuantityContainer{
+  position: relative;
+  left: -100px;
+}
+
+.bagSceneItemDialogueContainer{
+  position: relative;
+  
+  margin: 25px;
+
+  height: 125px;
+  width: 95%;
+}
+
+.bagSceneItemMenuContainer{
+  display: none;
+  grid-template-columns: repeat(3,33.33%);
+
+  position: relative;
+
+  height: 150px;
+  width: 100%;
+}
+
+.bagSceneMenuButtonContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneMenuButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 80%;
+  width: 80%;
+}.bagSceneMenuButton:hover{
+  cursor: pointer;
+}
+
+.bagSceneConfirmationContainer{
+  display: none;
+  grid-template-columns: 80% 20%;
+
+  height: 100%;
+}
+
+.bagSceneConfirmationDialogue{
+  padding: 25;
+}
+
+.bagSceneConfirmationOptionContainer{
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  width: 100%;
+}
+
+.bagSceneConfirmationOptionButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+
+  cursor: pointer;
+
+  background-color: rgba(0, 128, 0, 0.15);
+}.bagSceneConfirmationOptionButton:hover{
+  background-color: rgba(0, 128, 0, 0.3);
+}
+
+.bagSceneConfirmationOptionButton:nth-child(2){
+  background-color: rgba(255, 0, 0, 0.15);
+}.bagSceneConfirmationOptionButton:nth-child(2):hover{
+  background-color: rgba(255, 0, 0, 0.3);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: darkgray; 
+}
+
+#restoreMovePPContainerBackground{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#restoreMovePPContainer{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 500;
+  width: 900;
+
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+
+
+  background-color: rgb(10, 10, 10);
+}
+
+.restoreMovePPMoveContainer{
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 50%;
+}
+
+.restoreMovePPMoveContentContainer{
+  display: flex;
+  flex-wrap: wrap;
+
+  align-content: center;
+  justify-content: center;
+
+  height: 150%;
+  width: 90%;
+
+  background-color: rgba(0, 0, 0, 0.25);
+
+  text-align: center;
+}
+
+.restoreMovePPMoveContentContainerHover:hover{
+  background-color: rgba(25, 25, 25, 0.25);
+  cursor: pointer;
+}
+
+#bagSceneMapContainerBackground{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 100%;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#bagSceneMapContainer{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 950;
+  width: 700;
+
+  background-color: rgb(10, 10, 10);
+}
+
+.teleportArea{
+  animation: blinker 2s step-start infinite;
+} .teleportArea:hover{
+  cursor: pointer;
+}
+
+@keyframes blinker {
+  50% {
+     opacity: 0;
+  }
+}

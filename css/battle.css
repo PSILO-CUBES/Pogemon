@@ -1,0 +1,702 @@
+#foeHealthBarContainer{
+  position: absolute;
+  left: -800;
+  top: 3%;
+
+  background: black;
+
+  height: 100;
+  width: 40%;
+
+  z-index: 2;
+}
+
+#foeTeamShowcase{
+  display: flex;
+
+  position: absolute;
+  top: 13.5%;
+
+  height: 25;
+  width: 15%;
+  
+  margin-top: 12.5;
+
+  transition: 0.5s ease-in-out;
+}
+
+.foeTeamShowcaseIndividual{
+  height: 100%;
+  width: 100%;
+}
+
+.foeTeamShowcaseBalls{
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 25;
+  width: auto;
+}
+
+#allyHealthBarContainer{
+  position: absolute;
+  top: 62.5%;
+  right: -800;
+
+  background: black;
+
+  height: 100;
+  width: 40%;
+
+  z-index: 2;
+}
+
+#foeHealthBarContainer,
+#allyHealthBarContainer{
+  transition: 0.5s ease-in-out;
+}
+
+.infoContainer{
+  display: grid;
+  grid-template-columns: 70% 10% auto auto;
+}
+
+.status{
+  position: absolute;
+  left: 480px;
+  top: 15.5%;
+
+  height: 24;
+  width: 75;
+}
+
+#allyStatus, #foeStatus {
+  display: none;
+}
+
+.battleName{
+  position: relative;
+  left: 15;
+  top: 15;
+}
+
+.battleLvl{
+  display: flex;
+  justify-content: flex-end;
+
+  position: relative;
+  right: 15;
+  top: 15;
+}
+
+#battleScene{
+  position: absolute;
+  top: 0;
+
+  display: none;
+  grid-template-rows: 75% 25%;
+
+  height: 100%;
+  width: 100%;
+}
+
+#menu{
+  height: 100%;
+  width: 100%;
+
+  background: rgb(0, 0, 0);
+}
+
+#dialogueInterface{
+  display: none;
+  cursor: pointer;
+  padding: 30;
+  height: 100%;
+  width: 100%;
+}
+
+.menuInterface{
+  display: grid;
+  grid-template-columns: 60% 40%;
+
+  height: 100%;
+}
+
+#textBox{
+  padding: 25;
+}
+
+#optionBox, #movesBox{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.optionButton, .movesButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50%;
+  height: 50%;
+}
+
+.optionButton:hover, .movesButton:hover, .learnMoveOptionButton:hover{
+  background-color: rgba(255, 255, 255, 0.25);
+
+  cursor: pointer;
+}
+
+#movesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+
+.movesDescContainer{
+  display: flex;
+  justify-content: flex-end;
+}
+
+#moveDescElement{
+  display: flex;
+}#moveDescElement > span{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 50%;
+  height: 100%;
+
+  font-size: 16px;
+}#moveDescElement > span:nth-child(2){
+  justify-content: start;
+}
+
+.statsElementContent{
+  font-size: 16px;
+}
+
+.descContainer{
+  display: flex;
+  width: 100%;
+} .descContainer > div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+
+  width: 100%;
+  height: auto;
+}
+
+.statusContainer{
+  position: relative;
+
+  display: grid;
+
+  grid-template-rows: 50%;
+}
+
+.healthContainer{
+  position: relative;
+  top: 46%;
+
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.healthBarContainer{
+  position: relative;
+
+  clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
+}
+
+.healthBar{
+  position: relative;
+  width: 100%;
+
+  height: 31;
+
+  background: green;
+
+  z-index: 3;
+  
+  transition: ease-out 0.5s;
+}
+
+.healthBarBackground{
+  position: relative;
+  top: -100%;
+
+  width: 100%;
+  height: 30;
+
+  background: darkgrey;
+
+  display: inline-block;
+
+  z-index: 2;
+}
+
+/* somehow put gradient from green on the denominator to the color representing the state of the current hp */
+.hp{
+  display: flex;
+  justify-content: center;
+}
+
+.expBarContainer{
+  pointer-events: none;
+
+  clip-path: polygon(0% 0%, 0% 0%, 100% 1000%, 100% 0%);
+}
+
+.expBar{
+  position: relative;
+
+  height: 72.5%;
+  width: 0%;
+
+  background-color: aqua;
+
+  z-index: 2;
+
+  transition: ease-out 0.5s;
+}
+
+.expBarBackground{
+  position: relative;
+  top: -72.5%;
+
+  height: 72.5%;
+  width: 100%;
+
+  background-color:aquamarine;
+
+  display: inline-block;
+
+  z-index: 1;
+}
+
+#lvlUpWindow{
+  position: absolute;
+
+  height: 400;
+  width: 650;
+
+  left: 2900;
+  top: 39.5%;
+  transform: translate(-50%,-50%);
+  
+  display: none;
+  grid-template-rows: 25% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.5s ease-out;
+}
+
+#teamLvlUpWindow{
+  position: absolute;
+
+  height: 115;
+  width: 650;
+
+  left: 120.5%;
+  top: 10.5%;
+  transform: translate(-50%,-50%);
+  
+  display: none;
+  grid-template-columns: 115px auto;
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.2s ease-out;
+}
+
+#teamLvlUpExpDetailsLvl{
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+
+  margin-left: -15px;
+}
+
+#teamLvlUpExpDetailsContainer{
+  display: grid;
+  grid-template-rows: 75% 25%;
+}
+
+.teamLvlUpExpContainer{
+  display: flex;
+
+  position: relative;
+  top: 1px;
+  left: 1px;
+
+  height: 100%;
+  width: 100%;
+
+  clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
+}
+
+.teamLvlUpExpBar{
+  position: absolute;
+
+  background-color: aqua;
+
+  height: 100%;
+  width: 0%;
+}
+
+.teamLvlUpExpBackBar{
+  background-color: aquamarine;
+
+  height: 100%;
+  width: 100%;
+}
+
+.teamLvlUpImg{
+  height: 115;
+}
+
+.lvlUpStatsContainer{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.lvlUpDisplay{
+  display: flex;
+
+  justify-content: end;
+  align-items: center;
+
+  font-size: 22;
+}
+
+#lvlUpLvl{
+  justify-content: center;
+}
+
+.lvlUpStatsName{
+  justify-content: start;
+
+  padding-left: 25;
+}
+
+.lvlUpStats{
+  padding-right: 25;
+}
+
+#learnMoveInterface{
+  display: none;
+  grid-template-columns: 60% 40%;
+}
+
+.learnMoveOptionButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 50%;
+
+  cursor: pointer;
+}
+
+#learnMoveDialogue{
+  padding: 25;
+}
+
+#foeHealthBar{
+  top: -1;
+}
+
+.genderImgContainer{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.genderImg{
+  position: absolute;
+  top: 3.5;
+
+  height: 25px;
+  
+  padding: 10;
+}
+
+.buffDiv{
+  background-color: rgba(0, 255, 0, 0.75);
+
+  clip-path: polygon(50% 0%, 95% 40%, 100% 60%, 60% 50%, 40% 50%, 0% 60%, 5% 40%);
+  /* help from https://bennettfeely.com/clippy/ */
+}
+
+.debuffDiv{
+  background-color: rgba(255, 0, 0, 0.75);
+
+  clip-path: polygon(40% 55%, 59% 55%, 95% 40%, 100% 40%, 50% 100%, 0 40%, 5% 40%);
+  /* help from https://bennettfeely.com/clippy/ */
+}
+
+.allyStatusEffectContainer{
+  position: relative;
+  left: 450px;
+
+  height: 65%;
+  width: 22.5%;
+}
+
+.foeStatusEffectContainer{
+  position: relative;
+  left: 1400px;
+
+  height: 40%;
+  width: 17.5%;
+}
+
+#learnMoveInfo{
+  display: grid;
+  grid-template-rows: 60% 40%;
+
+  position: absolute;
+
+  height: 400;
+  width: 650;
+
+  left: 2900;
+  top: 39.5%;
+  transform: translate(-50%,-50%);
+
+  background-color: rgba(0, 0, 0, 0.95);
+
+  transition: 0.5s ease-in-out;
+}
+
+#learnMovesDesc{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  height: 100%;
+}
+
+#learnMoveName{
+  display: grid;
+  text-align: center;
+  align-items: center;
+
+  height: 100%;
+  width: 100%;
+}
+
+/* #fieldEffect, #trickRoomIndicator{
+  height: 100%;
+  width: 100%;
+} */
+
+#trickroom{
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  height: 100%;
+  width: 100%;
+}
+
+#trickroomCells{
+  border: rgba(128, 0, 128, 0.25) solid 1px;
+
+  height: 100%;
+  width: 100%;
+}
+
+#fieldEffect{
+  height: 100%;
+}
+
+#fieldEffectContainer{
+  display: none;
+  justify-content: end;
+  align-items: start;
+
+  position: absolute;
+  top: 3%;
+  right: -124px;
+
+  height: 72px;
+
+  padding: 10;
+}
+
+#trickRoomIndicatorContainer{
+  display: none;
+  justify-content: end;
+  align-items: start;
+  transition: ease-in-out 1s;
+
+  position: absolute;
+  top: 10%;
+  right: -124;
+
+  height: 72;
+
+  padding: 8;
+}
+
+#foeScreenContainer{
+  position: absolute;
+  right: 904px;
+  top: 4%;
+
+  display: flex;
+
+  height: 92px;
+  width: 248px;
+}
+
+#allyScreenContainer{
+  position: absolute;
+  top: 54%;
+  right: 0;
+
+  display: flex;
+
+  height: 72px;
+  width: 248px;
+}
+
+#foeReflectIndicatorContainer,
+#allyReflectIndicatorContainer{
+  position: relative;
+
+  display: flex;
+  justify-content: end;
+  align-items: start;
+
+  height: 72px;
+
+  padding: 10;
+
+  z-index: 1;
+
+  transition: 0.5s ease-in-out;
+}
+
+#foeLightScreenIndicatorContainer,
+#allyLightScreenIndicatorContainer{
+  position: relative;
+
+  display: flex;
+  justify-content: end;
+  align-items: start;
+
+  height: 72px;
+
+  padding: 10;
+
+  z-index: 1;
+
+  transition: 0.5s ease-in-out;
+}
+
+#allyReflectIndicatorContainer,
+#allyLightScreenIndicatorContainer{
+  top: 84;
+}
+
+#foeReflectIndicatorContainer,
+#foeLightScreenIndicatorContainer{
+  top: -124;
+}
+
+#fieldEffectTurnIndicator, 
+#trickRoomTurnIndicator, 
+#foeReflectTurnIndicator,
+#allyReflectTurnIndicator,
+#foeLightScreenTurnIndicator,
+#allyLightScreenTurnIndicator{
+  align-self: center;
+  font-size: x-large;
+  padding-right: 8;
+  color: black;
+}
+
+#fieldEffectIcon, 
+#trickRoomIcon, 
+#reflectIcon, 
+#lightScreenIcon{
+  height: 100%;
+}
+
+#reflectIcon, 
+#lightScreenIcon{
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+#proceedImgContainer{
+  display: none;
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  
+  height: 75;
+  width: 75;
+
+  padding: 15;
+}
+
+#proceedImg{
+  height: 100%;
+
+  opacity: 0;
+  
+  animation: fade 3.5s linear infinite;
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
+}
+
+.battleCategoryIcon{
+  height: 35;
+}
+
+.hazardContainer{
+  position: absolute;
+
+  height: 160;
+  width: 110;
+
+  display: grid;
+  grid-template-columns: 50% 50%;
+  align-items: center;
+  justify-items: center;
+}
+
+#allyHazardsContainer{
+  left: 0;
+  top: 585;
+}
+
+#foeHazardsContainer{
+  right: 0;
+  top: 246.5;
+}
+
+.hazardType{
+  height: 92.5%;
+  width: 92.5%;
+
+  background-color: rgba(0, 0, 0, 0.625);
+
+  transition: 1s ease-in-out;
+
+  opacity: 0;
+}

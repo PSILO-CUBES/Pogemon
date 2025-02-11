@@ -1,0 +1,167 @@
+#teamScene{
+  display: none;
+  
+  position: absolute;
+  top: 0;
+
+  height: 100%;
+  width: 100%;
+}
+
+#teamSceneContainer{
+  display: grid;
+
+  height: 100%;
+  width: 100%;
+}
+
+#teamMenuContainer{
+  height: 100%;
+  width: 100%;
+
+  display: none;
+  grid-template-columns: 50% 50%;
+
+  justify-items: center;
+  align-items: center;
+}
+
+.teamMenuSection{
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 250px auto;
+
+  height: 250px;
+  width: 85%;
+
+  border: 5px solid rgb(75, 75, 75);
+
+  color: white;
+} .teamMenuSection > *{
+  pointer-events: none;
+}
+
+.teamMenuInfoContainer{
+  display: grid;
+  grid-template-rows: 50% 50%;
+
+  background-color: rgb(75, 75, 75);
+}
+
+.teamMenuInfoSection{
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  padding: 15;
+  margin-top: 5;
+}
+
+.teamMenuGenderImg{
+  height: 22.5px;
+}
+
+.teamMenuInfoLvl{
+  position: relative;
+  top: 6.5px;
+  left: -255px;
+}
+
+.teamMenuHealthBarSection{
+  position: relative;
+  left: 5px;
+}
+
+.teamMenuInfoHealthBarContainer{
+  position: relative;
+  top: 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+
+  width: 100%;
+  height: 80%;
+}
+
+.teamMenuInfoHealthBar{
+  height: 25%;
+  width: 75%;
+
+  clip-path: polygon(100% 100%, 0% 100%, 7.75% 0%, 100% 0%);
+}
+
+.teamMenuInfoHP{
+  padding-left: 10px;
+}
+
+.teamMenuInfoGreenBar{
+  height: 100%;
+  width: 100%;
+
+  background-color: green;
+}
+
+.teamMenuInfoGreenBarContainer{
+  position: absolute;
+  
+  height: 25%;
+  width: 75%;
+}
+
+.teamMenuInfoGreyBar{
+  background-color: grey;
+
+  height: 100%;
+  width: 100%;
+}
+
+#teamInterfaceContainer{
+  position: absolute;
+
+  align-self: center;
+  justify-self: center;
+
+  background: rgba(75, 75, 75, 0.75);
+
+  display: none;
+  grid-template-rows: repeat(3, 33.33%);
+
+  z-index: 9;
+}
+
+.inferfaceOption{
+  height: 100%;
+  width: 100%;
+
+  font-size: 0px;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}.inferfaceOption:hover{
+  background: rgba(175, 175, 175, 0.75);
+}
+
+.teamMenuSpriteContainer{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.pogemonTeamMenuItem{
+  width: 50px;
+}
+
+.teamMenuInfoStatus{
+  position: absolute;
+  top: 55%;
+  right: 0;
+
+  height: 24;
+  
+  margin-right: 10px;
+}
