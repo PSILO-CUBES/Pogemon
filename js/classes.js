@@ -5096,7 +5096,8 @@ export class Pogemon extends Sprite{
     let statusNameArr = ['slp', 'psn', 'para', 'burn', 'frz']
 
     for(let i = 0; i < statusNameArr.length; i++){
-      if(effectArr[i] == statusNameArr[i]) pass = true
+      if(effectArr[i] != undefined)
+        if(effectArr[i] == statusNameArr[i]) pass = true
     }
 
     return pass

@@ -692,6 +692,14 @@ name player scene before game start after new save file -- you feel comfrotable 
 
 ai sturdle always uses withdrawls x
 
+always evolve x
+
+team pushes undefined for some fucking dumb reason x
+
+save bug to get thru banishment_Road banana guy block x
+
+afflictions reset after battle x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -700,8 +708,6 @@ ai sturdle always uses withdrawls x
 
 stuffToDo:{
     ideas:{
-
-
 
     }
 
@@ -718,17 +724,27 @@ stuffToDo:{
 
         put looking direction on changeMap collisions so i dont get in by accident
 
+        
+
         -- gab tested buggs
-
-        always evolve
-
-        team pushes undefined for some fucking dumb reason
-
-        save bug to get thru banishment_Road banana guy block
 
         sand weather turn spent before move
 
-        it was not very effective text on protect
+        protect stuff :{
+            is was not very effective text on protect
+
+            effects affect pogemon even thru protect
+        }
+
+        player interation stuff :{
+            maat gym can talk when shes not there
+
+            heisenberg wrong dialogue
+
+            spamming player interaction forces chosenDialogue to pop
+
+            player.interaction stays stuck for some reason
+        }
 
         bag scene give potion display is fucked up -- changing wrong child node so i switch gender icon with held item icon by accident
 
@@ -736,11 +752,9 @@ stuffToDo:{
 
         target not defined classes.js:2996 -- after battle cant move
 
-        afflictions reset after battle
-
         affliction battle content goes over level up stuff
 
-        cant name player of pogemon only spaces
+        cant name player or pogemon only spaces
 
         remove spaces before letters
 
@@ -750,17 +764,22 @@ stuffToDo:{
 
         program no button in pogemart
 
-        maat gym can talk when shes not there
-
-        heisenberg wrong dialogue
-
-        spamming player interaction forces chosenDialogue to pop
-
-        player.interaction stays stuck for some reason
 
         switch without opponent attacking
 
         return to over world after team ally exp scene wont happen
+
+        maat gym trainer battle collisions
+
+        poison queue is pushed at wrong time
+
+        foe wild piny sprite change to small tadtoxic when switching
+
+        split exp is blocked by level cap
+
+        learning quick attack when already known
+
+        leave pogecenter with text box still open
     }
 }
 

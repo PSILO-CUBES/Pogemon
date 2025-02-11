@@ -1310,7 +1310,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 200,
+    yeild: 60,
     catchRate: 245,
     surfable: false
   },

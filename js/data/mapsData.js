@@ -367,8 +367,7 @@ export let mapsObj = {
     },
     height: 44,
     width: 62,
-    encounters: 
-      {
+    encounters: {
         ground: [
           {pogemon: pogemonsObj.flailegant, lvls: [3, 7], odds: {min:1,max:40}},
           {pogemon: pogemonsObj.wallafi, lvls: [3, 7], odds: {min:40,max:85}},
@@ -380,7 +379,7 @@ export let mapsObj = {
           {pogemon: pogemonsObj.flailegant, lvls: [8, 12], odds: {min:50,max:90}},
           {pogemon: pogemonsObj.nahass, lvls: [8, 12], odds: {min:90,max:100}},
         ]
-      },
+    },
     changeMapLocations:[
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
       {name: 'pearly_Path', spawnPosition: {x: -2000, y: -1900}}, 
