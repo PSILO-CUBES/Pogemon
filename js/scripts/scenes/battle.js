@@ -2340,7 +2340,7 @@ function switchEnemyAfterFaint(type){
 export let evoArr = []
 
 export function addToEvoArr(battler){
-  let pass = true
+  let pass = false
 
   if(battler.evo == null) return
 
@@ -2360,6 +2360,8 @@ export function addToEvoArr(battler){
           if(currMap.name == 'neo_Genesis') evoArr.push(battler)
         } else evoArr.push(battler)
         
+        console.log('evo check')
+
         pass = false
       } else {
         for(let i = 0; i < evoArr.length; i++){
@@ -2376,6 +2378,8 @@ export function addToEvoArr(battler){
     if(battler.name == 'skopt') {
       if(currMap.name == 'neo_Genesis') evoArr.push(battler)
     } else evoArr.push(battler)
+
+    console.log('evo check')
   }
 }
 

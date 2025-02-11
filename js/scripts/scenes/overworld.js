@@ -1181,6 +1181,8 @@ export function manageOverWorldState(state, previousScene){
         })
       }, 1250)
     }
+
+    
   } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)

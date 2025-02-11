@@ -1715,7 +1715,7 @@ export class Pogemon extends Sprite{
                 duration: 0.08
               })
       
-              gsap.to(recipient.sprite, {
+              gsap.to(recipient, {
                 opacity: 0,
                 yoyo: true,
                 repeat: 5,
@@ -5179,21 +5179,8 @@ export class Pogemon extends Sprite{
 
       switch(difficulty){
         case null:
-          if(
-            !assaultVestInteraction &&
-            !tauntInteraction &&
-            !preventRedundantConfusion &&
-            !preventRedundantSeeds &&
-            !preventRedundantTaunt &&
-            !preventRedundantReflect &&
-            !preventRedundantLightScreen &&
-            !preventRedundantTrickRoom &&
-            !preventRedundantStealthRocks &&
-            !preventRedundantStickyWeb &&
-            !preventRedundantStatus &&
-            !preventRedundantKnockOff
-            
-          ) effectiveMovesArr.push(move)
+        case undefined:
+          effectiveMovesArr.push(move)
           break
         case 'gym':
           if(
@@ -5241,6 +5228,8 @@ export class Pogemon extends Sprite{
           break
       }
     })
+
+    console.log(effectiveMovesArr)
 
     const newRNG = Math.floor(Math.random() * effectiveMovesArr.length)
 
