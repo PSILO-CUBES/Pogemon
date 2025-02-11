@@ -29,6 +29,7 @@ if(data == null){
   player.bag = new Map()
 
   data.bag.forEach(key =>{
+    console.log(key)
     player.bag.set(`${key.item.name}`, {item: {...key.item}, quantity: key.quantity})
   })
 }

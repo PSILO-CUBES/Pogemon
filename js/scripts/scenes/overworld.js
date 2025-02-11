@@ -952,14 +952,11 @@ export function manageOverWorldState(state, previousScene){
     }
 
     console.log(newGame)
-    if(newGame) player.bag.set('potion', {items: {...itemsObj.potion}, quantity: 5})
+    if(newGame) player.bag.set('potion', {item: {...itemsObj.potion}, quantity: 5})
 
     let teamPlaceHolder = []
     
     if(previousScene != 'boot' && previousScene != 'team' && previousScene != 'pc'){
-      // console.log(teamOrder)
-      // console.log(player.team)
-
       teamOrder.forEach((order, i) =>{
         player.team.forEach((pogemon, j) =>{
           if(order.id == pogemon.id) {
@@ -979,6 +976,16 @@ export function manageOverWorldState(state, previousScene){
       if(player.team.length <= 6) if(catchEventObj.active) teamPlaceHolder.push(player.team[teamOrder.length])
 
       player.team = teamPlaceHolder 
+      
+      player.team.forEach(pogemon =>{
+        pogemon.affliction[0].active = false
+        pogemon.affliction[0].turns = 0
+
+        pogemon.affliction[1].active = false
+
+        pogemon.affliction[2].active = false
+        pogemon.affliction[2].turns = 0
+      })
     }
 
     if(previousScene == 'boot' && newGame) player.name = playerName

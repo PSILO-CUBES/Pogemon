@@ -188,7 +188,7 @@ export let mapsObj = {
         info: {
           direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}}, 
           dialogue:[`Please, choose any of those 3 pogemons!`], 
-          dialoguePicked:[`I hope you enjoy the adventure you'll have alongside your companion!`], 
+          dialoguePicked:[`I hope you enjoy the adventure you'll have alongside your companion!`,`I'll heal them just to make sure you are good to go!`,`All ready to go!`], 
           looking: 'Down',
           eventKey: 'oak'
         },

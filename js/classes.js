@@ -5246,6 +5246,27 @@ export class Pogemon extends Sprite{
 
     return move
   }
+
+  completeHeal(){
+    this.hp = this.stats.baseHp
+
+    console.log(this.hp)
+
+    this.status.name = null
+    this.status.turns = 0
+
+    this.affliction[0].active = false
+    this.affliction[0].turns = 0
+
+    this.affliction[1].active = false
+
+    this.affliction[2].active = false
+    this.affliction[2].turns = 0
+
+    this.moves.forEach(move =>{
+      move.pp = movesObj[move.name].pp
+    })
+  }
 }
 
 export class Character extends Sprite{

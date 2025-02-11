@@ -2976,7 +2976,6 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
         target.affliction[0].active = false
 
-
         setTimeout(() =>{
           // queueProcess.disabled = true
           // console.log('here')

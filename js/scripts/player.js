@@ -803,7 +803,11 @@ function playerInteraction(e) {
         switch(player.interaction.info.eventKey){
           case 'oak':
             if(player.team.length == 0) chosenDialogue = player.interaction.info.dialogue
-            else chosenDialogue = player.interaction.info.dialoguePicked
+            else {
+              chosenDialogue = player.interaction.info.dialoguePicked
+              
+              player.team[0].completeHeal()
+            }
             
             break
           case 'maatMeeting' :

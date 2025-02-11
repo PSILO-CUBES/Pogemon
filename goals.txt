@@ -743,6 +743,8 @@ stuffToDo:{
         cant name player of pogemon only spaces
 
         remove spaces before letters
+
+        keep trees and rocks destroyed, also starter pogeball reappears for some reason
     }
 }
 
