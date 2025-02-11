@@ -629,6 +629,10 @@ export const playerTeamItemsState = {
 }
 
 export function transitionScenes(prevScene, exitedScene){
+  player.team.forEach((pogemon, i) =>{
+    if(pogemon == undefined) player.team.splice(i, 1)
+  })
+
   switch(prevScene){
     case 'overworld':
       gsap.to('#overlapping', {
@@ -920,7 +924,7 @@ let teamOrder
 
 export function manageOverWorldState(state, previousScene){
   if(state) {
-    player.disabled = true
+    player.disabled = false
 
     if(OWAnimationRuning) return
 
@@ -944,8 +948,11 @@ export function manageOverWorldState(state, previousScene){
       if(!player.badges[0]) player.team[0].dialogue('overworld', "Congratulations, you've earned your first badge!\n\nYou can now cut down pesky tree that are in your way.")
       else if (!player.badges[1]) player.team[0].dialogue('overworld', "Congratulations, you've earned a second badge!\n\nNo rock will ever be in your way from now on.")
 
-        console.log('messageNow')
+      console.log('messageNow')
     }
+
+    console.log(newGame)
+    if(newGame) player.bag.set('potion', {items: {...itemsObj.potion}, quantity: 5})
 
     let teamPlaceHolder = []
     
@@ -1182,7 +1189,7 @@ export function manageOverWorldState(state, previousScene){
       }, 1250)
     }
 
-    
+
   } else {
     teamOrder = [...player.team]
     // console.log(teamOrder)

@@ -1665,9 +1665,15 @@ function eventZoneManagement(eventZones){
       // console.log(eventZonesIndex)
       console.log(eventZonesIndex.type)
 
+      if(eventZonesIndex.type != 6){
+        document.querySelector('#openWindow').style.backgroundColor = 'transparent'
+        document.querySelector('#openWindow').replaceChildren()
+      }
+
       if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && !worldEventData.bananaGuy.bananaAsked) {
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
           console.log('messageNow')
@@ -1679,6 +1685,7 @@ function eventZoneManagement(eventZones){
       } if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && !bananaAquired()) {
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
         console.log('messageNow')
@@ -1690,9 +1697,9 @@ function eventZoneManagement(eventZones){
       } else if(eventZonesIndex.info.eventKey == "banishmentPathBlock" && worldEventData.bananaGuy.bananaAsked && bananaAquired() && !worldEventData.bananaGuy.bananaGiven) {
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.bananaDialogue)
-        console.log('messageNow')
 
         worldEventData.bananaGuy.bananaGiven = true
       }
@@ -1700,6 +1707,7 @@ function eventZoneManagement(eventZones){
       if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && !worldEventData.mousaCrest.ask){
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
         console.log('messageNow')
@@ -1711,6 +1719,7 @@ function eventZoneManagement(eventZones){
       } else if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && !worldEventData.kukum.permission){
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
         console.log('messageNow')
@@ -1720,6 +1729,7 @@ function eventZoneManagement(eventZones){
       } else if(eventZonesIndex.info.eventKey == "mousaCrestBlock" && worldEventData.kukum.permission){
         player.interaction = eventZonesIndex
         
+        disableOWMenu.active = true
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.permissionDialogue)
         console.log('messageNow')
@@ -1960,8 +1970,12 @@ function spendQueue(){
       document.querySelector('#pickedUpItem').src = ''
     }
 
-    player.disabled = false
-    disableOWMenu.active = false
+    console.log('lmao')
+
+    setTimeout(() =>{
+      player.disabled = false
+      disableOWMenu.active = false
+    }, 500)
 
     if(!healProcess) {
       if(player.interaction != null){

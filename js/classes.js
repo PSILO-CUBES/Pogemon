@@ -2993,7 +2993,7 @@ export class Pogemon extends Sprite{
                   justGotSeeded = true
                   recipient.affliction[1].active = true
 
-                  if(target.isEnemy) document.querySelector('#allySeeds').style.opacity = 1
+                  if(recipient.isEnemy) document.querySelector('#allySeeds').style.opacity = 1
                   else document.querySelector('#foeSeeds').style.opacity = 1
                 }
 

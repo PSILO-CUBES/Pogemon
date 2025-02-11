@@ -729,6 +729,20 @@ stuffToDo:{
         sand weather turn spent before move
 
         it was not very effective text on protect
+
+        bag scene give potion display is fucked up -- changing wrong child node so i switch gender icon with held item icon by accident
+
+        pogemon already has item dialogue
+
+        target not defined classes.js:2996 -- after battle cant move
+
+        afflictions reset after battle
+
+        affliction battle content goes over level up stuff
+
+        cant name player of pogemon only spaces
+
+        remove spaces before letters
     }
 }
 
