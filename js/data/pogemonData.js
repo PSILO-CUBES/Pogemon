@@ -1310,7 +1310,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 60,
+    yeild: 60.,
     catchRate: 245,
     surfable: false
   },
@@ -4670,6 +4670,7 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.headbutt, lvl: 1, seen: false},
+      2: {move: movesObj.growl, lvl: 1, seen: false},
     },
     sprites: {
       classic:{

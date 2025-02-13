@@ -708,7 +708,7 @@ afflictions reset after battle x
 
 stuffToDo:{
     ideas:{
-
+        keyboard for ui intergration
     }
 
     bugs:{
@@ -724,7 +724,7 @@ stuffToDo:{
 
         put looking direction on changeMap collisions so i dont get in by accident
 
-        
+
 
         -- gab tested buggs
 
@@ -746,6 +746,18 @@ stuffToDo:{
             player.interaction stays stuck for some reason
         }
 
+        naming stuff :{
+            prevent underscore
+
+            cant name player or pogemon only spaces
+
+            remove spaces before letters
+
+            naming input needs to be reset after naming
+
+            player must be disabled during naming
+        }
+
         bag scene give potion display is fucked up -- changing wrong child node so i switch gender icon with held item icon by accident
 
         pogemon already has item dialogue
@@ -754,16 +766,11 @@ stuffToDo:{
 
         affliction battle content goes over level up stuff
 
-        cant name player or pogemon only spaces
-
-        remove spaces before letters
-
         keep trees and rocks destroyed, also starter pogeball reappears for some reason
 
         fair town pogemart dont show correct item
 
         program no button in pogemart
-
 
         switch without opponent attacking
 
@@ -780,6 +787,12 @@ stuffToDo:{
         learning quick attack when already known
 
         leave pogecenter with text box still open
+
+        load backup save broken
+
+        player wrong name
+
+        gene_Town level is always the same
     }
 }
 

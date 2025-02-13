@@ -977,14 +977,18 @@ export function manageOverWorldState(state, previousScene){
 
       player.team = teamPlaceHolder 
       
-      player.team.forEach(pogemon =>{
-        pogemon.affliction[0].active = false
-        pogemon.affliction[0].turns = 0
-
-        pogemon.affliction[1].active = false
-
-        pogemon.affliction[2].active = false
-        pogemon.affliction[2].turns = 0
+      player.team.forEach((pogemon, i) =>{
+        if(pogemon == undefined){
+          player.team.splice(i, 1)
+        } else {
+          pogemon.affliction[0].active = false
+          pogemon.affliction[0].turns = 0
+  
+          pogemon.affliction[1].active = false
+  
+          pogemon.affliction[2].active = false
+          pogemon.affliction[2].turns = 0
+        }
       })
     }
 
@@ -1148,8 +1152,11 @@ export function manageOverWorldState(state, previousScene){
       }
 
       if(player.interaction.info.gymLeader != undefined) {
+        let gymLeaderName = player.interaction.info.gymLeader.name
+        if(gymLeaderName == "ma'at") gymLeaderName = 'maat'
+
         player.badges[player.interaction.info.gymLeader.num] = true
-        worldEventData[player.interaction.info.gymLeader.name].gym = true
+        worldEventData[gymLeaderName].gym = true
       }
     }
 

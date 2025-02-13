@@ -90,7 +90,10 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      // player.catch(pogemonsObj.disso, true, mapsObj.lab)
+      player.catch(pogemonsObj.disso, true, mapsObj.lab)
+
+      worldEventData.maat.firstMeet = true
+      
 
       // setTimeout(() =>{
       //   player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
@@ -731,6 +734,7 @@ export function itemPickUp(item, amount, msg){
     
     if(data != undefined || data != null){
       if(player.interaction.info.eventKey == 'bananacopia') return
+      if(data.mapsObjState[currMap.name].items == undefined) return
       data.mapsObjState[currMap.name].items.forEach((item,i) =>{
         if(item == null) item = mapsObj[currMap.name].items[i]
         if(item.name == player.interaction.info.name) item.pickedUp = true
@@ -748,6 +752,7 @@ function playerInteraction(e) {
   if(!scenes.get('overworld').initiated) return
   if(scenes.get('evolution').initiated) return
   if(menu.initiated) return
+  if(player.interaction == null) return
   if(e.key != ' ') return
 
   let openWindow = document.querySelector('#openWindow')
@@ -1765,10 +1770,9 @@ function eventZoneManagement(eventZones){
         if(eventZonesIndex.info.looking != undefined) if(!playerLookingAtNPC) return
       }
 
-
       player.interaction = eventZonesIndex
 
-      // console.log(player.interaction)
+      console.log(player.interaction)
 
       // console.log(player.interaction)
       if(player.team.length >= 1) {
@@ -1778,49 +1782,63 @@ function eventZoneManagement(eventZones){
           //   if(mapsObj[currMap.name].trainers[i].beaten == true) return
           // }
 
+          console.log('wtf?')
+
           switch(eventZonesIndex.info.eventKey){
             case 'maatGymTrainer':
-              if(worldEventData.maat.firstMeet && !player.badges[0]) return
+              if(worldEventData.maat.firstMeet && !player.badges[0]){
 
-              document.addEventListener('keydown', (e) =>{
-                if(e.key == ' '){
-                  player.disabled = true
-                  player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
-                  console.log('messageNow')
-                }
-              })
+              } else {
+                document.addEventListener('keydown', (e) =>{
+                  if(e.key == ' '){
+                    if(player.interaction == null) return
+                    player.disabled = true
+                    player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
+                    console.log('messageNow')
+                  }
+                })
+              }
+
               if(!worldEventData.maat.firstMeet) return
               if(player.badges[0]) return
               break
             case 'djedGymTrainer':
-              if(worldEventData.djed.meet && !player.badges[1]) return
-
+              if(worldEventData.djed.meet && !player.badges[1]) {
+                
+              } else {
                 document.addEventListener('keydown', (e) =>{
                   if(e.key == ' '){
+                    if(player.interaction == null) return
                     player.disabled = true
                     player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
                     console.log('messageNow')
                   }
                 })
+              }
 
-                if(!worldEventData.djed.meet) return
-                if(player.badges[1]) return
-                break
+              if(!worldEventData.djed.meet) return
+              if(player.badges[1]) return
+              break
             case 'hermesGymTrainer':
-              if(worldEventData.hermes.met && !player.badges[2]) return
+              if(worldEventData.hermes.met && !player.badges[2]) {
 
+              } else {
                 document.addEventListener('keydown', (e) =>{
                   if(e.key == ' '){
+                    if(player.interaction == null) return
                     player.disabled = true
                     player.team[0].dialogue('overworld', eventZonesIndex.info.OWdialogue)
                     console.log('messageNow')
                   }
                 })
+              }
 
-                if(!worldEventData.hermes.met) return
-                if(player.badges[1]) return
-                break
+              if(!worldEventData.hermes.met) return
+              if(player.badges[1]) return
+              break
           }
+
+          console.log('wtf2?')
 
           if(eventZonesIndex.info.beaten) return
           

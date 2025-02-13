@@ -24,7 +24,9 @@ export let mapsObj = {
     width: 60,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.piny, lvls: [2, 3], odds: {min:0,max:100}},
+        {pogemon: pogemonsObj.piny, lvls: [2, 3], odds: {min:0,max:100}, heldItem: undefined, moves:[
+          movesObj.protect
+        ]},
         // {pogemon: pogemonsObj.flailegant, lvls: [2, 3], odds: {min:50,max:100}},
       ], 
       water: [
@@ -142,21 +144,21 @@ export let mapsObj = {
       {
         name: 'leftovers',
         amount: 1,
-        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: true
       },
       {
         name: 'twisted_Spoon',
         amount: 1,
-        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: false
       },
       {
         name: 'sharp_Beak',
         amount: 1,
-        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
+        direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:50}}},
         pickedUp: false,
         hidden: true
       },
@@ -599,7 +601,7 @@ export let mapsObj = {
       {
         name: 'Barry',
         team: [[pogemonsObj.wallafi, 12, null, null, null, null]],
-        direction: {reach: {pos:{x:0, y:0}, neg:{x:200, y:0}}},
+        direction: {reach: {pos:{x:0, y:0}, neg:{x:400, y:0}}},
         looking: 'Right', 
         sprite: '../../img/charSprites/youngster/youngster.png',
         dialogue: "Ma'at is one of my best friends!\n\nShe helped me catch my first pogemon!",
@@ -657,7 +659,7 @@ export let mapsObj = {
         name: 'npc',
         sprite: 'img/charSprites/heisenberg/heisenberg.png',
         info: {
-          direction: {reach: {pos:{x:5, y:0}, neg:{x:-20, y:20}}}, 
+          direction: {reach: {pos:{x:50, y:50}, neg:{x:50, y:50}}}, 
           looking: 'Down',
           dialogue:["Let me introduce myself, i am professor Heisenberg.", "When Ma'at brought her slimie for me to study, it somehow secreated a\n\nstrange glowy substance that hardened itself into this halo.\n\n\nThis slime creature is very strange..", "It's genetic makeup indicates it could somehow evolve!\n\n\nMy hypothesis is that the halo plays an important role in\n\nit's evolution process.", "If you manage to make that happen, come and show me.", "Professor Heisenberg gave you the glowy halo."],
           slimeDialogue: ["Wow, what a strange speciment!\n\nIt seems like draining certain elemental essences allows it to change form.", "Even though you managed to prove slimie can actualy evolve,\n\nit does not seem like this is the last form this pogemon can take.", "If you manage to fill your party with one of each type of smile,\n\ncome back and show me."],

@@ -900,7 +900,7 @@ export const itemsObj = {
     effect: 'evolution',
     pow: "---",
     img: 'img/item_scene/items/key/halo.png',
-    desc: "A strange and glowy halo, given to you by Professor Heisenberg in Sol Town.\n\nHe mentioned something about it allowing slimie to somehow evolve.",
+    desc: "A strange and glowy halo, given to you by Professor Heisenberg in Fair Town.\n\nHe mentioned something about it allowing slimie to somehow evolve.",
     heldType: '---',
     consume: false,
     odds: 0,

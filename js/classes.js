@@ -1539,7 +1539,13 @@ export class Pogemon extends Sprite{
             console.log('here')
             break
           case 'protect':
-            const rng = Math.floor(Math.random() * move.effects.protect)
+            const rng = Math.floor(Math.random() * 100)
+
+            console.log(rng)
+
+            console.log(100 / (this.protected.turns + 1))
+
+            console.log(rng > 100 / (this.protected.turns + 1))
 
             const protectAnimation = () => {
               let protectImg = new Image()
@@ -1595,7 +1601,7 @@ export class Pogemon extends Sprite{
               })
             }
 
-            if(recipient.protected.active == true || rng > move.effects.protect / this.protected.turns){
+            if(recipient.protected.active == true || rng > 100 / (this.protected.turns + 1)){
               this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} failed to protect itself..`)
               this.protected.turns = 0
               this.protected.active = false
@@ -2594,6 +2600,10 @@ export class Pogemon extends Sprite{
         
               this.hpManagement()
               setTimeout(() => this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} used ${this.switchUnderScoreForSpace(move.name)}.\n\nIt healed some hp.`), 750)
+              setTimeout(() => {
+                queueProcess.disabled = false
+                console.log('here')
+              }, 1750)
           } else {
               document.querySelector('#movesInterface').style.display = 'none'
               if(move.type != 'status') return
@@ -5096,7 +5106,7 @@ export class Pogemon extends Sprite{
     let statusNameArr = ['slp', 'psn', 'para', 'burn', 'frz']
 
     for(let i = 0; i < statusNameArr.length; i++){
-      if(effectArr[i] != undefined)
+      if(effectArr != undefined)
         if(effectArr[i] == statusNameArr[i]) pass = true
     }
 
@@ -5608,7 +5618,7 @@ export class Character extends Sprite{
       if(player != undefined) if(player.bag.get('illuminated_Gem') != null) shinyCharm = player.bag.get('illuminated_Gem').quantity
 
       //                                                              held item        ability              shiny ivs  moves gender nature              
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, {...mapsObj[currMap]}, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, Math.pow(50, 3), false, {...mapsObj[currMap]}, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)

@@ -172,7 +172,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.lab}
+      currMap = {...mapsObj.gene_Town}
       currMap.seen = true
     }
   } else {
@@ -346,26 +346,28 @@ async function generateBoundaries(nextMapInfo){
               if(mapsObj[`${currMap.name}`].trainers != undefined) {
                 let trainerInfo = mapsObj[`${currMap.name}`].trainers[z]
 
-                console.log(trainerInfo)
-
                 if(trainerInfo == undefined) return
 
                 if(z == 0) z = z + 1
                 else z++
 
+                if(defaultMapsObj[currMap.name].trainers[i] != undefined) trainerInfo.direction.reach = defaultMapsObj[currMap.name].trainers[z].direction.reach
+
                 if(trainerInfo.eventKey != undefined){
                   switch(trainerInfo.eventKey){
                     case 'maatGymTrainer':
-                      if(!worldEventData.maat.firstMeet && player.badges[0]) 
-                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
-                      break
+                      if(!worldEventData.maat.firstMeet && !player.badges[0]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                      else if(player.badges[0]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+
+                      break  
                     case 'maatGym':
                       if(!worldEventData.maat.firstMeet) return
                       if(player.badges[0]) return
                       break
                     case 'djedGymTrainer':
-                      if(!worldEventData.djed.meet && player.badges[1]) 
-                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                      if(!worldEventData.maat.firstMeet && !player.badges[1]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                      else if(player.badges[1]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+
                       break
                     case 'djedGym':
                       if(!worldEventData.djed.meet) return
@@ -376,8 +378,9 @@ async function generateBoundaries(nextMapInfo){
                       if(player.badges[2]) return
                       break
                     case 'hermesGymTrainer':
-                      if(!worldEventData.djed.meet && player.badges[1]) 
-                        trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                      if(!worldEventData.maat.firstMeet && !player.badges[2]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                      else if(player.badges[2]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+
                       break
                     case 'duskSummoner':
                       if(!worldEventData.endPortal.explained) return
@@ -407,8 +410,6 @@ async function generateBoundaries(nextMapInfo){
                 } else if(currMap.name == 'neo_Genesis'){
                   if(worldEventData.set.defeated) return
                 }
-
-                console.log(trainerInfo)
               
                 let trainerTeam = []
 
@@ -490,8 +491,7 @@ async function generateBoundaries(nextMapInfo){
                     type: 1,
                     collision: true
                   })
-                )
-            
+                )            
                 return
               }
               break
@@ -993,19 +993,25 @@ async function generateBoundaries(nextMapInfo){
                 if(z == 0) z = z + 1
                 else z++
 
+                if(defaultMapsObj[nextMapInfo.name].trainers[i] != undefined) trainerInfo.direction.reach = defaultMapsObj[nextMapInfo.name].trainers[z].direction.reach
+
+                console.log(trainerInfo)
                 switch(trainerInfo.eventKey){
-                  case 'maatGymTrainer':
-                    if(!worldEventData.maat.firstMeet && player.badges[0]) 
-                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
-                    // console.log(trainerInfo)
+                  case "maatGymTrainer":
+                    console.log()
+                    if(!worldEventData.maat.firstMeet && !player.badges[0]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                    else if(player.badges[0]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+
+                    console.log(trainerInfo.direction.reach)
                     break
                   case 'maatGym':
                     if(!worldEventData.maat.firstMeet) return
                     if(player.badges[0]) return
                     break
                   case 'djedGymTrainer':
-                    if(!worldEventData.djed.meet && player.badges[1]) 
-                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+
+                    if(!worldEventData.djed.meet && !player.badges[1]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                    else if(player.badges[1]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
                     break
                   case 'djedGym':
                     if(!worldEventData.djed.meet) return
@@ -1016,8 +1022,8 @@ async function generateBoundaries(nextMapInfo){
                     if(player.badges[2]) return
                     break
                   case 'hermesGymTrainer':
-                    if(!worldEventData.djed.meet && player.badges[1]) 
-                      trainerInfo.direction.reach = {pos:{x:16, y:16}, neg:{x:16, y:16}}
+                    if(!worldEventData.hermes.met && !player.badges[2]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
+                    else if(player.badges[2]) trainerInfo.direction.reach = {pos:{x:50, y:50}, neg:{x:50, y:50}}
                     break
                   case 'duskSummoner':
                     if(!worldEventData.endPortal.explained) return
@@ -1046,6 +1052,8 @@ async function generateBoundaries(nextMapInfo){
                 } else if(currMap.name == 'neo_Genesis'){
                   if(worldEventData.set.defeated) return
                 }
+
+                console.log(trainerInfo.direction.reach)
               
                 let trainerTeam = []
 

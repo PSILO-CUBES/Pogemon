@@ -178,6 +178,8 @@ function printBootMenu(){
     newGameButtonDOM.id = 'newGameButton'
     newGameButtonDOM.classList.add('bootMenuButton')
     newGameButtonDOM.textContent = 'New Game'
+    // newGameButtonDOM.addEventListener('click', e => initBootMenuInteractionEvent(e))
+    
     newGameButtonDOM.addEventListener('click', e => initNewGameInteractionEvent(e))
 
 
