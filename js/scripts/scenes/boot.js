@@ -158,6 +158,14 @@ function printBootMenu(){
             location.reload()
         }
     })
+
+    newGameJSONInputField.addEventListener('keydown', e =>{
+        if(e.data != null) {
+            const parsedData = JSON.parse(e.data)
+            setSaveData('saveFile', parsedData)
+            location.reload()
+        }
+    })
     
     // trainerInfoContainer.textContent = 'no save file found'
     // trainerInfoContainer.setAttribute('class', 'noSaveCentering')
@@ -195,9 +203,10 @@ function initNewGameInteractionEvent(e){
         volumeValues.SFX = 50
         volumeValues.music = 50
 
-        playerName = 'player'
+        // playerName = 'player'
 
         function namedEvent(){
+            document.querySelector('#namePlayerConfirmButton').style.display = 'none'
             gsap.to('#overlapping', {
                 opacity: 1,
                 duration: 0.5,
@@ -233,10 +242,25 @@ function initNewGameInteractionEvent(e){
                 document.querySelector('#namePlayerInput').addEventListener('input', e => {
                     name = document.querySelector('#namePlayerInput').value
                 })
+
+                document.querySelector('#namePlayerInput').addEventListener('keyup', e =>{
+                    document.querySelector('#namePlayerInput').value = document.querySelector('#namePlayerInput').value.replace(/[^A-z]/g, '')
+                })
+
+                // document.getElementById("namePlayerInput").keydown = e => {
+                //     var chr = String.fromCharCode(e.which)
+
+                //     console.log(chr)
+
+                //     if ("12345NOABC".indexOf(chr) < 0)
+                //         console.log('works')
+                // }
         
                 document.querySelector('#namePlayerConfirmButton').innerText = 'confirm'
                 document.querySelector('#namePlayerConfirmButton').addEventListener('click', e =>{
-                    playerName = name
+                    if(name == undefined) return
+                    if(/[^A-z]/g.test(name)) return
+                    playerName = name.replace(/[^A-z]/g, '')
                     namedEvent()
                 })
                 
@@ -374,3 +398,7 @@ function incrementMinuteLoop(){
         incrementMinuteLoop()
     }, 500)
 }
+
+document.addEventListener('keydown', e => {
+    if(e.code === "Tab") e.preventDefault()
+}, true);

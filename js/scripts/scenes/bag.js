@@ -292,6 +292,11 @@ function bagSceneMenuButtonOnClick(e){
 
   switch(e.target.textContent){
     case 'use':
+      if(currItem.usable != undefined){
+        player.team[0].dialogue('bag', `This item cannot be used.`)
+        return
+      }
+
       if(currItem.effect == 'repel'){
         if(repelObj.active) player.team[0].dialogue('bag', `Repel is already applied..\n\n${repelObj.steps} steps left.`)
         else {
@@ -589,10 +594,19 @@ function useItemOnClickEvent(e){
 
               let hpColor
 
-              if(hpToPercent >= 50) hpColor = 'green'
-              else if(hpToPercent < 50 && hpToPercent >= 25) hpColor = 'yellow'
-              else if(hpToPercent < 25 && hpToPercent > 0) hpColor = 'red'
-              else if(hpToPercent <= 0) hpColor = 'black'
+              if(hpToPercent >= 50){
+                hpColor = 'green'
+                targetPogemon.frames.hold = 60
+              } else if(hpToPercent < 50 && hpToPercent >= 25){
+                hpColor = 'yellow'
+                targetPogemon.frames.hold = 90
+              } else if(hpToPercent < 25 && hpToPercent > 0){
+                hpColor = 'red'
+                targetPogemon.frames.hold = 120
+              } else if(hpToPercent <= 0){
+                hpColor = 'black'
+                targetPogemon.frames.hold = 0
+              }
 
               e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${hpToPercent}%`
               e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.backgroundColor = hpColor
@@ -933,9 +947,14 @@ function useItemOnClickEvent(e){
         })
       }
 
+      let sameItem = false
+      if(targetPogemon.heldItem != null) if(targetPogemon.heldItem.name == currItem.name) sameItem = true
+
       targetPogemon.heldItem = currItem
       targetPogemon.dialogue('bag', `You gave ${switchUnderScoreForSpace(targetPogemon.nickname)} a ${switchUnderScoreForSpace(currItem.name)}.`)
-      e.target.childNodes[0].childNodes[0].src = `img/item_scene/items/${currItem.type}/${currItem.name}.png`
+      if(sameItem) targetPogemon.dialogue('bag', `${switchUnderScoreForSpace(targetPogemon.nickname)} is already holding a ${switchUnderScoreForSpace(currItem.name)}.`)
+
+      e.target.childNodes[0].childNodes[1].src = `img/item_scene/items/${currItem.type}/${currItem.name}.png`
       let bagItem = player.bag.get(`${currItem.name}`)
       player.bag.set(`${currItem.name}`, {item: bagItem.item, quantity: bagItem.quantity - 1})
       currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(`${currItem.name}`).quantity}`
@@ -1367,6 +1386,10 @@ function initBagScene(prevScene){
 
     if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
     else player.team[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
+
+    player.team[i].frames.hold = 50
+
+    console.log(player.team[i].pogemon.sprites.classic.bagSprite)
     // player.team[i].animate = false
     teamSprites.push(player.team[i])
   }

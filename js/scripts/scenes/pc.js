@@ -123,7 +123,7 @@ async function printSavedBox(){
         data.playerInfo.pcMovesInfo.forEach(box =>{
             if(box.length > 0) box.forEach(movesInfo =>{
                 movesInfo.forEach((move,i) =>{
-                    pc[move[2]][move[3]].moves[i] = movesObj[move[0]]
+                    pc[move[2]][move[3]].moves[i] = {...movesObj[move[0]]}
                     pc[move[2]][move[3]].moves[i].pp = move[1]
                 })
             })

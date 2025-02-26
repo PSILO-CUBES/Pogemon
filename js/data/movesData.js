@@ -528,7 +528,7 @@ export const movesObj = {
     pow: 50,
     acc: 100,
     pp: 48,
-    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 50}],
+    effects: [{name: 'debuff', target:'def', pow: 1, type: 'stats', rng: 100}],
     priority: 0,
     sprite: '../../img/moves/rock_smash.png',
     animationType: 'physicalSprite',
@@ -2662,7 +2662,7 @@ export const movesObj = {
     priority: 0,
     rotation: {ally: 0, foe: 0},
     duration: 1.5,
-    sprite: '../../img/moves/moonlight.png',
+    sprite: '../../img/moves/draining_kiss.png',
     animationType: 'status',
     desc: "Causes the target to become confused."
   },
@@ -2699,3 +2699,7 @@ export const movesObj = {
     desc: "Raises the user's Attack and Speed by 1."
   },
 }
+
+export let defaultMovesObj = {...movesObj}
+
+console.log(defaultMovesObj)

@@ -132,7 +132,7 @@ body{
   height: 76.5%;
   width: 100%;
 
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.875);
   padding: 37.5px;
 }#overworldDialogue:hover{
   cursor: pointer;

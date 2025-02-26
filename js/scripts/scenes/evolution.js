@@ -157,27 +157,28 @@ function initEvo(target, i){
 
     console.log(pogemonsObj[chosenEvo])
 
-    return pogemonsObj[chosenEvo]
+    return {...pogemonsObj[chosenEvo]}
   }
 
   targetMon = target
-  if(pogemonsObj[target.evo.name] != undefined) targetEvo = pogemonsObj[target.evo.name]
+  if(pogemonsObj[target.evo.name] != undefined) targetEvo = {...pogemonsObj[target.evo.name]}
   else if(target.name == 'jleech') targetEvo = jleechEvoTypeCalc()
-  else if(target.name == 'formal' && currItem.name == 'regina_Esca') targetEvo = pogemonsObj.regaligyne
+  else if(target.name == 'formal' && currItem.name == 'regina_Esca') targetEvo = {...pogemonsObj.regaligyne}
   else {
     if(evoItemUsed.item != null || target.heldItem != null) {
+      console.log(evoItemUsed)
       target.evo.forEach(evoType =>{
 
         if(evoType.item === evoItemUsed.item) {
-          targetEvo = pogemonsObj[evoType.name]
+          targetEvo = {...pogemonsObj[evoType.name]}
         }
 
-        if(evoType.type == 'held') if(evoType.item == target.heldItem.name) targetEvo = pogemonsObj[evoType.name]
+        if(evoType.type == 'held') if(target.heldItem != null) if(evoType.item == target.heldItem.name) targetEvo = {...pogemonsObj[evoType.name]}
       })
     } else {
       target.evo.forEach(evoType =>{
         if(evoType.type == 'event'){
-          targetEvo = pogemonsObj[evoType.name]
+          targetEvo = {...pogemonsObj[evoType.name]}
         } 
       })
     }

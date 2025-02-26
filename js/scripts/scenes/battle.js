@@ -283,6 +283,7 @@ function initWildEncounter(tileInfo, info){
   battleType = 'wild'
   
   let returnedFoe = foeRNGEncounter(tileInfo, info)
+  console.log(returnedFoe)
   if(returnedFoe == undefined) return
 
   let foeObj = returnedFoe.pogemon
@@ -363,24 +364,30 @@ function critLanded(pogemon, recipient, move){
         queueProcess.disabled = false
         console.log('here')
       }, 750)
-    }, 1000)
+    }, 1500)
   }
 
   return critHit
 }
 
 function changeHPColor(DOM, target){
-  let percentHP = target.convertToPercentage(target.hp, target.stats.baseHp)
-  DOM.style.width = `${percentHP}%`
-  if(percentHP > 51){
-    DOM.style.backgroundColor = 'green'
-    foe.frames.hold = 60
-  } else if (percentHP < 51 && percentHP > 26){
-    DOM.style.backgroundColor = 'yellow'
-    foe.frames.hold = 90
-  } else if (percentHP < 26){
-    DOM.style.backgroundColor = 'red'
-    foe.frames.hold = 120
+  let hpToPercent = target.convertToPercentage(target.hp, target.stats.baseHp)
+  DOM.style.width = `${hpToPercent}%`
+
+  let hpColor = DOM.style.backgroundColor
+
+  if(hpToPercent >= 50){
+    hpColor = 'green'
+    target.frames.hold = 60
+  } else if(hpToPercent < 50 && hpToPercent >= 25){
+    hpColor = 'yellow'
+    target.frames.hold = 90
+  } else if(hpToPercent < 25 && hpToPercent > 0){
+    hpColor = 'red'
+    target.frames.hold = 120
+  } else if(hpToPercent <= 0){
+    hpColor = 'black'
+    target.frames.hold = 0
   }
 }
 
@@ -588,7 +595,7 @@ export function initRenameEvent(pogemon){
   catchEventObj.active = true
   catchEventObj.caughtPogemon = pogemon
   player.disabled = true
-
+  console.log('playerDisabled')
   const caughtPogemonImgDom = document.querySelector('#pogemonNamingSceneDisplayImg')
 
   if(pogemon.isShiny) caughtPogemonImgDom.src = pogemon.pogemon.sprites.shiny.sprite
@@ -644,7 +651,7 @@ function onEnterTerrainAffliction(type, target, recipient){
   
     if(terrainConditions.static.sticky_web.active[type]){
       queue.unshift(() =>{
-        recipient.statusAnimation('status', [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}], movesObj['sticky_web'], target, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
+        recipient.statusAnimation('status', [{name: 'debuff', target:'spd', pow: 1, type: 'stats'}], {...movesObj['sticky_web']}, target, renderedSprites, statsChangeObj, terrainConditions, queueProcess)}
       )
     }
   }
@@ -657,8 +664,40 @@ function onEnterTerrainAffliction(type, target, recipient){
   }
 }
 
+let battleStarted = false
+
+function manageAfflictionContentState(target, DOMContainer, sticky_web, stealth_rock){
+  console.log(DOMContainer.childNodes)
+  DOMContainer.childNodes.forEach((node, i) =>{
+    console.log(node)
+    switch(i){
+      case 1:
+        if(target.affliction[0].active) node.style.opacity = 1
+        else node.style.opacity = 0
+        break
+      case 3:
+        if(sticky_web) node.style.opacity = 1
+        else node.style.opacity = 0
+        break
+      case 5:
+        if(target.affliction[1].active) node.style.opacity = 1
+        else node.style.opacity = 0
+        break
+      case 7:
+        if(stealth_rock) node.style.opacity = 1
+        else node.style.opacity = 0
+        break
+      case 9:
+        if(target.affliction[2].active) node.style.opacity = 1
+        else node.style.opacity = 0
+        break
+    }
+  })
+}
+
 export function initBattle(faintedTriggered, info, tileInfo){
   queueFaintTrigger.initiated = false
+  pogemonSwapped = false
 
   scenes.set('battle', {initiated : true})
   document.querySelector('#overworldScene').style.display = 'none'
@@ -666,14 +705,14 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
   loadAlly(player.team[0])
 
-  console.log(prevScene)
-
   if(prevScene == 'overworld') {
     battlerArr = []
     evoArr = []
     lvlUpArr = []
 
+    queue.length = 0
 
+    battleStarted = true
 
     Object.values(terrainConditions).forEach(category =>{
       Object.entries(category).forEach(type =>{
@@ -746,6 +785,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
     ally.opacity = 0
     foe.opacity = 0
 
+    changeHPColor(document.querySelector('#foeHealthBar'), foe)
+    changeHPColor(document.querySelector('#allyHealthBar'), ally)
+
     foe.position = {
       x: 1415,
       y: 50
@@ -753,11 +795,6 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
     let allyNeutralPosition = {...ally.position}
     let foeNeutralPosition = {...foe.position}
-
-    // 
-    // foe.position.x = 800
-
-    console.log(foe)
 
     setTimeout(() =>{
       setTimeout(() =>{
@@ -775,6 +812,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
     if(foe.isShiny) {
       foe.img.src = foe.pogemon.sprites.shiny.frontSprite
     } else foe.img.src = foe.pogemon.sprites.classic.frontSprite
+
+    manageAfflictionContentState(ally, document.querySelector('#allyHazardsContainer'), terrainConditions.static.sticky_web.active.ally, terrainConditions.static.stealth_rock.active.ally)
+    manageAfflictionContentState(foe, document.querySelector('#foeHazardsContainer'), terrainConditions.static.sticky_web.active.foe, terrainConditions.static.stealth_rock.active.foe)    
   }
   // foe.frames.hold = 60
 
@@ -839,6 +879,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
   // terrainConditions.turns.etc.trick_room.active = true
   // terrainConditions.turns.etc.trick_room.turns = 5
 
+  if(foe.isShiny) foeSprite.img.src = foe.pogemon.sprites.shiny.frontSprite
+  else foeSprite.img.src = foe.pogemon.sprites.classic.frontSprite
+
   if(battlerArr.length != 0){
     if(checkIfSameId()) battlerArr.push(ally)
   } else {
@@ -867,7 +910,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
         setTimeout(() => foe.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${switchUnderScoreForSpace(ally.nickname)} frisked ${itemName}.`), 750)
       }
-    } else {
+    } else if(!teamEvent.switch) {
       document.querySelector('#encounterInterface').style.display = 'grid'
       console.log('grided')
     }
@@ -883,6 +926,10 @@ export function initBattle(faintedTriggered, info, tileInfo){
     document.querySelector('#proceedImgContainer').style.display = 'block'
     
     if(itemUsed.item.type == 'ball'){
+      if(foe.isShiny) {
+        foe.img.src = foe.pogemon.sprites.shiny.frontSprite
+      } else foe.img.src = foe.pogemon.sprites.classic.frontSprite
+      
       if(enemyTrainer == undefined){
         queueProcess.disabled = true
         console.log('there')
@@ -942,7 +989,8 @@ export function initBattle(faintedTriggered, info, tileInfo){
         
         moveProcess = true
         
-        manageCheckStatusEvent(foe, ally)
+        // manageCheckStatusEvent(foe, ally)
+        console.log('manageCheckStatusEvent')
         return
       } else {
         player.team[0].dialogue("battle", "Can't catch another trainer's pogemon!")
@@ -991,7 +1039,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
         if(faster.id == foe.id) slower = ally
 
         manageCheckStatusEvent(faster, slower)
-
+        console.log('manageCheckStatusEvent')
         // ally.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState)
       })
     }
@@ -1064,10 +1112,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
         let flag = false
   
         function proceedWithMove(){
-          // let rng = Math.floor(Math.random() * foe.moves.length)
-          // let foeRNGAttack = foe.moves[rng]
-
-          foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
+          foe.move({move: foe.rerollEnemyMoveSoAppropriate(ally, foeRNGMove, terrainConditions, enemyTrainerInfo), recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
           console.log('YAYA')
     
           moveProcess = true
@@ -1293,7 +1338,8 @@ function clearBattleScene(nextScene){
       else if (nextScene == 'bag') manageBagState(true, 'battle')
       else if (nextScene == 'evo') return
       else {
-
+        foe = undefined
+        
         player.team.forEach(pogemon =>{
           pogemon.subHp = 0
           pogemon.opacity = 1
@@ -1717,7 +1763,7 @@ function setBattlersInfo(){
 }
 
 const optionBox = document.querySelector('#optionBox')
-const options = ['Fight', 'pgmn', 'Item', 'Run']
+const options = ['Fight', 'Item', 'pgmn', 'Run']
 
 let optionButtonsArr
 
@@ -1844,7 +1890,7 @@ let currMove
 let foeRNGMove
 
 function chooseMove(e) {
-  let selectedMove = movesObj[`${e.target.textContent.replace(/ /g, "_")}`]
+  let selectedMove = {...movesObj[`${e.target.textContent.replace(/ /g, "_")}`]}
   moves.ally = selectedMove
 
   //should change ai move depending on decided difficulty
@@ -2159,6 +2205,7 @@ export function manageLearnedMoves(ally, selectedQueue, type, firstIndex){
       // working here
       // if the move the pogemon is trying to learn is already a move he learned previously, does not learn it
       if(Object.values(ally.learntMoves).includes(newMoves[i].name)) return
+      //quick attack passed with a premade pogemon for some reason
 
       if(type == 'evolution'){
         if(!firstIndex){
@@ -2257,6 +2304,8 @@ function pickRandomPogemonOtherThanLast(type){
 function switchEnemyAfterFaint(type){
   if(enemyTrainerInfo == undefined) return
 
+  pogemonSwapped = false
+
   let currTrainer = enemyTrainerInfo.createdTrainer
 
 
@@ -2314,6 +2363,8 @@ function switchEnemyAfterFaint(type){
 
   if(foe.isShiny) foe.img.src = foe.pogemon.sprites.shiny.frontSprite
   else foe.img.src = foe.pogemon.sprites.classic.frontSprite
+
+  console.log(foe)
 
   renderedSprites.splice(0, 1, foe)
   foe.setCorrectHold()
@@ -2423,10 +2474,12 @@ function manageFaintingEvent(target){
     }
   }
 
+  battlerArr = battlerArr.filter((battler) => !battler.fainted)
+
+  console.log(battlerArr)
+
   battlerArr.forEach((battler, i) =>{
     prevLvl = ally.lvl
-
-    if(battler.fainted) return
 
     if(battlerArr.length == 1) {
       oldStats = {...battler.stats}
@@ -2475,12 +2528,22 @@ function manageFaintingEvent(target){
         })
 
         return
-      } else {
+      } else if(ally.hp > 0) {
         queue.push(() => switchEnemyAfterFaint())
+        console.log(queue)
+      } else if(enemyTrainerInfo == undefined && foe.hp < 1){
+        queue.push(() => ally.dialogue('battle', `You have defeated ${target.name}!`))
+        queue.push(() => {
+          manageBattleState(false)
+          console.log('here')
+        })
       }
     } else {
+      console.log(i)
+      console.log(battlerArr.length)
       if(i == battlerArr.length - 1) {
-        queue.push(() =>{
+        console.log('lmao')
+        // queue.push(() =>{
           prevLvl = battler.lvl
           // last index
           // fires too early sometimes
@@ -2490,9 +2553,11 @@ function manageFaintingEvent(target){
           battler.expGain(target, battleType, battlerArr, true, levelCapObj.level)
           console.log(levelCapObj.level)
 
-          battler.teamExpEvent(queue, prevLvl, queueProcess)
+          console.log(battler)
+
+          if(battler.id != player.team[0].id) battler.teamExpEvent(queue, prevLvl, queueProcess)
+
           addToEvoArr(battler)
-          // HEHEHEHEHEHE
 
           if(battler.lvl > prevLvl) {
             lvlUpArr.push(battler)
@@ -2551,7 +2616,7 @@ function manageFaintingEvent(target){
             }
             return
           }
-        })
+        // })
         return
       } else {
         prevLvl = battler.lvl
@@ -2610,10 +2675,19 @@ function manageFaintingEvent(target){
 
       if(lvlBeforeExpGained < ally.lvl) {
         if(ally.pogemon.evo == null) {
-          queue.push(() => {
-            manageBattleState(false)
-            console.log('here')
-          })
+          setTimeout(() =>{
+            queue.push(() => {
+              if(queue.length <= 1){
+                manageBattleState(false)
+                console.log('battle over')
+              } else {
+                queue.push(() => {
+                  manageBattleState(false)
+                  console.log('battle over')
+                })
+              }
+            })
+          }, 250)
           return
         }
   
@@ -2643,10 +2717,10 @@ function manageFaintingEvent(target){
       return
     }
   
-    if(lvlBeforeExpGained < ally.lvl) {
-      oldStats = {...battler.stats}
+    // if(lvlBeforeExpGained < ally.lvl) {
+    oldStats = {...battler.stats}
   
-      if(enemyTeamWiped(enemyTrainerInfo)){
+    if(enemyTeamWiped(enemyTrainerInfo)){
         if(ally.pogemon.evo == null) {
           queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
           player.money = player.money + enemyTrainerInfo.reward
@@ -2673,12 +2747,72 @@ function manageFaintingEvent(target){
           })
         }
         return
-      }
+    }
   
       //if enemy team isint wiped, switch for next 'mon in foe.team arr
-      return
-    }
+      // return
+    // }
   })
+
+  console.log(battlerArr)
+
+  if(battlerArr.length == 0) {
+    let battler = player.team[0]
+    battlerArr.push(battler)
+
+    console.log(battlerArr)
+
+    oldStats = {...battler.stats}
+
+    battler.expGain(target, battleType, battlerArr, true, levelCapObj.level)
+    console.log(levelCapObj.level)
+
+    // vvv checking if can add to evoArr in there vvv
+
+    addToEvoArr(battler)
+    
+    if(battler.lvl > prevLvl) {
+      lvlUpArr.push(battler)
+      manageLvlUpDisplay('battle', oldStats, queue, prevLvl, battler)
+      manageLearnedMoves(battler, queue, 'battle')
+    }
+
+    // console.log(enemyTeamWiped(enemyTrainerInfo))
+
+    if(enemyTeamWiped(enemyTrainerInfo)){
+      if(ally.pogemon.evo == null) {
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+        queue.push(() => {
+          manageBattleState(false)
+          console.log('here')
+        })
+        return
+      }
+
+      if(ally.pogemon.evo.lvl <= ally.lvl) if(prevLvl < ally.lvl) {
+        queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+        player.money = player.money + enemyTrainerInfo.reward
+        queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+        manageEvolution(evoArr)
+        return
+      }
+
+      queue.push(() => ally.dialogue('battle', `You have defeated ${enemyTrainerInfo.name}!`))
+      player.money = player.money + enemyTrainerInfo.reward
+      queue.push(() => ally.dialogue('battle', `You gained ${enemyTrainerInfo.reward} pogebucks!`))
+      queue.push(() => {
+        manageBattleState(false)
+        console.log('here')
+      })
+
+      return
+    } else if(ally.hp > 0) {
+      queue.push(() => switchEnemyAfterFaint())
+      console.log(queue)
+    }
+  }
 }
 
 function checkIfTeamWipedOut(){
@@ -2687,8 +2821,6 @@ function checkIfTeamWipedOut(){
   player.team.forEach(pogemon =>{
     if(!pogemon.fainted) wiped = false
   })
-
-
 
   return wiped
 }
@@ -2699,6 +2831,8 @@ let moves = {ally: null, foe: null}
 
 let inBattleCharacters = {ally: null, foe: null}
 
+export let pogemonSwapped = false
+
 function faintEvent(target){
   inBattleCharacters.ally = ally
   inBattleCharacters.foe = foe
@@ -2708,6 +2842,13 @@ function faintEvent(target){
 
   // commenting out this queue.push might break things
 
+  console.log(target)
+
+  let recipient = foe
+  if(target.isEnemy) recipient = ally
+
+  if(recipient.fainted) return
+
   if(target.isEnemy){
     if(target.fainted) return
 
@@ -2716,13 +2857,16 @@ function faintEvent(target){
 
     setTimeout(() =>{
       queue.length = 0
+      console.log(queue)
 
       setTimeout(() =>{
         target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
-        target.faint(queueFaintTrigger)
+        target.faint(queueFaintTrigger, recipient)
   
         manageFaintingEvent(target)
+        console.log('manageFaintingEvent')
   
+        pogemonSwapped = true
         setTimeout(() =>{
           queueProcess.disabled = false
           console.log('here')
@@ -2730,14 +2874,18 @@ function faintEvent(target){
       }, 250)
     }, 1250)
   } else {
-    queue.push(() =>{
+    if(target.fainted) return
+    setTimeout(() =>{
       if(target.fainted) return
+      
       target.dialogue('battle', `${switchUnderScoreForSpace(target.nickname)} fainted!`)
-      target.faint(queueFaintTrigger)
-  
-      setTimeout(() =>{
-        queueProcess.disabled = false
-      }, 750)
+      target.faint(queueFaintTrigger, recipient)
+
+      // queueProcess.disabled = true
+      // console.log('there')
+
+      queueProcess.disabled = false
+      console.log('here')
   
       queue.push(() => {
         if(checkIfTeamWipedOut()){
@@ -2757,12 +2905,17 @@ function faintEvent(target){
           if(!target.fainted) return
           faintedTriggered.active = true
           manageBattleState(false, 'team', {active : true})
-          console.log('here')
+
+          setTimeout(() => {
+            queueProcess.disabled = false
+            console.log('here')
+          }, 750)
         }
       })
-    })
-  }
+    }, 1250)
 
+    console.log(queue)
+  }
 }
 
 // pogemon status turn event
@@ -2780,7 +2933,7 @@ function manageCheckStatusEvent(faster, slower){
 }
 
 function checkIfFainted(target){
-  if(target.hp <= 0){
+  if(target.hp <= 0 && !target.fainted){
     // queue.push(() =>{
       // if(!target.hp <= 0 || !target.fainted) {
       //   queue.splice(1, 1)
@@ -2988,11 +3141,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
           statusEvent(target, targetMove, recipient, statusIcon, false, faster, slower)
           console.log(`status event`)
-          if(battleType != 'trainer') if(target.hp <= 0){
-            faintEvent(target)
-            console.log('faintEvent')
-            return
-          }
+          if(battleType != 'trainer') checkIfFainted(target)
 
           // manageCheckStatusEvent(faster, slower)
           // console.log('manageCheckStatusEvent')
@@ -3017,7 +3166,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
 
         console.log('confuse check now')
 
-        if(battleType != 'trainer') if(target.hp <= 0) faintEvent(target)
+        if(battleType != 'trainer') if(target.hp <= 0) checkIfFainted(target)
         
         console.log('faintEvent')
 
@@ -3026,7 +3175,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
         // console.log('not confused')
 
         // console.log(`status event`)
-        if(battleType != 'trainer') if(target.hp <= 0) faintEvent(target)
+        if(battleType != 'trainer') if(target.hp <= 0) checkIfFainted(target)
         
         console.log('faintEvent')
 
@@ -3363,7 +3512,20 @@ function screenDisplayManagement(type, isEnemy, screenType, turns){
   }
 }
 
+export const statusEventObj = {
+  ally: false,
+  foe: false,
+}
+
 function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, faster, slower){
+  console.log(statusEventObj)
+  if(target.isEnemy){
+    if(statusEventObj.foe) return
+    else statusEventObj.foe = true
+  } else {
+    if(statusEventObj.ally) return
+    else statusEventObj.ally = true
+  }
 
   // if(target.affliction[2].active) return
 
@@ -3397,7 +3559,11 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
   }
 
   function normalMoveEvent() {
+    if(target.isEnemy) statusEventObj.foe = false
+    else statusEventObj.ally = false
+
     if(target.isEnemy && targetMove == undefined) targetMove = foeRNGMove
+    teamEvent.switch = false
     if(attackLanded(targetMove.acc, targetMove)) {
       moveProcess = true
 
@@ -3455,7 +3621,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
       if(target.status.name == 'slp') return
 
       target.move({move: targetMove, recipient, recipientMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
-      // console.log('YAYA')
+      console.log('YAYA')
     } else {
       if(target.hp <= 0) return
       target.miss('missed', renderedSprites, queueProcess)
@@ -3678,16 +3844,18 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
 
       if(faster.affliction[0].active || faster.status.name == 'para' || faster.status.name == 'slp') {
         queue.push(() => manageCheckStatusEvent(faster, slower)) 
+        console.log('manageCheckStatusEvent')
         passed = true
       }
       
       if(slower.affliction[0].active || slower.status.name == 'para' || slower.status.name == 'slp') {
         if(passed) return 
         queue.push(() => manageCheckStatusEvent(faster, slower))
+        console.log('manageCheckStatusEvent')
       }
 
       // target.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
-      console.log('manageCheckStatusEvent')
+      // console.log('manageCheckStatusEvent')
     } else if(target.affliction[0].active){
       console.log('afflictionEvent')
       if(recipient.id == faster.id){
@@ -4015,20 +4183,20 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
 
         if(target.isEnemy){
           terrainConditions.static.sticky_web.active.foe = false
-          document.querySelector('#foeWebs').style.opacity = 0
-
-          terrainConditions.static.stealth_rock.active.foe = false
-          document.querySelector('#foeRocks').style.opacity = 0
-
-          document.querySelector('#foeSeeds').style.opacity = 0
-        } else {
-          terrainConditions.static.sticky_web.active.ally = false
           document.querySelector('#allyWebs').style.opacity = 0
 
-          terrainConditions.static.stealth_rock.active.ally = false
+          terrainConditions.static.stealth_rock.active.foe = false
           document.querySelector('#allyRocks').style.opacity = 0
 
           document.querySelector('#allySeeds').style.opacity = 0
+        } else {
+          terrainConditions.static.sticky_web.active.ally = false
+          document.querySelector('#foeWebs').style.opacity = 0
+
+          terrainConditions.static.stealth_rock.active.ally = false
+          document.querySelector('#foeRocks').style.opacity = 0
+
+          document.querySelector('#foeSeeds').style.opacity = 0
         }
 
         break
@@ -4250,6 +4418,7 @@ function attackMove(e) {
 
   if(ally.choiceItem.move != null && ally.choiceItem.move.name != currMove.name) {
     setTimeout(() => queue.length = 0, 50)
+    console.log(queue)
 
     ally.dialogue('battle', `${ally.nickname} is locked into a move due to it's choice ${ally.choiceItem.type}...`)
 
@@ -4263,6 +4432,7 @@ function attackMove(e) {
 
   if(ally.affliction[2].active && currMove.type == 'status'){
     setTimeout(() => queue.length = 0, 50)
+    console.log(queue)
 
     ally.dialogue('battle', `${ally.nickname} is taunted and so cannot use status moves...`)
 
@@ -4276,6 +4446,7 @@ function attackMove(e) {
 
   if(ally.heldItem != null) if(ally.heldItem.name == 'assault_Vest' && currMove.type == 'status'){
     setTimeout(() => queue.length = 0, 50)
+    console.log(queue)
 
     ally.dialogue('battle', `${ally.nickname} has an assault vest equipped and so cannot use status moves...`)
 
@@ -4315,6 +4486,7 @@ function attackMove(e) {
   
     let fasterStatusIcon = document.querySelector('#allyStatus')
     let slowerStatusIcon = document.querySelector('#foeStatus')
+
     if(faster.isEnemy) {
       fasterStatusIcon = document.querySelector('#foeStatus')
       slowerStatusIcon = document.querySelector('#allyStatus')
@@ -4372,50 +4544,72 @@ function attackMove(e) {
     // console.log('there')
 
     console.log('nwowowowawa')
-    
-    queue.push(() =>{
-        // here
-      if(slower.fainted){
+
+      // here
+    if(slower.fainted){
         manageCheckStatusEvent(faster, slower)
         console.log('manageCheckStatusEvent')
 
         console.log('afflictionEvent')
         afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', true, slowerStatusIcon, false, faster, slower)
         console.log('NWONWOWNOWNONWOONWONWONWNOW')
-      } else {
-        // pushRecipientEndOfTurnBattleItemEvent(faster, fasterHpBeforeMove, slowerHpBeforeMove)
-        if(slower.convertToPercentage(slower.hp, slower.stats.baseHp) != slowerHpBeforeMove){
-          if(slower.flinched){
-            slower.miss('flinched', renderedSprites, queueProcess)
-            manageCheckStatusEvent(faster, slower)  
+    } else if(faster.fainted) {
+        if(checkIfTeamWipedOut()){
+          document.querySelector('#allyStatus').style.backgroundColor = 'transparent'
+          document.querySelector('#overlapping').textContent = 'Git Gud'
+          gsap.to('#overlapping', {
+            opacity: 1,
+          })
+          //here
+          document.querySelector('#overlapping').addEventListener('click', spendQueue)
+          document.querySelector('#overlapping').style.cursor = 'pointer'
+          document.querySelector('#overlapping').style.pointerEvents = 'auto'
+          queue.push(() =>{
+            location.reload()
+          })
+        } else {
+          if(!faster.fainted) return
+          faintedTriggered.active = true
+          manageBattleState(false, 'team', {active : true})
+          console.log('here')
+        }
+    } else {
+      // pushRecipientEndOfTurnBattleItemEvent(faster, fasterHpBeforeMove, slowerHpBeforeMove)
 
+      if(slower.convertToPercentage(slower.hp, slower.stats.baseHp) != slowerHpBeforeMove){
+        if(slower.flinched){
+          queue.push(() =>{
+            slower.miss('flinched', renderedSprites, queueProcess)
+            manageCheckStatusEvent(faster, slower) 
+            console.log('manageCheckStatusEvent')
             console.log('afflictionEvent')
             afflictionsEvent(slower, slowerMove, faster, 'slowerCheck', true, slowerStatusIcon, false, faster, slower)
             console.log('NWONWOWNOWNONWOONWONWONWNOW')
 
             slower.flinched = false
-            return
-          }
-        }
-          
-        if(!slowerCheck){
-          // if(slower.choiceItem.move != null && slower.choiceItem.move.name != slowerMove.name) return
-          statusEvent(slower, slowerMove, faster, slowerStatusIcon, false, faster, slower)
-          console.log('statusEvent')
+          })
           return
         }
       }
+
+      if(!slowerCheck && slower.hp > 0){
+        queue.push(() =>{
+          // if(slower.choiceItem.move != null && slower.choiceItem.move.name != slowerMove.name) return
+          statusEvent(slower, slowerMove, faster, slowerStatusIcon, false, faster, slower)
+          console.log('statusEvent')
+        })
+      }
+    }
+
+    // might be where weather is put as first end turn index thingy
+    // flippedQueue.forEach(func =>{
+    //   queue.push(func)  
+    // })
   
-      // might be where weather is put as first end turn index thingy
-      // flippedQueue.forEach(func =>{
-      //   queue.push(func)  
-      // })
-  
-      setTimeout(() =>{
-        queueProcess.disabled = false
-        console.log('here')
-      }, 1250)
-    })
+    setTimeout(() =>{
+      queueProcess.disabled = false
+      console.log('here')
+    }, 1250)
   }
 }
 
@@ -4439,6 +4633,7 @@ function checkForEvoAfterFaint(){
   queueFaintTrigger.initiated = false
 
   manageFaintingEvent(foe)
+  console.log('manageFaintingEvent')
 
   if(evoArr.length > 0){
     // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
@@ -4452,10 +4647,11 @@ function checkForEvoAfterFaint(){
     return
   } else {
     // queue.push(() => ally.dialogue('battle', `You have defeated ${foe.name}!`))
-    queue.push(() => {
-      manageBattleState(false)
-      console.log('here')
-    })
+    if(enemyTeamWiped(enemyTrainerInfo))
+      queue.push(() => {
+        manageBattleState(false)
+        console.log('battle over')
+      })
   }
 }
 
@@ -4483,6 +4679,9 @@ function checkIfTerrainConditionActive(){
       })
     })
   })
+
+  if(battleStarted) flag = false
+  battleStarted = false
 
   return [flag, terrainArr]
 }
@@ -4617,6 +4816,7 @@ function spendQueue(){
       slower = ally
     }
     
+    // prevent this if battle just started
     if(!terrainConditions.weatherSpent && flag) {
       ally.endOfTurnTerrainManagement(null, queue, terrainConditions, faintSwitch, queueProcess, manageWeatherState, faster, slower, enemyTrainerInfo, player)
     } else {
@@ -4632,12 +4832,33 @@ function spendQueue(){
         turnItemEvent.foe = false
     
         ranAway = false
-  
-        dialogueInterfaceDom.style.display = 'none'
-        document.querySelector('#proceedImgContainer').style.display = 'none'
-        if(scenes.get('battle').initiated)  if(queue.length == 0) encounterInterfaceDom.style.display = 'grid'
-        console.log('grided')
         moveProcess = false
+  
+        if(scenes.get('battle').initiated)  
+          if(queue.length == 0) 
+            if(player.team[0].hp > 0 && !foe.fainted) {
+              console.log('grided')
+              dialogueInterfaceDom.style.display = 'none'
+              document.querySelector('#proceedImgContainer').style.display = 'none'
+
+              encounterInterfaceDom.style.display = 'grid'
+            } else if(foe.fainted) {
+              console.log(ally)
+              manageFaintingEvent(foe)
+              console.log('manageFaintingEvent')
+
+              console.log(foe.fainted)
+            } else if(player.team[0].hp <= 0) {
+              setTimeout(() =>{
+                faintedTriggered.active = true
+                manageBattleState(false, 'team', {active : true})
+      
+                setTimeout(() => {
+                  queueProcess.disabled = false
+                  console.log('here')
+                }, 750)
+              }, 750)
+            }
       }, 50)
     }
   }

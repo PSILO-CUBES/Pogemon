@@ -1461,7 +1461,8 @@ function showMapNameAnimation(currMap){
   const changeMapContainer = document.querySelector('#changeMapContainer')
 
   if(currMap.name == 'undefined' || currMap.name == null) currMap.name = pogecenterReturnInfo.name
-
+  console.log(pogecenterReturnInfo)
+  
   let mapName = switchUnderScoreForSpace(currMap.name)
 
   switch(mapName){

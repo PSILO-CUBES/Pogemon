@@ -6,7 +6,7 @@ export let volumeValues = {
 }
 
 const data = await loadData("saveFile")
-// console.log(data)
+console.log(data)
 
 if(data != null) volumeValues = data.volumeValues
 

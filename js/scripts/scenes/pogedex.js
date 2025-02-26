@@ -299,7 +299,7 @@ function createInfoMenu(){
                 const mapsBlockArr = [
                     {name: 'gene_Town', x: 126, y: 724, height: 54, width: 62}, 
                     {name: 'pearly_Path', x: 120, y: 632, height: 92, width: 68}, 
-                    {name: 'slither_Road', x: 188, y: 581, height: 143, width: 63}, 
+                    {name: 'slither_Road', x: 188, y: 581, height: 144, width: 63}, 
                     {name: 'fair_Town', x: 251, y: 663, height: 70, width: 45}, 
                     {name: 'cross_Link', x: 251, y: 593, height: 81, width: 45}, 
                     {name: 'eden_Forest', x: 114, y: 772, height: 103, width: 96}, 
@@ -308,9 +308,9 @@ function createInfoMenu(){
                     {name: 'exodus_Road', x: 17, y: 530, height: 64, width: 103}, 
                     {name: 'sinai_Desert', x: 17, y: 432, height: 98, width: 103}, 
                     {name: 'melchi_Cave', x: 67, y: 392, height: 40, width: 51} , 
-                    {name: 'luna_Mountain_Entrance', x: 268, y: 572, height: 75, width: 113}, 
+                    {name: 'luna_Mountain_Entrance', x: 268, y: 572, height: 76, width: 113}, 
                     {name: 'luna_Mountain', x: 269, y: 466, height: 107, width: 121}, 
-                    {name: 'sol_Path', x: 390, y: 473, height: 59, width: 104}, 
+                    {name: 'sol_Path', x: 390, y: 473, height: 60, width: 104}, 
                     {name: 'commandment_Road', x: 389, y: 338, height: 136, width: 104}, 
                     {name: 'scribble_Town', x: 282, y: 338, height: 66, width: 107}, 
                     {name: 'mousa_Crest', x: 282, y: 403, height: 63, width: 107}, 
@@ -320,15 +320,15 @@ function createInfoMenu(){
                     {name: 'stasis_Cave_Lower_Level', x: 30, y: 234, height: 128, width: 106},  
                     {name: 'stasis_Cave_Upper_Level', x: 28, y: 146, height: 88, width: 112},
                     {name: 'stasis_Cave_Top_Level', x: 93, y: 67, height: 81, width: 47}, 
-                    {name: 'ascension_Path', x: 178, y: 297, height: 91, width: 101}, 
+                    {name: 'ascension_Path', x: 178, y: 297, height: 92, width: 101}, 
                     {name: 'alquima_Town', x: 179, y: 202, height: 95, width: 101}, 
-                    {name: 'end_Trail', x: 240, y: 130, height: 108, width: 178}, 
+                    {name: 'end_Trail', x: 240, y: 130, height: 109, width: 178}, 
                     {name: 'transit_Peak', x: 305, y: 40, height: 92, width: 113}, 
                     {name: 'neo_Genesis', x: 212, y: 40, height: 91, width: 93},
                     {name: 'key_Town', x: 323, y: 696, height: 90, width: 77},
-                    {name: 'ghost_Woods', x: 321, y: 785, height: 86, width: 87},
-                    {name: 'pacc_Isle', x: 408, y: 785, height: 86, width: 94},
-                    {name: 'edicule_Cave', x: 451, y: 871, height: 47, width: 45},
+                    {name: 'ghost_Woods', x: 321, y: 785, height: 87, width: 87},
+                    {name: 'pacc_Isle', x: 408, y: 785, height: 87, width: 94},
+                    {name: 'edicule_Cave', x: 451, y: 871, height: 48, width: 45},
                 ]
 
                 const mapsEncounterContainer = document.createElement('DIV')
@@ -628,7 +628,8 @@ function createInfoMenu(){
 
                                                 if(Object.values(targetPogemon.movepool)[i] == undefined) break
 
-                                                if(moveInfo.seen || targetPogemon.learntMoves.includes(moveInfo.move.name)) {
+                                                // console.log(targetPogemon.learntMoves.includes(moveInfo.move.name))
+                                                if(moveInfo.seen) {
                                                     pogedexInfoMoveContainer.innerText = `lvl ${moveInfo.lvl}\n\n${switchUnderScoreForSpace(moveInfo.move.name)}`
                                                     pogedexInfoMoveContainer.addEventListener('mouseover', e => printMoveInfo(moveInfo.move))    
                                                 } else {

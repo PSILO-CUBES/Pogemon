@@ -60,7 +60,7 @@ function switchProcessEvent(first, second){
   if(second.pogemon == undefined) return
 
   disableOWMenu.active = true
-  console.log('here2')
+  console.log('disableOWMenu')
 
   switchEvent = true
 
@@ -198,6 +198,7 @@ function switchProcessEvent(first, second){
 
 function teamMenuSectionClickEvent(e, i){
   if(switchEvent == true) return
+  if(player.team[i] == undefined) return
 
   pogemonSpriteArr.forEach(sprite =>{
     sprite.animate = false
@@ -236,7 +237,7 @@ function teamMenuSectionClickEvent(e, i){
   }
 
   pogemonSelected = true
-  if(!pogemonSelected.fainted) pogemonSpriteArr[i].animate = true
+  if(!pogemonSelected.fainted) if(pogemonSpriteArr[i] != undefined) pogemonSpriteArr[i].animate = true
   switchProcess.target.first.i = i
   switchProcess.target.first.pogemon = player.team[i]
 
@@ -441,10 +442,10 @@ function definePogemonSprites(i){
 
   pogemonSpriteArr.push(player.team[i])
   
-  if(player.team[i].isShiny) pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.shiny.teamSprite
-  else pogemonSpriteArr[i].img.src = player.team[i].pogemon.sprites.classic.teamSprite
-  
-  pogemonSpriteArr[i].opacity = 1
+  if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.teamSprite
+  else player.team[i].img.src = player.team[i].pogemon.sprites.classic.teamSprite
+
+  player.team[i].opacity = 1
 }
 
 function printInitMenu(){
@@ -600,7 +601,7 @@ function teamAnimation() {
 
   backgroundSprite.draw()
 
-  pogemonSpriteArr.forEach((sprite,i) =>{
+  player.team.forEach((sprite,i) =>{
     sprite.draw()
   })
 }

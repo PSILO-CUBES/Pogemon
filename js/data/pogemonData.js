@@ -98,7 +98,7 @@ export let pogemonsObj = {
       {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.tackle, lvl: 1, seen: false},
+      1: {move: movesObj.fart, lvl: 1, seen: false},
       2: {move: movesObj.growl, lvl: 1, seen: false},
       3: {move: movesObj.rock_smash, lvl: 7, seen: false},
       4: {move: movesObj.fart, lvl: 10, seen: false},
@@ -844,7 +844,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.smallAnimationPos,
-    yeild: 65,
+    yeild: 55,
     catchRate: 255,
     surfable: false
   },
@@ -1310,7 +1310,7 @@ export let pogemonsObj = {
       }
     },
     animationPositions: animationPositionObj.medAnimationPos,
-    yeild: 60.,
+    yeild: 60,
     catchRate: 245,
     surfable: false
   },
@@ -1391,8 +1391,8 @@ export let pogemonsObj = {
     evo: {name: 'sophistaves', lvl: 27, type: 'lvl'},
     abilities: [
       {ability : abilitiesObj.sweet_Veil, seen: false, hidden: false},
-      {ability : abilitiesObj.serene_Grace, seen: false, hidden: false},
-      {ability : abilitiesObj.aerilate, seen: false, hidden: true},
+      {ability : abilitiesObj.run_Away, seen: false, hidden: false},
+      {ability : abilitiesObj.pick_Up, seen: false, hidden: true},
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
@@ -4657,19 +4657,19 @@ export let pogemonsObj = {
       2: null
     },
     stats: {
-      hp: 48,
+      hp: 43,
       atk: 999,
-      def: 999,
-      spatk: 1,
-      spdef: 48,
-      spd: 999
+      def: 1,
+      spatk: 50,
+      spdef: 12,
+      spd: 1
     },
     evo: null,
     abilities: [
       {ability : abilitiesObj.pick_Up, seen: false, hidden: false},
     ],
     movepool: {
-      1: {move: movesObj.headbutt, lvl: 1, seen: false},
+      1: {move: movesObj.double_Edge, lvl: 1, seen: false},
       2: {move: movesObj.growl, lvl: 1, seen: false},
     },
     sprites: {

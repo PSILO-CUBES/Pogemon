@@ -9,7 +9,7 @@ import { Sprite, Character, Pogemon } from "../classes.js"
 
 import { loadData } from "../save.js"
 import { scenes } from "./canvas.js"
-import { changeMapInfo, currMap, generateMapData, itemSpritesArr, map, obstacleSpritesArr, worldEventData } from "./maps.js"
+import { changeMapInfo, currMap, generateMapData, itemSpritesArr, map, obstacleSpritesArr, pogecenterReturnInfo, worldEventData } from "./maps.js"
 
 import { catchEventObj, initRenameEvent, manageBattleState } from "./scenes/battle.js"
 import { changeMap, disableOWMenu, manageOverWorldState, menu, playerTeamItemsState, prevScene, returnPrevScene, waitForNextBattle } from "./scenes/overworld.js"
@@ -77,7 +77,7 @@ export async function generatePlayer(canvas){
     })
 
     if(data == null) {
-      player = new Character([], new Map(), 500, 'Down', 'player', 'ethan', new Sprite({
+      player = new Character([], new Map(), 500, 'Down', null, 'ethan', new Sprite({
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
@@ -90,22 +90,24 @@ export async function generatePlayer(canvas){
         }
       }))
 
-      player.catch(pogemonsObj.disso, true, mapsObj.lab)
+      player.catch(pogemonsObj.loko, true, mapsObj.lab.name)
+      // player.catch(pogemonsObj.piny, true, mapsObj.lab.name)
+      // player.catch(pogemonsObj.nahass, true, mapsObj.lab.name)
+      // player.catch(pogemonsObj.allingua, true, mapsObj.lab.name)
 
       worldEventData.maat.firstMeet = true
       
+      setTimeout(() =>{
+        player.bag.set("ultimball", {item: {...itemsObj.ultimball}, quantity: 999})
+        // player.bag.set("illuminated_Gem", {item: {...itemsObj.illuminated_Gem}, quantity: 1})
+        // player.bag.set("fleeting_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
 
-      // setTimeout(() =>{
-      //   player.bag.set("teleport_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
-      //   player.bag.set("illuminated_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
-      //   // player.bag.set("fleeting_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
-
-      //   player.bag.set("map", {item: {...itemsObj.map}, quantity: 1})
-      //   player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 999})
-      //   player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
-      //   player.bag.set("rare_Candy", {item: {...itemsObj.rare_Candy}, quantity: 999})
-      //   player.bag.set("regina_Esca", {item: {...itemsObj.regina_Esca}, quantity: 999})
-      // }, 250)
+        // player.bag.set("map", {item: {...itemsObj.map}, quantity: 1})
+        // player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 999})
+        // player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
+        // player.bag.set("rare_Candy", {item: {...itemsObj.rare_Candy}, quantity: 999})
+        // player.bag.set("regina_Esca", {item: {...itemsObj.regina_Esca}, quantity: 999})
+      }, 250)
 
       player.pogedexInfo.forEach(pogedex =>{
         // pogedex.seen = true
@@ -123,7 +125,7 @@ export async function generatePlayer(canvas){
 
       return player
     } else {
-      player = new Character([], new Map(), 500, 'Down', 'player', 'ethan', new Sprite({
+      player = new Character([], new Map(), 500, 'Down', data.playerInfo.player.name, 'ethan', new Sprite({
         type: 'player',
         position:{
           x: canvas.width / 2 - playerWidth / 2,
@@ -157,7 +159,7 @@ export async function generatePlayer(canvas){
         remodeledPogemon.moves.length = 0
 
         data.playerInfo.teamMovesInfo[i].forEach((move, j) =>{
-          let newMove = movesObj[`${data.playerInfo.teamMovesInfo[i][j][0]}`]
+          let newMove = {...movesObj[`${data.playerInfo.teamMovesInfo[i][j][0]}`]}
           newMove.pp = data.playerInfo.teamMovesInfo[i][j][1]
           remodeledPogemon.moves.push(newMove)
         })
@@ -557,37 +559,39 @@ document.querySelectorAll('.pogemonBuyMenuArrow')[0].addEventListener('click', e
 document.querySelectorAll('.pogemonBuyMenuArrow')[1].addEventListener('click', e => onArrowClickEvent('down'))
 document.querySelector('#pogemartBuyItemsButton').addEventListener('click', e => openBuyMenu())
 document.querySelectorAll('.pogemartBuyConfirmationOptions')[0].addEventListener('click', e => transactionEvent())
+document.querySelectorAll('.pogemartBuyConfirmationOptions')[1].addEventListener('click', e => onClickEvent(false, e.target, ))
 document.querySelector('#pogemartSellItemsButton').addEventListener('click', e => openSellMenu())
 
+// pogemart shop on click vv what a dumb name to give something, mad fucking vague
 function onClickEvent(state, target, itemType){
-  if(itemType == undefined) return
-
-  const item = itemsObj[itemType.name]
-  
-  if(item != undefined){
-    if(item.value == null && transactionType == 'sell'){
-      document.querySelector('#pogemartMenuDescripion').textContent = 'I cannot buy this from you, sorry.'
-      return
-    }
-  }
-
-  if(transactionType == 'buy') document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'buy'
-  else document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'sell'
+  // if(target.classList[0] == 'pogemartItemsContainer' || target.classList[0] == 'pogemartBuyConfirmationOptions') document.querySelector('#pogemartSellItemsButton').style.display = 'none'
   
   const pogemartMenuDescripion = document.querySelector('#pogemartMenuDescripion')
   const pogemartBuyMenu = document.querySelector('#pogemartBuyMenu')
 
-  if(target.classList[0] == 'pogemartItemsContainer') document.querySelector('#pogemartSellItemsButton').style.display = 'none'
-
   pogemartBuyingInteraction.initiated = true
-
-  if(item != undefined){
-    pogemartBuyingInteraction.product = item
-  }
 
   if(pogemartInteraction.initiated == false) return
   if(state){
+
+    const item = itemsObj[itemType.name]
+  
+    if(item != undefined){
+      if(item.value == null && transactionType == 'sell'){
+        document.querySelector('#pogemartMenuDescripion').textContent = 'I cannot buy this from you, sorry.'
+        return
+      }
+    }
+  
+    if(transactionType == 'buy') document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'buy'
+    else document.querySelector('#pogemonBuyMenuBuyInteraction').textContent = 'sell'
+
+    if(item != undefined){
+      pogemartBuyingInteraction.product = item
+    }
+
     if(inputValue == undefined) inputValue = 0
+    
     if(inputValue == 0) {
       if(transactionType == 'buy') document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s will you buy?`
       else document.querySelector('#pogemartBuyMenuTextContainer').textContent = `How many ${switchUnderScoreForSpace(pogemartBuyingInteraction.product.name)}'s would you like to sell?`
@@ -619,6 +623,8 @@ function onClickEvent(state, target, itemType){
     
     pogemartBuyingInteraction.initiated = false
 
+    if(inputValue == undefined) inputValue = 0
+
     document.querySelectorAll('.pogemartItemsContainer').forEach(node =>{
       node.id = ''
       node.style.backgroundColor = 'transparent'
@@ -626,9 +632,9 @@ function onClickEvent(state, target, itemType){
   }
 }
 
-addEventListener('click', e => {
-  onClickEvent(false, e.target)
-})
+// addEventListener('click', e => {
+//   onClickEvent(false, e.target)
+// })
 
 document.querySelector('#pogemonBuyMenuBuyInteraction').addEventListener('click', e =>{
   if(inputValue <= 0) return
@@ -695,6 +701,7 @@ let soundFlag = false
 
 export function itemPickUp(item, amount, msg){
   player.disabled = true
+  console.log('playerDisabled')
 
   scenes.set('pickingItem', {initiated: true})
   
@@ -764,6 +771,7 @@ function playerInteraction(e) {
     case 'pc':
         if(scenes.get('pc').initiated) return
         player.disabled = true
+        console.log('playerDisabled')
 
         gsap.to('#overlapping', {
           opacity: 1,
@@ -782,10 +790,11 @@ function playerInteraction(e) {
       if(interaction.initiated) return
       if(player.interaction.info.eventKey == 'setFirstMeet' && worldEventData.set.postTransformation) return
       disableOWMenu.active = true
-      console.log('here2')
+      console.log('disableOWMenu')
 
       interaction.initiated = true
       player.disabled = true
+      console.log('playerDisabled')
 
       // document.querySelector('#overworldDialogueContainer').style.display = 'grid'
 
@@ -974,8 +983,7 @@ function playerInteraction(e) {
         case 'pogecenter':
           healProcess = true
           player.team.forEach(pogemon =>{
-            pogemon.hp = pogemon.stats.baseHp
-            pogemon.fainted = false
+            pogemon.completeHeal()
           })
           queue.push(() =>{
             setTimeout(() =>{
@@ -987,14 +995,29 @@ function playerInteraction(e) {
         case 'pogemart':
           queue.push(() =>{
             let index
-            for(let i = 0; i < Object.values(player.badges).length; i++){
-              if(Object.values(player.badges)[i] == false) index = 0
-              index = i
+            let mapName
+
+            if(data != null && data.nextMapInfo.name != null) mapName = data.nextMapInfo.name
+            else mapName = pogecenterReturnInfo.name
+
+            console.log(data)
+
+            switch(mapName){
+              case 'fair_Town':
+                index = 0
+                break
+              case 'keme_Town':
+                index = 1
+                break
+              case 'scribble_Town':
+                index = 2
+                break
+              case 'alquima_Town':
+                index = 3
+                break
             }
 
-            console.log(index)
             generatePogemartMenu(mapsObj[`pogemart`].productOptions[index])
-            // console.log(index)
             disableOWMenu.active = false
             inputValue = 0
           })
@@ -1016,6 +1039,7 @@ function playerInteraction(e) {
   
         player.disabled = true
         interaction.initiated = true
+        console.log('playerDisabled')
   
         let starters = [pogemonsObj['loko'], pogemonsObj['steeli'], pogemonsObj['maaph']]
         let starter = starters[player.interaction.info.amount]
@@ -1120,12 +1144,14 @@ function playerInteraction(e) {
 
       player.interaction.collisionInstance.obstacleSprite.animate = true
       player.disabled = true
+      console.log('playerDisabled')
       setTimeout(() =>{
         player.interaction.collisionInstance.obstacleSprite.animate = false
         player.interaction.collisionInstance.boundary.collision = false      
         player.interaction.info.disabled = true
         // console.log(mapsObj[currMap.name].obstaclesInfo)
         player.disabled = false
+        console.log('playerAble')
         console.log(catchEventObj)
         soundFlag = false
         obstacleSpritesArr.forEach((sprite, i) => {if(sprite.type == player.interaction.collisionInstance.obstacleSprite.type) obstacleSpritesArr.splice(i, 1)})
@@ -1460,6 +1486,7 @@ function incrementRepelStepsWhenMoving(){
     repelObj.active = false
 
     player.disabled = true
+    console.log('playerDisabled')
     player.dialogue('overworld', `The repel effect wore off..`)
 
   } else repelObj.steps -= 1
@@ -1542,6 +1569,7 @@ function changeMapEvent(changeMap, currPos){
 
       changeMapFlag = true
       player.disabled = true
+      console.log('playerDisabled')
 
       // if(changeMapIndex.info.name == 'pogemart' || changeMapIndex.name == 'pogecenter'){
       //   prevMap = currMapInfo
@@ -1576,11 +1604,15 @@ function changeMapEvent(changeMap, currPos){
             blockChangeMap = false
           }, 2000)
         }
-        else player.disabled = false
+        else {
+          player.disabled = false
+          console.log('playerAble')
+        }
       } else if(currMap.name == 'transit_Peak' && changeMapIndex.info.eventKey == "neoGenesisPortal" && !worldEventData.set.preTransformation){
 
         console.log(changeMapIndex)
         player.disabled = true
+        console.log('playerDisabled')
 
         if(!blockChangeMap) {
           player.dialogue('overworld', `I have no idea what lies beyond this portal.\n\nI should speak to the old man Set before entering.`)
@@ -1590,7 +1622,10 @@ function changeMapEvent(changeMap, currPos){
             blockChangeMap = false
           }, 2000)
         }
-        else player.disabled = false
+        else {
+          player.disabled = false
+          console.log('playerAble')
+        }
 
       } else {
         audioObj.SFX.changeMap.play()
@@ -1683,9 +1718,9 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
-          console.log('messageNow')
 
         worldEventData.bananaGuy.bananaAsked = true
 
@@ -1695,9 +1730,9 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
-        console.log('messageNow')
 
         worldEventData.bananaGuy.bananaAsked = true
 
@@ -1707,6 +1742,7 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.bananaDialogue)
 
@@ -1717,9 +1753,9 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.dialogue)
-        console.log('messageNow')
 
         worldEventData.mousaCrest.ask = true
 
@@ -1729,9 +1765,9 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.waitingDialogue)
-        console.log('messageNow')
 
         // console.log('block event')
         return
@@ -1739,9 +1775,10 @@ function eventZoneManagement(eventZones){
         player.interaction = eventZonesIndex
         
         disableOWMenu.active = true
+        console.log('disableOWMenu')
         player.disabled = true
         player.dialogue('overworld', eventZonesIndex.info.permissionDialogue)
-        console.log('messageNow')
+
 
         // console.log('block event')
         return
@@ -1838,12 +1875,10 @@ function eventZoneManagement(eventZones){
               break
           }
 
-          console.log('wtf2?')
-
           if(eventZonesIndex.info.beaten) return
           
           disableOWMenu.active = true
-          console.log('here2')
+          console.log('disableOWMenu')
 
           player.disabled = true
 
@@ -1935,6 +1970,7 @@ function eventZoneManagement(eventZones){
                             manageBattleState(true, null, null, eventZonesIndex.info)
                             disableOWMenu.active = false
                             player.disabled = false
+                            console.log('playerAble')
                             console.log(catchEventObj)
                             gsap.to('#overlapping', {
                               opacity: 0,
@@ -1996,6 +2032,7 @@ function spendQueue(){
 
     setTimeout(() =>{
       player.disabled = false
+      console.log('playerAble')
       disableOWMenu.active = false
     }, 500)
 
@@ -2015,6 +2052,7 @@ function spendQueue(){
       document.querySelector('#overworldDialogueContainer').style.display = 'none'
       openWindow.style.backgroundColor = 'transparent'
       player.disabled = false
+      console.log('playerAble')
       console.log(catchEventObj)
       disableOWMenu.active = false
       interaction.initiated = false
@@ -2034,6 +2072,7 @@ function spendQueue(){
     if(player.interaction.info.eventKey == 'banishmentPathBlock' && !worldEventData.bananaGuy.bananaGiven){
       player.disabled = true
       audioObj.SFX.changeMap.play()
+      console.log('playerDisabled')
 
       gsap.to('#overlapping', {
         opacity: 1,
@@ -2044,6 +2083,7 @@ function spendQueue(){
           setTimeout(() =>{
             disableOWMenu.active = false
             player.disabled = false
+            console.log('playerAble')
           }, 250)
         }
       })
@@ -2083,7 +2123,7 @@ function spendQueue(){
     if(player.interaction.info.eventKey == 'mousaCrestBlock' && !worldEventData.kukum.permission){
       player.disabled = true
       audioObj.SFX.changeMap.play()
-
+      console.log('playerDisabled')
       gsap.to('#overlapping', {
         opacity: 1,
         duration: 0.4,
@@ -2093,6 +2133,7 @@ function spendQueue(){
           setTimeout(() =>{
             disableOWMenu.active = false
             player.disabled = false
+            console.log('playerAble')
           }, 250)
         }
       })
@@ -2147,6 +2188,7 @@ function spendQueue(){
       if(document.querySelector('#overworldDialogue').innerText == 'Have a good day! :D') return
       // disableOWMenu.active = true
       player.disabled = true
+      console.log('playerDisabled')
       generatePogemartMenu(mapsObj.pogemart.productOptions[player.interaction.info.shopKey])
     }
 
@@ -2228,6 +2270,7 @@ partyInteractionContainer.addEventListener('click', e =>{
   if(e.target.id == 'partyInteractionContainerBackground'){
     disableOWMenu.active = false
     player.disabled = false
+    console.log('playerAble')
 
     partyInteractionContainer.style.display = 'none'
   }
@@ -2241,7 +2284,7 @@ partyInteractionContainer.addEventListener('click', e =>{
 
 function homouFamilyInteraction(type){
   disableOWMenu.active = true
-  console.log('here2')
+  console.log('disableOWMenu')
   player.disabled = true
 
   const partyInteractionContentContainer = document.querySelector('#partyInteractionContentContainer')
@@ -2292,6 +2335,7 @@ relearnMoveContentContainer.addEventListener('click', e =>{
   document.querySelector('#relearnMoveContentContainer').style.display = 'none'
   disableOWMenu.active = false
   player.disabled = false
+  console.log('playerAble')
 })
 
 const relearnMoveCurrMovesArr = []
@@ -2447,7 +2491,7 @@ function switchMoveVisualEvent(pogemon){
   //   else pogemon.learntMoves.push(relearnMoveObj.currMove.move)
   // })
 
-  pogemon.moves[oldRelearnMoveObj.currMove.id] = movesObj[oldRelearnMoveObj.oldMove.move]
+  pogemon.moves[oldRelearnMoveObj.currMove.id] = {...movesObj[oldRelearnMoveObj.oldMove.move]}
   console.log(pogemon.moves[oldRelearnMoveObj.currMove.id])
 
   // // let movePlaceHolder
@@ -2475,6 +2519,7 @@ function switchMoveVisualEvent(pogemon){
 
       disableOWMenu.active = false
       player.disabled = false
+      console.log('playerAble')
     }, 750)
 
     let textPlaceHolder

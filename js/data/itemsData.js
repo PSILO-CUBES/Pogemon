@@ -276,7 +276,7 @@ export const itemsObj = {
     effect: 'heal',
     pow: 10,
     img: 'img/item_scene/items/berry/old_Banana.png',
-    desc: 'A old and soggy banana.\n\nRestores Hp when help in battle.',
+    desc: 'A old and soggy banana.\n\nRestores Hp when held in battle.',
     heldType: 'after',
     heldEffect: 'flatHealing',
     heldThreshHold: 50,
@@ -291,7 +291,7 @@ export const itemsObj = {
     effect: 'heal',
     pow: 35,
     img: 'img/item_scene/items/berry/banana.png',
-    desc: 'A very ordinary banana.\n\nRestores Hp when help in battle.',
+    desc: 'A very ordinary banana.\n\nRestores Hp when held in battle.',
     heldType: 'after',
     heldEffect: 'flatHealing',
     heldThreshHold: 50,
@@ -321,7 +321,7 @@ export const itemsObj = {
     effect: 'heal',
     pow: 25,
     img: 'img/item_scene/items/berry/yellow_Berry.png',
-    desc: 'A very sour yellow berry.\n\nRestores Hp when help in battle.',
+    desc: 'A very sour yellow berry.\n\nRestores Hp when held in battle.',
     heldType: 'after',
     heldEffect: 'percentHealing',
     heldThreshHold: 50,
@@ -918,7 +918,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   axe:{
     name: 'axe',
@@ -931,7 +932,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   guiding_Staff:{
     name: 'guiding_Staff',
@@ -944,7 +946,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   hammer:{
     name: 'hammer',
@@ -957,7 +960,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   surf_Saddle:{
     name: 'surf_Saddle',
@@ -970,7 +974,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   teleport_Gem:{
     name: 'teleport_Gem',
@@ -996,7 +1001,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   dusk_Gem:{
     name: 'dusk_Gem',
@@ -1009,7 +1015,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   twilight_Gem:{
     name: 'twilight_Gem',
@@ -1022,7 +1029,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   solstice_Gem:{
     name: 'solstice_Gem',
@@ -1035,7 +1043,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   corrupt_Gem:{
     name: 'corrupt_Gem',
@@ -1048,7 +1057,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   stasis_Gem:{
     name: 'stasis_Gem',
@@ -1061,7 +1071,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   fleeting_Gem:{
     name: 'fleeting_Gem',
@@ -1074,7 +1085,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
   illuminated_Gem:{
     name: 'illuminated_Gem',
@@ -1087,7 +1099,8 @@ export const itemsObj = {
     consume: false,
     odds: 0,
     price: 1,
-    value: null
+    value: null,
+    usable: false
   },
 }
 

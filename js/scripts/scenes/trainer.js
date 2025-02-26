@@ -20,7 +20,7 @@ export let timeObj = {
     sec: 0
 }
 
-const data = await loadData()
+const data = await loadData('saveFile')
 
 function returnAmountOfSeenPogemon(player){
     let i = 0

@@ -469,6 +469,10 @@
 }
 
 #statsSceneGridSectionPogemonDataLvl{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   font-size: large;
   word-break: break-all;
 

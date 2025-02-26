@@ -700,6 +700,86 @@ save bug to get thru banishment_Road banana guy block x
 
 afflictions reset after battle x
 
+recoil broken asf x
+
+faint after recoil damage if user has less than 1 hp x
+
+faint after recoil x
+
+sand weather turn spent before move x
+
+naming stuff : {
+    prevent underscore
+    cant name player or pogemon only spaces
+    remove spaces before letters
+    naming input needs to be reset after naming
+    player must be disabled during naming
+} x
+
+cant cut trees x
+
+fair town pogemart dont show correct item x
+
+program no button in pogemart x
+
+leave pogecenter with text box still open x
+
+bag scene give potion display is fucked up -- changing wrong child node so i switch gender icon with held item icon by accident x
+
+pogemon already has held item dialogue x
+
+prevent key items from being used x
+
+player wrong name after 2nd save file x
+
+affliction battle content goes over level up stuff x
+
+switch without opponent attacking -- happens rarely when spamming escape, think is fixed x
+
+split exp is blocked by level cap -- level up happens the next battle lmao w x
+
+return to over world after team ally exp scene wont happen x
+
+load backup save broken x
+
+need to make a defaultMovesObj x
+
+player cant move after battle x
+
+exiting pogecenter after a couple of saves crashes : {
+    overworld.js:91 {name: 'pogecenter', spawnPosition: undefined}
+} x
+
+prevent stats screen switching to unknown pogemon with W and S x
+
+make sure end of turn afflictions happen regardless of protect x
+
+reset queue at the beginning of battle x
+
+use battle item dispences useless queue x 
+
+slimie in gym fainted but didint switch Maat gym x
+
+fainting from recoil is fucked x
+
+can click empty team slots in team menu x
+
+reduce defense dont do shit x
+
+crit message happens too early sometimes and gets deleted by stat change dialogue x
+
+foe wild piny wont faint -- struggle related x
+
+prevent exp bar gain animation when level capped x
+
+at half hp goes from yellow to green when attacking x
+
+pogedex map stuff needs to cover more area x
+
+correct health color after bag event x
+
+team pogemon sprites get fucked up after 2nd catch -- corrects after save x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -707,10 +787,6 @@ afflictions reset after battle x
 ↓ 	↓ 	↓ 	↓ 	↓  to work on 	↓ 	↓ 	↓ 	↓ 	↓ 
 
 stuffToDo:{
-    ideas:{
-        keyboard for ui intergration
-    }
-
     bugs:{
         remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
 
@@ -724,79 +800,100 @@ stuffToDo:{
 
         put looking direction on changeMap collisions so i dont get in by accident
 
+        target not defined classes.js:2996 -- after battle cant move
 
 
         -- gab tested buggs
 
-        sand weather turn spent before move
 
-        protect stuff :{
-            is was not very effective text on protect
+        remember to set owMenu back to enabled every time!!!!!!!!! -- check where it is fired with Gab
 
-            effects affect pogemon even thru protect
-        }
+        keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
 
-        player interation stuff :{
-            maat gym can talk when shes not there
+        foe wild piny sprite change to small tadtoxic when switching -- happend to my nahass after i caught it goes away if save and refresh -- i think its related to catching
 
-            heisenberg wrong dialogue
-
-            spamming player interaction forces chosenDialogue to pop
-
-            player.interaction stays stuck for some reason
-        }
-
-        naming stuff :{
-            prevent underscore
-
-            cant name player or pogemon only spaces
-
-            remove spaces before letters
-
-            naming input needs to be reset after naming
-
-            player must be disabled during naming
-        }
-
-        bag scene give potion display is fucked up -- changing wrong child node so i switch gender icon with held item icon by accident
-
-        pogemon already has item dialogue
-
-        target not defined classes.js:2996 -- after battle cant move
-
-        affliction battle content goes over level up stuff
-
-        keep trees and rocks destroyed, also starter pogeball reappears for some reason
-
-        fair town pogemart dont show correct item
-
-        program no button in pogemart
-
-        switch without opponent attacking
-
-        return to over world after team ally exp scene wont happen
-
-        maat gym trainer battle collisions
-
-        poison queue is pushed at wrong time
-
-        foe wild piny sprite change to small tadtoxic when switching
-
-        split exp is blocked by level cap
+        queue exp event, setTimeout not a good idea should push in queue no matter what, poison affliciton happens at the wrong time beacuse of it -- stats change interaction in conflict with this one
 
         learning quick attack when already known
 
-        leave pogecenter with text box still open
-
-        load backup save broken
-
-        player wrong name
-
         gene_Town level is always the same
+
+
+        -- me tested buggs
+
+        switch stuff :{
+            enemy switch happens too fast
+
+            enemy pogemon doesnt switch after fainting after i switch
+
+            ally dont faint after switching when opponent is poisoned
+
+            battle doesnt end after gym leader fainted -- force faint at end of turn somehow
+        }
+
+        confusion: {
+            wild flailegant snapped out of confusion but didint attack -- maybe was slower?
+
+            snapped out of confusion faster skips my turn
+        }
+
+        poison : {
+            poison happens when dialogue is clickable in between stat raise timeout
+
+            enemy poison happens before i faint??? <-- aint this normal wtf??
+
+            reset poison damage to 0 when starting new battle
+        }
+
+        using potion during battle fucks up bag sprites, makes the game fucky after battle too -- multiple animations are fired at once which causes the "fucky" effect
+
+        statusEffectAnimation fires multiple times -- leech seed animation spazed out
+
+        ow items respawn sometimes
+
+        make heisenberg give the halo as in itemPickup thingy
+
+        pogeball doesnt get used if not caught? -- pogeball doesnt get used period i think
+
+        can move during cancel renaming -- sometimes
+
+
+
+
+        i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
+
+        poison issues confuse issues need to be checked manualy
+
+        check if bag scene and ow scene animation active and cancel the animation if not
+    }
+
+    test:{
+        sweet kiss animation wont play
+
+        moon light might not work
+
+        switch out on last pogemon and battle ended even tho the opponent didint faint
+
+        wild battle restarted with previous fainted pogemon, hp was at 0 and was the same pogemon
+
+        enemy pogemon uses old move when i switch x
+
+        poison damage delt to me instead of wild mon after catch -- calling checkStatusEvent on wrong target in catch method x
+
+        tadtoxic doenst showup in pogedex until relaod x
+
+        tadtoxic stays 0 brightness even when seen x
+
+        check when ally pogemon faints, 3 queues happen should shave those off x
+        
     }
 }
 
 ------------------------ demo release ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+keyboard for ui intergration
+
+make battle backgrounds
 
 add description for every pogemon 
 

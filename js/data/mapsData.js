@@ -24,10 +24,8 @@ export let mapsObj = {
     width: 60,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.piny, lvls: [2, 3], odds: {min:0,max:100}, heldItem: undefined, moves:[
-          movesObj.protect
-        ]},
-        // {pogemon: pogemonsObj.flailegant, lvls: [2, 3], odds: {min:50,max:100}},
+        {pogemon: pogemonsObj.piny, lvls: [2, 4], odds: {min:0,max:50}},
+        {pogemon: pogemonsObj.flailegant, lvls: [2, 4], odds: {min:50,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -43,29 +41,28 @@ export let mapsObj = {
 
       {name: 'lab', spawnPosition: {x: 375, y: -425,}},
 
-
       {name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},{name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},
       {name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},{name: 'eden_Forest', spawnPosition: {x:-2105, y:-225}},
     ],
     obstaclesInfo: [
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:80}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:80}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:80}, neg:{x:0, y:0}}},
         disabled: false,
       },
       {
         name: 'tree',
-        direction: {reach: {pos:{x:0, y:50}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:0, y:80}, neg:{x:0, y:0}}},
         disabled: false,
       },
     ],
@@ -171,7 +168,7 @@ export let mapsObj = {
     FGImg: './img/maps/lab/labFG.png',
     spawnPosition: {
       x: 375,
-      y: -425
+      y: 25
     },
     height: 17,
     width: 18,
@@ -238,9 +235,9 @@ export let mapsObj = {
     width: 64,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.piny, lvls: [2, 6], odds: {min:1,max:35}}, 
-        {pogemon: pogemonsObj.wallafi, lvls: [2, 6], odds: {min:35,max:65}}, 
-        {pogemon: pogemonsObj.flailegant, lvls: [2, 6], odds: {min:65,max:90}},
+        {pogemon: pogemonsObj.piny, lvls: [3, 6], odds: {min:1,max:35}}, 
+        {pogemon: pogemonsObj.wallafi, lvls: [3, 6], odds: {min:35,max:65}}, 
+        {pogemon: pogemonsObj.flailegant, lvls: [3, 6], odds: {min:65,max:90}},
         {pogemon: pogemonsObj.allingua, lvls: [3, 7], odds: {min:90,max:95}},
         {pogemon: pogemonsObj.tadtoxic, lvls: [3, 7], odds: {min:95,max:100}},
       ], 
@@ -306,9 +303,7 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 6, itemsObj.banana, null, null, null, [
-          movesObj.extreme_speed
-        ]]],
+        team: [[pogemonsObj.wallafi, 6, itemsObj.banana, null, null, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
@@ -555,7 +550,7 @@ export let mapsObj = {
     mapImg: './img/maps/fair_Town_Gym/fair_Town_Gym.png',
     FGImg: './img/maps/fair_Town_Gym/fair_Town_GymFG.png',
     spawnPosition: {
-      x: -500,
+      x: 250,
       y: -500
     },
     height: 32,
@@ -567,7 +562,12 @@ export let mapsObj = {
       {
         name: "Ma'at", 
         team: [
-          [pogemonsObj.flailegant, 14, null, null, null, null], 
+          [pogemonsObj.flailegant, 14, null, null, null, null, [
+            movesObj.draining_kiss,
+            // movesObj.mystical_power,
+            // movesObj.roost,
+            // movesObj.flame_charge,
+          ]], 
           [pogemonsObj.slimie, 15, null, itemsObj.leftovers, abilitiesObj.slimie_regeneration, true], 
           [pogemonsObj.balancia, 17, itemsObj.rocky_Helmet, abilitiesObj.synchronize, null, true, [
             movesObj.headbutt,
@@ -589,7 +589,7 @@ export let mapsObj = {
       {
         name: 'Larry', 
         team: [[pogemonsObj.formal, 11, null, null, null, null], [pogemonsObj.allingua, 13, null, null, null, null]],
-        direction: {reach: {pos:{x:200, y:0}, neg:{x:0, y:0}}},
+        direction: {reach: {pos:{x:300, y:0}, neg:{x:0, y:0}}},
         looking: 'Left', 
         sprite: '../../img/charSprites/youngman/youngman.png',
         dialogue: 'Gramps is facinated with those slime pogemon.\n\nHe talked about stones being the catalysts for evolution or\n\nsomething like that.',
@@ -4971,7 +4971,8 @@ if(data != null) {
     if(map.seen != undefined) map.seen = data.mapsObjState[map.name].seen
     if(map.obstaclesInfo != undefined) {
       map.obstaclesInfo.forEach((obstacle, i) =>{{
-        obstacle.disabled = data.mapsObjState[map.name].obstaclesInfo[i].disabled
+        if(data.mapsObjState[map.name].obstaclesInfo != undefined)
+          obstacle.disabled = data.mapsObjState[map.name].obstaclesInfo[i].disabled
       }})
     }
   })

@@ -108,11 +108,11 @@ function statsSceneMovesInteraction(e, state){
 	if(document.querySelector('#statsSceneGridSectionDataMovesContainer').childNodes.length == 1) return
 
     if(switchMoveProcess.active){
-        statsSceneSwitchMoves(switchMoveProcess.moves.first, movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`])
+        statsSceneSwitchMoves(switchMoveProcess.moves.first, {...movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`]})
       return
     }
 
-    switchMoveProcess.moves.first = movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`]
+    switchMoveProcess.moves.first = {...movesObj[`${switchSpaceForUnderScore(e.target.innerText.toLowerCase())}`]}
 	console.log(switchSpaceForUnderScore(e.target.innerText.toLowerCase()))
 
     document.querySelectorAll(`.${e.target.classList[0]}`).forEach(node =>{
@@ -122,7 +122,20 @@ function statsSceneMovesInteraction(e, state){
     document.querySelector('#statsSceneMovesInterfaceDescContainer').replaceChildren()
 
     e.target.style.backgroundColor = 'rgba(75,75,75,0.35)'
-    printMoveDesc(movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`])
+
+	function returnPogemonClickedMove(moveObj){
+		let returnedMove
+
+		selectedPogemon.moves.forEach(move =>{
+			if(moveObj.name == move.name) returnedMove = move
+		})
+
+		return returnedMove
+	}
+
+	console.log(returnPogemonClickedMove({...movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`]}))
+
+    printMoveDesc(returnPogemonClickedMove({...movesObj[`${e.target.innerText.toLowerCase().replace(' ', '_')}`]}))
 
     document.querySelector('#statsSceneMovesInterface').style.display = 'grid'
 
@@ -167,6 +180,8 @@ function printMoveDesc(selectedMove){
 
 			statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementTag)
 			statsSceneMovesInterfaceMoveDescContent.appendChild(statsSceneMovesInterfaceMoveDescElementName)
+
+			console.log(selectedMove)
 		} else if (i <= 5) {
 			if(i == 0) {
 				statsSceneMovesInterfaceMoveDescContent.innerText = `${Object.keys(selectedMove)[i]} : ${Object.values(selectedMove)[i].replace(/_/g, ' ')}`
@@ -244,6 +259,7 @@ function createMenu(){
 						const statsSceneCatchContainer = document.createElement('div')
 						statsSceneCatchContainer.id = 'statsSceneGridSectionInfoCatch'
 
+						console.log(selectedPogemon.caughtMap)
 						statsSceneCatchContainer.innerText = `${switchUnderScoreForSpace(selectedPogemon.nickname)} was met at ${switchUnderScoreForSpace(selectedPogemon.caughtMap.name)} at lvl ${selectedPogemon.catchInfo.lvl} on ${selectedPogemon.catchInfo.date.toLocaleString('default', { month: 'long' })} ${getOrdinalNum(selectedPogemon.catchInfo.date.getDate())} ${selectedPogemon.catchInfo.date.getFullYear()}. \n\n It has a ${selectedPogemon.nature.name} nature.`
 
 						statsSceneGridSectionInfo.appendChild(statsSceneCatchContainer)
@@ -558,7 +574,7 @@ function initStatsMenu(){
 
 function clearStatsMenu(prevScene){
   disableOWMenu.active = true
-  console.log('here2')
+  console.log('disableOWMenu')
   
   gsap.to('#overlapping', {
     opacity: 1,
@@ -586,11 +602,13 @@ export function switchStatsTargetWithKeys(key){
 	
 	if(key == 'w') {
 		if(selectedPogemonTeamIndex - 1 < 0) return
+		if(player.team[selectedPogemonTeamIndex - 1] == undefined) return
 		selectedPogemonTeamIndex = selectedPogemonTeamIndex - 1
 	}
 	
 	if(key == 's') {
 		if(selectedPogemonTeamIndex + 1 > 5) return
+		if(player.team[selectedPogemonTeamIndex+ 1] == undefined) return
 		selectedPogemonTeamIndex = selectedPogemonTeamIndex + 1
 	}
 
