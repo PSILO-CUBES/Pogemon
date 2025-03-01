@@ -4,7 +4,7 @@ import { player, repelObj } from "../player.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { prevScene, returnPrevScene, transitionScenes } from "./overworld.js"
 import { itemsObj } from "../../data/itemsData.js"
-import { addToEvoArr, evoArr, levelCapObj, manageBattleState } from "./battle.js"
+import { addToEvoArr, changeHPColor, evoArr, levelCapObj, manageBattleState } from "./battle.js"
 import { mapsObj } from "../../data/mapsData.js"
 import { manageEvolutionState } from "./evolution.js"
 import { switchUnderScoreForSpace } from "./stats.js"
@@ -592,24 +592,8 @@ function useItemOnClickEvent(e){
 
               console.log(hpToPercent)
 
-              let hpColor
-
-              if(hpToPercent >= 50){
-                hpColor = 'green'
-                targetPogemon.frames.hold = 60
-              } else if(hpToPercent < 50 && hpToPercent >= 25){
-                hpColor = 'yellow'
-                targetPogemon.frames.hold = 90
-              } else if(hpToPercent < 25 && hpToPercent > 0){
-                hpColor = 'red'
-                targetPogemon.frames.hold = 120
-              } else if(hpToPercent <= 0){
-                hpColor = 'black'
-                targetPogemon.frames.hold = 0
-              }
-
               e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${hpToPercent}%`
-              e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.backgroundColor = hpColor
+              changeHPColor(e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0], targetPogemon)
 
               player.bag.set(`${currItem.name}`, {item: currItem, quantity: currQuantity - 1})
               currItemDom.childNodes[1].childNodes[1].textContent = `x${player.bag.get(`${currItem.name}`).quantity}`
@@ -751,6 +735,7 @@ function useItemOnClickEvent(e){
   
                 targetPogemon.hp = Math.floor(targetPogemon.stats.baseHp * currItem.pow)
                 e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0].style.width = `${player.team[0].convertToPercentage(targetPogemon.hp, targetPogemon.stats.baseHp)}%`
+                changeHPColor(e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0], targetPogemon)
                 e.target.childNodes[1].childNodes[1].childNodes[1].childNodes[0].textContent = `${targetPogemon.hp}/${targetPogemon.stats.baseHp}`
   
                 itemUsed.item = currItem
@@ -1199,6 +1184,7 @@ function printBagScene(){
       const bagSceneTeamSectionGreenBarDom = document.createElement('div')
       bagSceneTeamSectionGreenBarDom.classList.add('bagSceneTeamSectionGreenBar')
       bagSceneTeamSectionGreenBarDom.style.width = `${player.team[i].convertToPercentage(player.team[i].hp, player.team[i].stats.baseHp)}%`
+      changeHPColor(bagSceneTeamSectionGreenBarDom, player.team[i])
   
       const bagSceneTeamSectionGreyBarDom = document.createElement('div')
       bagSceneTeamSectionGreyBarDom.classList.add('bagSceneTeamSectionGreyBar')

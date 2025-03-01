@@ -5,7 +5,7 @@ import { Sprite } from "../../classes.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
-import { manageBattleState, faintedTriggered } from "./battle.js"
+import { manageBattleState, faintedTriggered, changeHPColor } from "./battle.js"
 import { manageStatsState, switchUnderScoreForSpace } from "./stats.js"
 
 let teamAnimationId
@@ -404,11 +404,14 @@ function printTeamInfo(i, teamMenuContainerDom){
   healthbarSection.children[1].textContent = `Lv ${player.team[i].lvl}`
   healthbarSection.children[0].children[0].textContent = `${player.team[i].hp}/${player.team[i].stats.baseHp}`
   healthbarSection.children[0].children[1].children[0].children[0].style.width = `${player.team[i].convertToPercentage(player.team[i].hp,player.team[i].stats.baseHp)}%`
+  changeHPColor(healthbarSection.children[0].children[1].children[0].children[0], player.team[i])
+
   if(player.team[i].status.name == null) healthbarSection.children[2].style.display = 'none'
   else {
     healthbarSection.children[2].style.display = 'block'
     healthbarSection.children[2].src = `img/status/${player.team[i].status.name}.png`
   }
+
 }
 
 function definePogemonSprites(i){

@@ -780,6 +780,28 @@ correct health color after bag event x
 
 team pogemon sprites get fucked up after 2nd catch -- corrects after save x
 
+foe wild piny sprite change to small tadtoxic when switching -- happend to my nahass after i caught it goes away if save and refresh -- i think its related to catching x
+
+reset poison damage to 0 when starting new battle x
+
+poison happens twice x
+
+poison happens when dialogue is clickable in between stat raise timeout x
+
+switching on the second battle doesnt push a move x
+
+failed to run away grids without firing move x
+
+pogeball doesnt get used if not caught? -- pogeball doesnt get used period i think x
+
+make healthbar yellow and red in bag, teams and stats x
+
+opponent seeds icon shows even if immuned x
+
+hide afflictions when switching x
+
+opponent seeds works even if immuned x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -788,83 +810,76 @@ team pogemon sprites get fucked up after 2nd catch -- corrects after save x
 
 stuffToDo:{
     bugs:{
-        remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
+        focus: {
+            switch stuff :{
+                enemy pogemon doesnt switch after fainting after i switch x
 
-        didint test unaware but 80% sure it works
+                battle doesnt end after gym leader fainted -- force faint at end of turn somehow x
 
-        80% sure magic bounce / synchronize interaction works properly
+                switch twice breaks the battle queue
 
-        didint test black sludge
+                enemy switch happens too fast
+            }
 
-        teleport gem teleports to weird ass places when tping -- related spawnPosition being reassinged when there is a save file or pogecenterReturnInfo stuff found
+            confusion: {
+                wild flailegant snapped out of confusion but didint attack -- maybe was slower?
 
-        put looking direction on changeMap collisions so i dont get in by accident
+                snapped out of confusion faster skips my turn
+            }
 
-        target not defined classes.js:2996 -- after battle cant move
+            wrong affliction lights up after using item in battle
 
+            itemUsed still true after item used reset
 
-        -- gab tested buggs
+            poison fainting doesnt end battle
 
+            using potion during battle fucks up bag sprites, makes the game fucky after battle too -- multiple animations are fired at once which causes the "fucky" effect
 
-        remember to set owMenu back to enabled every time!!!!!!!!! -- check where it is fired with Gab
+            statusEffectAnimation fires multiple times -- leech seed animation spazed out -- related to problem above?? multiple animation playing at the same time would cause a problem like that
 
-        keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
-
-        foe wild piny sprite change to small tadtoxic when switching -- happend to my nahass after i caught it goes away if save and refresh -- i think its related to catching
-
-        queue exp event, setTimeout not a good idea should push in queue no matter what, poison affliciton happens at the wrong time beacuse of it -- stats change interaction in conflict with this one
-
-        learning quick attack when already known
-
-        gene_Town level is always the same
-
-
-        -- me tested buggs
-
-        switch stuff :{
-            enemy switch happens too fast
-
-            enemy pogemon doesnt switch after fainting after i switch
-
-            ally dont faint after switching when opponent is poisoned
-
-            battle doesnt end after gym leader fainted -- force faint at end of turn somehow
+            can move during cancel renaming -- sometimes
         }
 
-        confusion: {
-            wild flailegant snapped out of confusion but didint attack -- maybe was slower?
+        other stuff:{
+            remove cursor: pointer from bag pogemon container when not highlighted -- sometimes happens idk when
 
-            snapped out of confusion faster skips my turn
+            didint test unaware but 80% sure it works
+
+            80% sure magic bounce / synchronize interaction works properly
+
+            didint test black sludge
+
+            teleport gem teleports to weird ass places when tping -- related spawnPosition being reassinged when there is a save file or pogecenterReturnInfo stuff found
+
+            put looking direction on changeMap collisions so i dont get in by accident
+
+            target not defined classes.js:2996 -- after battle cant move
+
+
+            -- gab tested buggs
+
+            remember to set owMenu back to enabled every time!!!!!!!!! -- check where it is fired with Gab
+
+            keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
+
+            ow items respawn sometimes
+
+            queue exp event, setTimeout not a good idea should push in queue no matter what, poison affliciton happens at the wrong time beacuse of it -- stats change interaction in conflict with this one
+
+            learning quick attack when already known
+
+            gene_Town level is always the same
         }
 
-        poison : {
-            poison happens when dialogue is clickable in between stat raise timeout
+        reminder :{
+            i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
 
-            enemy poison happens before i faint??? <-- aint this normal wtf??
+            poison issues confuse issues need to be checked manualy
 
-            reset poison damage to 0 when starting new battle
+            check if bag scene and ow scene animation active and cancel the animation if not
+
+            make heisenberg give the halo as in itemPickup thingy
         }
-
-        using potion during battle fucks up bag sprites, makes the game fucky after battle too -- multiple animations are fired at once which causes the "fucky" effect
-
-        statusEffectAnimation fires multiple times -- leech seed animation spazed out
-
-        ow items respawn sometimes
-
-        make heisenberg give the halo as in itemPickup thingy
-
-        pogeball doesnt get used if not caught? -- pogeball doesnt get used period i think
-
-        can move during cancel renaming -- sometimes
-
-
-
-
-        i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
-
-        poison issues confuse issues need to be checked manualy
-
-        check if bag scene and ow scene animation active and cancel the animation if not
     }
 
     test:{
@@ -885,7 +900,15 @@ stuffToDo:{
         tadtoxic stays 0 brightness even when seen x
 
         check when ally pogemon faints, 3 queues happen should shave those off x
-        
+
+
+        poison : {
+            was poisoned could be a bit later
+
+            enemy poison happens before i faint??? <-- aint this normal wtf?? -- ally dont faint after switching when opponent is poisoned -- 
+            faint message doesnt display but the switching still happens -- kinda dont care that it happens that way, if it fucks with other events ill have to check it out tho x
+            
+        }
     }
 }
 

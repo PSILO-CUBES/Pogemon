@@ -254,7 +254,7 @@ export class Pogemon extends Sprite{
       this.stats = this.generateStats()
       this.isShiny = this.generateShiny(predeterminedShiny, shinyCharm)
       this.hp = this.stats.baseHp
-      this.status = {name: null, turns: 0}
+      this.status = {name: null, turns: 0, spent: false}
       this.affliction = [
         {name: 'confusion', turns: 0, active: false},
         {name: 'seeded', active: false},
@@ -560,7 +560,7 @@ export class Pogemon extends Sprite{
     } 
   }
 
-  hpManagement(){
+  hpManagement(DOM){
     const hpToPercent = this.convertToPercentage(this.hp, this.stats.baseHp)
 
     let recipientHealthBar = document.querySelector('#allyHealthBar')
@@ -569,6 +569,13 @@ export class Pogemon extends Sprite{
     if(this.isEnemy){
       recipientHealthBar = document.querySelector('#foeHealthBar')
       hpDom = document.querySelector('#foeHp')
+    }
+
+    if(DOM != undefined){
+      recipientHealthBar = document.querySelector(`.${DOM}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+
+      if(this.hp >= 0) hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
+      else hpDom.textContent = `0/${this.stats.baseHp}`
     }
 
     gsap.to(recipientHealthBar, {
@@ -590,13 +597,12 @@ export class Pogemon extends Sprite{
       hpColor = 'black'
       this.frames.hold = 0
     }
-    
 
-    // vv not sure why i check for this.hp >= 0 here vv
-    if(this.hp >= 0) hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
-    else hpDom.textContent = `0/${this.stats.baseHp}`
+    console.log(recipientHealthBar)
 
-    recipientHealthBar.style.backgroundColor = hpColor
+    recipientHealthBar.style.background = hpColor
+
+    console.log(hpColor)
   }
 
   managePP(move){
@@ -3020,7 +3026,7 @@ export class Pogemon extends Sprite{
   
                   let justGotSeeded = false
   
-                  if(this.affliction[1].active == false) {
+                  if(!this.affliction[1].active) {
                     justGotSeeded = true
                     this.affliction[1].active = true
   
@@ -3034,7 +3040,7 @@ export class Pogemon extends Sprite{
                       return
                     }
                   
-                    if(this.affliction[1].active == true && justGotSeeded == false) {
+                    if(this.affliction[1].active && !justGotSeeded) {
                       this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} is already seeded....`)
                     } else {
                       this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(this.nickname)} was seeded.`)
@@ -3054,25 +3060,23 @@ export class Pogemon extends Sprite{
 
                 let justGotSeeded = false
 
-                if(recipient.affliction[1].active == false) {
-                  justGotSeeded = true
-                  recipient.affliction[1].active = true
-
-                  if(recipient.isEnemy) document.querySelector('#foeSeeds').style.opacity = 1
-                  else document.querySelector('#allySeeds').style.opacity = 1
-                }
-
                 setTimeout(() =>{
                   if(recipient.element[1] == 'grass' || recipient.element[2] == 'grass'){
                     this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} cannot be seeded...`)
                     return
                   }
                 
-                  if(recipient.affliction[1].active == true && justGotSeeded == false) {
+                  if(recipient.affliction[1].active && !justGotSeeded) {
                     this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} is already seeded....`)
                   } else {
                     this.dialogue('battle', `${document.querySelector('#dialogueInterface').textContent}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} was seeded.`)
                     recipient.affliction[1].active = true
+
+                    justGotSeeded = true
+                    recipient.affliction[1].active = true
+    
+                    if(recipient.isEnemy) document.querySelector('#foeSeeds').style.opacity = 1
+                    else document.querySelector('#allySeeds').style.opacity = 1
                   }
 
                   setTimeout(() =>{
@@ -4491,10 +4495,13 @@ export class Pogemon extends Sprite{
       if(this.status.name == 'para' || this.status.name == 'slp') {
         if(statusInfo != null || statusInfo != undefined) opponent.checkStatus(statusInfo[0], statusInfo[1], statusInfo[2], statusInfo[3], statusInfo[4], statusInfo[5], this, null, true, terrainConditions, manageWeatherState, faintSwitch)
       } else {
+        if(this.status.spent) return
         queue.push(() =>{
           if(this.fainted) return
           thisFaints()
           let chip
+
+          this.status.spent = true
     
           switch(this.status.name){
             case 'burn':
@@ -4711,9 +4718,9 @@ export class Pogemon extends Sprite{
     })
   }
 
-  heal(dom, item){
-    const hpDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[0]
-    const healthBarDom = document.querySelector(`.${dom}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+  heal(DOM, item){
+    const hpDom = document.querySelector(`.${DOM}`).childNodes[1].childNodes[1].childNodes[1].childNodes[0]
+    const healthBarDom = document.querySelector(`.${DOM}`).childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[0]
   
     if(this.hp == this.stats.baseHp) return
   
@@ -4722,6 +4729,8 @@ export class Pogemon extends Sprite{
   
     healthBarDom.style.width = `${this.convertToPercentage(this.hp, this.stats.baseHp)}%`
     hpDom.textContent = `${this.hp}/${this.stats.baseHp}`
+
+    this.hpManagement(DOM)
   }
 
   expGain(yeilder, battleType, battlerArr, inBattle, lvlCap){
@@ -5675,11 +5684,13 @@ export class Character extends Sprite{
         animate: true
       })
 
-      let shinyCharm = 0
-      if(player != undefined) if(player.bag.get('illuminated_Gem') != null) shinyCharm = player.bag.get('illuminated_Gem').quantity
+      const starterLevel = 5
+      const starterEXP = Math.pow(starterLevel, 3)
+
+      let shinyCharm = 1
 
       //                                                                            held item        ability              shiny ivs  moves gender nature              
-      newPogemon = new Pogemon(pogemon, Math.pow(5, 3), false, {...mapsObj.lab}, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
+      newPogemon = new Pogemon(pogemon, starterEXP, false, {...mapsObj.lab}, null, pogemon.abilities[0].ability, null, null, null, null, null, shinyCharm, null, pogemonSprite)
 
       markAsCaught()
       this.team.push(newPogemon)
@@ -5697,12 +5708,6 @@ export class Character extends Sprite{
         },
         animate: true
       })
-
-      let shinyCharm = 0
-      if(player != undefined) if(player.bag.get('illuminated_Gem') != null) shinyCharm = player.bag.get('illuminated_Gem').quantity
-
-      let heldItem
-      if(pogemon.heldItem != null) heldItem = pogemon.heldItem
 
       //                                                                                  held item        ability              shiny ivs  moves gender nature              
       newPogemon = new Pogemon(pogemonsObj[pogemon.name], Math.pow(pogemon.lvl, 3), false, pogemon.caughtMap, pogemon.heldItem, null, null, null, null, null, null, null, pogemon, pogemonSprite)

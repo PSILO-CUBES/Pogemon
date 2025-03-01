@@ -89,7 +89,7 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 50
+      spd: 1
     },
     evo: {name: 'lokol', lvl: 20, type: 'lvl'},
     abilities: [
@@ -99,7 +99,7 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.fart, lvl: 1, seen: false},
-      2: {move: movesObj.growl, lvl: 1, seen: false},
+      2: {move: movesObj.charge_beam, lvl: 1, seen: false},
       3: {move: movesObj.rock_smash, lvl: 7, seen: false},
       4: {move: movesObj.fart, lvl: 10, seen: false},
       5: {move: movesObj.rapid_spin, lvl: 13, seen: false},

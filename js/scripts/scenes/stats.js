@@ -8,6 +8,7 @@ import { disableOWMenu, returnPrevScene } from "./overworld.js"
 import { manageTeamState } from "./team.js"
 import { managePcState } from "./pc.js"
 import { player } from "../player.js"
+import { changeHPColor } from "./battle.js"
 
 let statsAnimationFrame
 
@@ -430,6 +431,7 @@ function createMenu(){
 														case 0:
 															statsSceneGridSectionPogemonSectionHpBar.setAttribute('id', 'statsSceneGridSectionPogemonSectionHpGreenBar')
 															statsSceneGridSectionPogemonSectionHpBar.style.width = `${selectedPogemon.convertToPercentage(selectedPogemon.hp,selectedPogemon.stats.baseHp)}%`
+															changeHPColor(statsSceneGridSectionPogemonSectionHpBar, selectedPogemon)
 															break
 														case 1:
 															statsSceneGridSectionPogemonSectionHpBar.setAttribute('id', 'statsSceneGridSectionPogemonSectionHpGreyBar')

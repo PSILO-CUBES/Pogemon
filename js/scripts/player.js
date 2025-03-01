@@ -91,7 +91,8 @@ export async function generatePlayer(canvas){
       }))
 
       player.catch(pogemonsObj.loko, true, mapsObj.lab.name)
-      // player.catch(pogemonsObj.piny, true, mapsObj.lab.name)
+      player.catch(pogemonsObj.piny, true, mapsObj.lab.name)
+
       // player.catch(pogemonsObj.nahass, true, mapsObj.lab.name)
       // player.catch(pogemonsObj.allingua, true, mapsObj.lab.name)
 

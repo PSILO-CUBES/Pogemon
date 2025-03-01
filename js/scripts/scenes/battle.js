@@ -370,25 +370,31 @@ function critLanded(pogemon, recipient, move){
   return critHit
 }
 
-function changeHPColor(DOM, target){
+export function changeHPColor(DOM, target){
   let hpToPercent = target.convertToPercentage(target.hp, target.stats.baseHp)
   DOM.style.width = `${hpToPercent}%`
 
-  let hpColor = DOM.style.backgroundColor
+  console.log(target.name)
+  console.log(hpToPercent >= 50)
+
+  let hpColor = 'black'
 
   if(hpToPercent >= 50){
     hpColor = 'green'
     target.frames.hold = 60
+    console.log('wow')
   } else if(hpToPercent < 50 && hpToPercent >= 25){
     hpColor = 'yellow'
     target.frames.hold = 90
+    console.log('wow')
   } else if(hpToPercent < 25 && hpToPercent > 0){
     hpColor = 'red'
     target.frames.hold = 120
   } else if(hpToPercent <= 0){
-    hpColor = 'black'
     target.frames.hold = 0
   }
+
+  DOM.style.background = hpColor
 }
 
 function chooseStatusImg(target, status, statusDom){
@@ -705,7 +711,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
   loadAlly(player.team[0])
 
-  if(prevScene == 'overworld') {
+  if(prevScene == 'overworld'){
     battlerArr = []
     evoArr = []
     lvlUpArr = []
@@ -812,13 +818,13 @@ export function initBattle(faintedTriggered, info, tileInfo){
     if(foe.isShiny) {
       foe.img.src = foe.pogemon.sprites.shiny.frontSprite
     } else foe.img.src = foe.pogemon.sprites.classic.frontSprite
-
-    manageAfflictionContentState(ally, document.querySelector('#allyHazardsContainer'), terrainConditions.static.sticky_web.active.ally, terrainConditions.static.stealth_rock.active.ally)
-    manageAfflictionContentState(foe, document.querySelector('#foeHazardsContainer'), terrainConditions.static.sticky_web.active.foe, terrainConditions.static.stealth_rock.active.foe)    
   }
   // foe.frames.hold = 60
 
   renderedSprites = [foe, ally]
+
+  manageAfflictionContentState(ally, document.querySelector('#allyHazardsContainer'), terrainConditions.static.sticky_web.active.ally, terrainConditions.static.stealth_rock.active.ally)
+  manageAfflictionContentState(foe, document.querySelector('#foeHazardsContainer'), terrainConditions.static.sticky_web.active.foe, terrainConditions.static.stealth_rock.active.foe)
 
   gsap.to(ally, {
     opacity: 1,
@@ -888,6 +894,9 @@ export function initBattle(faintedTriggered, info, tileInfo){
     battlerArr.push(ally)
   }
 
+  const textBox = document.querySelector('#textBox')
+  textBox.innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+
   if(!itemUsed.used){
     if(prevScene == 'overworld') {
       if(info == null) player.dialogue('battle', `a wild ${switchUnderScoreForSpace(foe.nickname)} appeared!`)
@@ -914,12 +923,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
       document.querySelector('#encounterInterface').style.display = 'grid'
       console.log('grided')
     }
-  }
-
-  const textBox = document.querySelector('#textBox')
-  textBox.innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
-
-  if(itemUsed.used){
+  } else {
     document.querySelector('#encounterInterface').style.display = 'none'
     document.querySelector('#movesInterface').style.display = 'none'
     document.querySelector('#dialogueInterface').style.display = 'block'
@@ -1003,6 +1007,7 @@ export function initBattle(faintedTriggered, info, tileInfo){
       document.querySelector('#proceedImgContainer').style.display = 'block'
 
       queue.push(() =>{
+        foeRNGMove = foe.rerollEnemyMoveSoAppropriate(ally, foeRNGMove, terrainConditions, enemyTrainerInfo)
         foe.move({move: foeRNGMove, recipient: ally, recipientMove: allyMove, renderedSprites, critHit: critLanded, queue, queueProcess, terrainConditions, queueFaintTrigger, manageWeatherState, faintEvent, enemyTrainerInfo})
         console.log('YAYA')
 
@@ -1047,8 +1052,12 @@ export function initBattle(faintedTriggered, info, tileInfo){
     return
   }
 
+  console.log(teamEvent.switch)
+  console.log(teamEvent.previousScene)
+
   if(teamEvent.switch && teamEvent.previousScene == 'battle'){
     // intimidate here
+
     if(faintedTriggered != undefined) {
       if(faintedTriggered.active) {
         faintedTriggered.active = false
@@ -1072,7 +1081,12 @@ export function initBattle(faintedTriggered, info, tileInfo){
         return
       }
 
+      console.log(allyId)
+      console.log(player.team[0].id)
+
       if(allyId !== player.team[0].id){
+        allyId = player.team[0].id
+
         resetStats('ally')
 
         onEnterTerrainAffliction('ally', ally, foe)
@@ -1083,8 +1097,6 @@ export function initBattle(faintedTriggered, info, tileInfo){
             affliction.turns = 0
           })
         })
-        
-        allyId = player.team[0].id
   
         document.querySelector('#encounterInterface').style.display = 'none'
         document.querySelector('#movesInterface').style.display = 'none'
@@ -1298,7 +1310,6 @@ export function initBattle(faintedTriggered, info, tileInfo){
 
   console.log(faster.abilityInfo.ability.info)
   console.log(slower.abilityInfo.ability.info)
-
   console.log(terrainConditions.turns.weather[currMap.weather])
 
   if(faster.abilityInfo.ability.type == 'initWeather') 
@@ -1480,6 +1491,7 @@ const battleSceneDom = document.querySelector('#battleScene')
 let C = 0
 
 let ranAway = false
+let runAttempt = false
 
 function optionButtonInteraction(e) {
   if(scenes.get('battle').initiated){
@@ -1525,6 +1537,7 @@ function optionButtonInteraction(e) {
         break
       case 'Run':
         if(enemyTrainer == undefined){
+          runAttempt = true
 
           if(player.interaction != null){
             if(player.interaction.info.eventKey == 'frozenBaaull'){
@@ -1562,6 +1575,7 @@ function optionButtonInteraction(e) {
             document.querySelector('#textBox').innerText = `${foe.nickname}'s ability prevents you from escaping.`
             setTimeout(() =>{
               document.querySelector('#textBox').innerText = `What will ${switchUnderScoreForSpace(ally.nickname)} do?`
+              runAttempt = false
             }, 1250)
           } else if(escapeOdds < 100) {
             encounterInterfaceDom.style.display = 'none'
@@ -1609,6 +1623,8 @@ function optionButtonInteraction(e) {
 
               manageCheckStatusEvent(foe, ally)
               console.log('manageCheckStatusEvent')
+
+              runAttempt = false
             })
             return
           } else {
@@ -1635,6 +1651,7 @@ function optionButtonInteraction(e) {
                     duration: 0.4,
                     onComplete: () =>{
                       ranAway = false
+                      runAttempt = false
                     }
                   })
                 }
@@ -2809,8 +2826,12 @@ function manageFaintingEvent(target){
 
       return
     } else if(ally.hp > 0) {
-      queue.push(() => switchEnemyAfterFaint())
-      console.log(queue)
+      if(enemyTrainerInfo == undefined){
+
+      } else {
+        queue.push(() => switchEnemyAfterFaint())
+        console.log(queue)
+      }
     }
   }
 }
@@ -4836,28 +4857,34 @@ function spendQueue(){
   
         if(scenes.get('battle').initiated)  
           if(queue.length == 0) 
-            if(player.team[0].hp > 0 && !foe.fainted) {
+            if(player.team[0].hp > 0 && !foe.fainted && !runAttempt) {
               console.log('grided')
               dialogueInterfaceDom.style.display = 'none'
               document.querySelector('#proceedImgContainer').style.display = 'none'
 
               encounterInterfaceDom.style.display = 'grid'
-            } else if(foe.fainted) {
-              console.log(ally)
-              manageFaintingEvent(foe)
-              console.log('manageFaintingEvent')
 
-              console.log(foe.fainted)
+              player.team[0].status.spent = false
+              foe.status.spent = false
+
+              itemUsed.item = null
+              itemUsed.used = false
+            } else if(foe.fainted) {
+                console.log(ally)
+                manageFaintingEvent(foe)
+                console.log('manageFaintingEvent')
+  
+                console.log(foe.fainted)
             } else if(player.team[0].hp <= 0) {
-              setTimeout(() =>{
-                faintedTriggered.active = true
-                manageBattleState(false, 'team', {active : true})
-      
-                setTimeout(() => {
-                  queueProcess.disabled = false
-                  console.log('here')
+                setTimeout(() =>{
+                  faintedTriggered.active = true
+                  manageBattleState(false, 'team', {active : true})
+        
+                  setTimeout(() => {
+                    queueProcess.disabled = false
+                    console.log('here')
+                  }, 750)
                 }, 750)
-              }, 750)
             }
       }, 50)
     }
