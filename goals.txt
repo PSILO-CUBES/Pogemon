@@ -802,6 +802,48 @@ hide afflictions when switching x
 
 opponent seeds works even if immuned x
 
+itemUsed still true after item used reset x
+
+enemy pogemon doesnt switch after fainting after i switch x
+
+battle doesnt end after gym leader fainted -- force faint at end of turn somehow x
+
+switch twice breaks the battle queue x
+
+poison fainting doesnt end battle -- grided brings menu back when stuff still in queue :""""")) x
+
+confusion: {
+    wild flailegant snapped out of confusion but didint attack -- maybe was slower? x
+    
+    snapped out of confusion faster skips my turn x
+}
+
+check if bag scene and ow scene animation active and cancel the animation if not x
+
+if under 4 moves push tm directly into moves x
+
+leech seeds doesnt work on first turn x
+
+wrong affliction lights up after using item in battle x
+
+new seen pogemon doesnt appear in pogedex -- i think x
+
+split exp goes on infinitly when wild pogemon x
+
+switching on second battle breaks queue x
+
+switched but opponent didint attack x
+
+foe keeps using same move x
+
+using status move when taunted fucks up the turn x
+
+opponent uses old move when switching x ?
+
+if i switch, the oppenent attack's needs to be relative to the previous enemy x
+
+freeze when slimie faints in ma'at gym x
+
 ↑ 	↑ 	↑ 	↑ 	↑   done    ↑ 	↑ 	↑ 	↑ 	↑
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -811,33 +853,58 @@ opponent seeds works even if immuned x
 stuffToDo:{
     bugs:{
         focus: {
-            switch stuff :{
-                enemy pogemon doesnt switch after fainting after i switch x
+            bag sprites keep increasing after leaving bag scene
 
-                battle doesnt end after gym leader fainted -- force faint at end of turn somehow x
+            wild mon faints and dispences switchEnemyAfterFaint????
 
-                switch twice breaks the battle queue
-
-                enemy switch happens too fast
-            }
-
-            confusion: {
-                wild flailegant snapped out of confusion but didint attack -- maybe was slower?
-
-                snapped out of confusion faster skips my turn
-            }
-
-            wrong affliction lights up after using item in battle
-
-            itemUsed still true after item used reset
-
-            poison fainting doesnt end battle
-
-            using potion during battle fucks up bag sprites, makes the game fucky after battle too -- multiple animations are fired at once which causes the "fucky" effect
-
-            statusEffectAnimation fires multiple times -- leech seed animation spazed out -- related to problem above?? multiple animation playing at the same time would cause a problem like that
+            status move hold get very fast when spending queues
 
             can move during cancel renaming -- sometimes
+
+            ally doesnt attack when enemy snaps out of confusion -- ally slower
+
+            learn moves from rare candy level up
+
+            bag scene weird sprite stays when putting pogemon into pc
+
+            team switch hp color dont change
+
+            -----------------------------------------
+
+            make sap healing relative to damage actualy dealt and not overall damage
+
+            leftovers dont work
+
+            staelth rock damage not applied
+
+            use item sends useless queue with silk scarf -- when slower??
+
+            bad save stuff:{
+                keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
+
+                ow items respawn sometimes
+
+                ow trainers become rebattleable
+            }
+        }
+
+        reminder :{
+            i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
+
+            poison issues confuse issues need to be checked
+
+            make heisenberg give the halo as in itemPickup thingy
+
+            put projectile animation sprite in front of ally pogemon
+
+            put correct offset on character for wall and grass battle collisions
+
+            enemy switch happens too fast
+
+            cut only half of exp gain animation when hitting level cap
+
+            0 hold in team and stats menu if pogemon fainted
+
         }
 
         other stuff:{
@@ -860,25 +927,15 @@ stuffToDo:{
 
             remember to set owMenu back to enabled every time!!!!!!!!! -- check where it is fired with Gab
 
-            keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
-
-            ow items respawn sometimes
-
             queue exp event, setTimeout not a good idea should push in queue no matter what, poison affliciton happens at the wrong time beacuse of it -- stats change interaction in conflict with this one
 
             learning quick attack when already known
 
             gene_Town level is always the same
-        }
 
-        reminder :{
-            i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
+            using potion during battle fucks up bag sprites, makes the game fucky after battle too -- multiple animations are fired at once which causes the "fucky" effect x
 
-            poison issues confuse issues need to be checked manualy
-
-            check if bag scene and ow scene animation active and cancel the animation if not
-
-            make heisenberg give the halo as in itemPickup thingy
+            statusEffectAnimation fires multiple times -- leech seed animation spazed out -- related to problem above?? multiple animation playing at the same time would cause a problem like that x
         }
     }
 
@@ -901,13 +958,14 @@ stuffToDo:{
 
         check when ally pogemon faints, 3 queues happen should shave those off x
 
+        test wake up and para attack
+
 
         poison : {
             was poisoned could be a bit later
 
             enemy poison happens before i faint??? <-- aint this normal wtf?? -- ally dont faint after switching when opponent is poisoned -- 
             faint message doesnt display but the switching still happens -- kinda dont care that it happens that way, if it fucks with other events ill have to check it out tho x
-            
         }
     }
 }

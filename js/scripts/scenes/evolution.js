@@ -220,6 +220,7 @@ let evolutionAnimationId
 
 export function evolutionAnimation(){
   evolutionAnimationId = requestAnimationFrame(evolutionAnimation)
+  // console.log(`evo : ${evolutionAnimationId}`)
 
   sprites.forEach(sprite =>{
     sprite.draw()

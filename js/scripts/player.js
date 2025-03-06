@@ -91,15 +91,19 @@ export async function generatePlayer(canvas){
       }))
 
       player.catch(pogemonsObj.loko, true, mapsObj.lab.name)
-      player.catch(pogemonsObj.piny, true, mapsObj.lab.name)
 
       // player.catch(pogemonsObj.nahass, true, mapsObj.lab.name)
       // player.catch(pogemonsObj.allingua, true, mapsObj.lab.name)
 
-      worldEventData.maat.firstMeet = true
+      // worldEventData.maat.firstMeet = true
       
       setTimeout(() =>{
-        player.bag.set("ultimball", {item: {...itemsObj.ultimball}, quantity: 999})
+        // player.bag.set("ultimball", {item: {...itemsObj.ultimball}, quantity: 999})
+        // player.bag.set("potion", {item: {...itemsObj.potion}, quantity: 999})
+        player.bag.set('pogeball', {item: {...itemsObj.pogeball}, quantity: 6})
+        player.bag.set('potion', {item: {...itemsObj.potion}, quantity: 5})
+        // player.bag.set("TM040", {item: {...itemsObj["TM040"]}, quantity: 999})
+        
         // player.bag.set("illuminated_Gem", {item: {...itemsObj.illuminated_Gem}, quantity: 1})
         // player.bag.set("fleeting_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
 
@@ -138,6 +142,18 @@ export async function generatePlayer(canvas){
           hold: 10
         }
       }))
+
+      // setTimeout(() =>{
+        // player.bag.set("TM040", {item: {...itemsObj["TM040"]}, quantity: 999})
+      //   // player.bag.set("illuminated_Gem", {item: {...itemsObj.illuminated_Gem}, quantity: 1})
+      //   // player.bag.set("fleeting_Gem", {item: {...itemsObj.teleport_Gem}, quantity: 1})
+  
+      //   // player.bag.set("map", {item: {...itemsObj.map}, quantity: 1})
+      //   // player.bag.set("golden_Disk", {item: {...itemsObj.golden_Disk}, quantity: 999})
+      //   // player.bag.set("super_Repel", {item: {...itemsObj.super_Repel}, quantity: 999})
+      //   // player.bag.set("rare_Candy", {item: {...itemsObj.rare_Candy}, quantity: 999})
+      //   // player.bag.set("regina_Esca", {item: {...itemsObj.regina_Esca}, quantity: 999})
+      // }, 250)
 
       player.team.length = 0
 
@@ -193,6 +209,8 @@ export async function generatePlayer(canvas){
 
       return player
     }
+
+
 }
 
 function keysInput() {
@@ -2035,7 +2053,9 @@ function spendQueue(){
       player.disabled = false
       console.log('playerAble')
       disableOWMenu.active = false
-    }, 500)
+      console.log('enableOWmenu')
+      scenes.set('pickingItem', {initiated: false})
+    }, 750)
 
     if(!healProcess) {
       if(player.interaction != null){

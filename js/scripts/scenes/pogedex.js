@@ -34,6 +34,7 @@ let targetPogemon
 
 function pogedexAnimation(timeSpent){
     pogedexAnimationId = window.requestAnimationFrame(pogedexAnimation)
+    // console.log(`dex : ${pogedexAnimationId}`)
 
     backgroundSprite.draw()
     pogedexTargetSprite.draw()
@@ -51,6 +52,7 @@ function changeTargetPogemonInfo(target){
     let pogemonSeen = false
 
     for(let i = 0; i < player.pogedexInfo.length; i++) if(player.pogedexInfo[i].name == target.name) {
+        console.log(player.pogedexInfo[i])
         if(player.pogedexInfo[i].caught) pogemonCaught = true
         if(player.pogedexInfo[i].seen) pogemonSeen = true
     }
@@ -61,7 +63,7 @@ function changeTargetPogemonInfo(target){
     if(pogemonSeen) infoButton.innerText = 'INFO'
     if(pogemonCaught) infoButton.innerText = 'INFO+'
     
-    document.querySelector('#pogedexSceneTargetMoreInfoButton').classList.add('infoHover')
+    infoButton.classList.add('infoHover')
 
     pogedexTargetImg.src = target.sprites.classic.frontSprite
 }
@@ -190,10 +192,7 @@ function createPogedexMenu(){
     // console.log(lastSeeableIndex)
 
     for(let i = 0; i < lastSeeableIndex; i++){
-        let currPogemon
-
-        if(data != null) currPogemon = data.playerInfo.player.pogedexInfo[i]
-        else currPogemon = player.pogedexInfo[i]
+        let currPogemon = player.pogedexInfo[i]
 
         if(currPogemon == undefined) return
 
@@ -205,7 +204,6 @@ function createPogedexMenu(){
         const pogedexSceneScrollPogemonImg = document.createElement('img')
         pogedexSceneScrollPogemonImg.setAttribute('class', 'pogedexSceneScrollPogemonImg')
 
-        console.log(currPogemon)
         if(currPogemon.seen) {
             // if seen here
             pogedexSceneScrollPogemonImg.src = currPogemon.sprite

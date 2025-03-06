@@ -7,6 +7,9 @@ import { pogemonsObj } from "./pogemonData.js"
 
 const data = await loadData("saveFile")
 
+// heldItem: null, moves:[
+//   movesObj.leech_seed
+// ]
 
 export let mapsObj = {
   background: './img/background.png',
@@ -24,8 +27,8 @@ export let mapsObj = {
     width: 60,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.piny, lvls: [2, 4], odds: {min:0,max:50}},
-        {pogemon: pogemonsObj.flailegant, lvls: [2, 4], odds: {min:50,max:100}},
+        {pogemon: pogemonsObj.piny, lvls: [2, 4], odds: {min:1,max:100}},
+        // {pogemon: pogemonsObj.flailegant, lvls: [2, 4], odds: {min:50,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -4955,8 +4958,11 @@ if(data != null) {
       if(map.trainers.length != 0) {
         map.trainers.forEach((trainer, j) =>{
           if(trainer.team.length != 0)
+
+            if(Object.values(data.mapsObjState)[i].trainers != undefined) trainer.beaten = Object.values(data.mapsObjState)[i].trainers[j].beaten
+
             trainer.team.forEach((pogemon, i2) =>{
-              if(defaultMapsObj[map.name].trainers != undefined) 
+              if(defaultMapsObj[map.name].trainers != undefined)
                 if(defaultMapsObj[map.name].trainers.length != 0)
                   pogemon = Object.values(defaultMapsObj[map.name].trainers)[j].team[i2]
                   // defaultMapsObj[map.name].trainers.forEach(trainer =>{
@@ -4998,6 +5004,8 @@ if(data != null) {
       Object.values(mapsObj[data.currMapName].obstaclesInfo)[i].disabled = Object.values(data.currMapObj.obstaclesInfo)[i].disabled
     }
   }
+
+
 
   // console.log(mapsObj[data.currMapName].obstaclesInfo)
 }

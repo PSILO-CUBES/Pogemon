@@ -89,7 +89,7 @@ export let pogemonsObj = {
       def: 50,
       spatk: 30,
       spdef: 30,
-      spd: 1
+      spd: 40
     },
     evo: {name: 'lokol', lvl: 20, type: 'lvl'},
     abilities: [
@@ -98,8 +98,8 @@ export let pogemonsObj = {
       {ability : abilitiesObj.unaware, seen: false, hidden: true},
     ],
     movepool: {
-      1: {move: movesObj.fart, lvl: 1, seen: false},
-      2: {move: movesObj.charge_beam, lvl: 1, seen: false},
+      1: {move: movesObj.growl, lvl: 1, seen: false},
+      2: {move: movesObj.tackle, lvl: 1, seen: false},
       3: {move: movesObj.rock_smash, lvl: 7, seen: false},
       4: {move: movesObj.fart, lvl: 10, seen: false},
       5: {move: movesObj.rapid_spin, lvl: 13, seen: false},
@@ -1281,8 +1281,8 @@ export let pogemonsObj = {
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
       2: {move: movesObj.growl, lvl: 1, seen: false},
-      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
-      4: {move: movesObj.mach_punch, lvl: 10, seen: false},
+      3: {move: movesObj.rock_smash, lvl: 7, seen: false},
+      4: {move: movesObj.rock_smash, lvl: 10, seen: false},
       5: {move: movesObj.feather_weight, lvl: 13, seen: false},
       6: {move: movesObj.shadow_punch, lvl: 16, seen: false},
       7: {move: movesObj.eerie_impulse, lvl: 19, seen: false},
@@ -1638,12 +1638,12 @@ export let pogemonsObj = {
     ],
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
-      2: {move: movesObj.recover, lvl: 1, seen: false},
-      3: {move: movesObj.protect, lvl: 7, seen: false},
-      4: {move: movesObj.swift, lvl: 10, seen: false},
-      5: {move: movesObj.fart, lvl: 13, seen: false},
-      6: {move: movesObj.taunt, lvl: 16, seen: false},
-      7: {move: movesObj.confuse_ray, lvl: 19, seen: false},
+      2: {move: movesObj.protect, lvl: 1, seen: false},
+      3: {move: movesObj.swift, lvl: 7, seen: false},
+      4: {move: movesObj.fart, lvl: 10, seen: false},
+      5: {move: movesObj.taunt, lvl: 13, seen: false},
+      6: {move: movesObj.confuse_ray, lvl: 16, seen: false},
+      7: {move: movesObj.recover, lvl: 19, seen: false},
       8: {move: movesObj.sludge, lvl: 21, seen: false},
       9: {move: movesObj.eerie_impulse, lvl: 24, seen: false},
       10: {move: movesObj.sludge_bomb, lvl: 27, seen: false},

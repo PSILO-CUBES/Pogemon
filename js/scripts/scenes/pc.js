@@ -167,6 +167,7 @@ const selectedPogemonSprite = new Sprite({
 
 function pcAnimation(){
     pcAnimationId = window.requestAnimationFrame(pcAnimation)
+    // console.log(`pc : ${pcAnimationId}`)
 
     backgroundSprite.draw()
     selectedPogemonSprite.draw()

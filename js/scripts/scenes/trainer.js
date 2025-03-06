@@ -9,6 +9,8 @@ let trainerAnimationId
 
 function trainerAnimation(timeSpent){
     trainerAnimationId = window.requestAnimationFrame(trainerAnimation)
+    // console.log(`trainer : ${trainerAnimationId}`)
+
     printInfo()
 
     backgroundSprite.draw()

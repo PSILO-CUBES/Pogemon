@@ -10,6 +10,7 @@ let bootSceneAnimationId
 
 function bootSceneAnimation(){
     bootSceneAnimationId = window.requestAnimationFrame(bootSceneAnimation)
+    // console.log(`boot : ${bootSceneAnimationId}`)
 }
 
 export let playerName
@@ -358,7 +359,7 @@ function initBootScene(){
 }
 
 function clearBootScene(){
-    window.cancelAnimationFrame(bootSceneAnimation)
+    window.cancelAnimationFrame(bootSceneAnimationId)
     const bootSceneDOM = document.querySelector('#bootScene')
     bootSceneDOM.style.display = 'none'
 }

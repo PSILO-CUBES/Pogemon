@@ -266,7 +266,7 @@ export const abilitiesObj = {
         }
     },
     poison_touch:{
-        name: 'statik',
+        name: 'poison_touch',
         type: 'status',
         desc: "adds a 20% chance to poison on every attack.",
         info: {

@@ -42,6 +42,7 @@ export function switchSpaceForUnderScore(text){
 
 function statsAnimation(){
   statsAnimationFrame = window.requestAnimationFrame(statsAnimation)
+//   console.log(`stats : ${statsAnimationFrame}`)
 
   backgroundSprite.draw()
   pogemonSprite.draw()

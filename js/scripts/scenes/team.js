@@ -5,7 +5,7 @@ import { Sprite } from "../../classes.js"
 import { scenes, backgroundSprite } from "../canvas.js"
 import { player } from "../player.js"
 import { disableOWMenu, escapeEvent, prevScene, returnPrevScene } from "./overworld.js"
-import { manageBattleState, faintedTriggered, changeHPColor } from "./battle.js"
+import { manageBattleState, faintedTriggered, changeHPColor, prevBattlerObj } from "./battle.js"
 import { manageStatsState, switchUnderScoreForSpace } from "./stats.js"
 
 let teamAnimationId
@@ -157,6 +157,9 @@ function switchProcessEvent(first, second){
       opacity: 1,
       duration,
       onComplete: () => {
+        if(player.team[0].id != first.pogemon.id) prevBattlerObj.battler = first.pogemon
+        if(player.team[0].id != second.pogemon.id) prevBattlerObj.battler = second.pogemon
+        
         pogemonSelected = false
         switchEvent = false
         teamEvent.switch = true
@@ -601,6 +604,7 @@ function cleanTeamScene(){
 
 function teamAnimation() {
   teamAnimationId = window.requestAnimationFrame(teamAnimation)
+  // console.log(`team : ${teamAnimationId}`)
 
   backgroundSprite.draw()
 

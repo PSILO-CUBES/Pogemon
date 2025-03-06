@@ -854,70 +854,80 @@ function useItemOnClickEvent(e){
             return
           }
 
-          const TMContainerBackground = document.createElement('div')
-          TMContainerBackground.id = 'restoreMovePPContainerBackground'
-          bagScene.appendChild(TMContainerBackground)
+          if(targetPogemon.moves == 4){
+            const TMContainerBackground = document.createElement('div')
+            TMContainerBackground.id = 'restoreMovePPContainerBackground'
+            bagScene.appendChild(TMContainerBackground)
+  
+            function removeTMMenu(text){
+              bagSceneItemDialogueContainer.innerText = text
+              bagScene.removeChild(bagScene.childNodes[1])
+              bagScene.removeChild(bagScene.childNodes[1])
+            }
+  
+            TMContainerBackground.addEventListener('click', () => removeTMMenu(``))
+            const TMContainer = document.createElement('div')
+            TMContainer.id = 'restoreMovePPContainer'
+  
+            bagScene.appendChild(TMContainer)
+  
+            let freezeTMProcess = false
+  
+            function changeMoveForTMOnClick(e, i, move, currItem){
+              if(freezeTMProcess) return
+              freezeTMProcess = true
+  
+              const lastMove = targetPogemon.moves[i]
+  
+              targetPogemon.moves[i] = movesObj[currItem.TMName]
+              if(targetPogemon.moves[i].pp > lastMove) targetPogemon.moves[i].pp = lastMove.pp
+  
+              player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
+              e.target.innerText = `${switchUnderScoreForSpace(currItem.TMName)}`
+              currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
+  
+              Object.values(targetPogemon.pogemon.movepool).forEach(move =>{
+                if(move.name == currItem.TMName) move.seen = true
+              })
+  
+              itemUsed.item = currItem
+  
+              bagSceneItemDialogueContainer.innerText = `${switchUnderScoreForSpace(currItem.name)} was taught to ${switchUnderScoreForSpace(targetPogemon.nickname)} successfully!`
+  
+              targetPogemon.learntMoves.push(currItem.TMName)
+  
+              setTimeout(() =>{
+                removeTMMenu(`${switchUnderScoreForSpace(lastMove.name)} was switched to ${switchUnderScoreForSpace(currItem.TMName)}.`)
+              }, 1750)
+            }
+  
+            let rememberTMClickItem = {...currItem}
 
-          function removeTMMenu(text){
-            bagSceneItemDialogueContainer.innerText = text
-            bagScene.removeChild(bagScene.childNodes[1])
-            bagScene.removeChild(bagScene.childNodes[1])
-          }
-
-          TMContainerBackground.addEventListener('click', () => removeTMMenu(``))
-          const TMContainer = document.createElement('div')
-          TMContainer.id = 'restoreMovePPContainer'
-
-          bagScene.appendChild(TMContainer)
-
-          let freezeTMProcess = false
-
-          function changeMoveForTMOnClick(e, i, move, currItem){
-            if(freezeTMProcess) return
-            freezeTMProcess = true
-
-            const lastMove = targetPogemon.moves[i]
-
-            targetPogemon.moves[i] = movesObj[currItem.TMName]
-            if(targetPogemon.moves[i].pp > lastMove) targetPogemon.moves[i].pp = lastMove.pp
-
-            player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
-            e.target.innerText = `${switchUnderScoreForSpace(currItem.TMName)}`
-            currItemDom.childNodes[1].childNodes[1].innerText = `x${player.bag.get(currItem.name).quantity}`
-
-            Object.values(targetPogemon.pogemon.movepool).forEach(move =>{
-              if(move.name == currItem.TMName) move.seen = true
+            targetPogemon.moves.forEach((move, i) =>{
+              const TMMoveContainer = document.createElement('div')
+              TMMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
+              restoreMovePPContainer.appendChild(TMMoveContainer)
+  
+              const TMMoveContentContainer = document.createElement('div')
+              TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainer')
+              TMMoveContainer.appendChild(TMMoveContentContainer)
+  
+              TMMoveContentContainer.innerText = `${switchUnderScoreForSpace(move.name)}`
+  
+              TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainerHover restoreMovePPMoveContentContainer')
+              TMMoveContentContainer.addEventListener('click', e => changeMoveForTMOnClick(e, i, move, rememberTMClickItem))
             })
-
-            itemUsed.item = currItem
-
-            bagSceneItemDialogueContainer.innerText = `${switchUnderScoreForSpace(currItem.name)} was taught to ${switchUnderScoreForSpace(targetPogemon.nickname)} successfully!`
-
+          } else {
+            player.dialogue('bag', `Congratulations!\n\n${switchUnderScoreForSpace(targetPogemon.nickname)} successfully learned ${switchUnderScoreForSpace(currItem.TMName)}.`)
+            targetPogemon.moves.push({...movesObj[currItem.TMName]})
             targetPogemon.learntMoves.push(currItem.TMName)
-
-            setTimeout(() =>{
-              removeTMMenu(`${switchUnderScoreForSpace(lastMove.name)} was switched to ${switchUnderScoreForSpace(currItem.TMName)}.`)
-            }, 1750)
+            player.bag.set(currItem.name, {item: currItem, quantity: currQuantity - 1})
           }
 
-          let rememberTMClickItem = {...currItem}
-
-          targetPogemon.moves.forEach((move, i) =>{
-            const TMMoveContainer = document.createElement('div')
-            TMMoveContainer.setAttribute('class', 'restoreMovePPMoveContainer')
-            restoreMovePPContainer.appendChild(TMMoveContainer)
-
-            const TMMoveContentContainer = document.createElement('div')
-            TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainer')
-            TMMoveContainer.appendChild(TMMoveContentContainer)
-
-            TMMoveContentContainer.innerText = `${switchUnderScoreForSpace(move.name)}`
-
-            TMMoveContentContainer.setAttribute('class', 'restoreMovePPMoveContentContainerHover restoreMovePPMoveContentContainer')
-            TMMoveContentContainer.addEventListener('click', e => changeMoveForTMOnClick(e, i, move, rememberTMClickItem))
-          })
           break  
         }
+
+        targetPogemon.animate = false
       break
     case 'give':
       let prevItem
@@ -1340,6 +1350,7 @@ const teamSprites = []
 
 function bagSceneAnimation(){
   bagSceneAnimationId = window.requestAnimationFrame(bagSceneAnimation)
+  // console.log(`bag : ${bagSceneAnimationId}`)
   
   backgroundSprite.draw()
 
@@ -1372,8 +1383,6 @@ function initBagScene(prevScene){
 
     if(player.team[i].isShiny) player.team[i].img.src = player.team[i].pogemon.sprites.shiny.bagSprite
     else player.team[i].img.src = player.team[i].pogemon.sprites.classic.bagSprite
-
-    player.team[i].frames.hold = 50
 
     console.log(player.team[i].pogemon.sprites.classic.bagSprite)
     // player.team[i].animate = false

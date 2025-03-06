@@ -687,6 +687,8 @@ export const disableOWMenu = {active : false}
 
 function escapeKeyEventOptions(e) {
   const encounterInterfaceDom = document.querySelector('#encounterInterface')
+  console.log(disableOWMenu.active)
+  console.log(scenes)
   if(disableOWMenu.active) return
   if(e.key === 'Escape'){
     if(scenes.get('overworld').initiated){
@@ -717,9 +719,8 @@ function escapeKeyEventOptions(e) {
         // })
         return
       }
-
+      
       if(scenes.get('pickingItem').initiated == true) return
-
 
       // opens OW menu
       if(player.interaction != null) if(player.interaction.info.starter) if(player.disabled) return
@@ -918,9 +919,12 @@ let timer = 1
 
 const overWorldAnimation = timeSpent =>{
   animationId = requestAnimationFrame(overWorldAnimation)
+  // console.log(`OW : ${animationId}`)
+
   OWAnimationRuning = true
 
   if(timeSpent - lastFrameSpent < frameRateInMilliseconds) return
+  
   lastFrameSpent = timeSpent
 
   if(currMap == undefined) return
@@ -974,9 +978,6 @@ export function manageOverWorldState(state, previousScene){
       console.log('messageNow')
     }
 
-    console.log(newGame)
-    if(newGame) player.bag.set('potion', {item: {...itemsObj.potion}, quantity: 5})
-
     let teamPlaceHolder = []
     
     if(previousScene != 'boot' && previousScene != 'team' && previousScene != 'pc'){
@@ -1021,6 +1022,12 @@ export function manageOverWorldState(state, previousScene){
           pogemon.animate = false
         }
       })
+    } else if(previousScene == 'pc'){
+      player.disabled = false
+      console.log('playerAble')
+
+      disableOWMenu.active = false
+      console.log('OW menu enabled')
     }
 
     console.log(playerName)
@@ -1053,7 +1060,7 @@ export function manageOverWorldState(state, previousScene){
     menu.initiated = false
     overworldMenuDom.replaceChildren()
 
-    // put gym winning message here here
+    // put gym winning message here
 
     if(player.interaction != null) {
       if(enemyTrainer == undefined) return

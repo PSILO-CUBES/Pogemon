@@ -765,7 +765,7 @@ export const movesObj = {
     name: 'metal_claw',
     type: 'physical',
     element: 'steel',
-    pow: 50,
+    pow: 500,
     acc: 95,
     pp: 56,
     effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats', rng: 30}],
@@ -1998,7 +1998,7 @@ export const movesObj = {
     rotation: {ally: 0, foe: 0},
     sprite: '../../img/moves/seed.png',
     animationType: 'status',
-    desc: "1/8 of target's HP is restored to user every turn."
+    desc: "1/8 of target's HP is sapped from the target every turn."
   },
   poison_powder:{
     name: 'poison_powder',
