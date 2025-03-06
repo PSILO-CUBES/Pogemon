@@ -765,7 +765,7 @@ export const movesObj = {
     name: 'metal_claw',
     type: 'physical',
     element: 'steel',
-    pow: 500,
+    pow: 50,
     acc: 95,
     pp: 56,
     effects: [{name: 'debuff', target:'atk', pow: 1, type: 'stats', rng: 30}],

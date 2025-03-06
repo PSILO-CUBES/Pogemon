@@ -567,15 +567,14 @@ export let mapsObj = {
         team: [
           [pogemonsObj.flailegant, 14, null, null, null, null, [
             movesObj.draining_kiss,
-            // movesObj.mystical_power,
-            // movesObj.roost,
-            // movesObj.flame_charge,
+            movesObj.quick_attack,
+            movesObj.feather_weight,
           ]], 
           [pogemonsObj.slimie, 15, null, itemsObj.leftovers, abilitiesObj.slimie_regeneration, true], 
           [pogemonsObj.balancia, 17, itemsObj.rocky_Helmet, abilitiesObj.synchronize, null, true, [
             movesObj.headbutt,
             movesObj.mystical_power,
-            movesObj.roost,
+            movesObj.quick_attack,
             movesObj.flame_charge,
           ]]
         ],

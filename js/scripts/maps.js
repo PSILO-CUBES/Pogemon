@@ -172,7 +172,7 @@ async function generateBoundaries(nextMapInfo){
   // check if map already exists from the saveFile
   if(data == null || data == undefined) {
     if(currMap == undefined) {
-      currMap = {...mapsObj.gene_Town}
+      currMap = {...mapsObj.lab}
       currMap.seen = true
     }
   } else {

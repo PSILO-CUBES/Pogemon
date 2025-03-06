@@ -5764,7 +5764,7 @@ export class Character extends Sprite{
         animate: true
       })
 
-      const starterLevel = 15
+      const starterLevel = 5
       const starterEXP = Math.pow(starterLevel, 3)
 
       let shinyCharm = 1

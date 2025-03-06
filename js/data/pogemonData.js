@@ -1281,7 +1281,7 @@ export let pogemonsObj = {
     movepool: {
       1: {move: movesObj.tackle, lvl: 1, seen: false},
       2: {move: movesObj.growl, lvl: 1, seen: false},
-      3: {move: movesObj.rock_smash, lvl: 7, seen: false},
+      3: {move: movesObj.quick_attack, lvl: 7, seen: false},
       4: {move: movesObj.rock_smash, lvl: 10, seen: false},
       5: {move: movesObj.feather_weight, lvl: 13, seen: false},
       6: {move: movesObj.shadow_punch, lvl: 16, seen: false},
