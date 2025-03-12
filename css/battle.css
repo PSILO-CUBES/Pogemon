@@ -315,6 +315,8 @@
   background-color: rgba(0, 0, 0, 0.95);
 
   transition: 0.2s ease-out;
+
+  z-index: 3;
 }
 
 #teamLvlUpExpDetailsLvl{

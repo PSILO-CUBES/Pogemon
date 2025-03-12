@@ -27,8 +27,8 @@ export let mapsObj = {
     width: 60,
     encounters: {
       ground: [
-        {pogemon: pogemonsObj.piny, lvls: [2, 4], odds: {min:1,max:100}},
-        // {pogemon: pogemonsObj.flailegant, lvls: [2, 4], odds: {min:50,max:100}},
+        {pogemon: pogemonsObj.piny, lvls: [2, 4], odds: {min:1,max:50}},
+        {pogemon: pogemonsObj.flailegant, lvls: [2, 4], odds: {min:50,max:100}},
       ], 
       water: [
         {pogemon: pogemonsObj.tadtoxic, lvls: [10, 15], odds: {min:1,max:100}}
@@ -306,7 +306,7 @@ export let mapsObj = {
       },   
       {
         name: 'Jah', 
-        team: [[pogemonsObj.wallafi, 6, itemsObj.banana, null, null, null]],
+        team: [[pogemonsObj.wallafi, 6, itemsObj.old_Banana, null, null, null]],
         direction: {reach: {pos:{x:0, y:0}, neg:{x:0, y:350}}}, 
         looking: 'Down',
         sprite: '../../img/charSprites/oldman1/oldman1.png',
@@ -875,7 +875,7 @@ export let mapsObj = {
         amount: 1,
         direction: {reach: {pos:{x:50, y:80}, neg:{x:50, y:40}}},
         pickedUp: false,
-        hidden: true,
+        hidden: false,
         eventKey: 'bananacopia'
       },
     ],
@@ -4958,7 +4958,11 @@ if(data != null) {
         map.trainers.forEach((trainer, j) =>{
           if(trainer.team.length != 0)
 
-            if(Object.values(data.mapsObjState)[i].trainers != undefined) trainer.beaten = Object.values(data.mapsObjState)[i].trainers[j].beaten
+
+            if(Object.values(data.mapsObjState)[i].trainers != undefined) {
+              console.log(Object.values(data.mapsObjState)[i].trainers[j])
+              trainer.beaten = Object.values(data.mapsObjState)[i].trainers[j].beaten
+            }
 
             trainer.team.forEach((pogemon, i2) =>{
               if(defaultMapsObj[map.name].trainers != undefined)

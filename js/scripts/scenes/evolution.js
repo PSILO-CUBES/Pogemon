@@ -52,8 +52,9 @@ function pogemonTransition(target){
   target.stats = target.generateStats()
 
   Object.values(targetEvo.movepool).forEach(moveInfo =>{
-    if(!target.learntMoves.includes(moveInfo.move.name) && target.lvl >= moveInfo.lvl)
-      target.learntMoves.push(moveInfo.move.name)
+    if(moveInfo.move != undefined)
+      if(!target.learntMoves.includes(moveInfo.move.name) && target.lvl >= moveInfo.lvl)
+        target.learntMoves.push(moveInfo.move.name)
   })
 
   for(let i = 0; i < player.team.length; i++){

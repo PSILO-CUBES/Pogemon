@@ -100,7 +100,7 @@ export async function switchMap(nextMapInfo, preMapInfo){
       }
     }
 
-    pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 15
+    pogecenterReturnInfo.spawnPosition.y = pogecenterReturnInfo.spawnPosition.y - 50
 
     if(pogecenterReturnInfo.name == 'pogemart' || pogecenterReturnInfo.name == 'pogecenter') {
       pogecenterReturnInfo.name = pogelocationBackUp.name

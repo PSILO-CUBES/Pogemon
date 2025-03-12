@@ -38,8 +38,8 @@ export const keys = {
 
 let lastKey = ''
 
-let walkSpeed = 10
-let runSpeed = Math.floor(walkSpeed * 1.5)
+let walkSpeed = 7
+let runSpeed = Math.floor(walkSpeed * 2)
 let moveSpeed = walkSpeed
 
 export let player
@@ -84,6 +84,11 @@ export async function generatePlayer(canvas){
           y: canvas.height / 2 -  playerHeight / 2
         },
         img: playerImg,
+        sprites:{
+          walk: 'img/charSprites/ethan/ethan.png',
+          run: 'img/charSprites/ethan/ethan_run.png',
+          surf: 'img/charSprites/ethan/ethan_surf.png'
+        },
         frames: {
           max: 4,
           hold: 10
@@ -136,6 +141,11 @@ export async function generatePlayer(canvas){
           y: canvas.height / 2 -  playerHeight / 2
         },
         img: playerImg,
+        sprites:{
+          walk: 'img/charSprites/ethan/ethan.png',
+          run: 'img/charSprites/ethan/ethan_run.png',
+          surf: 'img/charSprites/ethan/ethan_surf.png'
+        },
         frames: {
           max: 4,
           hold: 10
@@ -777,12 +787,10 @@ function playerInteraction(e) {
   if(!scenes.get('overworld').initiated) return
   if(scenes.get('evolution').initiated) return
   if(menu.initiated) return
-  if(player.interaction == null) return
+  if(player.interaction == null || player.interaction == undefined) return
   if(e.key != ' ') return
 
   let openWindow = document.querySelector('#openWindow')
-  
-  if(player.interaction == undefined) return
 
   console.log(player.interaction)
   switch(player.interaction.name){
@@ -838,7 +846,9 @@ function playerInteraction(e) {
             else {
               chosenDialogue = player.interaction.info.dialoguePicked
               
-              player.team[0].completeHeal()
+              player.team.forEach(pogemon =>{
+                pogemon.completeHeal()
+              })
             }
             
             break
@@ -1521,11 +1531,12 @@ export const repelObj = {
 
 function playerMove(direction, movables, moveSpeed){
   if(!collisionWhileSurfing){
-    player.img.src = 'img/charSprites/ethan/ethan.png'
-    if(player.running) player.img.src = 'img/charSprites/ethan/ethan_run.png'
+    // console.log(player)
+    player.img.src = player.sprites.walk
+    if(player.running) player.img.src = player.sprites.run
   }
 
-  if(player.surfing) player.img.src = 'img/charSprites/ethan/ethan_surf.png'
+  if(player.surfing) player.img.src = player.sprites.surf
   
   switch(direction){
     case 'Up':

@@ -119,7 +119,7 @@
                  "name":"Map",
                  "opacity":1,
                  "type":"group",
-                 "visible":false,
+                 "visible":true,
                  "x":0,
                  "y":0
                 }, 
@@ -218,7 +218,7 @@
          "name":"Data",
          "opacity":1,
          "type":"group",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],

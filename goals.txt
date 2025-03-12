@@ -873,11 +873,37 @@ stuffToDo:{
 
             make sap healing relative to damage actualy dealt and not overall damage
 
-            leftovers dont work
+            leftovers dont work -- only work during weater?? i think all end turn regen only work when weather is flagged
 
             staelth rock damage not applied
 
             use item sends useless queue with silk scarf -- when slower??
+
+            piny hp goes over max for some weird reason??????????
+
+            redundant rocks
+
+            battle name display wrong name
+
+            make sure you dont start battle with fainted mf
+
+            gain exp twice
+
+            attack makes pogemon switch
+
+            remove leech seed when opponent is switching
+
+            sand stream dont start when switching after faint
+
+            leech seed fire after ally faint and then after ally switched in
+
+            slower confusion attack started while faster animation still playing
+
+            after enemy switch, new pogemon uses one of prev pogemons moves
+
+            snapped out of confusion skips slower turn -- my turn
+
+            player snapping out of confusion locks queue
 
             bad save stuff:{
                 keep trees and rocks destroyed, also starter pogeball reappears for some reason ??
@@ -891,7 +917,7 @@ stuffToDo:{
         reminder :{
             i think most battle issues at this point are just not checking for fainting and not switching / leaving battle when foe faints
 
-            poison issues confuse issues need to be checked
+            poison issues confuse issues need to be checked x
 
             make heisenberg give the halo as in itemPickup thingy
 
@@ -905,6 +931,13 @@ stuffToDo:{
 
             0 hold in team and stats menu if pogemon fainted
 
+            enemy pogemon doesnt show as fainted
+
+            stop making the server ask for every map image, only curr map image
+
+            put delta time on every animation scene with a sprite
+
+            maybe prevent save while on obstacle tile
         }
 
         other stuff:{

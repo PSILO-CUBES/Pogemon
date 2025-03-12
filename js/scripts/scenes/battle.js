@@ -76,6 +76,7 @@ function loadAlly(){
 function foeRNGEncounter(tileInfo, info){
   if(tileInfo != undefined){
     const rng = Math.floor(Math.random() * 100) + 1
+    console.log(rng)
 
     const encounters = mapsObj[`${currMap.name}`].encounters[tileInfo]
   
@@ -1533,6 +1534,8 @@ function optionButtonInteraction(e) {
           }, 1250)
         } else {
           manageBattleState(false, 'team')
+          console.log('teamMenuOpen')
+
           gsap.to('#overlapping', {
             opacity: 1,
             yoyo: true,
@@ -2413,6 +2416,7 @@ function switchEnemyAfterFaint(type){
   }
 
   setBattlersInfo()
+  manageAfflictionContentState(foe, document.querySelector('#foeHazardsContainer'), terrainConditions.static.sticky_web.active.foe, terrainConditions.static.stealth_rock.active.foe)
 
   if(foe.isShiny) foe.img.src = foe.pogemon.sprites.shiny.frontSprite
   else foe.img.src = foe.pogemon.sprites.classic.frontSprite
@@ -2778,7 +2782,7 @@ function manageFaintingEvent(target){
           manageLearnedMoves(battlerArr[battlerArr.length - 1], queue, 'battle')
         }
 
-        queue.push(() => ally.dialogue('battle', `${switchUnderScoreForSpace(foe.nickname)} has been defeated.`))
+        queue.push(() => {if(foe != undefined) ally.dialogue('battle', `${switchUnderScoreForSpace(foe.nickname)} has been defeated.`)})
         queue.push(() => {
           manageBattleState(false)
           console.log('here')
@@ -2984,6 +2988,7 @@ function faintEvent(target){
           if(!target.fainted) return
           faintedTriggered.active = true
           manageBattleState(false, 'team', {active : true})
+          console.log('teamMenuOpen')
 
           setTimeout(() => {
             queueProcess.disabled = false
@@ -3144,6 +3149,7 @@ let slowerHpBeforeMove
 
 let paraState = {foe: false, ally: false}
 let slpState = {foe: false, ally: false}
+let justWokeUp = {ally: false, foe: false}
 let confusionProcess = {ally: false, foe: false}
 let afflictionState = {ally: false, foe: false}
 let playerMove
@@ -3151,10 +3157,7 @@ let playerMove
 let fasterCheck = false
 let slowerCheck = false
 
-let justWokeUp = {
-  ally: false,
-  foe: false
-}
+
 
 let doublePass = false
 
@@ -3229,7 +3232,7 @@ function afflictionsEvent(target, targetMove, recipient, check, flinched, status
           // console.log('manageCheckStatusEvent')
 
           setTimeout(() =>{
-            queueProcess.disabled = false
+            if(queue.length > 0) queueProcess.disabled = false
           }, 1250)
         }, 1250)
         return
@@ -4032,6 +4035,7 @@ function statusEvent(target, targetMove, recipient, statusIcon, catchEvent, fast
           console.log('there')
 
           manageBattleState(false, 'team')
+          console.log('teamMenuOpen')
 
           gsap.to('#overlapping', {
             opacity: 1,
@@ -4672,6 +4676,8 @@ function attackMove(e) {
           if(!faster.fainted) return
           faintedTriggered.active = true
           manageBattleState(false, 'team', {active : true})
+          console.log('teamMenuOpen')
+
           console.log('here')
         }
     } else {
@@ -4845,7 +4851,7 @@ function spendQueue(){
         }
 
         unstuckQueueFlag = false
-      }, 3000)
+      }, 2000)
     }
     
     return
@@ -4901,6 +4907,8 @@ function spendQueue(){
 
     let faster = ally
     let slower = foe
+
+    if(foe == undefined || foe == null) return
   
     let allySpeed
     if(ally.status.name == 'para') allySpeed = Math.floor((ally.stats.spd * statsChangeObj.ally.nominator.spd / statsChangeObj.ally.denominator.spd) / 2)
@@ -4955,9 +4963,11 @@ function spendQueue(){
     
         ranAway = false
         moveProcess = false
+
+        console.log(moveProcess)
   
-        if(scenes.get('battle').initiated)  
-          if(queue.length == 0) 
+        if(scenes.get('battle').initiated)
+          if(queue.length == 0)
             if(player.team[0].hp > 0 && foe.hp > 0 && !foe.fainted && !runAttempt) {
               console.log('grided')
               dialogueInterfaceDom.style.display = 'none'
@@ -4973,7 +4983,8 @@ function spendQueue(){
 
               statusEventObj.ally = false
               statusEventObj.foe = false
-            } else if(foe.fainted) {
+            } else if(foe.hp <= 0 && foe.fainted) {
+                // ally.dialogue('battle', '')
                 console.log(ally)
                 manageFaintingEvent(foe)
                 console.log('manageFaintingEvent')
@@ -4982,6 +4993,7 @@ function spendQueue(){
                 setTimeout(() =>{
                   faintedTriggered.active = true
                   manageBattleState(false, 'team', {active : true})
+                  console.log('teamMenuOpen')
         
                   setTimeout(() => {
                     queueProcess.disabled = false

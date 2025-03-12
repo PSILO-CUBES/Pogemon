@@ -4,7 +4,9 @@ const port = 3000
 
 const server = http.createServer((req, res) =>{
   const ext = req.url.split('.')[1]
+
   console.log(req.url)
+
   if(ext == 'js'){
     fs.readFile(`../${req.url}`, (err, data) =>{
       if(err){
@@ -30,7 +32,8 @@ const server = http.createServer((req, res) =>{
   } else if(req.url == `${req.url}`){
     fs.readFile(`../${req.url}`, (err, data) =>{
       if(err){
-        console.log(`Error: File Not Found ${err}`)
+        res.writeHead(404)
+        res.write(`Error: File Not Found ${err}`)
       } else {
         res.write(data)
       }

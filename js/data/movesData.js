@@ -1020,7 +1020,7 @@ export const movesObj = {
     name: 'mega_drain',
     type: 'special',
     element: 'grass',
-    pow: 30,
+    pow: 50,
     acc: 100,
     pp: 24,
     effects: [{leech: 50}],

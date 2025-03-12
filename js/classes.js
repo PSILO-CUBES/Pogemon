@@ -288,7 +288,6 @@ export class Pogemon extends Sprite{
       this.fainted = preBuilt.fainted
       this.evo = this.pogemon.evo
       this.abilityInfo = preBuilt.abilityInfo
-      console.log(preBuilt.moves)
       this.moves = preBuilt.moves
       this.pogemon.movepool = pogemonsObj[this.name].movepool
       this.animationProperties = preBuilt.animationProperties
@@ -463,7 +462,7 @@ export class Pogemon extends Sprite{
             moves.push({...movepool[key].move})
             if(!this.isEnemy) movepool[key].seen = true
 
-            console.log(movepool[key])
+            // console.log(movepool[key])
           } else {
             // isint an array when trying to push things to it
             if(this.learntMoves.includes(movepool[key].move.name)) return
@@ -471,7 +470,7 @@ export class Pogemon extends Sprite{
             this.learntMoves.push(movepool[key].move.name)
             if(!this.isEnemy) movepool[key].seen = true
 
-            console.log(movepool[key])
+            // console.log(movepool[key])
             
   
             if(moves.length == 4) moves.splice(0, 1)
@@ -600,11 +599,11 @@ export class Pogemon extends Sprite{
       this.frames.hold = 0
     }
 
-    console.log(recipientHealthBar)
+    // console.log(recipientHealthBar)
 
     recipientHealthBar.style.background = hpColor
 
-    console.log(hpColor)
+    // console.log(hpColor)
   }
 
   managePP(move){
@@ -779,7 +778,7 @@ export class Pogemon extends Sprite{
             }
   
             renderedSprites.splice(1,0,statsAnimationSprite)
-            console.log('remove sprite')
+            // console.log('remove sprite')
           }
         }
 
@@ -829,7 +828,7 @@ export class Pogemon extends Sprite{
         }
         
         setTimeout(() =>{
-          console.log('remove sprite')
+          // console.log('remove sprite')
 
           //check status here
           let pass = false
@@ -1200,7 +1199,7 @@ export class Pogemon extends Sprite{
   
                 } else if(effectName == 'selfDebuff'){
                   let defiant = false
-                  console.log(this)
+                  // console.log(this)
                   if(this.abilityInfo.ability.name == 'defiant') {
                     this.statusAnimation('status', target.abilityInfo.ability.effects, {name: 'defiant'}, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
                     defiant = true
@@ -1484,8 +1483,8 @@ export class Pogemon extends Sprite{
             // if(move.name == 'sticky_web') webInteraction = true
 
             setTimeout(() =>{
-              queueProcess.disabled = false
-              console.log('here')
+              // queueProcess.disabled = false
+              // console.log('here')
               statusSprite.frames.hold = 10
               renderedSprites.pop()
             }, 1000)
@@ -2255,13 +2254,13 @@ export class Pogemon extends Sprite{
 
           damage = Math.floor((((2 * this.lvl / 5 + 2) * movePow * (this.stats.atk * choiceBand * userStatChange) / (recipient.stats.def * defAbility * defItem * weatherResistance * recipientStatChange) / 50 + 2) * burn * reflect) * roll * (typeEffectivness * expertBelt) * stab * crit * heldItemDmg * weatherDamage * abilityDamage)
         
-          console.log(recipient.name)
-          console.log(recipient.stats.def * defAbility * defItem * weatherResistance * recipientStatChange)
-          console.log(recipient.stats.def)
-          console.log(defAbility)
-          console.log(defItem)
-          console.log(weatherResistance)
-          console.log(recipientStatChange)
+          // console.log(recipient.name)
+          // console.log(recipient.stats.def * defAbility * defItem * weatherResistance * recipientStatChange)
+          // console.log(recipient.stats.def)
+          // console.log(defAbility)
+          // console.log(defItem)
+          // console.log(weatherResistance)
+          // console.log(recipientStatChange)
         }
       } else if(move.type === 'special'){
         if(typeEffectivness !== 0){
@@ -2434,7 +2433,7 @@ export class Pogemon extends Sprite{
           this.statusAnimation('heal', move.effects, move, recipient, renderedSprites, statsChangeObj, terrainConditions, queueProcess)
 
           setTimeout(() =>{
-            if(queue.length > 0) return
+            if(this.stats.spd > recipient.stats.spd && recipientMove.priority < 1) return
             queueProcess.disabled = false
             console.log('here')
           }, 750)
@@ -2990,12 +2989,12 @@ export class Pogemon extends Sprite{
                 recipient.magicBounce(this, queue, queueProcess, terrainConditions, () =>{
                   if(this.element[1] == 'psychic' || this.element[2] == 'psychic') {
                     setTimeout(() =>{
-                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
+                      this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
                     }, 750)
                     return
                   } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost'){
                     setTimeout(() =>{
-                      this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
+                      this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} cannot be confused...`)
                     }, 750)
                     return
                   }
@@ -3029,12 +3028,12 @@ export class Pogemon extends Sprite{
               } else {
                 if(recipient.element[1] == 'psychic' || recipient.element[2] == 'psychic') {
                   setTimeout(() =>{
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
                   }, 750)
                   return
                 } else if(recipient.element[1] == 'ghost' || recipient.element[2] == 'ghost'){
                   setTimeout(() =>{
-                    this.dialogue('battle', `${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
+                    this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(recipient.nickname)} cannot be confused...`)
                   }, 750)
                   return
                 }
@@ -3061,10 +3060,10 @@ export class Pogemon extends Sprite{
                   }, 1750)
                 }
 
-                setTimeout(() =>{
-                  queueProcess.disabled = false
-                  console.log('here')
-                }, 1250)
+                // setTimeout(() =>{
+                //   queueProcess.disabled = false
+                //   console.log('here')
+                // }, 1250)
               }
 
               break
@@ -3999,6 +3998,7 @@ export class Pogemon extends Sprite{
   statusEffectAnimation(type, renderedSprites, queueProcess, confusionProcess){
     queueProcess.disabled = true
     console.log('there')
+
     let rotation = 0
     let yOffset = 0
     let xOffset = 0
@@ -4051,7 +4051,7 @@ export class Pogemon extends Sprite{
       case 'para':
         statusEffectImg.src = 'img/moves/para.png'
         renderedSprites.push(statusEffectSprite)
-        statusEffectSprite.frames.hold = 15
+        statusEffectSprite.frames.hold = 60
 
         if(this.isEnemy){
           statusEffectSprite.position = {
@@ -4078,7 +4078,7 @@ export class Pogemon extends Sprite{
       case 'psn':
         statusEffectImg.src = 'img/moves/psn.png'
         renderedSprites.push(statusEffectSprite)
-        statusEffectSprite.frames.hold = 15
+        statusEffectSprite.frames.hold = 60
 
         if(this.isEnemy){
           statusEffectSprite.position = {
@@ -4095,9 +4095,11 @@ export class Pogemon extends Sprite{
         tl.to(statusEffectSprite.position, {
           duration: 1,
           onComplete: () =>{
-            queueProcess.disabled = false
-            console.log('here')
             renderedSprites.pop()
+            setTimeout(() =>{
+              queueProcess.disabled = false
+              console.log('here')
+            }, 1250)
           }
         })
 
@@ -4131,7 +4133,7 @@ export class Pogemon extends Sprite{
       case 'frz':
         statusEffectImg.src = 'img/moves/frz.png'
         renderedSprites.push(statusEffectSprite)
-        statusEffectSprite.frames.hold = 15
+        statusEffectSprite.frames.hold = 60
         statusEffectSprite.opacity = 0.5
 
         if(this.isEnemy){
@@ -4821,12 +4823,12 @@ export class Pogemon extends Sprite{
 
     if(this.heldItem != null) if(this.heldItem.name == 'lucky_Egg') expGained = expGained * 1.5
 
-    const totalExpMulti = 10
+    const totalExpMulti = 4
 
     expGained = expGained * totalExpMulti
     
     this.exp += expGained
-    if(document.querySelector('#dialogueInterface') != null) this.dialogue('battle', `${document.querySelector('#dialogueInterface').innerText}\n\n${this.switchUnderScoreForSpace(this.nickname)} gained ${expGained} exp points!`)
+    if(document.querySelector('#dialogueInterface') != null) this.dialogue('battle', `${this.switchUnderScoreForSpace(this.nickname)} gained ${expGained} exp points!`)
 
     let potentialLevel = Math.floor(Math.cbrt(this.exp))
 
@@ -5414,6 +5416,8 @@ export class Pogemon extends Sprite{
       move.pp = movesObj[move.name].pp
       console.log(movesObj[move.name])
     })
+
+    this.fainted = false
   }
 }
 
@@ -5719,7 +5723,7 @@ export class Character extends Sprite{
             opacity: 0,
             onComplete: () =>{
               TweenMax.to(ballSprite.position, {
-                y: pogemon.position.y + 250,
+                y: pogemon.position.y + 200,
                 onComplete: () => {
                   TweenMax.to(ballSprite, {
                     rotation: '0.15',
